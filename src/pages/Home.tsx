@@ -1,14 +1,12 @@
-import { useTranslation } from "react-i18next";
-import LanguageSwitch from "@/components/custom/LanguageSwitch";
 
+import Layout from '../components/layout/layout'
 const Home = () => {
-  const { t } = useTranslation(); // مهم
-
   return (
-    <div className="p-6 space-y-4">
-      <LanguageSwitch />
-      <h1 className="text-2xl">{t("welcome")}</h1>
-      <button className="px-3 py-2 border rounded">{t("add_to_cart")}</button>
+    <div className="">
+       
+       <Layout/>
+
+      <h1 className="text-2xl">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Pariatur aliquam aperiam nisi voluptates, quidem neque accusantium assumenda esse tempora adipisci repellat illum ea eos ad unde quos possimus ipsa sed.</h1>
     </div>
   );
 };
