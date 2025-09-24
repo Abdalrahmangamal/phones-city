@@ -35,16 +35,17 @@ export default function Header() {
     alt="مدينة الهواتف"
     width={157}
     height={24}
-    className="h-10 w-auto object-contain"
+    className="h-15 w-auto object-contain"
   />
+  <h1 className='text-[24px] font-[700]'>مدينة الهواتف</h1>
 </a>
 
           {/* Search */}
-          <div className="mx-auto hidden flex-1 items-center md:flex">
-            <div className="relative w-full max-w-2xl">
+          <div className="mx-auto hidden flex-1 items-center flex items-center justify-center md:flex">
+            <div className="relative w-full max-w-[500px] ">
               <Input
                 placeholder="ابحث عن المنتجات"
-                className="h-10 rounded-full bg-transparent border-white/30 text-white placeholder:text-white/60 focus-visible:ring-white/40"
+                className="h-10 rounded-full bg-transparent border-[white] text-white placeholder:text-white/60 focus-visible:ring-white/40"
               />
             </div>
           </div>
