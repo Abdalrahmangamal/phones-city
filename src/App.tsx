@@ -1,16 +1,43 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+// App.tsx (مثال)
+import { BrowserRouter, Routes, Route, Navigate, useParams } from "react-router-dom";
+import { useSettings } from "@/store/settings";
+import i18n from "@/i18n";
+import Home from "@/pages/Home";
+import React from "react";
 
-//Pages
-import Home from "./pages/Home";
+function LangLayout() {
+  const { lang: urlLang } = useParams();
+  const { lang, setLang } = useSettings();
 
-const App = () => {
+  // لو البراميتر مش صالح رجّع لِغة الستيت
+  if (urlLang !== "ar" && urlLang !== "en") {
+    return <Navigate to={`/${lang}/`} replace />;
+  }
+
+  // 👈 التزامن هنا داخل useEffect، مش أثناء render
+  React.useEffect(() => {
+    if (urlLang && urlLang !== lang) {
+      setLang(urlLang as "ar" | "en");
+      i18n.changeLanguage(urlLang);
+    }
+  }, [urlLang, lang, setLang]);
+
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Home />} />
-      </Routes>
-    </Router>
+    <Routes>
+      <Route path="" element={<Home />} />
+      {/* بقية الصفحات */}
+    </Routes>
   );
-};
+}
 
-export default App;
+export default function App() {
+  const { lang } = useSettings();
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Navigate to={`/${lang}`} replace />} />
+        <Route path="/:lang/*" element={<LangLayout />} />
+      </Routes>
+    </BrowserRouter>
+  );
+}

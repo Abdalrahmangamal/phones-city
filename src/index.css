@@ -1,5 +1,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+/* index.css */
+[dir="rtl"] .ml-auto { margin-left: 0; margin-right: auto; }
 
 @custom-variant dark (&:is(.dark *));
 
