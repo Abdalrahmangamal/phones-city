@@ -33,11 +33,13 @@ function LangLayout() {
 export default function App() {
   const { lang } = useSettings();
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Navigate to={`/${lang}`} replace />} />
-        <Route path="/:lang/*" element={<LangLayout />} />
-      </Routes>
-    </BrowserRouter>
+    <div className=""> {/* Removed pr-4 padding since we're handling it in the Home component */}
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Navigate to={`/${lang}`} replace />} />
+          <Route path="/:lang/*" element={<LangLayout />} />
+        </Routes>
+      </BrowserRouter>
+    </div>
   );
 }

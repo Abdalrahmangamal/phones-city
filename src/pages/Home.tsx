@@ -1,12 +1,27 @@
+import Layout from '@/components/layout/layout'
+import HeroSection from '@/components/custom/HeroSection'
+import SearchSection from '../components/custom/SearchSection'
+import CategoriesSection from '../components/custom/CategoriesSection'
+import TrendingProductsSection from '../components/custom/TrendingProductsSection'
 
-import Layout from '../components/layout/layout'
 const Home = () => {
   return (
-    <div className="">
-       
+    <div dir="rtl">
        <Layout/>
-
-      <h1 className="text-2xl">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Pariatur aliquam aperiam nisi voluptates, quidem neque accusantium assumenda esse tempora adipisci repellat illum ea eos ad unde quos possimus ipsa sed.</h1>
+       <div className="px-4">
+         <div className="mt-6">
+           <HeroSection />
+         </div>
+         <div className="mt-6">
+           <SearchSection />
+         </div>
+       </div>
+       <div className="mt-6">
+         <CategoriesSection />
+       </div>
+       <div className="mt-6">
+         <TrendingProductsSection />
+       </div>
     </div>
   );
 };
