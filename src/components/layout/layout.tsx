@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
+import LanguageSwitch from '@/components/custom/LanguageSwitch';
 
 type Category = {
   id: string;
@@ -76,11 +77,7 @@ export default function Header() {
         <div className="mt-2 flex items-center">
             {/* Language Switcher */}
             <div className="flex flex-1 justify-start">
-                <button className="flex items-center gap-1 text-sm font-normal">
-                    <Globe className="h-4 w-4" />
-                    <span>عربي</span>
-                    <ChevronDown className="h-4 w-4" />
-                </button>
+                <LanguageSwitch />
             </div>
 
             {/* Nav Links */}

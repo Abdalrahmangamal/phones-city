@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 const categories = [
@@ -28,9 +28,9 @@ const categories = [
   },
 ];
 
-const CategoryCard = ({ title, image }) => {
+const CategoryCard = ({ title, image }: { title: string; image: string }) => {
   return (
-    <div className="bg-[#FDFDFD] rounded-lg shadow-[8px_8px_20px_0px_#00000008] w-[180px] h-[182px] flex flex-col items-center gap-2 pb-4">
+    <div className="bg-[#FDFDFD] rounded-lg shadow-[8px_8px_20px_0px_#00000008] w-[180px] h-[182px] flex flex-col items-center gap-2 pb-4 flex-shrink-0">
       <img src={image} alt={title} className="w-[180px] h-[122px] object-cover rounded-t-lg" />
       <div className="w-full px-2 flex flex-col items-center">
         <h3 className="font-roboto font-medium text-lg text-[#4B4B4B] text-center leading-tight">{title}</h3>
@@ -40,18 +40,49 @@ const CategoryCard = ({ title, image }) => {
 };
 
 const CategoriesSection = () => {
+  const [translateX, setTranslateX] = useState(0);
+  const cardWidth = 180 + 24; // width + gap
+
+  const nextSlide = () => {
+    setTranslateX(prev => {
+      const maxTranslate = -(categories.length * cardWidth - 4 * cardWidth); // Show 4 cards at a time
+      const newTranslate = prev - cardWidth;
+      return newTranslate < maxTranslate ? maxTranslate : newTranslate;
+    });
+  };
+  
+  const prevSlide = () => {
+    setTranslateX(prev => {
+      const newTranslate = prev + cardWidth;
+      return newTranslate > 0 ? 0 : newTranslate;
+    });
+  };
+
   return (
     <div style={{ background: '#211C4D36' }} className="py-10">
       <div className="container mx-auto flex items-center justify-center gap-6">
-        <button className="bg-white rounded-full w-10 h-10 flex items-center justify-center border border-[#E0E5EB]">
+        <button 
+          className="bg-white rounded-full w-10 h-10 flex items-center justify-center border border-[#E0E5EB]" 
+          aria-label="السابق"
+          onClick={prevSlide}
+        >
           <ChevronRight className="w-4 h-4" />
         </button>
-        <div className="flex gap-6">
-          {categories.map(category => (
-            <CategoryCard key={category.title} {...category} />
-          ))}
+        <div className="overflow-hidden w-[calc(180px*4+24*3)]">
+          <div 
+            className="flex gap-6 transition-transform duration-300 ease-in-out"
+            style={{ transform: `translateX(${translateX}px)` }}
+          >
+            {categories.map((category, index) => (
+              <CategoryCard key={index} {...category} />
+            ))}
+          </div>
         </div>
-        <button className="bg-white rounded-full w-10 h-10 flex items-center justify-center border border-[#E0E5EB]">
+        <button 
+          className="bg-white rounded-full w-10 h-10 flex items-center justify-center border border-[#E0E5EB]" 
+          aria-label="التالي"
+          onClick={nextSlide}
+        >
           <ChevronLeft className="w-4 h-4" />
         </button>
       </div>
