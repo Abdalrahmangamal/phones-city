@@ -7,12 +7,12 @@ const ProductCard = () => {
       {/* Thumb */}
       <div className="relative w-full h-[264px] p-6">
         {/* Heart Button */}
-        <button className="absolute top-4 right-4 bg-[#2A255B0D] rounded-full w-9 h-9 flex items-center justify-center">
+        <button className="absolute top-4 right-4 bg-[#2A255B0D] rounded-full w-9 h-9 flex items-center justify-center" aria-label="Add to favorites">
           <Heart className="w-6 h-6 text-[#211C4D]" strokeWidth="2" />
         </button>
         {/* Discount Badge */}
         <div className="absolute top-4 left-4 bg-[#F03D3D] text-white text-xs px-2 py-1 rounded">
-          -17%
+          17<span className="inline-block mr-0.5">-</span><span className="inline-block mr-0.5">%</span>
         </div>
         {/* Product Image */}
         <img src="/1632cd4b864838f21092481885f0c4a6e120b93f.png" alt="Product" className="w-full h-full object-contain" />
@@ -34,7 +34,6 @@ const ProductCard = () => {
           </div>
           {/* Rating */}
           <div className="flex items-center justify-end gap-2">
-            <span className="font-roboto text-xs text-gray-400">(125)</span>
             <div className="flex gap-1">
               {/* Stars */}
               <Star fill="#F3AC5D" stroke="#F3AC5D" className="w-5 h-5" />
@@ -43,6 +42,7 @@ const ProductCard = () => {
               <Star fill="none" stroke="#CAD0D9" className="w-5 h-5" />
               <Star fill="none" stroke="#CAD0D9" className="w-5 h-5" />
             </div>
+            <span className="font-roboto text-xs text-gray-400">(125)</span>
           </div>
         </div>
         {/* Price + Button */}
@@ -57,7 +57,7 @@ const ProductCard = () => {
             </span>
           </div>
           {/* Add to Cart Button */}
-          <button className="bg-[#EEF1F6] rounded-full w-10 h-10 flex items-center justify-center">
+          <button className="bg-[#EEF1F6] rounded-full w-10 h-10 flex items-center justify-center" aria-label="Add to cart">
             <ShoppingCart className="w-5 h-5 text-black" />
           </button>
         </div>
