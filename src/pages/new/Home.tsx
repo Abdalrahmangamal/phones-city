@@ -2,7 +2,6 @@ import React from 'react';
 import Layout from '@/components/layout/layout';
 import NewHeroSection from '@/components/public/HeroSection';
 import CategoriesSection from '@/components/public/BannerSection';
-import TrendingProductsSection from '@/components/custom/TrendingProductsSection';
 import ProductCategoriesSection from '@/components/home/ProductCategoriesSection';
 import ShareSection from '@/components/custom/ShareSection';
 import NewTrendingProductsSection from '@/components/custom/NewTrendingProductsSection';
@@ -32,7 +31,9 @@ const NewHome = () => {
         </section>
         
         {/* Trending Products Section */}
-        
+        <section className="mt-6 mb-6">
+          <NewTrendingProductsSection />
+        </section>
         
         {/* Frame 1321317127 Image Section */}
         <section className="mt-6 mb-6 flex justify-center">
@@ -55,8 +56,8 @@ const NewHome = () => {
           <ShareSection />
         </section>
         
-        {/* New Trending Products Section */}
-        <section className="mt-6 mb-6 flex justify-center">
+        {/* Trending Products Section */}
+        <section className="mt-6 mb-6">
           <NewTrendingProductsSection />
         </section>
         
