@@ -32,8 +32,17 @@ const NewHome = () => {
         </section>
         
         {/* Trending Products Section */}
-        <section className="mt-6 mb-6">
-          <TrendingProductsSection />
+        
+        
+        {/* Frame 1321317127 Image Section */}
+        <section className="mt-6 mb-6 flex justify-center">
+          <div className="w-full rounded-[16px] overflow-hidden">
+            <img 
+              src="/Frame 1321317127.svg" 
+              alt="Frame 1321317127" 
+              className="w-full h-auto object-cover"
+            />
+          </div>
         </section>
         
         {/* Product Categories Section */}

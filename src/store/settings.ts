@@ -24,7 +24,6 @@ export const useSettings = create<SettingsState>()(
         set({
           lang,
           dir: lang === "ar" ? "rtl" : "ltr",
-          // ممكن تغيّر العملة افتراضياً بحسب اللغة/المنطقة لو حابب
         }),
 
       setCurrency: (currency) => set({ currency }),
@@ -32,7 +31,6 @@ export const useSettings = create<SettingsState>()(
     {
       name: "app-settings-v1", // localStorage key
       version: 1,
-      // migration: (state, version) => state, // لو طوّرت الشكل بعدين
     }
   )
 );

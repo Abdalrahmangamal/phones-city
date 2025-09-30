@@ -90,25 +90,25 @@ const NewTrendingProductsSection: React.FC = () => {
   };
 
   return (
-    <div className="w-full max-w-[1264px] flex flex-col items-start gap-[32px]">
+    <div className="w-full max-w-[1264px] flex flex-col items-start gap-6 md:gap-[32px]">
       {/* Section Header */}
       <div className="w-full flex items-center justify-between relative">
         <div className="relative">
           {/* SVG Background Image - positioned above and to the right of the text */}
-          <div className="absolute -top-2 -right-4 z-0">
-            <img src="/Layer_1.svg" alt="" className="opacity-100" />
+          <div className="absolute -top-1 md:-top-2 -right-2 md:-right-4 z-0">
+            <img src="/Layer_1.svg" alt="" className="opacity-100 w-16 md:w-auto" />
           </div>
-          <h2 className="font-roboto font-semibold text-[40px] leading-[36px] text-[#211C4D] relative z-10">
+          <h2 className="font-roboto font-semibold text-2xl md:text-[40px] leading-[30px] md:leading-[36px] text-[#211C4D] relative z-10">
             الأكثر مبيعاً
           </h2>
         </div>
-        <button className="flex items-center gap-[6px] py-[10px] rounded-[4px]" aria-label="عرض المزيد من المنتجات">
-          <span className="font-roboto font-medium text-[24px] leading-[20px] text-[#211C4D]">
+        <button className="flex items-center gap-1 md:gap-[6px] py-2 md:py-[10px] rounded-[4px]" aria-label="عرض المزيد من المنتجات">
+          <span className="font-roboto font-medium text-sm md:text-[24px] leading-[16px] md:leading-[20px] text-[#211C4D]">
             عرض المزيد
           </span>
           <svg
-            width="25.47"
-            height="28.44"
+            width="20"
+            height="22"
             viewBox="0 0 25 28"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
@@ -128,30 +128,30 @@ const NewTrendingProductsSection: React.FC = () => {
       <div className="w-full h-[0px] border-t border-[#E5E7EB]" />
 
       {/* Products Row */}
-      <div className="w-full flex gap-[24px] overflow-x-auto py-2">
+      <div className="w-full flex gap-4 md:gap-[24px] overflow-x-auto py-2">
         {products.map((product) => (
           <div
             key={product.id}
-            className="w-[299px] rounded-[16px] bg-white shadow-[0px_4px_4px_0px_#00000040] flex flex-col overflow-hidden"
+            className="flex-shrink-0 w-[280px] md:w-[299px] rounded-[16px] bg-white shadow-[0px_4px_4px_0px_#00000040] flex flex-col overflow-hidden"
             dir="rtl"
           >
             {/* Product Image Area */}
-            <div className="w-full min-h-[240px] p-[24px] relative">
+            <div className="w-full min-h-[200px] md:min-h-[240px] p-4 md:p-[24px] relative">
               {/* Discount Badge */}
-              <div className="absolute top-4 left-4 w-[45px] h-[20px] rounded-[4px] bg-[#F03D3D] flex items-center justify-center py-[2px] px-[8px]">
-                <span className="font-inter font-medium text-[12px] leading-[16px] text-white" dir="ltr">
+              <div className="absolute top-2 md:top-4 left-2 md:left-4 w-[40px] md:w-[45px] h-[18px] md:h-[20px] rounded-[4px] bg-[#F03D3D] flex items-center justify-center py-0 md:py-[2px] px-1 md:px-[8px]">
+                <span className="font-inter font-medium text-[10px] md:text-[12px] leading-[14px] md:leading-[16px] text-white" dir="ltr">
                   {product.discount}
                 </span>
               </div>
 
               {/* Favorite Button */}
               <button
-                className="absolute top-[12px] right-[12px] w-[44px] h-[44px] rounded-full bg-[#211C4D0D] flex items-center justify-center p-[6px]"
+                className="absolute top-2 md:top-[12px] right-2 md:right-[12px] w-8 md:w-[44px] h-8 md:h-[44px] rounded-full bg-[#211C4D0D] flex items-center justify-center p-1 md:p-[6px]"
                 aria-label="أضف إلى المفضلة"
               >
                 <svg
-                  width="20"
-                  height="20"
+                  width="16"
+                  height="16"
                   viewBox="0 0 24 24"
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
@@ -159,7 +159,7 @@ const NewTrendingProductsSection: React.FC = () => {
                   <path
                     d="M12 21.35L10.55 20.03C5.4 15.36 2 12.28 2 8.5C2 5.42 4.42 3 7.5 3C9.24 3 10.91 3.81 12 5.09C13.09 3.81 14.76 3 16.5 3C19.58 3 22 5.42 22 8.5C22 12.28 18.6 15.36 13.45 20.04L12 21.35Z"
                     stroke="#211C4D"
-                    strokeWidth="2.5"
+                    strokeWidth="2"
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     fill="none"
@@ -168,34 +168,34 @@ const NewTrendingProductsSection: React.FC = () => {
               </button>
 
               {/* Product Image */}
-              <div className="w-full h-[240px] flex items-center justify-center">
-                <img src={product.image} alt={product.name} className="max-w-[258px] max-h-[240px] object-contain" />
+              <div className="w-full h-[180px] md:h-[240px] flex items-center justify-center">
+                <img src={product.image} alt={product.name} className="max-w-[200px] md:max-w-[258px] max-h-[180px] md:max-h-[240px] object-contain" />
               </div>
             </div>
 
             {/* Product Details */}
-            <div className="w-full p-[16px] bg-white flex flex-col gap-[12px]">
+            <div className="w-full p-3 md:p-[16px] bg-white flex flex-col gap-2 md:gap-[12px]">
               {/* Title */}
-              <h3 className="font-roboto font-medium text-[24px] leading-[20px] text-[#211C4D]">
+              <h3 className="font-roboto font-medium text-lg md:text-[24px] leading-[18px] md:leading-[20px] text-[#211C4D]">
                 {product.name}
               </h3>
 
               {/* Rating + Colors */}
-              <div className="w-full flex flex-col items-end gap-2">
+              <div className="w-full flex flex-col items-end gap-1 md:gap-2">
                 {/* Stars and reviews */}
-                <div className="flex items-center gap-[8px] justify-end">
+                <div className="flex items-center gap-1 md:gap-[8px] justify-end">
                   {renderStars(product.rating)}
-                  <span className="font-roboto font-normal text-[12px] leading-[18px] text-[#9CA3AF]" dir="ltr">
+                  <span className="font-roboto font-normal text-[10px] md:text-[12px] leading-[14px] md:leading-[18px] text-[#9CA3AF]" dir="ltr">
                     ({product.reviews})
                   </span>
                 </div>
 
                 {/* Colors */}
-                <div className="flex gap-[4px] justify-end">
+                <div className="flex gap-1 md:gap-[4px] justify-end">
                   {product.colors.map((color, index) => (
                     <div
                       key={index}
-                      className="w-[15px] h-[15px] rounded-full border border-[#00000040]"
+                      className="w-3 h-3 md:w-[15px] md:h-[15px] rounded-full border border-[#00000040]"
                       style={{ backgroundColor: color }}
                       aria-label={`لون المنتج ${index + 1}`}
                     />
@@ -206,25 +206,25 @@ const NewTrendingProductsSection: React.FC = () => {
               {/* Price and Add to Cart */}
               <div className="w-full flex items-center justify-between">
                 <div className="flex flex-col items-end">
-                  <span className="font-roboto font-semibold text-[16px] leading-[28px] text-[#211C4D]">
+                  <span className="font-roboto font-semibold text-sm md:text-[16px] leading-[24px] md:leading-[28px] text-[#211C4D]">
                     {product.discountedPrice}
                   </span>
                   <div className="relative">
-                    <span className="font-roboto font-medium text-[16px] leading-[28px] text-[#211C4D] line-through">
+                    <span className="font-roboto font-medium text-sm md:text-[16px] leading-[24px] md:leading-[28px] text-[#211C4D] line-through">
                       {product.originalPrice}
                     </span>
-                    <div className="absolute top-[50%] left-0 w-full h-[2px] bg-[#F03D3D] transform -translate-y-1/2" />
+                    <div className="absolute top-[50%] left-0 w-full h-[1px] md:h-[2px] bg-[#F03D3D] transform -translate-y-1/2" />
                   </div>
                 </div>
 
                 {/* Add to Cart Button */}
                 <button
-                  className="w-[40px] h-[40px] rounded-[8px] bg-[#EEF1F6] flex items-center justify-center p-[12px]"
+                  className="w-8 h-8 md:w-[40px] md:h-[40px] rounded-[8px] bg-[#EEF1F6] flex items-center justify-center p-2 md:p-[12px]"
                   aria-label="أضف إلى السلة"
                 >
                   <svg
-                    width="18"
-                    height="18"
+                    width="14"
+                    height="14"
                     viewBox="0 0 24 24"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"

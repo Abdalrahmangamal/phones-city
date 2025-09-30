@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import "./ProductCategoriesSection.css";
 
 const ProductCategoriesSection: React.FC = () => {
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -94,62 +95,54 @@ const ProductCategoriesSection: React.FC = () => {
   }, []); // تنفذ مرة واحدة عند الماونت
 
   return (
-    <div className="w-full h-[303px] flex flex-col items-center px-[98px]">
-      {/* Header */}
-      <div className="w-[1244px] h-[47px] flex flex-col items-center gap-[8px] mb-[16px]">
-        <h2 className="font-roboto font-bold text-[40px] leading-[100%] text-[#211C4D] text-center">
+    <div className="w-full flex flex-col items-center px-4 md:px-[98px]">
+      {/* Header - relative so the decorative line can be absolute (ولا تاخد مكان) */}
+      <div className="relative w-full max-w-[1244px] h-auto flex flex-col items-center gap-2 mb-6">
+        {/* Title (يكون فوق الصورة) */}
+        <h2 className="relative z-10 font-roboto font-bold text-2xl md:text-[40px] leading-[100%] text-[#211C4D] text-center">
           الأقسام
         </h2>
-        <img src="/Group 17.png" alt="Decorative line" className="w-full h-[4px]" />
+
+        {/* Decorative line - small, centered, positioned just under the title, behind it */}
+        <img
+          src="/Layer_1.svg"
+          alt=""
+          className="pointer-events-none absolute left-1/2 -translate-x-1/2 top-full translate-y-1 md:translate-y-2 -z-10 w-32 md:w-[240px] h-1 md:h-[6px] object-cover opacity-95"
+        />
       </div>
 
       {/* List */}
-      <div className="w-[1244px] h-[246px] flex items-center gap-[20px]">
+      <div className="w-full max-w-[1244px] h-auto flex items-center gap-2 md:gap-[20px]">
         <button
-          className="w-[40px] h-[40px] rounded-[100px] bg-white border border-[#E0E5EB] flex items-center justify-center"
+          className="w-8 h-8 md:w-[40px] md:h-[40px] rounded-full bg-white border border-[#E0E5EB] flex items-center justify-center flex-shrink-0"
           onClick={slidePrev}
           aria-label="السابق"
           disabled={isScrolling}
         >
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="md:w-4 md:h-4">
             <path d="M6 12L10 8L6 4" stroke="#211C4D" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </button>
 
         <div
           ref={containerRef}
-          className="flex-1 flex gap-[20px] overflow-x-auto scrollbar-hide"
-          style={{ direction: "ltr", scrollBehavior: "smooth" }}
+          className="flex-1 flex gap-2 md:gap-[20px] overflow-x-auto scrollbar-hide py-2 category-scroll-container"
         >
           {/* كرر العناصر 3 مرات (أصل + نسخ) */}
           {[...categories, ...categories, ...categories].map((category, index) => (
-            <div key={`${category.id}-${index}`} className="flex flex-col items-center gap-[24px] flex-shrink-0">
-              <div className="w-[190px] h-[150px] relative">
+            <div key={`${category.id}-${index}`} className="flex flex-col items-center gap-4 md:gap-[24px] flex-shrink-0">
+              <div className="w-24 h-24 md:w-[190px] md:h-[150px] relative">
                 <div
-                  className="absolute w-[150px] h-[150px] rounded-full"
-                  style={{
-                    background: "#FFFFFF33",
-                    boxShadow: "0px 30px 57px 0px #00000026",
-                    top: "0px",
-                    left: "20px"
-                  }}
+                  className="absolute w-20 h-20 md:w-[150px] md:h-[150px] rounded-full category-item-shadow"
                 ></div>
                 <img
                   src={category.image}
                   alt={category.name}
-                  className="absolute"
-                  style={{
-                    width: "auto",
-                    height: "auto",
-                    maxHeight: "120px",
-                    maxWidth: "120px",
-                    top: "15px",
-                    left: "35px"
-                  }}
+                  className="absolute category-image"
                 />
               </div>
-              <div className="w-full h-[28px] flex items-start justify-center mt-[-10px]">
-                <h3 className="font-roboto font-bold text-[24px] leading-[100%] text-[#211C4D] text-center">
+              <div className="w-full h-auto flex items-start justify-center mt-[-5px] md:mt-[-10px]">
+                <h3 className="font-roboto font-bold text-sm md:text-[24px] leading-[100%] text-[#211C4D] text-center">
                   {category.name}
                 </h3>
               </div>
@@ -158,12 +151,12 @@ const ProductCategoriesSection: React.FC = () => {
         </div>
 
         <button
-          className="w-[40px] h-[40px] rounded-[100px] bg-white border border-[#E0E5EB] flex items-center justify-center"
+          className="w-8 h-8 md:w-[40px] md:h-[40px] rounded-full bg-white border border-[#E0E5EB] flex items-center justify-center flex-shrink-0"
           onClick={slideNext}
           aria-label="التالي"
           disabled={isScrolling}
         >
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="md:w-4 md:h-4">
             <path d="M10 12L6 8L10 4" stroke="#211C4D" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </button>

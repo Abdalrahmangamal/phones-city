@@ -21,7 +21,7 @@ const FrameSection: React.FC = () => {
 
   return (
     <section
-      className="w-[1280px] max-w-full h-[282px] flex items-center gap-[80px] relative"
+      className="w-full max-w-[1280px] h-auto flex flex-col sm:flex-row items-center gap-4 md:gap-8 lg:gap-[80px] relative py-4"
       aria-label="Frame 1321317125"
       dir="rtl"
     >
@@ -30,15 +30,14 @@ const FrameSection: React.FC = () => {
         onClick={() => setOpen("frame1")}
         aria-haspopup="dialog"
         aria-controls="modal-frame"
-        className="flex-none"
+        className="flex-none w-full sm:w-auto"
         style={{ background: "transparent", border: "none", padding: 0, cursor: "pointer" }}
       >
         <img
           src="/Trending products.svg"
           alt="Trending products"
-          width={600}
-          height={282}
-          style={{ display: "block", maxWidth: "100%", height: "auto" }}
+          className="w-full h-auto max-w-none sm:max-w-[300px] md:max-w-[450px] lg:max-w-[600px]"
+          style={{ display: "block", height: "auto", margin: "0 auto" }}
         />
       </button>
 
@@ -47,15 +46,14 @@ const FrameSection: React.FC = () => {
         onClick={() => setOpen("frame2")}
         aria-haspopup="dialog"
         aria-controls="modal-frame"
-        className="flex-none"
+        className="flex-none w-full sm:w-auto"
         style={{ background: "transparent", border: "none", padding: 0, cursor: "pointer" }}
       >
         <img
           src="/Trending products2.svg"
           alt="Trending products 2"
-          width={600}
-          height={282}
-          style={{ display: "block", maxWidth: "100%", height: "auto" }}
+          className="w-full h-auto max-w-none sm:max-w-[300px] md:max-w-[450px] lg:max-w-[600px]"
+          style={{ display: "block", height: "auto", margin: "0 auto" }}
         />
       </button>
 
@@ -65,7 +63,7 @@ const FrameSection: React.FC = () => {
           ref={overlayRef}
           onClick={onBackdropClick}
           role="presentation"
-          aria-hidden={open === "none"}
+          aria-hidden="true"
           style={{
             position: "fixed",
             inset: 0,

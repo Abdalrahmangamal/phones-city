@@ -84,7 +84,7 @@ const TestimonialsSection: React.FC = () => {
   };
 
   return (
-    <div className="w-full max-w-[1280px] h-[574px] bg-white rounded-[16px] overflow-hidden relative">
+    <div className="w-full max-w-[1280px] h-auto min-h-[574px] bg-white rounded-[16px] overflow-hidden relative">
       {/* Background decorative elements */}
       <div className="absolute top-[-174.07px] left-[-265px] w-[868px] h-[868px] rounded-full bg-[#211C4D0A] z-0"></div>
       <div className="absolute top-[-143.07px] left-[-240px] w-[806px] h-[806px] rounded-full bg-[#211C4D] z-0"></div>
@@ -92,21 +92,21 @@ const TestimonialsSection: React.FC = () => {
       {/* Section header container (title + arrows + Layer_1.svg) */}
       <div className="relative z-10">
         {/* Title block positioned per design */}
-        <div className="absolute top-[58px] right-[58.49px] w-[319px] h-[149px] flex flex-col gap-[12px]">
+        <div className="absolute top-[30px] md:top-[58px] right-[20px] md:right-[58.49px] w-[280px] md:w-[319px] h-auto min-h-[149px] flex flex-col gap-2 md:gap-[12px]">
           <div className="relative">
-            <h2 className="font-roboto font-bold text-[40px] leading-[650%] text-[#211C4D] text-right">
+            <h2 className="font-roboto font-bold text-2xl md:text-[40px] leading-[120%] md:leading-[650%] text-[#211C4D] text-right">
               اراء العملاء
             </h2>
 
             {/* Under the title: arrows (correct directions) */}
-            <div className="mt-[12px] flex items-center gap-[12px] justify-end">
+            <div className="mt-2 md:mt-[12px] flex items-center gap-2 md:gap-[12px] justify-end">
               {/* previous (points left) */}
               <button
                 onClick={prevSlide}
                 aria-label="السابق"
-                className="w-[36px] h-[36px] rounded-[8px] bg-white shadow flex items-center justify-center"
+                className="w-8 h-8 md:w-[36px] md:h-[36px] rounded-[8px] bg-white shadow flex items-center justify-center"
               >
-                <svg width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+                <svg width="16" height="16" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden>
                   {/* left pointing arrow */}
                   <path d="M15 18L9 12L15 6" stroke="#211C4D" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
@@ -116,9 +116,9 @@ const TestimonialsSection: React.FC = () => {
               <button
                 onClick={nextSlide}
                 aria-label="التالي"
-                className="w-[36px] h-[36px] rounded-[8px] bg-white shadow flex items-center justify-center"
+                className="w-8 h-8 md:w-[36px] md:h-[36px] rounded-[8px] bg-white shadow flex items-center justify-center"
               >
-                <svg width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+                <svg width="16" height="16" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden>
                   {/* right pointing arrow */}
                   <path d="M9 6L15 12L9 18" stroke="#211C4D" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
@@ -126,31 +126,31 @@ const TestimonialsSection: React.FC = () => {
             </div>
 
             {/* Layer_1.svg under the title (decorative) */}
-            <div className="absolute top-[48px] right-[-20px]">
-              <img src="/Layer_1.svg" alt="" className="w-[110px] h-[255.61px]" />
+            <div className="absolute top-[35px] md:top-[48px] right-[-10px] md:right-[-20px] hidden md:block">
+              <img src="/Layer_1.svg" alt="" className="w-[80px] md:w-[110px] h-auto md:h-[255.61px]" />
             </div>
           </div>
         </div>
       </div>
       
       {/* Testimonials slider */}
-      <div className="absolute top-[125.93px] left-[-433px] w-[1230px] h-[304px] flex gap-[30px]">
+      <div className="absolute top-[100px] md:top-[125.93px] left-0 md:left-[-433px] w-full md:w-[1230px] h-auto min-h-[304px] flex flex-col md:flex-row gap-4 md:gap-[30px] items-center justify-center md:justify-start py-4 md:py-0">
         {/* Current testimonial */}
-        <div className="w-[600px] h-[304px] bg-white rounded-[12px] shadow-[0px_0px_20px_0px_#0000000D] p-[40px] flex flex-col items-end gap-[24px] z-10">
-          <div className="w-full flex flex-col items-end gap-[15px]">
-            <div className="w-[520px] h-[80px] flex items-center gap-[16px] justify-end">
+        <div className="w-[90%] md:w-[600px] h-auto min-h-[304px] bg-white rounded-[12px] shadow-[0px_0px_20px_0px_#0000000D] p-4 md:p-[40px] flex flex-col items-end gap-4 md:gap-[24px] z-10">
+          <div className="w-full flex flex-col items-end gap-2 md:gap-[15px]">
+            <div className="w-full md:w-[520px] h-auto min-h-[80px] flex items-center gap-2 md:gap-[16px] justify-end">
               <div className="flex flex-col items-end">
-                <h3 className="font-poppins font-medium text-[24px] leading-[22.4px] text-[#211C4D]">
+                <h3 className="font-poppins font-medium text-lg md:text-[24px] leading-[22.4px] text-[#211C4D]">
                   {testimonials[currentSlide].name}
                 </h3>
-                <div className="flex items-center gap-[8px] mt-[8px] justify-end">
-                  <span className="font-poppins font-medium text-[15px] leading-[22.4px] text-[#211C4D]">
+                <div className="flex items-center gap-1 md:gap-[8px] mt-1 md:mt-[8px] justify-end">
+                  <span className="font-poppins font-medium text-sm md:text-[15px] leading-[22.4px] text-[#211C4D]">
                     {testimonials[currentSlide].rating}
                   </span>
                   {renderStars(testimonials[currentSlide].rating)}
                 </div>
               </div>
-              <div className="w-[80px] h-[80px] rounded-full overflow-hidden">
+              <div className="w-[60px] h-[60px] md:w-[80px] md:h-[80px] rounded-full overflow-hidden">
                 <img 
                   src={testimonials[currentSlide].image} 
                   alt={testimonials[currentSlide].name} 
@@ -159,13 +159,13 @@ const TestimonialsSection: React.FC = () => {
               </div>
             </div>
           </div>
-          <p className="w-[520px] h-[120px] font-roboto font-medium text-[24px] leading-[40px] text-[#211C4D] text-right">
+          <p className="w-full md:w-[520px] h-auto min-h-[120px] font-roboto font-medium text-base md:text-[24px] leading-6 md:leading-[40px] text-[#211C4D] text-right">
             {testimonials[currentSlide].text}
           </p>
         </div>
         
-        {/* Next testimonial (preview) */}
-        <div className="w-[600px] h-[304px] bg-white rounded-[12px] shadow-[0px_0px_20px_0px_#0000000D] p-[40px] flex flex-col items-end gap-[24px] opacity-60">
+        {/* Next testimonial (preview) - hidden on mobile */}
+        <div className="hidden md:block w-[600px] h-[304px] bg-white rounded-[12px] shadow-[0px_0px_20px_0px_#0000000D] p-[40px] flex flex-col items-end gap-[24px] opacity-60">
           <div className="w-full flex flex-col items-end gap-[15px]">
             <div className="w-[520px] h-[80px] flex items-center gap-[16px] justify-end">
               <div className="flex flex-col items-end">
