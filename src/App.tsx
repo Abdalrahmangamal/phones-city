@@ -25,8 +25,8 @@ function LangLayout() {
 
   return (
     <Routes>
-      <Route path="" element={<NewHome />} />
-      <Route path="old" element={<Home />} />
+      {/* <Route path="" element={<NewHome />} /> */}
+      <Route path="" element={<Home />} />
       {/* بقية الصفحات */}
     </Routes>
   );

@@ -1,0 +1,73 @@
+
+
+.swiper {
+  width: 100%;
+}
+
+.swiper-slide {
+  text-align: center;
+  font-size:18px;
+  background-color: transparent !important;
+  /* Center slide text vertically */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.swiper-slide img {
+  display: block;
+  width:100%;
+  object-fit: cover;
+}
+/* كل النقاط */
+.swiper-pagination-bullet {
+  background-color: #7c5c36; /* اللون البني/البرونزي */
+  opacity: 0.5;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  transition: all 0.3s ease-in-out;
+  margin: 0 4px !important;
+}
+
+/* النقطة النشطة (Active) */
+.swiper-pagination-bullet-active {
+  background-color: #F3AC5D; /* اللون البرتقالي */
+  opacity: 1;
+  width: 20px;       /* أكبر شوية */
+  height: 10px;      /* تفضل مستطيلة */
+  border-radius: 8px; /* نعومة في الحواف */
+}
+/* زرار النافيجيشن الأساسي */
+.swiper-button-next,
+.swiper-button-prev {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;              /* يخليه دايرة */
+  background: #fff;                /* خلفية بيضا */
+  border: 1px solid #e5e7eb;       /* إطار فاتح */
+  box-shadow: 0px 4px 10px rgba(0,0,0,0.05);
+  color: #211C4D;                  /* لون السهم */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* نخلي الأيقونة (السهم) أصغر */
+.swiper-button-next::after,
+.swiper-button-prev::after {
+  font-size: 16px;   /* حجم السهم */
+  font-weight: bold;
+}
+
+/* hover effect */
+.swiper-button-next:hover,
+.swiper-button-prev:hover {
+  background: #f3f4f6;   /* خلفية أغمق بسيط */
+  color: #F3AC5D;        /* السهم يبقى برتقالي */
+}
+
+.swiper-navigation-icon{
+        width: 7px !important;
+        color: black;
+      }
