@@ -141,49 +141,56 @@
 }
 
 /* Slide transition animations */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateX(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
 @keyframes slideInLeft {
   from {
-    opacity: 0;
-    transform: translateX(50px);
+    transform: translateX(100%);
   }
   to {
-    opacity: 1;
     transform: translateX(0);
   }
 }
 
 @keyframes slideInRight {
   from {
-    opacity: 0;
-    transform: translateX(-50px);
+    transform: translateX(-100%);
   }
   to {
-    opacity: 1;
     transform: translateX(0);
   }
 }
 
-.animate-fadeIn {
-  animation: fadeIn 0.5s ease-in-out;
+@keyframes slideOutLeft {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes slideOutRight {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
+.animate-slideInLeft {
+  animation: slideInLeft 0.5s ease-in-out;
 }
 
 .animate-slideInRight {
   animation: slideInRight 0.5s ease-in-out;
 }
 
-.animate-slideInLeft {
-  animation: slideInLeft 0.5s ease-in-out;
+.animate-slideOutLeft {
+  animation: slideOutLeft 0.5s ease-in-out;
+}
+
+.animate-slideOutRight {
+  animation: slideOutRight 0.5s ease-in-out;
 }
 
 .delay-100 {

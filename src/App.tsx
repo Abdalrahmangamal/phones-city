@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate, useParams } from "react-router-
 import { useSettings } from "@/store/settings";
 import i18n from "@/i18n";
 import Home from "@/pages/Home";
+import NewHome from "@/pages/new/Home";
 import React from "react";
 
 function LangLayout() {
@@ -24,7 +25,8 @@ function LangLayout() {
 
   return (
     <Routes>
-      <Route path="" element={<Home />} />
+      <Route path="" element={<NewHome />} />
+      <Route path="old" element={<Home />} />
       {/* بقية الصفحات */}
     </Routes>
   );
