@@ -67,48 +67,36 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
 
   return (
     <div 
-      className="fixed inset-0 bg-[#211C4D] z-50 overflow-y-auto"
+      className="fixed inset-0 bg-white z-50 overflow-y-auto"
       style={{ 
         paddingTop: '70px', // Account for navbar height
         paddingBottom: '0'
       }}
     >
       {/* Header with close button */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-[#FFFFFF20]">
-        <h2 className="text-white text-xl font-bold">مدينة الهواتف</h2>
+      <div className="flex items-center justify-between px-4 py-3 border-b border-[#00000020]">
+        <div className="flex items-center">
+          <img src="/src/assets/images/logo.png" alt="Logo" className="w-8 h-8" />
+          <h2 className="text-black text-xl font-bold mr-2">مدينة الهواتف</h2>
+        </div>
         <button 
           onClick={onClose}
-          className="p-2 rounded-full bg-[#333D4C]"
+          className="p-2 rounded-full bg-[#F0F0F0]"
           aria-label="Close menu"
         >
-          <X className="w-6 h-6 text-white" />
+          <X className="w-6 h-6 text-black" />
         </button>
       </div>
 
-      {/* Navigation Links */}
-      <div className="px-4 py-3">
-        <nav className="space-y-2">
-          {navLinks.map((link) => (
-            <a 
-              key={link} 
-              href="#" 
-              className="block px-4 py-3 text-white text-base font-medium rounded-lg hover:bg-[#333D4C]"
-            >
-              {link}
-            </a>
-          ))}
-        </nav>
-      </div>
-
       {/* Categories Section */}
-      <div className="px-4 py-3 border-t border-[#FFFFFF20] mt-2">
-        <h3 className="text-white text-lg font-bold mb-3">الأقسام</h3>
+      <div className="px-4 py-3 mt-2">
+        <h3 className="text-black text-lg font-bold mb-3">الأقسام</h3>
         <div className="space-y-2">
           {categories[0].items?.map((item, index) => (
             <a
               key={index}
               href="#"
-              className="flex items-center justify-between px-4 py-3 text-white hover:bg-[#333D4C] rounded-lg"
+              className="flex items-center justify-between px-4 py-3 text-black hover:bg-[#F0F0F0] rounded-lg"
               onClick={(e) => {
                 e.preventDefault();
                 if (item.name === 'الاجهزة اللوحية') {
@@ -143,7 +131,7 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
               <a
                 key={subIndex}
                 href="#"
-                className="flex items-center gap-3 px-4 py-3 text-white hover:bg-[#333D4C] rounded-lg"
+                className="flex items-center gap-3 px-4 py-3 text-black hover:bg-[#F0F0F0] rounded-lg"
                 onClick={(e) => {
                   e.preventDefault();
                 }}
@@ -154,6 +142,21 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
             ))}
           </div>
         )}
+      </div>
+
+      {/* Navigation Links */}
+      <div className="px-4 py-3 border-t border-[#00000020]">
+        <nav className="space-y-2">
+          {navLinks.map((link) => (
+            <a 
+              key={link} 
+              href="#" 
+              className="block px-4 py-3 text-black text-base font-medium rounded-lg hover:bg-[#F0F0F0]"
+            >
+              {link}
+            </a>
+          ))}
+        </nav>
       </div>
     </div>
   );
