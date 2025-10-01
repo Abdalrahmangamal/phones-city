@@ -20,26 +20,21 @@ const NewHome = () => {
       {/* Navigation Bar - Reusing existing component */}
       <Layout />
       
-      {/* Main Content Area */}
-      <main className=" w-full  md:px-[45px] px-[10px]">
+      {/* Main Content Area - Added pt-20 for mobile navbar spacing */}
+      <main className="w-full md:px-[45px] px-[10px] pt-20 md:pt-0">
         {/* Hero Section - Implementing Figma design */}
-    
-          <HeroSection />
+        <HeroSection />
         
         {/* Banner Section */}
-      
-          <BannerSection />
+        <BannerSection />
         
         {/* Trending Products Section */}
         
-        
         {/* Frame 1321317127 Image Section */}
-       
-         <InstallmentSection/>
+        <InstallmentSection/>
         
         {/* Product Categories Section */}
-       
-          <ProductCategoriesSection />
+        <ProductCategoriesSection />
         
         {/* LatestOffers Section */}
         <LatestOffers/>
