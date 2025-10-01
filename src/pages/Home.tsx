@@ -2,18 +2,18 @@ import React from 'react';
 import Layout from '@/components/layout/layout';
 import HeroSection from '@/components/public/HeroSection';
 import BannerSection from '@/components/public/BannerSection';
-import TrendingProductsSection from '@/components/custom/TrendingProductsSection';
 import ProductCategoriesSection from '@/components/home/ProductCategoriesSection';
 import NewTrendingProductsSection from '@/components/custom/NewTrendingProductsSection';
 import SpecialOffersSection from '@/components/custom/SpecialOffersSection';
 import TestimonialsSection from '@/components/custom/TestimonialsSection';
 import FrameSection from '@/components/custom/FrameSection';
-import TrendingProductsPopupSection from '@/components/custom/TrendingProductsPopupSection';
 import Share2Section from '@/components/custom/Share2Section';
 import Rectangle5Section from '@/components/custom/Rectangle5Section';
 import InstallmentSection from '@/components/home/InstallmentSection';
 import LatestOffers from '@/components/home/LatestOffers';
 import Footer from '@/components/layout/Footer'; // Added Footer import
+import Bestseller from '@/components/home/Bestseller';
+import Parttner from '@/components/public/Parttner';
 
 const NewHome = () => {
   return (
@@ -41,9 +41,7 @@ const NewHome = () => {
         <LatestOffers/>
         
         {/* New Trending Products Section */}
-        <section className="mt-6 mb-6 flex justify-center">
-          <NewTrendingProductsSection />
-        </section>
+      <Bestseller/>
         
         {/* Special Offers Section */}
         <section className="mt-6 mb-6 flex justify-center">
@@ -60,20 +58,12 @@ const NewHome = () => {
           <FrameSection />
         </section>
         
-        {/* Trending Products Popup Section */}
-        <section className="mt-6 mb-6 flex justify-center">
-          <TrendingProductsPopupSection />
-        </section>
+    
         
-        {/* Share 2 Section */}
-        <section className="mt-6 mb-6 flex justify-center">
-          <Share2Section />
-        </section>
+        <Parttner/>
         
         {/* Rectangle 5 Section */}
-        <section className="mt-6 mb-6 flex justify-center">
           <Rectangle5Section />
-        </section>
       </main>
       
       {/* Footer - Added Footer component at the bottom */}
