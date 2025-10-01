@@ -13,33 +13,29 @@ import Share2Section from '@/components/custom/Share2Section';
 import Rectangle5Section from '@/components/custom/Rectangle5Section';
 import InstallmentSection from '@/components/home/InstallmentSection';
 import LatestOffers from '@/components/home/LatestOffers';
+import Footer from '@/components/layout/Footer'; // Added Footer import
 
 const NewHome = () => {
   return (
-    <div className="min-h-screen bg-gray-50 w-full">
+    <div className="min-h-screen bg-gray-50 w-full flex flex-col">
       {/* Navigation Bar - Reusing existing component */}
       <Layout />
       
-      {/* Main Content Area */}
-      <main className=" w-full  md:px-[45px] px-[10px]">
+      {/* Main Content Area - Added pt-20 for mobile navbar spacing */}
+      <main className="w-full md:px-[45px] px-[10px] pt-20 md:pt-0 flex-grow">
         {/* Hero Section - Implementing Figma design */}
-    
-          <HeroSection />
+        <HeroSection />
         
         {/* Banner Section */}
-      
-          <BannerSection />
+        <BannerSection />
         
         {/* Trending Products Section */}
         
-        
         {/* Frame 1321317127 Image Section */}
-       
-         <InstallmentSection/>
+        <InstallmentSection/>
         
         {/* Product Categories Section */}
-       
-          <ProductCategoriesSection />
+        <ProductCategoriesSection />
         
         {/* LatestOffers Section */}
         <LatestOffers/>
@@ -79,6 +75,9 @@ const NewHome = () => {
           <Rectangle5Section />
         </section>
       </main>
+      
+      {/* Footer - Added Footer component at the bottom */}
+      <Footer />
     </div>
   );
 };

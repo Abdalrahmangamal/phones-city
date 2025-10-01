@@ -2,8 +2,7 @@ import React from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
 // Import Swiper styles (لازم تجيبهم)
-import 'swiper/css';
-import 'swiper/css/pagination';
+import 'swiper/swiper.css';
 
 import "../../style.css";
 
