@@ -11,15 +11,16 @@ import FrameSection from '@/components/custom/FrameSection';
 import TrendingProductsPopupSection from '@/components/custom/TrendingProductsPopupSection';
 import Share2Section from '@/components/custom/Share2Section';
 import Rectangle5Section from '@/components/custom/Rectangle5Section';
+import Footer from '@/components/layout/Footer'; // Added Footer import
 
 const NewHome = () => {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 flex flex-col">
       {/* Navigation Bar - Reusing existing component */}
       <Layout />
       
       {/* Main Content Area */}
-      <main className="container mx-auto px-4">
+      <main className="container mx-auto px-4 flex-grow">
         {/* Hero Section - Implementing Figma design */}
         <section className="mt-6">
           <NewHeroSection />
@@ -91,6 +92,9 @@ const NewHome = () => {
           <Rectangle5Section />
         </section>
       </main>
+      
+      {/* Footer - Added Footer component at the bottom */}
+      <Footer />
     </div>
   );
 };

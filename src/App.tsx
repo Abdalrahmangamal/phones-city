@@ -35,7 +35,7 @@ function LangLayout() {
 export default function App() {
   const { lang } = useSettings();
   return (
-    <div className=""> {/* Removed pr-4 padding since we're handling it in the Home component */}
+    <div className="flex flex-col min-h-screen"> {/* Added flex-col and min-h-screen to ensure footer stays at bottom */}
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Navigate to={`/${lang}`} replace />} />
