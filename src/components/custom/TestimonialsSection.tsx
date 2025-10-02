@@ -1,199 +1,184 @@
-import React, { useState } from 'react';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation } from 'swiper/modules';
+import { Swiper as SwiperType } from 'swiper';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import blue from '../../assets/images/Ellipse 2.png';
+import gray from '../../assets/images/Ellipse 1.png';
+import placeholderImage from '../../assets/images/image_placeholder.png';
+import arrowUp from '../../assets/images/arrowup.png';
+import arrowDown from '../../assets/images/arrowdown.png';
+import { useRef } from 'react';
 
-const TestimonialsSection: React.FC = () => {
-  const [currentSlide, setCurrentSlide] = useState(0);
-  
-  // Testimonial data
+const TestimonialsSection = () => {
+  const swiperRef = useRef<SwiperType | null>(null);
+
   const testimonials = [
     {
-      id: 1,
       name: "يزن مؤمن محمود",
       rating: 4.8,
-      image: "/89bb371fe2516fee2bb94a9db64f24dd73fcc67b.png",
-      text: "الخدمة جيدة جدًا، خاصة في التوصيل السريع جداً، ليس فقط سريعاً بالنسبة لنا، بل الجودة أيضاً رقم واحد، أوصي بشدة بـ مدينة الهواتف لكم."
+      text: "الخدمة جيدة جدًا، خاصة في التوصيل السريع جداً، ليس فقط سريعاً بالنسبة لنا، بل الجودة أيضاً رقم واحد، أوصي بشدة بـ مدينة الهواتف لكم.",
+      image: placeholderImage
     },
     {
-      id: 2,
-      name: "محمد أحمد علي",
+      name: "أحمد علي",
+      rating: 4.5,
+      text: "تجربة رائعة، سأعود مرة أخرى!",
+      image: placeholderImage
+    },
+    {
+      name: "سارة محمد",
       rating: 5.0,
-      image: "/89bb371fe2516fee2bb94a9db64f24dd73fcc67b.png",
-      text: "تجربة ممتازة مع فريق العمل، المنتجات بجودة عالية والتوصيل كان سريع جدًا. أنصح الجميع بالشراء من هنا."
+      text: "أفضل خدمة عملاء حصلت عليها، محترفين جداً وسريعين في الاستجابة.",
+      image: placeholderImage
     },
     {
-      id: 3,
-      name: "سارة عبدالله محمد",
-      rating: 4.9,
-      image: "/89bb371fe2516fee2bb94a9db64f24dd73fcc67b.png",
-      text: "خدمة عملاء رائعة ودعم فني متميز. المنتجات كما هو موضح في الموقع والأسعار تنافسية جدًا."
+      name: "خالد عبدالله",
+      rating: 4.2,
+      text: "جودة المنتج ممتازة والتوصيل في الوقت المحدد.",
+      image: placeholderImage
     }
   ];
 
-  // Render star ratings
-  const renderStars = (rating: number) => {
-    const fullStars = Math.floor(rating);
-    const hasHalfStar = rating % 1 >= 0.5;
-    
-    return (
-      <div className="flex gap-1" aria-hidden>
-        {[...Array(5)].map((_, i) => (
-          <svg
-            key={i}
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            aria-hidden
-          >
-            {i < fullStars ? (
-              <path
-                d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"
-                fill="#F3AC5D"
-              />
-            ) : i === fullStars && hasHalfStar ? (
-              <>
-                <defs>
-                  <linearGradient id="half-star">
-                    <stop offset="50%" stopColor="#F3AC5D" />
-                    <stop offset="50%" stopColor="#CAD0D9" />
-                  </linearGradient>
-                </defs>
-                <path
-                  d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"
-                  fill="url(#half-star)"
-                />
-              </>
-            ) : (
-              <path
-                d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"
-                fill="#CAD0D9"
-              />
-            )}
-          </svg>
-        ))}
-      </div>
-    );
+  const handlePrev = () => {
+    if (swiperRef.current) {
+      swiperRef.current.slidePrev();
+    }
   };
 
-  const nextSlide = () => {
-    setCurrentSlide((prev) => (prev === testimonials.length - 1 ? 0 : prev + 1));
-  };
-
-  const prevSlide = () => {
-    setCurrentSlide((prev) => (prev === 0 ? testimonials.length - 1 : prev - 1));
+  const handleNext = () => {
+    if (swiperRef.current) {
+      swiperRef.current.slideNext();
+    }
   };
 
   return (
-    <div className="w-full max-w-[1280px] h-auto min-h-[574px] bg-white rounded-[16px] overflow-hidden relative">
-      {/* Background decorative elements */}
-      <div className="absolute top-[-174.07px] left-[-265px] w-[868px] h-[868px] rounded-full bg-[#211C4D0A] z-0"></div>
-      <div className="absolute top-[-143.07px] left-[-240px] w-[806px] h-[806px] rounded-full bg-[#211C4D] z-0"></div>
-      
-      {/* Section header container (title + arrows + Layer_1.svg) */}
-      <div className="relative z-10">
-        {/* Title block positioned per design */}
-        <div className="absolute top-[30px] md:top-[58px] right-[20px] md:right-[58.49px] w-[280px] md:w-[319px] h-auto min-h-[149px] flex flex-col gap-2 md:gap-[12px]">
-          <div className="relative">
-            <h2 className="font-roboto font-bold text-2xl md:text-[40px] leading-[120%] md:leading-[650%] text-[#211C4D] text-right">
-              اراء العملاء
+    <section className="w-full max-w-[1400px] min-h-[500px] lg:h-[900px] mx-auto flex items-center justify-center py-10 lg:py-0 lg:mt-6 relative overflow-hidden px-4 sm:px-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-10 w-full items-center relative z-10">
+        {/* الجزء الأيمن */}
+        <div className="flex flex-col items-start gap-4 lg:gap-6 relative z-20 text-right order-2 lg:order-1">
+          <div className="flex items-center justify-center lg:justify-start w-full lg:w-auto">
+            <img src="/Layer_1.svg" alt="" className="w-12 h-12 lg:w-16 lg:h-16" />
+            <h2 className="font-roboto font-semibold text-2xl sm:text-3xl lg:text-[40px] leading-[28px] lg:leading-[36px] text-[#211C4D] mr-2">
+              آراء العملاء
             </h2>
+          </div>
 
-            {/* Under the title: arrows (correct directions) */}
-            <div className="mt-2 md:mt-[12px] flex items-center gap-2 md:gap-[12px] justify-end">
-              {/* previous (points left) */}
-              <button
-                onClick={prevSlide}
-                aria-label="السابق"
-                className="w-8 h-8 md:w-[36px] md:h-[36px] rounded-[8px] bg-white shadow flex items-center justify-center"
-              >
-                <svg width="16" height="16" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden>
-                  {/* left pointing arrow */}
-                  <path d="M15 18L9 12L15 6" stroke="#211C4D" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </button>
+          {/* أزرار التحكم */}
+          <div className="flex mt-4 lg:mt-8 justify-center lg:justify-start w-full lg:w-auto lg:mr-[50px] gap-4">
+            <button 
+              className="swiper-button-prev-custom p-2 hover:bg-gray-100 rounded transition-colors"
+              onClick={handlePrev}
+            >
+              <img 
+                src={arrowDown} 
+                alt="السابق" 
+                className="w-5 h-5 lg:w-6 lg:h-6 object-contain"
+              />
+            </button>
+            <button 
+              className="swiper-button-next-custom p-2 hover:bg-gray-100 rounded transition-colors"
+              onClick={handleNext}
+            >
+              <img 
+                src={arrowUp} 
+                alt="التالي" 
+                className="w-5 h-5 lg:w-6 lg:h-6 object-contain"
+              />
+            </button>
+          </div>
+        </div>
 
-              {/* next (points right) */}
-              <button
-                onClick={nextSlide}
-                aria-label="التالي"
-                className="w-8 h-8 md:w-[36px] md:h-[36px] rounded-[8px] bg-white shadow flex items-center justify-center"
-              >
-                <svg width="16" height="16" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden>
-                  {/* right pointing arrow */}
-                  <path d="M9 6L15 12L9 18" stroke="#211C4D" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </button>
-            </div>
+        {/* الجزء الأيسر - فقط للخلفيات */}
+        <div className="relative flex justify-center lg:justify-start items-start h-full order-1 lg:order-2">
+          
+          <div className="absolute inset-0 flex items-center justify-center z-0">
+            <img 
+              src={blue} 
+              alt="" 
+              className="opacity-100 w-full h-full object-cover min-w-[300px] min-h-[300px] sm:min-w-[500px] sm:min-h-[500px] lg:min-w-[806px] lg:min-h-[806px]" 
+            />
+          </div>
+          <div className="absolute inset-0 flex items-center justify-center z-0">
+            <img 
+              src={gray} 
+              alt="" 
+              className="opacity-100 w-full h-full object-cover min-w-[350px] min-h-[300px] sm:min-w-[550px] sm:min-h-[500px] lg:min-w-[868px] lg:min-h-[806px]" 
+            />
+          </div>
+        </div>
 
-            {/* Layer_1.svg under the title (decorative) */}
-            <div className="absolute top-[35px] md:top-[48px] right-[-10px] md:right-[-20px] hidden md:block">
-              <img src="/Layer_1.svg" alt="" className="w-[80px] md:w-[110px] h-auto md:h-[255.61px]" />
-            </div>
+        {/* الـ Slider منفصل ويمتد على كامل العرض */}
+        <div className="absolute inset-0 flex items-center justify-center z-20 order-3">
+          <div className="w-full max-w-[1200px] mx-auto px-2 sm:px-4">
+            <Swiper
+              modules={[Navigation]}
+              spaceBetween={20}
+              slidesPerView={1}
+              centeredSlides={true}
+              breakpoints={{
+                480: { slidesPerView: 1, spaceBetween: 15 },
+                640: { slidesPerView: 1.2, spaceBetween: 20 },
+                768: { slidesPerView: 1.5, spaceBetween: 25 },
+                1024: { slidesPerView: 2, spaceBetween: 30 },
+                1280: { slidesPerView: 2, spaceBetween: 30 },
+              }}
+              onSwiper={(swiper) => {
+                swiperRef.current = swiper;
+              }}
+              className="mySwiper w-full"
+            >
+              {testimonials.map((testimonial, index) => (
+                <SwiperSlide key={index}>
+                  <div className="flex items-center justify-center">
+                    <div className="bg-white p-4 sm:p-5 rounded-[16px] shadow-lg w-full max-w-[320px] sm:max-w-[400px] lg:max-w-[550px] h-[280px] sm:h-[300px] lg:h-[304px] relative">
+                      {/* Header Section */}
+                      <div className="flex items-start justify-between mb-3 sm:mb-4 gap-2 sm:gap-3 mt-4 sm:mt-6">
+                        <img
+                          src={testimonial.image}
+                          alt={testimonial.name}
+                          className="rounded-full object-cover flex-shrink-0 mr-2 sm:mr-3"
+                          style={{ width: '60px', height: '60px' }}
+                        />
+                        <div className="flex-1 text-right">
+                          <h3 className="text-base sm:text-lg lg:text-[20px] font-bold text-[#211C4D] mb-1">
+                            {testimonial.name}
+                          </h3>
+                          <div className="flex justify-start items-center gap-1 sm:gap-2">
+                            {[...Array(5)].map((_, i) => (
+                              <span
+                                key={i}
+                                className={`text-lg sm:text-xl w-[20px] h-[20px] sm:w-[25px] sm:h-[25px] lg:w-[30px] lg:h-[30px] flex items-center justify-center ${
+                                  i < Math.round(testimonial.rating)
+                                    ? 'text-[#F3AC5D]'
+                                    : 'text-gray-300'
+                                }`}
+                              >
+                                ★
+                              </span>
+                            ))}
+                            <span className="text-sm sm:text-[15px] font-[500] text-[#211C4D]">
+                              {testimonial.rating}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Text */}
+                      <div className="p-2 sm:p-4 bg-white mb-2 sm:mb-3">
+                        <p className="text-[#211C4D] text-base sm:text-lg lg:text-[20px] xl:text-[24px] font-[500] leading-relaxed text-right">
+                          {testimonial.text}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </SwiperSlide>
+              ))}
+            </Swiper>
           </div>
         </div>
       </div>
-      
-      {/* Testimonials slider */}
-      <div className="absolute top-[100px] md:top-[125.93px] left-0 md:left-[-433px] w-full md:w-[1230px] h-auto min-h-[304px] flex flex-col md:flex-row gap-4 md:gap-[30px] items-center justify-center md:justify-start py-4 md:py-0">
-        {/* Current testimonial */}
-        <div className="w-[90%] md:w-[600px] h-auto min-h-[304px] bg-white rounded-[12px] shadow-[0px_0px_20px_0px_#0000000D] p-4 md:p-[40px] flex flex-col items-end gap-4 md:gap-[24px] z-10">
-          <div className="w-full flex flex-col items-end gap-2 md:gap-[15px]">
-            <div className="w-full md:w-[520px] h-auto min-h-[80px] flex items-center gap-2 md:gap-[16px] justify-end">
-              <div className="flex flex-col items-end">
-                <h3 className="font-poppins font-medium text-lg md:text-[24px] leading-[22.4px] text-[#211C4D]">
-                  {testimonials[currentSlide].name}
-                </h3>
-                <div className="flex items-center gap-1 md:gap-[8px] mt-1 md:mt-[8px] justify-end">
-                  <span className="font-poppins font-medium text-sm md:text-[15px] leading-[22.4px] text-[#211C4D]">
-                    {testimonials[currentSlide].rating}
-                  </span>
-                  {renderStars(testimonials[currentSlide].rating)}
-                </div>
-              </div>
-              <div className="w-[60px] h-[60px] md:w-[80px] md:h-[80px] rounded-full overflow-hidden">
-                <img 
-                  src={testimonials[currentSlide].image} 
-                  alt={testimonials[currentSlide].name} 
-                  className="w-full h-full object-cover"
-                />
-              </div>
-            </div>
-          </div>
-          <p className="w-full md:w-[520px] h-auto min-h-[120px] font-roboto font-medium text-base md:text-[24px] leading-6 md:leading-[40px] text-[#211C4D] text-right">
-            {testimonials[currentSlide].text}
-          </p>
-        </div>
-        
-        {/* Next testimonial (preview) - hidden on mobile */}
-        <div className="hidden md:block w-[600px] h-[304px] bg-white rounded-[12px] shadow-[0px_0px_20px_0px_#0000000D] p-[40px] flex flex-col items-end gap-[24px] opacity-60">
-          <div className="w-full flex flex-col items-end gap-[15px]">
-            <div className="w-[520px] h-[80px] flex items-center gap-[16px] justify-end">
-              <div className="flex flex-col items-end">
-                <h3 className="font-poppins font-medium text-[24px] leading-[22.4px] text-[#211C4D]">
-                  {testimonials[(currentSlide + 1) % testimonials.length].name}
-                </h3>
-                <div className="flex items-center gap-[8px] mt-[8px] justify-end">
-                  <span className="font-poppins font-medium text-[15px] leading-[22.4px] text-[#211C4D]">
-                    {testimonials[(currentSlide + 1) % testimonials.length].rating}
-                  </span>
-                  {renderStars(testimonials[(currentSlide + 1) % testimonials.length].rating)}
-                </div>
-              </div>
-              <div className="w-[80px] h-[80px] rounded-full overflow-hidden">
-                <img 
-                  src={testimonials[(currentSlide + 1) % testimonials.length].image} 
-                  alt={testimonials[(currentSlide + 1) % testimonials.length].name} 
-                  className="w-full h-full object-cover"
-                />
-              </div>
-            </div>
-          </div>
-          <p className="w-[520px] h-[120px] font-roboto font-medium text-[24px] leading-[40px] text-[#211C4D] text-right">
-            {testimonials[(currentSlide + 1) % testimonials.length].text}
-          </p>
-        </div>
-      </div>
-    </div>
+    </section>
   );
 };
 

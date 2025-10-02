@@ -54,9 +54,9 @@ const NewHome = () => {
         </section>
         
         {/* Frame Section */}
-        <section className="mt-6 mb-6 flex justify-center">
-          <FrameSection />
-        </section>
+        <section className="px-0 -mx-[10px] md:-mx-[45px]">
+    <FrameSection />
+  </section>
         
     
         
