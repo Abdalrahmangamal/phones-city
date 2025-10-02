@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import logo from '../../assets/images/logo.png'; 
-import { ShoppingCart, UserRound, Heart, Search, LayoutGrid, ChevronDown, ChevronRight, ChevronLeft, Monitor, Smartphone, Tablet, Camera, Mouse, Headphones, Watch, Gamepad2, HardDrive, Power, Pen, CreditCard, Home, Server, Menu, X } from 'lucide-react';
+import { ShoppingCart, UserRound, Heart, Search, LayoutGrid, ChevronDown, ChevronRight, Monitor, Smartphone, Tablet, Camera, Mouse, Headphones, Watch, Gamepad2, HardDrive, Power, Pen, CreditCard, Home, Server } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import LanguageSwitch from '@/components/custom/LanguageSwitch';
@@ -52,7 +52,7 @@ export default function Header() {
   const [isDropdownOpen, setIsDropdownOpen] = React.useState(false);
   const [activeSubmenu, setActiveSubmenu] = React.useState<string | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
-  const [isMobileSearchOpen, setIsMobileSearchOpen] = React.useState(false);
+  // const [isMobileSearchOpen, setIsMobileSearchOpen] = React.useState(false);
 
   // submenu position as viewport coordinates (fixed)
   const [submenuPos, setSubmenuPos] = React.useState<{ top: number; left: number } | null>(null);
@@ -104,7 +104,7 @@ export default function Header() {
   ];
 
   // handle click on category item: toggle submenu on same item
-  const handleCategoryItemClick = (item: CategoryItem, e: React.MouseEvent<HTMLAnchorElement>, index: number) => {
+  const handleCategoryItemClick = (item: CategoryItem, e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     e.stopPropagation();
 
@@ -295,7 +295,7 @@ export default function Header() {
                             borderRadius: '8px',
                             opacity: 1,
                           }}
-                          onClick={(e) => handleCategoryItemClick(item, e, index)}
+                          onClick={(e) => handleCategoryItemClick(item, e)}
                         >
                           <div className="flex items-center gap-3">
                             {item.icon}

@@ -1,8 +1,8 @@
 import ProductCard from "../public/ProductCard";
-import pattern from '../../assets/images/svg/Layer_1.png'
+import pattern from '../../assets/images/Layer_1.png'
 export default function Bestseller() {
   return (
-    <div>
+    <div className="mt-[80px]">
       <div className="flex items-center w-full justify-between relative">
         <div className="relative">
         <p className="text-[#211C4D] font-[600] text-[40px]">الأكثر مبيعاً</p>

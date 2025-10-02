@@ -1,8 +1,8 @@
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
 import { Swiper as SwiperType } from 'swiper';
-import 'swiper/css';
-import 'swiper/css/navigation';
+// import 'swiper/css';
+// import 'swiper/css/navigation';
 import blue from '../../assets/images/Ellipse 2.png';
 import gray from '../../assets/images/Ellipse 1.png';
 import placeholderImage from '../../assets/images/image_placeholder.png';

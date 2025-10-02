@@ -15,7 +15,7 @@ type SettingsState = {
 
 export const useSettings = create<SettingsState>()(
   persist(
-    subscribeWithSelector((set, get) => ({
+    subscribeWithSelector((set, ) => ({
       lang: "ar",
       dir: "rtl",
       currency: "EGP",

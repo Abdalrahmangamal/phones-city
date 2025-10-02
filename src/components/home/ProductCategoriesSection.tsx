@@ -1,4 +1,3 @@
-import React, { useRef, useState } from "react";
 // Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react";
 import image1 from '../../assets/images/image1.png';
@@ -7,13 +6,13 @@ import image3 from '../../assets/images/image3.png';
 import image4 from '../../assets/images/image4.png';
 import image5 from '../../assets/images/image5.png';
 import image6 from '../../assets/images/imag6.png'; // Fixed the filename
-import svg1 from '../../assets/images/svg/Layer_1.png';
+import svg1 from '../../assets/images/Layer_1.png';
 // Import Swiper styles
 import "../../style.css";
 import { Navigation } from "swiper/modules";
 // Correct imports for Swiper v12 CSS files
-import 'swiper/css';
-import 'swiper/css/navigation';
+// import 'swiper/css';
+// import 'swiper/css/navigation';
 
 // import required modules
 
@@ -28,7 +27,7 @@ const ProductCategoriesSection: React.FC = () => {
         spaceBetween={0}
         navigation={true}                 // 👈 تفعل الأسهم
         modules={[Navigation]} // 👈 تضيف Navigation هنا
-        className="mySwiper h-[300px]"
+        className="mySwiper !h-[400px]"
         breakpoints={{
           320: {       // موبايل صغير
             slidesPerView: 1,

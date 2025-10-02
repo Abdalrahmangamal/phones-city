@@ -1,6 +1,5 @@
 'use client';
 
-import * as React from 'react';
 import { ShoppingCart, Heart, Search } from 'lucide-react';
 import { useSettings } from '@/store/settings';
 

@@ -1,4 +1,4 @@
-import pattern from '../../assets/images/svg/Layer_1.png'
+import pattern from '../../assets/images/Layer_1.png'
 import logo1 from '../../assets/images/logo1.png'
 import logo2 from '../../assets/images/logo2.png'
 import logo3 from '../../assets/images/logo3.png'
@@ -6,7 +6,7 @@ import logo4 from '../../assets/images/logo4.png'
 import { Swiper, SwiperSlide } from "swiper/react";
 
 // Import Swiper styles
-import "swiper/css";
+// import "swiper/css";
 
 import "../../style.css";
 

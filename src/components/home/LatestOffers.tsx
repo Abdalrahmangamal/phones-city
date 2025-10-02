@@ -1,11 +1,11 @@
-import svg from "../../assets/images/svg/svg2.png";
+import svg from "../../assets/images/svg2.png";
 import laptops from "../../assets/images/laptops.png";
 import game from "../../assets/images/game.png";
 import playstation from "../../assets/images/playstation.png";
 import { Link } from "react-router-dom";
 export default function LatestOffers() {
   return (
-    <div className="w-full  relative">
+    <div className="w-full mt-[80px] relative">
       <h1 className="text-[40px] font-[700] text-[211C4D ] text-center">
         احدث العروض
       </h1>
@@ -118,7 +118,7 @@ export default function LatestOffers() {
             <div className="w-full relative">
               <img src={playstation} className="w-full rounded-[16px]" alt="" />
               <div className="absolute inset-0 bg-gradient-to-t from-[#211c4d80]/80 via-[#211c4d8000]/30 to-transparent rounded-[16px]"></div>
-              <div className="absolute flex flex-col items-center pl-[00px] !text-center justify-center  inset-0 bg-gradient-to-t from-[#211c4d80]/80 via-[#211c4d8000]/30 to-transparent rounded-[16px]">
+              <div className="absolute flex flex-col items-center pl-[350px] !text-center justify-center  inset-0 bg-gradient-to-t from-[#211c4d80]/80 via-[#211c4d8000]/30 to-transparent rounded-[16px]">
               <h1 className="text-[56px] font-[700] text-[#211C4D] ">أجهزة الألعاب</h1>
               <p className="text-[#211C4D] text-[24px] font-[700]">خصم يصل الي 15%</p>
               <Link

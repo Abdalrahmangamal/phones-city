@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { X, Smartphone, Tablet, Camera, Mouse, Headphones, Watch, Gamepad2, HardDrive, Power, Pen, CreditCard, Home, Server, Monitor } from 'lucide-react';
-import { useSettings } from '@/store/settings';
+// import { useSettings } from '@/store/settings';
 
 interface MobileMenuProps {
   isOpen: boolean;
@@ -48,7 +48,7 @@ const categories: Category[] = [
 const navLinks = ['الرئيسية', 'من نحن', 'العروض', 'خدماتنا', 'تواصل معنا'];
 
 export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
-  const { lang } = useSettings();
+  // const { lang } = useSettings();
   const [activeSubmenu, setActiveSubmenu] = React.useState<string | null>(null);
   
   // Define subcategories for tablets

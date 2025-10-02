@@ -1,13 +1,12 @@
-import React from 'react';
 import Layout from '@/components/layout/layout';
 import HeroSection from '@/components/public/HeroSection';
 import BannerSection from '@/components/public/BannerSection';
 import ProductCategoriesSection from '@/components/home/ProductCategoriesSection';
-import NewTrendingProductsSection from '@/components/custom/NewTrendingProductsSection';
+// import NewTrendingProductsSection from '@/components/custom/NewTrendingProductsSection';
 import SpecialOffersSection from '@/components/custom/SpecialOffersSection';
 import TestimonialsSection from '@/components/custom/TestimonialsSection';
 import FrameSection from '@/components/custom/FrameSection';
-import Share2Section from '@/components/custom/Share2Section';
+// import Share2Section from '@/components/custom/Share2Section';
 import Rectangle5Section from '@/components/custom/Rectangle5Section';
 import InstallmentSection from '@/components/home/InstallmentSection';
 import LatestOffers from '@/components/home/LatestOffers';

@@ -1,15 +1,17 @@
-import React from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
 // Import Swiper styles (لازم تجيبهم)
 import 'swiper/swiper.css';
 
-import "../../style.css";
+// Import Swiper styles
+declare module 'swiper/css';
+declare module 'swiper/css/pagination';
 
 // Import required modules
 import { Pagination } from 'swiper/modules';
 import { Link } from 'react-router-dom';
 
+import "../../style.css";
 const NewHeroSection = () => {
   const images = [
     '/8165fa56d02ed33ff4b950907459c02c9a8a6fd3.png',
