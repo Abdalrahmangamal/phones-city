@@ -24,9 +24,13 @@ const FrameSection: React.FC = () => {
         className="absolute bottom-0 right-0 w-[50vw] max-w-[550px] h-auto object-cover z-0"
       />
       <div className="relative z-10 max-w-7xl mx-auto">
-        <h2 className="text-center text-[#211C4D] text-[clamp(24px,5vw,36px)] font-[700] mb-4">
+        <div className="flex items-center justify-center lg:justify-center w-full lg:w-auto">
+          <img src="/Layer_1.svg" alt="" className="w-12 h-12 lg:w-20 lg:h-20 " />
+          <h2 className="text-center text-[#211C4D] text-[clamp(24px,5vw,36px)] font-[700] mb-4 ml-6">
           مميزات المتجر
         </h2>
+        </div>
+        
         <h5 className="text-center text-[#211C4D] text-[clamp(18px,4vw,28px)] font-[700] mb-8">
           "كل ميزة صممناها عشان نخلي تسوقك اسهل , اسرع , اضمن ."
         </h5>
