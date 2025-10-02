@@ -1,157 +1,139 @@
 'use client';
 
 import * as React from 'react';
-import { X, Smartphone, Tablet, Camera, Mouse, Headphones, Watch, Gamepad2, HardDrive, Power, Pen, CreditCard, Home, Server, Monitor } from 'lucide-react';
-// import { useSettings } from '@/store/settings';
+import {
+  ChevronDown,
+  Monitor,
+  Smartphone,
+  Tablet,
+  Camera,
+} from 'lucide-react';
 
-interface MobileMenuProps {
-  isOpen: boolean;
-  onClose: () => void;
-}
-
-type CategoryItem = {
+type SubCategory = {
   name: string;
-  icon: React.ReactNode;
 };
 
 type Category = {
   id: string;
   name: string;
   icon: React.ReactNode;
-  items?: CategoryItem[];
+  subCategories?: SubCategory[];
 };
 
 const categories: Category[] = [
-  { 
-    id: 'laptops', 
-    name: 'لابتوب', 
-    icon: <Monitor className="w-5 h-5 text-black" />, 
-    items: [
-      { name: 'الهواتف الذاكيه', icon: <Smartphone className="w-5 h-5 text-black" /> },
-      { name: 'الاجهزة اللوحية', icon: <Tablet className="w-5 h-5 text-black" /> },
-      { name: 'الكيمرات و الداش كام', icon: <Camera className="w-5 h-5 text-black" /> },
-      { name: 'الاكسيسوارات', icon: <Mouse className="w-5 h-5 text-black" /> },
-      { name: 'السماعات', icon: <Headphones className="w-5 h-5 text-black" /> },
-      { name: 'الساعات الذاكيه', icon: <Watch className="w-5 h-5 text-black" /> },
-      { name: 'الالعاب', icon: <Gamepad2 className="w-5 h-5 text-black" /> },
-      { name: 'الروتر', icon: <HardDrive className="w-5 h-5 text-black" /> },
-      { name: 'الاجهزة النوكيا', icon: <Smartphone className="w-5 h-5 text-black" /> },
-      { name: 'الشواحن', icon: <Power className="w-5 h-5 text-black" /> },
-      { name: 'اقلام الايبادات', icon: <Pen className="w-5 h-5 text-black" /> },
-      { name: 'قسم التقسيط', icon: <CreditCard className="w-5 h-5 text-black" /> },
-      { name: 'الاجهزة الالكترونية والكهربائيه الصغيره', icon: <Home className="w-5 h-5 text-black" /> },
-      { name: 'الاجهزة الالكترونية والكهربائيه الكبيرة', icon: <Server className="w-5 h-5 text-black" /> }
-    ] 
-  }
+  {
+    id: 'laptops',
+    name: 'لابتوب',
+    icon: <Monitor className="w-5 h-5 text-gray-700" />,
+  },
+  {
+    id: 'phones',
+    name: 'الهواتف الذكيه',
+    icon: <Smartphone className="w-5 h-5 text-gray-700" />,
+    subCategories: [
+      { name: 'أجهزة أبل' },
+      { name: 'أجهزة سامسونج' },
+      { name: 'أجهزة هونر' },
+      { name: 'أجهزة شاومي' },
+    ],
+  },
+  {
+    id: 'tablets',
+    name: 'الأجهزة اللوحية',
+    icon: <Tablet className="w-5 h-5 text-gray-700" />,
+  },
+  {
+    id: 'electronics',
+    name: 'الأجهزة الإلكترونية الصغيرة',
+    icon: <Camera className="w-5 h-5 text-gray-700" />,
+  },
 ];
 
 const navLinks = ['الرئيسية', 'من نحن', 'العروض', 'خدماتنا', 'تواصل معنا'];
 
-export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
-  // const { lang } = useSettings();
-  const [activeSubmenu, setActiveSubmenu] = React.useState<string | null>(null);
-  
-  // Define subcategories for tablets
-  const tabletSubcategories = [
-    { name: 'اجهزة ابل', icon: <Smartphone className="w-5 h-5 text-black" /> },
-    { name: 'اجهزة السامسونج', icon: <Smartphone className="w-5 h-5 text-black" /> },
-    { name: 'اجهزة الهونر', icon: <Smartphone className="w-5 h-5 text-black" /> },
-    { name: 'اجهزة انفينيكس', icon: <Smartphone className="w-5 h-5 text-black" /> },
-    { name: 'اجهزة التكنو', icon: <Smartphone className="w-5 h-5 text-black" /> },
-    { name: 'اجهزة الايتيل', icon: <Smartphone className="w-5 h-5 text-black" /> },
-    { name: 'اجهزة شاومي ردمي', icon: <Smartphone className="w-5 h-5 text-black" /> },
-    { name: 'اجهزة اندرويد اخري', icon: <Smartphone className="w-5 h-5 text-black" /> }
-  ];
+export default function MobileMenu({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
+  const [openSections, setOpenSections] = React.useState(false);
+  const [openCategory, setOpenCategory] = React.useState<string | null>(null);
 
   if (!isOpen) return null;
 
   return (
-    <div 
-      className="fixed inset-0 bg-white z-50 overflow-y-auto"
-      style={{ 
-        paddingTop: '70px', // Account for navbar height
-        paddingBottom: '0'
-      }}
-    >
-      {/* Header with close button */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-[#00000020]">
-        <div className="flex items-center">
-          <img src="/src/assets/images/logo.png" alt="Logo" className="w-8 h-8" />
-          <h2 className="text-black text-xl font-bold mr-2">مدينة الهواتف</h2>
-        </div>
-        <button 
-          onClick={onClose}
-          className="p-2 rounded-full bg-[#F0F0F0]"
-          aria-label="Close menu"
-        >
-          <X className="w-6 h-6 text-black" />
+    <div className="fixed inset-0 bg-white z-50 overflow-y-auto">
+      {/* Header */}
+      <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200">
+        <h2 className="text-black text-xl font-bold">مدينة الهواتف</h2>
+        <button onClick={onClose} className="p-2 rounded-full bg-gray-100">
+          ✕
         </button>
       </div>
 
-      {/* Categories Section */}
-      <div className="px-4 py-3 mt-2">
-        <h3 className="text-black text-lg font-bold mb-3">الأقسام</h3>
-        <div className="space-y-2">
-          {categories[0].items?.map((item, index) => (
-            <a
-              key={index}
-              href="#"
-              className="flex items-center justify-between px-4 py-3 text-black hover:bg-[#F0F0F0] rounded-lg"
-              onClick={(e) => {
-                e.preventDefault();
-                if (item.name === 'الاجهزة اللوحية') {
-                  setActiveSubmenu(activeSubmenu === 'tablets' ? null : 'tablets');
-                } else {
-                  setActiveSubmenu(null);
-                }
-              }}
-            >
-              <div className="flex items-center gap-3">
-                {item.icon}
-                <span className="text-base">{item.name}</span>
-              </div>
-              {item.name === 'الاجهزة اللوحية' && (
-                <svg 
-                  className={`w-5 h-5 transition-transform ${activeSubmenu === 'tablets' ? 'rotate-90' : ''}`} 
-                  fill="none" 
-                  stroke="currentColor" 
-                  viewBox="0 0 24 24"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
-              )}
-            </a>
-          ))}
-        </div>
+      {/* زر الأقسام */}
+      <div className="px-4 py-3 border-b border-gray-200">
+        <button
+          onClick={() => setOpenSections(!openSections)}
+          className="flex items-center justify-between w-full px-3 py-2 font-semibold text-black hover:bg-gray-100 rounded-lg"
+        >
+          <span>الأقسام</span>
+          <ChevronDown
+            className={`w-5 h-5 transition-transform ${
+              openSections ? 'rotate-180' : ''
+            }`}
+          />
+        </button>
 
-        {/* Tablet Subcategories */}
-        {activeSubmenu === 'tablets' && (
-          <div className="mt-2 mr-4 space-y-2 border-r-2 border-[#F3AC5D] pr-4">
-            {tabletSubcategories.map((subItem, subIndex) => (
-              <a
-                key={subIndex}
-                href="#"
-                className="flex items-center gap-3 px-4 py-3 text-black hover:bg-[#F0F0F0] rounded-lg"
-                onClick={(e) => {
-                  e.preventDefault();
-                }}
-              >
-                {subItem.icon}
-                <span className="text-base">{subItem.name}</span>
-              </a>
+        {/* كل الكاتيجوريز */}
+        {openSections && (
+          <div className="mt-2 space-y-1">
+            {categories.map((cat) => (
+              <div key={cat.id}>
+                <button
+                  onClick={() =>
+                    setOpenCategory(openCategory === cat.id ? null : cat.id)
+                  }
+                  className="flex items-center justify-between w-full px-3 py-2 text-gray-800 hover:bg-gray-50 rounded-lg"
+                >
+                  <div className="flex items-center gap-2">
+                    {cat.icon}
+                    <span>{cat.name}</span>
+                  </div>
+                  {cat.subCategories && (
+                    <ChevronDown
+                      className={`w-4 h-4 transition-transform ${
+                        openCategory === cat.id ? 'rotate-180' : ''
+                      }`}
+                    />
+                  )}
+                </button>
+
+                {/* Subcategories */}
+                {openCategory === cat.id && cat.subCategories && (
+                  <ul className="mr-6 mt-1 border-r-2 border-[#F3AC5D] pr-2 space-y-1">
+                    {cat.subCategories.map((sub, i) => (
+                      <li key={i}>
+                        <a
+                          href="#"
+                          className="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg"
+                        >
+                          {sub.name}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
             ))}
           </div>
         )}
       </div>
 
       {/* Navigation Links */}
-      <div className="px-4 py-3 border-t border-[#00000020]">
+      <div className="px-4 py-3">
         <nav className="space-y-2">
           {navLinks.map((link) => (
-            <a 
-              key={link} 
-              href="#" 
-              className="block px-4 py-3 text-black text-base font-medium rounded-lg hover:bg-[#F0F0F0]"
+            <a
+              key={link}
+              href="#"
+              className="block px-4 py-2 text-black hover:bg-gray-100 rounded-lg"
             >
               {link}
             </a>
