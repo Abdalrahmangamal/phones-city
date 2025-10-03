@@ -13,6 +13,7 @@ import Footer from '@/components/layout/Footer'; // Added Footer import
 import Bestseller from '@/components/home/Bestseller';
 import Parttner from '@/components/public/Parttner';
 import AppDownloadSection from '@/components/custom/AppDownloadSection';
+import CertificationBadgesSection from '@/components/custom/CertificationBadgesSection';
 
 const NewHome = () => {
   return (
@@ -55,6 +56,10 @@ const NewHome = () => {
           <AppDownloadSection />
         </section>
     
+        {/* Certification Badges Section - SECOND TO LAST SECTION */}
+        <section className="mt-6 mb-6">
+          <CertificationBadgesSection />
+        </section>
         
         <Parttner/>
         

@@ -108,4 +108,4 @@ const CertificationBadgesSection: React.FC = () => {
   );
 };
 
-export default CertificationBadgesSection;
+export default CertificationBadgesSection; // Exported correctly
