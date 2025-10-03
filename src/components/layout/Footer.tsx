@@ -12,6 +12,7 @@ import drive from "../../assets/images/drive.png";
 import Google from "../../assets/images/Google.png";
 import amwal from "../../assets/images/amwal.png";
 import emkan from "../../assets/images/emkan.png";
+import payment from "../../assets/images/payment.png";
 const Footer: React.FC = () => {
   const serviceMenuItems = [
     "تقسيط المشتريات",
@@ -280,11 +281,11 @@ const Footer: React.FC = () => {
                 <img
                   src={emkan}
                   alt="Amkan"
-                  className="h-6 object-contain h-[21px] rounded w-[73px]"
+                  className="object-contain h-[21px] rounded w-[73px]"
                 />
                 {/* هنا حطينا صورة الـ SVG قبل فيزا، بنستخدم encodeURI لضمان التعامل مع المسافات بالاسم */}
                 <img
-                  src={encodeURI("/copyright + payment methods.svg")}
+                  src={payment}
                   alt="copyright-payments"
                   className="object-contain block"
                   style={{

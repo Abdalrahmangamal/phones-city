@@ -9,7 +9,7 @@ import hand from '../../assets/images/hand.png';
 import box from '../../assets/images/box.png';
 import correct from '../../assets/images/correct.png';
 import phone from '../../assets/images/phone.png';
-
+import pattern from '../../assets/images/Layer_1.png'
 const FrameSection: React.FC = () => {
   return (
     <div className="w-full min-h-[600px] lg:h-[750px] relative mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -25,7 +25,7 @@ const FrameSection: React.FC = () => {
       />
       <div className="relative z-10 max-w-7xl mx-auto">
         <div className="flex items-center justify-center lg:justify-center w-full lg:w-auto">
-          <img src="/Layer_1.svg" alt="" className="w-12 h-12 lg:w-20 lg:h-20 " />
+          <img src={pattern} alt="" className="w-12 h-12 lg:w-20 lg:h-20 " />
           <h2 className="text-center text-[#211C4D] text-[clamp(24px,5vw,36px)] font-[700] mb-4 ml-6">
           مميزات المتجر
         </h2>

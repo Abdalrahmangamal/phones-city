@@ -3,17 +3,17 @@ import HeroSection from '@/components/public/HeroSection';
 import BannerSection from '@/components/public/BannerSection';
 import ProductCategoriesSection from '@/components/home/ProductCategoriesSection';
 // import NewTrendingProductsSection from '@/components/custom/NewTrendingProductsSection';
-import SpecialOffersSection from '@/components/custom/SpecialOffersSection';
-import TestimonialsSection from '@/components/custom/TestimonialsSection';
-import FrameSection from '@/components/custom/FrameSection';
+import SpecialOffersSection from '@/components/home/SpecialOffersSection';
+import TestimonialsSection from '@/components/home/TestimonialsSection';
+import FrameSection from '@/components/home/FrameSection';
 // import Share2Section from '@/components/custom/Share2Section';
 import InstallmentSection from '@/components/home/InstallmentSection';
 import LatestOffers from '@/components/home/LatestOffers';
 import Footer from '@/components/layout/Footer'; // Added Footer import
 import Bestseller from '@/components/home/Bestseller';
 import Parttner from '@/components/public/Parttner';
-import AppDownloadSection from '@/components/custom/AppDownloadSection';
-import CertificationBadgesSection from '@/components/custom/CertificationBadgesSection';
+import AppDownloadSection from '@/components/home/AppDownloadSection';
+import CertificationBadgesSection from '@/components/home/CertificationBadgesSection';
 
 const NewHome = () => {
   return (
@@ -27,7 +27,6 @@ const NewHome = () => {
         {/* Banner Section */}
         <BannerSection />
         {/* Trending Products Section */}
-        {/* Frame 1321317127 Image Section */}
         <InstallmentSection/>
         {/* Product Categories Section */}
         <ProductCategoriesSection />

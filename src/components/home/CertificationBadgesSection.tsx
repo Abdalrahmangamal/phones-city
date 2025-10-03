@@ -35,7 +35,7 @@ const CertificationBadgesSection: React.FC = () => {
           <Dialog>
             <DialogTrigger asChild>
               <button
-                onClick={() => handleOpen("/Frame 1321317073.svg")}
+                onClick={() => handleOpen("../../assets/images/Frame 1321317073.svg")}
                 className="cursor-pointer focus:outline-none rounded"
               >
                 <img
@@ -86,7 +86,7 @@ const CertificationBadgesSection: React.FC = () => {
           <Dialog>
             <DialogTrigger asChild>
               <button
-                onClick={() => handleOpen("/Frame 13213170732.svg")}
+                onClick={() => handleOpen("../../assets/images/Frame 13213170732.svg")}
                 className="cursor-pointer focus:outline-none rounded"
               >
                 <img
