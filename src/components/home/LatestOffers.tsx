@@ -14,7 +14,7 @@ export default function LatestOffers() {
         <div className="relative flex items-end  justify-center h-[120vh] w-full md:w-[36%]">
           <img
             src={laptops}
-            className="h-[120vh] absolute top-0 w-full"
+            className="h-[128vh] absolute top-0 w-full"
             alt=""
           />
           <div className="z-[2] relative flex flex-col justify-center items-center pb-[100px]">

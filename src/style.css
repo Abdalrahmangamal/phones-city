@@ -21,27 +21,27 @@
 }
 /* كل النقاط */
 .swiper-pagination-bullet {
-  background-color: #7c5c36; /* اللون البني/البرونزي */
-  opacity: 0.5;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  transition: all 0.3s ease-in-out;
+  background-color: #7c5c36 !important; /* اللون البني/البرونزي */
+  opacity: 0.5 !important;
+  width: 10px !important;
+  height: 10px !important;
+  border-radius: 50% !important;
+  transition: all 0.3s ease-in-out !important;
   margin: 0 4px !important;
 }
 
 /* النقطة النشطة (Active) */
 .swiper-pagination-bullet-active {
-  background-color: #F3AC5D; /* اللون البرتقالي */
-  opacity: 1;
-  width: 20px;       /* أكبر شوية */
-  height: 10px;      /* تفضل مستطيلة */
-  border-radius: 8px; /* نعومة في الحواف */
+  background-color: #F3AC5D !important; /* اللون البرتقالي */
+  opacity: 1 !important;
+  width: 20px !important;       /* أكبر شوية */
+  height: 10px !important;      /* تفضل مستطيلة */
+  border-radius: 8px !important; /* نعومة في الحواف */
 }
 /* زرار النافيجيشن الأساسي */
 .swiper-button-next,
 .swiper-button-prev {
-  width: 40px;
+  width: 40px ;
   height: 40px;
   border-radius: 50%;              /* يخليه دايرة */
   background: #fff;                /* خلفية بيضا */
@@ -70,4 +70,7 @@
 .swiper-navigation-icon{
         width: 7px !important;
         color: black;
+      }
+      .lucide-chevron-right{
+        rotate: 180deg;
       }

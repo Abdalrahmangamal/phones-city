@@ -3,7 +3,7 @@ import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 // import "swiper/css";
-// import "swiper/css/navigation";
+import "swiper/css/navigation";
 
 type Product = {
   id: number;
@@ -143,9 +143,9 @@ const SpecialOffersSection: React.FC = () => {
       <Swiper
         modules={[Navigation]}
         navigation
-        spaceBetween={24}
+        spaceBetween={5}
         slidesPerView={4}
-        className="w-full"
+        className="w-full h-[500px]"
       >
         {productsData.map((product) => (
           <SwiperSlide key={product.id}>
