@@ -12,6 +12,8 @@ import LatestOffers from '@/components/home/LatestOffers';
 import Footer from '@/components/layout/Footer'; // Added Footer import
 import Bestseller from '@/components/home/Bestseller';
 import Parttner from '@/components/public/Parttner';
+import AppDownloadSection from '@/components/custom/AppDownloadSection';
+
 const NewHome = () => {
   return (
     <div className="min-h-screen bg-gray-50 w-full flex flex-col">
@@ -48,6 +50,10 @@ const NewHome = () => {
     <FrameSection />
   </section>
         
+        {/* App Download Section - NEW COMPONENT */}
+        <section className="mt-6 mb-6">
+          <AppDownloadSection />
+        </section>
     
         
         <Parttner/>
