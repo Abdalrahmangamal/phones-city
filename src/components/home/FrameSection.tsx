@@ -12,7 +12,7 @@ import phone from '../../assets/images/phone.png';
 import pattern from '../../assets/images/Layer_1.png'
 const FrameSection: React.FC = () => {
   return (
-    <div className="w-full min-h-[600px] lg:h-[750px] relative mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="w-full  min-h-[600px] lg:h-[750px] relative mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <img
         src={topYellow}
         alt="Top decorative frame"
