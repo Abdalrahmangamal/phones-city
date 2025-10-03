@@ -1,12 +1,18 @@
-import React from 'react';
+
+
+import background from '../../assets/images/background.png'
+import bolitse from '../../assets/images/politssection.png'
+import expotuer from '../../assets/images/expotuer.png'
+import ropot from '../../assets/images/ropot.png'
+import appstore from '../../assets/images/appstore.png'
+import googleplay from '../../assets/images/googleplay.png'
 
 const AppDownloadSection = () => {
   return (
-    <div className="relative w-full h-[530px] bg-white overflow-hidden">
+    <div className="relative w-full h-[530px] hidden md:block overflow-hidden mt-6">
       {/* Background blur elements */}
       <div 
-        className="absolute top-[52.5px] left-[105px] w-[480px] h-[646.996px] rounded-full opacity-50"
-        style={{ background: '#2AA0DC', filter: 'blur(300px)' }}
+        className="absolute top-[52.5px] left-[105px]  w-[480px] h-[646.996px] rounded-full opacity-50"
       ></div>
       
       <div 
@@ -16,65 +22,47 @@ const AppDownloadSection = () => {
       
       {/* Decorative ellipse border */}
       <div 
-        className="absolute top-[193.5px] left-[105px] w-[480px] h-[480px] rounded-full border-4 border-[#2AA0DC]"
+        className="absolute top-[141.5px] left-[138px] w-[480px] h-[480px] rounded-full border-4 border-[#2AA0DC]"
       ></div>
       
       {/* Main visual image */}
-      <div className="absolute top-[52.5px] left-[105px] z-10">
+      <div className="absolute top-[58.5px] left-[205px] z-10">
         <img 
-          src="/75c587161b6c0284b41b9760d01abd058049529f.jpg" 
+          src={background} 
           alt="Main visual" 
-          className="w-[480px] h-auto object-cover"
+          className="w-[349px] h-auto object-cover"
+        />
+      </div>
+      <div className="absolute top-[58.5px] left-[205px] z-10">
+        <img 
+          src={expotuer} 
+          alt="Main visual" 
+          className="w-[349px] h-auto object-cover"
+        />
+      </div>
+      <div className="absolute bottom-[0px] right-[0px] z-10">
+        <img 
+          src={ropot} 
+          alt="Main visual" 
+          className="w-[160px] h-auto object-cover"
         />
       </div>
       
       {/* Decorative gray dots images in a grid pattern */}
-      <div className="absolute top-[265.5px] left-[138px] w-[432.819px] h-[398.646px] border border-[#2AA0DC] z-10">
-        <img 
-          src="/92b0f245d3361d26ef979582019c89169ecdba20.png" 
-          alt="Decorative dots" 
-          className="w-full h-full object-cover"
-        />
-      </div>
       
-      <div className="absolute top-[472.01px] left-[361.59px] w-[209.225px] h-[192.138px] border border-[#2AA0DC] z-10">
-        <img 
-          src="/92b0f245d3361d26ef979582019c89169ecdba20.png" 
-          alt="Decorative dots" 
-          className="w-full h-full object-cover"
-        />
+    
+      <div className='absolute bottom-[0px] left-[135px] z-9'>
+        <img src={bolitse} className='h-[300px]' alt="" />
       </div>
-      
-      <div className="absolute top-[472.01px] left-[138px] w-[209.225px] h-[192.138px] border border-[#2AA0DC] z-10">
-        <img 
-          src="/92b0f245d3361d26ef979582019c89169ecdba20.png" 
-          alt="Decorative dots" 
-          className="w-full h-full object-cover"
-        />
-      </div>
-      
-      <div className="absolute top-[265.5px] left-[361.59px] w-[209.225px] h-[192.138px] border border-[#2AA0DC] z-10">
-        <img 
-          src="/92b0f245d3361d26ef979582019c89169ecdba20.png" 
-          alt="Decorative dots" 
-          className="w-full h-full object-cover"
-        />
-      </div>
-      
-      <div className="absolute top-[265.5px] left-[138px] w-[209.225px] h-[192.138px] border border-[#2AA0DC] z-10">
-        <img 
-          src="/92b0f245d3361d26ef979582019c89169ecdba20.png" 
-          alt="Decorative dots" 
-          className="w-full h-full object-cover"
-        />
-      </div>
-      
+    
+    
+
       {/* Text content and app download buttons */}
-      <div className="absolute top-[131.5px] left-[738px] w-[614px] h-[323px] flex flex-col gap-[40px] pr-[24px] pl-[24px]">
+      <div className="absolute top-[80.5px] right-[100px] w-[614px] h-[323px] flex flex-col gap-[40px] pr-[24px] pl-[24px]">
         <div className="flex flex-col gap-[15px]">
           <h2 
-            className="font-roboto font-bold text-[40px] leading-[150%] text-right"
-            style={{ color: '#211C4D' }}
+            className="font-roboto font-bold text-[40px] text-[#211C4D] leading-[150%] text-right"
+            
           >
             قم بتحميل تطبيقنا واحصل علي خصم 10% وتسوق افضل
           </h2>
@@ -86,21 +74,23 @@ const AppDownloadSection = () => {
         
         {/* App Store Buttons */}
         <div className="flex gap-[40px]">
+            <div className="w-[179.753px] h-[52px]  rounded cursor-pointer">
+            <img 
+              src={googleplay}
+              alt="Get it on Google Play" 
+              className="w-full h-full object-contain"
+            />
+          </div>
+
           <div className="w-[180px] h-[52px] cursor-pointer">
             <img 
-              src="/appstore.png" 
+              src={appstore} 
               alt="Download on the App Store" 
               className="w-full h-full object-contain"
             />
           </div>
           
-          <div className="w-[179.753px] h-[52px] border border-[#191B1C] rounded cursor-pointer">
-            <img 
-              src="/googleplay.png" 
-              alt="Get it on Google Play" 
-              className="w-full h-full object-contain"
-            />
-          </div>
+        
         </div>
       </div>
     </div>

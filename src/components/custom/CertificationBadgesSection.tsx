@@ -1,111 +1,127 @@
-import React, { useState } from 'react';
+import certficate1 from '../../assets/images/certficate1.png'
+import certficate2 from '../../assets/images/certficate2.png'
+// src/components/CertificationBadgesSection.tsx
+import React, { useState } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 const CertificationBadgesSection: React.FC = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalImage, setModalImage] = useState('');
+  const [modalImage, setModalImage] = useState<string | null>(null);
 
-  const openModal = (imageSrc: string) => {
-    setModalImage(imageSrc);
-    setIsModalOpen(true);
+  const handleOpen = (src: string) => {
+    setModalImage(src);
   };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-    setModalImage('');
-  };
-
-  // Handle ESC key to close modal
-  React.useEffect(() => {
-    const handleEsc = (event: KeyboardEvent) => {
-      if (event.keyCode === 27) {
-        closeModal();
-      }
-    };
-    window.addEventListener('keydown', handleEsc);
-    return () => {
-      window.removeEventListener('keydown', handleEsc);
-    };
-  }, []);
 
   return (
-    <div className="w-full max-w-[1280px] h-[282px] flex flex-row items-center gap-[80px] mx-auto">
+    <div className="w-full !my-30 max-w-[1280px] h-auto flex flex-col md:flex-row items-start md:items-center gap-6 md:gap-[80px] mx-auto p-4">
       {/* Left Section */}
-      <div className="flex flex-col w-[504px] gap-[24px]">
+      <div className="flex flex-col w-full md:w-[504px] gap-4">
         <div className="relative">
-          <div className="absolute -top-2 -right-4 z-0">
-            <img src="/Layer_1.svg" alt="" className="opacity-100" />
+          <div className="absolute top-1 right-4 z-0">
+            <img src="/Layer_1.svg" alt="" />
           </div>
-          <h2 
-            className="font-roboto font-semibold text-[40px] leading-[36px] text-[#211C4D] relative z-10 text-center"
-            style={{ fontFamily: 'Roboto' }}
+          <h2
+            id="cert-known-title"
+            className="font-roboto font-semibold text-[28px] md:text-[40px] leading-[36px] text-[#211C4D] relative z-10 text-center"
           >
-            شهاده توثيق معروف
+            شهادة توثيق معروف
           </h2>
         </div>
-        
-        {/* Image below the title */}
+
         <div className="flex justify-center">
-          <img 
-            src="/4ba8876e3b460700ce9e4cefe22262966e014980.png" 
-            alt="Product" 
-            className="cursor-pointer"
-            onClick={() => openModal('/Frame_1321317073.svg')}
-          />
+          <Dialog>
+            <DialogTrigger asChild>
+              <button
+                onClick={() => handleOpen("/Frame 1321317073.svg")}
+                className="cursor-pointer focus:outline-none rounded"
+              >
+                <img
+                  src={certficate1}
+                  alt="شهادة معروف - Thumbnail"
+                  className="max-w-full h-[150px] block"
+                />
+              </button>
+            </DialogTrigger>
+            <DialogContent className="max-w-7xl p-0 flex items-center justify-center"   
+            style={{
+    maxWidth: "50%",
+    maxHeight: "90vh",
+    padding: 0,
+    background: "transparent",
+    boxShadow: "none",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  }}>
+              {modalImage && (
+                <img
+                  src={modalImage}
+                  alt="عرض مكبر للشهادة"
+                  className="max-w-full max-h-[90vh] object-contain rounded-lg"
+                />
+              )}
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
-      
+
       {/* Right Section */}
-      <div className="flex flex-col w-[708px] gap-[24px]">
+      <div className="flex flex-col w-full md:w-[708px] gap-4">
         <div className="relative">
-          <div className="absolute -top-2 -right-4 z-0">
-            <img src="/Layer_1.svg" alt="" className="opacity-100" />
+          <div className="absolute top-0 right-47 z-0">
+            <img src="/Layer_1.svg" alt="" />
           </div>
-          <h2 
-            className="font-roboto font-semibold text-[40px] leading-[36px] text-[#211C4D] relative z-10 text-center"
-            style={{ fontFamily: 'Roboto' }}
+          <h2
+            id="cert-verify-title"
+            className="font-roboto font-semibold text-[28px] md:text-[40px] leading-[36px] text-[#211C4D] relative z-10 text-center"
           >
-            شهاده توثيق
+            شهادة توثيق
           </h2>
         </div>
-        
-        {/* Image below the title */}
+
         <div className="flex justify-center">
-          <img 
-            src="/2cc69f9d527f16247d632f5d5ed259bf6d997a43.png" 
-            alt="Product" 
-            className="cursor-pointer"
-            onClick={() => openModal('/Frame_13213170732.svg')}
-          />
+          <Dialog>
+            <DialogTrigger asChild>
+              <button
+                onClick={() => handleOpen("/Frame 13213170732.svg")}
+                className="cursor-pointer focus:outline-none rounded"
+              >
+                <img
+                  src={certficate2}
+                  alt="شهادة التوثيق - Thumbnail"
+                  className="max-w-full h-[120px] block"
+                />
+              </button>
+            </DialogTrigger>
+<DialogContent
+  className="p-0 flex items-center justify-center"
+  style={{
+    maxWidth: "50%",
+    maxHeight: "90vh",
+    padding: 0,
+    background: "transparent",
+    boxShadow: "none",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  }}
+>
+  {modalImage && (
+    <img
+      src={modalImage}
+      alt="عرض مكبر للشهادة"
+      className="max-w-full max-h-[90vh] w-full object-contain rounded-lg"
+    />
+  )}
+</DialogContent>
+          </Dialog>
         </div>
       </div>
-      
-      {/* Modal for enlarged image */}
-      {isModalOpen && (
-        <div 
-          className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50"
-          onClick={closeModal}
-        >
-          <div 
-            className="relative rounded-[16px] overflow-hidden"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button 
-              className="absolute top-4 right-4 text-white text-2xl bg-black bg-opacity-50 rounded-full w-8 h-8 flex items-center justify-center"
-              onClick={closeModal}
-              aria-label="Close modal"
-            >
-              ×
-            </button>
-            <img 
-              src={modalImage} 
-              alt="Enlarged view" 
-              className="max-w-[1234px] max-h-[861px] w-auto h-auto"
-            />
-          </div>
-        </div>
-      )}
     </div>
   );
 };
 
-export default CertificationBadgesSection; // Exported correctly
+export default CertificationBadgesSection;

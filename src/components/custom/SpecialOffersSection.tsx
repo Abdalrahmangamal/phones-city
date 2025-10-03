@@ -1,10 +1,14 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation } from "swiper/modules";
+import { Navigation,Autoplay } from "swiper/modules";
 // import "swiper/css";
 import "swiper/css/navigation";
-
+import airbuds from '../../assets/images/airbuds.png'
+import bluephone from '../../assets/images/bluephone.png'
+import camera from '../../assets/images/camera.png'
+import watch from '../../assets/images/watch.png'
+import {useLangSync} from '@/hooks/useLangSync'
 type Product = {
   id: number;
   name: string;
@@ -21,7 +25,7 @@ const productsData: Product[] = [
   {
     id: 1,
     name: "ساعة ذكية سلسلة 7....",
-    image: "/b3a03d436a7a55678e2142a1f7303de56510d5c3.png",
+    image:`${camera}`,
     originalPrice: "899.00 رس",
     discountedPrice: "786.00 رس",
     discount: "-17%",
@@ -32,7 +36,7 @@ const productsData: Product[] = [
   {
     id: 2,
     name: "ساعة ذكية سلسلة 8....",
-    image: "/b3a03d436a7a55678e2142a1f7303de56510d5c3.png",
+    image:`${bluephone}`,
     originalPrice: "999.00 رس",
     discountedPrice: "850.00 رس",
     discount: "-15%",
@@ -43,7 +47,7 @@ const productsData: Product[] = [
   {
     id: 3,
     name: "ساعة ذكية سلسلة 9....",
-    image: "/b3a03d436a7a55678e2142a1f7303de56510d5c3.png",
+    image:`${watch}`,
     originalPrice: "1199.00 رس",
     discountedPrice: "999.00 رس",
     discount: "-17%",
@@ -54,7 +58,7 @@ const productsData: Product[] = [
   {
     id: 4,
     name: "ساعة ذكية سلسلة 10....",
-    image: "/b3a03d436a7a55678e2142a1f7303de56510d5c3.png",
+    image:`${airbuds}`,
     originalPrice: "1299.00 رس",
     discountedPrice: "1099.00 رس",
     discount: "-15%",
@@ -65,7 +69,7 @@ const productsData: Product[] = [
   {
     id: 5,
     name: "ساعة ذكية سلسلة 10....",
-    image: "/b3a03d436a7a55678e2142a1f7303de56510d5c3.png",
+    image:`${watch}`,
     originalPrice: "1299.00 رس",
     discountedPrice: "1099.00 رس",
     discount: "-15%",
@@ -76,6 +80,18 @@ const productsData: Product[] = [
 ];
 
 const SpecialOffersSection: React.FC = () => {
+  const {lang} =useLangSync();
+  useEffect(() => {
+    // لما اللغة تتغير، ممكن تعيد تهيئة السلايدر
+    // هنا ممكن تحتاج تستدعي أي دالة من Swiper لإعادة التهيئة
+    // مثلاً: swiperRef.ref.current?.update() لو انت مستخدم ref
+
+    // مثال بسيط لإعادة التهيئة (لو فيه ref للـ Swiper):
+    // swiperRef.current?.update();
+
+  }, [lang]); // كل ما الـ lang تتغير، هيعمل التأثير ده
+
+
   const renderStars = (rating: number) => (
     <div className="flex gap-1 items-center" aria-hidden>
       {[...Array(5)].map((_, i) => (
@@ -141,11 +157,41 @@ const SpecialOffersSection: React.FC = () => {
 
       {/* slider */}
       <Swiper
-        modules={[Navigation]}
+      key={lang}
+        modules={[Navigation , Autoplay]}
         navigation
+        loop={true}
+          dir={lang === "ar" ? "rtl" : "ltr"}
+
+        autoplay={{
+    delay: 4000, // ⏱ الوقت بين كل سلايد بالمللي ثانية
+    disableOnInteraction: false, // ⛔ ما يوقفش لو المستخدم تفاعل
+  }}
         spaceBetween={5}
         slidesPerView={4}
         className="w-full h-[500px]"
+          breakpoints={{
+    350: {
+      slidesPerView: 1, // من أول شاشات الموبايل الكبير (تابلت صغير)
+      
+    },
+    640: {
+      slidesPerView: 2, // من أول شاشات الموبايل الكبير (تابلت صغير)
+      spaceBetween: 15,
+    },
+    768: {
+      slidesPerView: 3, // التابلت
+      spaceBetween: 20,
+    },
+    1024: {
+      slidesPerView: 4, // الديسكتوب
+    },
+    1280: {
+      slidesPerView: 4, // الشاشات الكبيرة
+      
+    },
+  }}
+
       >
         {productsData.map((product) => (
           <SwiperSlide key={product.id}>

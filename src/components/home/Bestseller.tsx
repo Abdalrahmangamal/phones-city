@@ -27,7 +27,7 @@ export default function Bestseller() {
           </svg>
         </div>
       </div>
-      <div className="flex items-center flex-wrap gap-[20px] mt-[90px] justify-between w-full">
+      <div className="flex items-center flex-wrap gap-[20px] mt-[90px] md:justify-between justify-center w-full">
         <ProductCard />
         <ProductCard />
         <ProductCard />

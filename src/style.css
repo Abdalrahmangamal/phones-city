@@ -74,3 +74,10 @@
       .lucide-chevron-right{
         rotate: 180deg;
       }
+
+      .active{
+            background-color: #FFFFFF1A;
+    padding: 9px 24px;
+    border-radius: 22px;
+      }
+      

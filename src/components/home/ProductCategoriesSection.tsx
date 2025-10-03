@@ -7,26 +7,46 @@ import image4 from '../../assets/images/image4.png';
 import image5 from '../../assets/images/image5.png';
 import image6 from '../../assets/images/imag6.png'; // Fixed the filename
 import svg1 from '../../assets/images/Layer_1.png';
+import { useLangSync } from '@/hooks/useLangSync'
 // Import Swiper styles
 import "../../style.css";
-import { Navigation } from "swiper/modules";
+import { Navigation , Autoplay } from "swiper/modules";
+import { useEffect } from "react";
 // Correct imports for Swiper v12 CSS files
 // import 'swiper/css';
 // import 'swiper/css/navigation';
 
 // import required modules
-
 const ProductCategoriesSection: React.FC = () => {
+  const {lang}= useLangSync();
+    useEffect(() => {
+      // لما اللغة تتغير، ممكن تعيد تهيئة السلايدر
+      // هنا ممكن تحتاج تستدعي أي دالة من Swiper لإعادة التهيئة
+      // مثلاً: swiperRef.ref.current?.update() لو انت مستخدم ref
+  
+      // مثال بسيط لإعادة التهيئة (لو فيه ref للـ Swiper):
+      // swiperRef.current?.update();
+  
+    }, [lang]); // كل ما الـ lang تتغير، هيعمل التأثير ده
+  
   return (
     <div className="relative my-6">
       <h1 className="text-center text-[#211C4D] text-[40px] font-[700]">
         الاقسام
       </h1>
       <Swiper
+      key={lang}
+        dir={lang === "ar" ? "rtl" : "ltr"}
+
         slidesPerView={6}
         spaceBetween={0}
+        autoplay={{
+    delay: 4000, // ⏱ الوقت بين كل سلايد بالمللي ثانية
+    disableOnInteraction: false, // ⛔ ما يوقفش لو المستخدم تفاعل
+  }}
+  loop={true}
         navigation={true}                 // 👈 تفعل الأسهم
-        modules={[Navigation]} // 👈 تضيف Navigation هنا
+        modules={[Navigation ,Autoplay]} // 👈 تضيف Navigation هنا
         className="mySwiper !h-[400px]"
         breakpoints={{
           320: {       // موبايل صغير

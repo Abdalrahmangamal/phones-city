@@ -51,10 +51,6 @@ const NewHome = () => {
     <FrameSection />
   </section>
         
-        {/* App Download Section - NEW COMPONENT */}
-        <section className="mt-6 mb-6">
-          <AppDownloadSection />
-        </section>
     
         {/* Certification Badges Section - SECOND TO LAST SECTION */}
         <section className="mt-6 mb-6">
@@ -63,6 +59,10 @@ const NewHome = () => {
         
         <Parttner/>
         
+        {/* App Download Section - NEW COMPONENT */}
+      
+          <AppDownloadSection />
+    
         {/* Rectangle 5 Section */}
       </main>
       

@@ -4,13 +4,26 @@ import logo2 from '../../assets/images/logo2.png'
 import logo3 from '../../assets/images/logo3.png'
 import logo4 from '../../assets/images/logo4.png'
 import { Swiper, SwiperSlide } from "swiper/react";
-
+import {useLangSync} from '@/hooks/useLangSync'
 // Import Swiper styles
 // import "swiper/css";
 
 import "../../style.css";
+import { useEffect } from 'react'
 
 export default function Parttner() {
+  
+  const {lang} =useLangSync();
+    useEffect(() => {
+      // لما اللغة تتغير، ممكن تعيد تهيئة السلايدر
+      // هنا ممكن تحتاج تستدعي أي دالة من Swiper لإعادة التهيئة
+      // مثلاً: swiperRef.ref.current?.update() لو انت مستخدم ref
+  
+      // مثال بسيط لإعادة التهيئة (لو فيه ref للـ Swiper):
+      // swiperRef.current?.update();
+  
+    }, [lang]); // كل ما الـ lang تتغير، هيعمل التأثير ده
+  
   return (
     <div>
 <div className='relative flex items-center justify-center'>
@@ -19,8 +32,11 @@ export default function Parttner() {
 </div>
 
      <Swiper
+     key={lang}
   slidesPerView={6}
   spaceBetween={20}
+    dir={lang === "ar" ? "rtl" : "ltr"}
+
   breakpoints={{
     320: { slidesPerView: 1 },   
     640: { slidesPerView: 3 },   

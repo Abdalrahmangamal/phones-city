@@ -1,4 +1,5 @@
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { useLangSync } from "@/hooks/useLangSync";
 
 // Import Swiper styles (لازم تجيبهم)
 import image from '../../assets/images/hero.png'
@@ -8,18 +9,34 @@ import 'swiper/swiper.css';
 import 'swiper/css/pagination';
 
 // Import required modules
-import { Pagination } from 'swiper/modules';
+import { Pagination, Autoplay  } from 'swiper/modules';
 import { Link } from 'react-router-dom';
 
 import "../../style.css";
+import { useEffect } from 'react';
 const NewHeroSection = () => {
 
+  const { lang } = useLangSync();
+  useEffect(() => {
+    // لما اللغة تتغير، ممكن تعيد تهيئة السلايدر
+    // هنا ممكن تحتاج تستدعي أي دالة من Swiper لإعادة التهيئة
+    // مثلاً: swiperRef.ref.current?.update() لو انت مستخدم ref
 
+    // مثال بسيط لإعادة التهيئة (لو فيه ref للـ Swiper):
+    // swiperRef.current?.update();
+
+  }, [lang]); // كل ما الـ lang تتغير، هيعمل التأثير ده
   return (
   <Swiper
-    pagination={{ clickable: true }}
-  modules={[Pagination]}
-
+  key={lang}
+  dir={lang === "ar" ? "rtl" : "ltr"}
+  autoplay={{
+    delay: 4000,
+    disableOnInteraction: false,
+  }}
+  loop={true}
+  pagination={{ clickable: true }}
+  modules={[Pagination, Autoplay]}
   className="mySwiper h-[400px] mt-6"
 >
 

@@ -118,9 +118,9 @@ export default function LatestOffers() {
             <div className="w-full relative">
               <img src={playstation} className="w-full rounded-[16px]" alt="" />
               <div className="absolute inset-0 bg-gradient-to-t from-[#211c4d80]/80 via-[#211c4d8000]/30 to-transparent rounded-[16px]"></div>
-              <div className="absolute flex flex-col items-center pl-[350px] !text-center justify-center  inset-0 bg-gradient-to-t from-[#211c4d80]/80 via-[#211c4d8000]/30 to-transparent rounded-[16px]">
-              <h1 className="text-[56px] font-[700] text-[#211C4D] ">أجهزة الألعاب</h1>
-              <p className="text-[#211C4D] text-[24px] font-[700]">خصم يصل الي 15%</p>
+              <div className="absolute flex flex-col items-center md:pl-[350px] pl-[160px] !text-center justify-center  inset-0 bg-gradient-to-t from-[#211c4d80]/80 via-[#211c4d8000]/30 to-transparent rounded-[16px]">
+              <h1 className="md:text-[56px] text-[30px] font-[700]  text-[#211C4D] ">أجهزة الألعاب</h1>
+              <p className="text-[#211C4D] text-[20px] font-[700]">خصم يصل الي 15%</p>
               <Link
   to={''}
   className='

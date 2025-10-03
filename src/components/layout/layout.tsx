@@ -5,15 +5,14 @@ import { ShoppingCart, UserRound, Heart, Globe } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import "../../style.css"
+import { useTranslation } from "react-i18next";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuPortal,
-  DropdownMenuSeparator,
-  DropdownMenuShortcut,
+
   DropdownMenuSub,
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
@@ -26,6 +25,7 @@ import MobileNavbar from "./MobileNavbar";
 
 export default function Header() {
   // language btn
+    const { t, i18n } = useTranslation();
   const [open, setOpen] = useState(false);
 
   // ⬇⬇ state عشان نتحكم في الموبايل منيو
@@ -111,9 +111,10 @@ export default function Header() {
               {open && (
                 <div className="absolute left-0 mt-2 w-40 bg-white rounded-md shadow-lg z-50">
                   <ul className="py-1 text-sm text-gray-700">
-                    <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">العربية</li>
-                    <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">English</li>
-                    <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Français</li>
+                    <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">      <button onClick={() => i18n.changeLanguage("ar")}>العربية</button></li>
+                    <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">  <button onClick={() => i18n.changeLanguage("en")}>English</button></li>
+                        
+
                   </ul>
                 </div>
               )}
@@ -121,20 +122,20 @@ export default function Header() {
 
             {/* Main Links */}
             <nav className="hidden items-center gap-15  text-sm md:flex">
-              <Link to={"/"} className="text-[24px] font-[400] ">
-                الرئيسية{" "}
+              <Link to={"/"} className="text-[24px] font-[400] active">
+                {t("Home")}
               </Link>
               <Link to={"/"} className="text-[24px] font-[400] ">
-                من نحن{" "}
+                {t("About")}
               </Link>
               <Link to={"/"} className="text-[24px] font-[400] ">
-                العروض{" "}
+                {t("Offers")}
               </Link>
               <Link to={"/"} className="text-[24px] font-[400] ">
-                خدماتنا{" "}
+                {t("Servces")}
               </Link>
               <Link to={"/"} className="text-[24px] font-[400] ">
-                تواصل معنا{" "}
+                {t("Contactus")}
               </Link>
             </nav>
 
@@ -166,7 +167,6 @@ export default function Header() {
   <DropdownMenuContent
     className="w-56"
     align="start"
-    dir="rtl" // خلي القائمة تشتغل RTL
   >
     <DropdownMenuGroup>
       <DropdownMenuItem className="flex justify-between text-right">
@@ -177,7 +177,7 @@ export default function Header() {
         <DropdownMenuSubTrigger className="flex justify-between text-right">
           الهواتف الذكية
         </DropdownMenuSubTrigger>
-        <DropdownMenuSubContent dir="rtl">
+        <DropdownMenuSubContent >
           <DropdownMenuItem className="text-right">أجهزة أبل</DropdownMenuItem>
           <DropdownMenuItem className="text-right">أجهزة سامسونج</DropdownMenuItem>
           <DropdownMenuItem className="text-right">أجهزة هونر</DropdownMenuItem>

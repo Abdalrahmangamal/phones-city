@@ -1,5 +1,5 @@
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation } from 'swiper/modules';
+import { Navigation,Autoplay } from 'swiper/modules';
 import { Swiper as SwiperType } from 'swiper';
 // import 'swiper/css';
 // import 'swiper/css/navigation';
@@ -8,9 +8,20 @@ import gray from '../../assets/images/Ellipse 1.png';
 import placeholderImage from '../../assets/images/image_placeholder.png';
 import arrowUp from '../../assets/images/arrowup.png';
 import arrowDown from '../../assets/images/arrowdown.png';
-import { useRef } from 'react';
-
+import { useEffect, useRef } from 'react';
+import {useLangSync} from '@/hooks/useLangSync'
 const TestimonialsSection = () => {
+  const {lang} = useLangSync();
+    useEffect(() => {
+      // لما اللغة تتغير، ممكن تعيد تهيئة السلايدر
+      // هنا ممكن تحتاج تستدعي أي دالة من Swiper لإعادة التهيئة
+      // مثلاً: swiperRef.ref.current?.update() لو انت مستخدم ref
+  
+      // مثال بسيط لإعادة التهيئة (لو فيه ref للـ Swiper):
+      // swiperRef.current?.update();
+  
+    }, [lang]); // كل ما الـ lang تتغير، هيعمل التأثير ده
+  
   const swiperRef = useRef<SwiperType | null>(null);
 
   const testimonials = [
@@ -112,9 +123,17 @@ const TestimonialsSection = () => {
           <div className="w-full h-full flex items-center justify-center z-20 relative ml-0 lg:ml-8">
             <div className="w-full max-w-[900px] mx-auto px-2 sm:px-4">
               <Swiper
-                modules={[Navigation]}
+              key={lang}
+                dir={lang === "ar" ? "rtl" : "ltr"}
+
+                modules={[Navigation,Autoplay ]}
                 spaceBetween={20}
+                loop={true}
                 slidesPerView={1}
+                autoplay={{
+    delay: 2000, // ⏱ الوقت بين كل سلايد بالمللي ثانية
+    disableOnInteraction: false, // ⛔ ما يوقفش لو المستخدم تفاعل
+  }}
                 centeredSlides={true}
                 breakpoints={{
                   480: { slidesPerView: 1, spaceBetween: 15 },
