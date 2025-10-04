@@ -43,12 +43,12 @@ export default function Servces() {
             }}
           ></div>
           
-          {/* Text Content - Responsive for mobile */}
-          <div className="absolute inset-0 flex flex-col items-end justify-center text-right p-4 md:p-0" 
+          {/* Text Content - Responsive for mobile, without align-items and with correct padding */}
+          <div className="absolute inset-0 flex flex-col justify-center text-right p-4 md:p-0" 
                style={{ 
                  width: "100%", 
                  height: "100%",
-                 paddingRight: "40px"
+                 paddingRight: "57px"
                }}>
             <h1 
               className="text-white font-roboto font-bold text-3xl md:text-5xl leading-[48px] md:leading-[68px] mb-2 md:mb-4 text-right"
