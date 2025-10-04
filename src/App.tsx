@@ -3,7 +3,8 @@ import { BrowserRouter, Routes, Route, Navigate, useParams } from "react-router-
 import { useSettings } from "@/store/settings";
 import i18n from "@/i18n";
 import Home from "@/pages/Home";
-import About from "@/pages/About";
+import About from "@/pages/about";
+import Servces from "@/pages/Servces";
 // import NewHome from "@/pages/new/Home";
 import React from "react";
 
@@ -29,7 +30,7 @@ function LangLayout() {
       {/* <Route path="" element={<NewHome />} /> */}
       <Route path="/" element={<Home />} />
       <Route path="/about" element={<About/>} />
-      <Route path="/servces" element={<About/>} />
+      <Route path="/servces" element={<Servces/>} />
     </Routes>
   );
 }
