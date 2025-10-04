@@ -1,16 +1,24 @@
 import ProductCard from "../public/ProductCard";
 import pattern from '../../assets/images/Layer_1.png'
-export default function Bestseller() {
+import { Link } from "react-router-dom";
+
+interface cardsectiontybe {
+  title:string;
+  link?:string;
+  btn:boolean;
+}
+
+export default function Bestseller({title,link,btn}:cardsectiontybe) {
   return (
     <div className="mt-[80px]">
       <div className="flex items-center w-full justify-between relative">
         <div className="relative">
-        <p className="text-[#211C4D] font-[600] text-[40px]">الأكثر مبيعاً</p>
+        <p className="text-[#211C4D] font-[600] text-[40px]">{title}</p>
 <img className="absolute top-[50px] right-[-40px]" src={pattern} alt="" />
         </div>
         <div className="flex items-center justify-center gap-[10px]">
-          <p className="text-[#211C4D] text-[24px] font-[500]">عرض المزيد</p>
-         
+      {btn ? (
+        <Link className="text-[#211C4D] text-[24px] flex items-center justify-center gap-[20px] font-[500]" to={`${link}`}>عرض المزيد
           <svg
             width="10"
             height="18"
@@ -25,6 +33,9 @@ export default function Bestseller() {
               fill="#211C4D"
             />
           </svg>
+        </Link>
+        ):("")
+      }   
         </div>
       </div>
       <div className="flex items-center flex-wrap gap-[20px] mt-[90px] md:justify-between justify-center w-full">

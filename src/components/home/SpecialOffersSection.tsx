@@ -127,15 +127,16 @@ const SpecialOffersSection: React.FC = () => {
           <div className="absolute -top-2 -right-4 z-0">
             <img src="/Layer_1.svg" alt="" className="opacity-100" />
           </div>
-          <h2 className="font-roboto font-semibold text-[40px] leading-[36px] text-[#211C4D] relative z-10">
+          <h2 className="font-roboto font-semibold md:text-[40px] text-[30px] leading-[36px] text-[#211C4D] relative z-10">
             عروض خاصة لك
           </h2>
         </div>
-        <button className="flex items-center gap-[6px] py-[10px] rounded-[4px]">
-          <span className="font-roboto font-medium text-[24px] leading-[20px] text-[#211C4D]">
+        <button className="flex  items-center gap-[6px] py-[10px] rounded-[4px]">
+          <span className="font-roboto font-medium md:text-[24px] leading-[20px] text-[#211C4D]">
             عرض المزيد
           </span>
           <svg
+          className="w-[18px] md:w-[25px]"
             width="25.47"
             height="28.44"
             viewBox="0 0 25 28"

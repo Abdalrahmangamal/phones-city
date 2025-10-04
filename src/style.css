@@ -80,4 +80,57 @@
     padding: 9px 24px;
     border-radius: 22px;
       }
-      
+      @keyframes rotate-glow {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+.animate-rotate-glow {
+  animation: rotate-glow 2.8s linear infinite;
+}
+
+@keyframes pulse-slow {
+  0%, 100% {
+    opacity: 0.1;
+    transform: scale(0.95);
+  }
+  50% {
+    opacity: 0.25;
+    transform: scale(1.1);
+  }
+}
+.animate-pulse-slow {
+  animation: pulse-slow 3s ease-in-out infinite;
+}
+
+@keyframes logo-glow {
+  0%, 100% {
+    filter: drop-shadow(0 0 12px rgba(243,172,93,0.3));
+  }
+  50% {
+    filter: drop-shadow(0 0 25px rgba(243,172,93,0.9));
+  }
+}
+.animate-logo-glow {
+  animation: logo-glow 2.5s ease-in-out infinite;
+}
+@media (min-width: 768px) and (max-width: 1000px) {
+
+  .btnoffer{
+    width: 60px;
+    font-size: 10px;
+  }
+  .textoffer{
+    font-size: 15px;
+    max-width: 50%;
+  }
+  .bigtitle{
+    width: 100%;
+    right: -100px;
+    padding: 0px;
+    scale: 0.5;
+  }
+}
