@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate, useParams } from "react-router-
 import { useSettings } from "@/store/settings";
 import i18n from "@/i18n";
 import Home from "@/pages/Home";
+import About from "@/pages/About";
 // import NewHome from "@/pages/new/Home";
 import React from "react";
 
@@ -26,8 +27,9 @@ function LangLayout() {
   return (
     <Routes>
       {/* <Route path="" element={<NewHome />} /> */}
-      <Route path="" element={<Home />} />
-      {/* بقية الصفحات */}
+      <Route path="/" element={<Home />} />
+      <Route path="/about" element={<About/>} />
+      <Route path="/servces" element={<About/>} />
     </Routes>
   );
 }
@@ -39,6 +41,8 @@ export default function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Navigate to={`/${lang}`} replace />} />
+              <Route path="/about" element={<Navigate to={`/${lang}/about`} replace />} />
+              <Route path="/servces" element={<Navigate to={`/${lang}/servces`} replace />} />
           <Route path="/:lang/*" element={<LangLayout />} />
         </Routes>
       </BrowserRouter>

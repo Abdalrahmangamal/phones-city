@@ -167,16 +167,16 @@ useEffect(() => {
               <Link to={"/"} className="text-[24px] font-[400] active">
                 {t("Home")}
               </Link>
-              <Link to={"/"} className="text-[24px] font-[400] ">
+              <Link to={"/about"} className="text-[24px] font-[400] ">
                 {t("About")}
               </Link>
-              <Link to={"/"} className="text-[24px] font-[400] ">
+              <Link to={"/offers"} className="text-[24px] font-[400] ">
                 {t("Offers")}
               </Link>
-              <Link to={"/"} className="text-[24px] font-[400] ">
+              <Link to={"/servces"} className="text-[24px] font-[400] ">
                 {t("Servces")}
               </Link>
-              <Link to={"/"} className="text-[24px] font-[400] ">
+              <Link to={"/contact"} className="text-[24px] font-[400] ">
                 {t("Contactus")}
               </Link>
             </nav>
