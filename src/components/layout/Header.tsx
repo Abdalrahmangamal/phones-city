@@ -65,6 +65,13 @@ export default function Header() {
 
             {/* Left icons */}
             <div className="flex items-center gap-2">
+<Link
+  to="/login"
+  className="w-[187px] h-[48px] rounded-[16px] bg-[#FFFFFF1A] flex items-center justify-center text-[24px] font-[400] 
+  text-white transition-all duration-300 hover:bg-white hover:text-[#211C4D]"
+>
+  تسجيل الدخول
+</Link>
               <IconButton aria-label="المفضلة">
                 <Heart className="h-5 w-5 opacity-90" />
               </IconButton>
