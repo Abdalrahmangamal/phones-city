@@ -23,34 +23,34 @@ export default function Login() {
   return (
     <div>
       <div className="w-full flex relative">
-        <img src={smalllogo} className="absolute right-15 top-5 z-2" alt="" />
-        <img src={toppatern} alt="" className="absolute left-0" />
+        <img src={smalllogo} className="absolute md:right-15 right-2 top-5 z-2" alt="" />
+        <img src={toppatern} alt="" className="absolute left-0 z-4 " />
       </div>
-      <div className="min-h-screen flex items-center justify-around relative">
-        <div className="bg-white rounded-[20px] w-[450px]  p-8  text-start">
-          <h2 className="text-[35px] font-[6000] text-[#211C4D] mb-2">
+      <div className="min-h-screen flex md:mt-[0px] mt-[200px] md:p-0 px-4 z-3 flex-col md:flex-row items-center justify-center gap-20 relative">
+        <div className="bg-white rounded-[20px] md:w-[450px]   w-full text-start">
+          <h2 className="text-[35px] font-[600] text-[#211C4D] mb-2">
             تسجيل الدخول إلى حسابك
           </h2>
-          <p className="text-[#B9B8B8] font-[400] text-[16px] mb-8">
+          <p className="text-[#B9B8B8] font-[400] text-[16px] md:mb-0 mb-8">
             برجى تسجيل الدخول إلى حسابك
           </p>
 
           <form className="space-y-5 text-right">
             {/* البريد الإلكتروني */}
             <div>
-              <label className="block mb-2 text-[24px] font-[500] text-[#211C4DB2]">
+              <label className="block mb-2 md:mb-0 text-[24px] font-[500] text-[#211C4DB2]">
                 البريد الإلكتروني
               </label>
               <input
                 type="email"
                 placeholder="username@gmail.com"
-                className="w-full p-3 border rounded-lg h-[56px] outline-none focus:ring-2 focus:ring-[#0B60B0]"
+                className="w-full p-3 border rounded-lg h-[50px] outline-none focus:ring-2 focus:ring-[#0B60B0]"
               />
             </div>
 
             {/* كلمة المرور */}
             <div>
-              <label className="block mb-2 text-[24px]  font-[500] text-[#211C4DB2]">
+              <label className="block mb-2 md:mb-0 text-[24px]  font-[500] text-[#211C4DB2]">
                 كلمة المرور
               </label>
               <div className="relative">
@@ -130,7 +130,6 @@ export default function Login() {
                   </DialogContent>
                 </DialogPortal>
               </Dialog>
-              <div className="w-full p-6 flex justify-center"></div>
             </div>
 
             {/* زر الدخول */}
@@ -267,8 +266,8 @@ export default function Login() {
             </p>
           </form>
         </div>
-        <div>
-          <img src={loginimage} className="scale-[0.9]" alt="" />
+        <div className="flex items-center justify-center">
+          <img src={loginimage} className="scale-[0.9] md:mb-0 mb-60" alt="" />
         </div>
         <img src={bottompattern} className="absolute bottom-0 right-0" alt="" />
       </div>
