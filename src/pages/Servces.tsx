@@ -4,8 +4,7 @@ import { useTranslation } from "react-i18next";
 export default function Servces() {
   const { t } = useTranslation();
   return (
-    <div>
-      <Layout />
+    <Layout>
       <div className="container mx-auto px-4 py-8">
         {/* Hero Section - Responsive for mobile */}
         <div className="w-full max-w-[1264px] h-[347px] rounded-lg mb-16 relative overflow-hidden">
@@ -30,7 +29,7 @@ export default function Servces() {
         </div>
         {/* Services Description Section - Separated from cards with proper spacing */}
         <div className="w-full py-10">
-          <div class="flex flex-col pr-20">
+          <div className="flex flex-col pr-20">
             <h2 className="text-[#211C4D] font-roboto font-bold text-[40px] leading-9 mb-2">في مدينه الهواتف</h2>
             <p className="text-[#211C4DCC] font-roboto font-normal text-2xl leading-10 text-right">
               نوفر لك تجربة شراء وصيانة متكاملة في مكان واحد لتلبية جميع احتياجاتك في عالم الهواتف و الاجهزة الذكية:
@@ -193,7 +192,6 @@ export default function Servces() {
           </div>
         </div>
       </div>
-      <Footer />
-    </div>
+    </Layout>
   );
 }
