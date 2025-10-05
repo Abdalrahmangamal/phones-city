@@ -34,11 +34,14 @@ export default function AboutUsSection() {
   />
 
   {/* نصف دائرة على الجهة اليسرى */}
-  <div className="absolute end-0 top-0 w-1/2 h-full bg-[#211C4D]/70 backdrop-blur-sm rounded-r-full flex items-center justify-start px-6">
-    <h2 className="text-white font-bold text-[40px] drop-shadow-lg">
+<div className="absolute end-0 top-0 w-1/2 h-full flex items-center justify-start  overflow-hidden">
+  <div className="w-full h-full bg-[#211C4D]/70 backdrop-blur-sm rounded-r-[9999px] flex items-center px-6">
+    <h2 className="text-white font-bold text-[35px] drop-shadow-lg z-10">
       صوره للمكان
     </h2>
   </div>
+</div>
+
 </div>
 
     </section>

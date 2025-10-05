@@ -8,7 +8,7 @@ const CategoriesSection = ({image}:bannertybe) => {
       <img 
         src={image}
         alt="Categories" 
-        className="w-full h-full rounded-[20px] md:object-cover object-fill"
+        className="w-full h-full rounded-[20px] md:object-cover object-contain"
       />
     </div>
   );

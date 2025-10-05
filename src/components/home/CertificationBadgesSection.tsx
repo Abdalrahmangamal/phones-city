@@ -1,5 +1,7 @@
 import certficate1 from '../../assets/images/certficate1.png'
 import certficate2 from '../../assets/images/certficate2.png'
+import saudibusiness from '../../assets/images/saudibusiness.jpg'
+import maraoof from '../../assets/images/maraoof.jpg'
 // src/components/CertificationBadgesSection.tsx
 import React, { useState } from "react";
 import {
@@ -35,7 +37,7 @@ const CertificationBadgesSection: React.FC = () => {
           <Dialog>
             <DialogTrigger asChild>
               <button
-                onClick={() => handleOpen("../../assets/images/Frame 1321317073.svg")}
+                onClick={() => handleOpen(`${maraoof}`)}
                 className="cursor-pointer focus:outline-none rounded"
               >
                 <img
@@ -45,9 +47,9 @@ const CertificationBadgesSection: React.FC = () => {
                 />
               </button>
             </DialogTrigger>
-            <DialogContent className="max-w-7xl p-0 flex items-center justify-center"   
+            <DialogContent className="md:max-w-[50%] p-0 flex items-center justify-center"   
             style={{
-    maxWidth: "50%",
+    
     maxHeight: "90vh",
     padding: 0,
     background: "transparent",
@@ -86,7 +88,7 @@ const CertificationBadgesSection: React.FC = () => {
           <Dialog>
             <DialogTrigger asChild>
               <button
-                onClick={() => handleOpen("../../assets/images/Frame 13213170732.svg")}
+                onClick={() => handleOpen(`${saudibusiness}`)}
                 className="cursor-pointer focus:outline-none rounded"
               >
                 <img
@@ -97,9 +99,8 @@ const CertificationBadgesSection: React.FC = () => {
               </button>
             </DialogTrigger>
 <DialogContent
-  className="p-0 flex items-center justify-center"
+  className="p-0 flex md:max-w-[50%] items-center justify-center"
   style={{
-    maxWidth: "50%",
     maxHeight: "90vh",
     padding: 0,
     background: "transparent",

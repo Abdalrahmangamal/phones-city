@@ -12,22 +12,11 @@ import { useLangSync } from '@/hooks/useLangSync'
 import "../../style.css";
 import { Navigation , Autoplay } from "swiper/modules";
 import { useEffect } from "react";
-// Correct imports for Swiper v12 CSS files
-// import 'swiper/css';
-// import 'swiper/css/navigation';
 
-// import required modules
 const ProductCategoriesSection: React.FC = () => {
   const {lang}= useLangSync();
     useEffect(() => {
-      // لما اللغة تتغير، ممكن تعيد تهيئة السلايدر
-      // هنا ممكن تحتاج تستدعي أي دالة من Swiper لإعادة التهيئة
-      // مثلاً: swiperRef.ref.current?.update() لو انت مستخدم ref
-  
-      // مثال بسيط لإعادة التهيئة (لو فيه ref للـ Swiper):
-      // swiperRef.current?.update();
-  
-    }, [lang]); // كل ما الـ lang تتغير، هيعمل التأثير ده
+    }, [lang]); 
   
   return (
     <div className="relative my-6">

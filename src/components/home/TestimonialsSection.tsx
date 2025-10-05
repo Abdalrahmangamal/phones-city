@@ -10,6 +10,7 @@ import arrowUp from '../../assets/images/arrowup.png';
 import arrowDown from '../../assets/images/arrowdown.png';
 import { useEffect, useRef } from 'react';
 import {useLangSync} from '@/hooks/useLangSync'
+import pattern from '../../assets/images/Layer_1.png'
 const TestimonialsSection = () => {
   const {lang} = useLangSync();
     useEffect(() => {
@@ -69,7 +70,7 @@ const TestimonialsSection = () => {
         {/* الجزء الأيمن - 1/3 من الشاشة */}
         <div className="flex flex-col items-start gap-4 lg:gap-6 relative z-20 text-right order-1 lg:order-1 lg:col-span-1">
           <div className="flex items-center justify-center lg:justify-start w-full lg:w-auto">
-            <img src="/Layer_1.svg" alt="" className="w-12 h-12 lg:w-20 lg:h-20" />
+            <img src={pattern} alt="" className="w-12 h-12 lg:w-20 lg:h-20" />
             <h2 className="font-roboto font-semibold text-2xl sm:text-3xl lg:text-[40px] leading-[28px] lg:leading-[36px] text-[#211C4D] mr-2">
               آراء العملاء
             </h2>
