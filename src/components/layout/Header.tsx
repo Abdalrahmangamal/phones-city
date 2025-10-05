@@ -137,16 +137,16 @@ export default function Header() {
               <Link to={"/"} className="text-[24px] md:text-[15px] font-[400] active">
                 {t("Home")}
               </Link>
-              <Link to={""} className="lg:text-[24px] md:text-[15px] font-[400] ">
+              <Link to={"/about"} className="lg:text-[24px] md:text-[15px] font-[400] ">
                 {t("About")}
               </Link>
-              <Link to={"/"} className="lg:text-[24px] md:text-[15px] font-[400] ">
+              <Link to={"/offers"} className="lg:text-[24px] md:text-[15px] font-[400] ">
                 {t("Offers")}
               </Link>
-              <Link to={"/"} className="lg:text-[24px] md:text-[15px] font-[400] ">
+              <Link to={"/servces"} className="lg:text-[24px] md:text-[15px] font-[400] ">
                 {t("Servces")}
               </Link>
-              <Link to={"/"} className="lg:text-[24px] md:text-[15px] font-[400] ">
+              <Link to={"/contact"} className="lg:text-[24px] md:text-[15px] font-[400] ">
                 {t("Contactus")}
               </Link>
             </nav>

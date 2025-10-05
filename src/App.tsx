@@ -4,6 +4,7 @@ import { useSettings } from "@/store/settings";
 import i18n from "@/i18n";
 import Home from "@/pages/Home";
 import About from "@/pages/About";
+import Servces from "@/pages/Servces";
 import Contact from "@/pages/Contact";
 // import NewHome from "@/pages/new/Home";
 import React from "react";
@@ -32,7 +33,7 @@ function LangLayout() {
       {/* <Route path="" element={<NewHome />} /> */}
       <Route path="/" element={<Home />} />
       <Route path="/about" element={<About/>} />
-      <Route path="/servces" element={<About/>} />
+      <Route path="/servces" element={<Servces/>} />
       <Route path="/contact" element={<Contact/>} />
       <Route path="/offers" element={<Offers/>} />
       <Route path="/login" element={<Login/>} />
