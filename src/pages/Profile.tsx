@@ -12,7 +12,7 @@ export default function profile() {
     <Layout>
       <div className="flex flex-col md:flex-row justify-center gap-[30px] mt-[80px]">
         <Sidebar />
-        <div className="md:w-[883px]">
+        <div className="md:w-[883px] px-5 md:px-0">
           <div className="w-full h-[45px] p-5 bg-[#E5E5E5] flex items-center rounded-[8px]">
             <p className="text-[#211C4DCC] text-[16px] font-[500]">
               البيانات الشخصية
