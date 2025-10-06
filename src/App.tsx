@@ -10,6 +10,8 @@ import Contact from "@/pages/Contact";
 import React from "react";
 import Offers from "./pages/Offers";
 import Login from "./pages/Login";
+import Profile from "./pages/Profile";
+import Myorder from "./pages/Myorder";
 
 function LangLayout() {
   const { lang: urlLang } = useParams();
@@ -37,6 +39,8 @@ function LangLayout() {
       <Route path="/contact" element={<Contact/>} />
       <Route path="/offers" element={<Offers/>} />
       <Route path="/login" element={<Login/>} />
+      <Route path="/profile" element={<Profile/>} />
+      <Route path="/myorder" element={<Myorder/>} />
     </Routes>
   );
 }
@@ -53,6 +57,8 @@ export default function App() {
               <Route path="/contact" element={<Navigate to={`/${lang}/contact`} replace />} />
               <Route path="/offers" element={<Navigate to={`/${lang}/offers`} replace />} />
               <Route path="/login" element={<Navigate to={`/${lang}/login`} replace />} />
+              <Route path="/profile" element={<Navigate to={`/${lang}/profile`} replace />} />
+              <Route path="/myorder" element={<Navigate to={`/${lang}/myorder`} replace />} />
           <Route path="/:lang/*" element={<LangLayout />} />
         </Routes>
       </BrowserRouter>

@@ -72,19 +72,29 @@ export default function Header() {
 >
   تسجيل الدخول
 </Link>
+<Link to={""}>
+
               <IconButton aria-label="المفضلة">
                 <Heart className="h-5 w-5 opacity-90" />
               </IconButton>
+</Link>
+
+<Link to={"/profile"}>
 
               <IconButton aria-label="حسابي">
                 <UserRound className="h-5 w-5 opacity-90" />
               </IconButton>
+
+</Link>
+<Link to={""}>
+
               <IconButton aria-label="عربة التسوق">
                 <span className="relative">
                   <ShoppingCart className="h-5 w-5 opacity-90" />
                   <span className="absolute -right-1 -top-1 h-2.5 w-2.5 rounded-full bg-orange-400" />
                 </span>
               </IconButton>
+</Link>
             </div>
           </div>
 
