@@ -7,15 +7,16 @@ export default function Myorder() {
     <Layout>
       <div className="flex flex-col md:flex-row justify-center gap-[30px] mt-[80px]">
         <Sidebar />
-        <div className="w-[883px]">
+        <div className="md:w-[883px] w-full">
           <div className="w-full h-[45px] p-5 bg-[#E5E5E5] flex items-center rounded-[8px]">
             <p className="text-[#211C4DCC] text-[16px] font-[500]">
               الفواتير
             </p>
           </div>
-          <table
+          <div className="overflow-x-auto w-[100vw] md:w-[60vw] lg:w-full xl:w-[883px] md:px-0 px-[20px]">
+  <table
             dir="rtl"
-            className="w-full border-separate border-spacing-y-3 mt-6 text-center !rtl"
+            className="w-full border-separate border-spacing-y-3 mt-6 text-center min-w-[883px] !rtl"
           >
             <thead>
               <tr className="">
@@ -176,6 +177,8 @@ export default function Myorder() {
               </tr>
             </tbody>
           </table>
+          </div>
+        
         </div>
       </div>
     </Layout>

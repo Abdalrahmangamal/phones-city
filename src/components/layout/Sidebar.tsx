@@ -24,7 +24,7 @@ export default function Sidebar() {
     { icon: <Heart className="w-5 h-5" />, text: "المفضلة",link:"/favoiets" },
     { icon: <MapPin className="w-5 h-5" />, text: "العنوان",link:"/myorder" },
     { icon: <Gift className="w-5 h-5" />, text: "خصومات",link:"/myorder" },
-    { icon: <Wallet className="w-5 h-5" />, text: "المحفظة",link:"/myorder" },
+    { icon: <Wallet className="w-5 h-5" />, text: "المحفظة",link:"/wallet" },
     { icon: <LogOut className="w-5 h-5" />, text: "تسجيل الخروج",link:"/myorder" },
   ];
 

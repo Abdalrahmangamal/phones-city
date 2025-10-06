@@ -9,7 +9,7 @@ export default function Myorder() {
     <Layout>
       <div className="flex flex-col md:flex-row justify-center gap-[30px] mt-[80px]">
         <Sidebar />
-        <div className="w-[883px]">
+        <div className="md:w-[883px] w-full">
           <div className="w-full h-[45px] p-5 bg-[#E5E5E5] flex items-center rounded-[8px]">
             <p className="text-[#211C4DCC] text-[16px] font-[500]">
               طلباتي
@@ -17,7 +17,7 @@ export default function Myorder() {
           </div>
           <Tabs defaultValue="total" className="w-full mt-[40px]">
             <div className="border-b-2 h-[60px]">
-              <TabsList className="flex items-center justify-between w-full bg-transparent   rounded-none px-5 ">
+              <TabsList className="flex flex-wrap md:flex-row items-center justify-between w-full bg-transparent   rounded-none px-5 ">
                 <TabsTrigger
                   value="Cancelled"
                   className="transition-none !shadow-none text-[16px] flex-none font-[400] text-[#211C4D99] tabs-trigger rounded-none"
@@ -45,10 +45,10 @@ export default function Myorder() {
               </TabsList>
             </div>
             <TabsContent value="total">
-                <div className="">
+                <div className="overflow-x-auto w-[100vw] md:w-[60vw] lg:w-full xl:w-[883px] md:px-0 px-[20px]">
               <table
                 dir="rtl"
-                className="w-full border-separate border-spacing-y-3 mt-6 text-center !rtl min-w-[850px] overflow-x-auto"
+                className="w-full border-separate border-spacing-y-3 mt-6 text-center !rtl min-w-[883px] overflow-x-auto"
               >
                 <thead>
                   <tr className="">
@@ -286,9 +286,10 @@ export default function Myorder() {
                 </div>
             </TabsContent>
             <TabsContent value="Delivering">
-              <table
+              <div className="overflow-x-auto w-[100vw] md:w-[60vw] lg:w-full xl:w-[883px] md:px-0 px-[20px]">
+                  <table
                 dir="rtl"
-                className="w-full border-separate border-spacing-y-3 mt-6 text-center !rtl"
+                className="w-full border-separate border-spacing-y-3 min-w-[883px] mt-6 text-center !rtl"
               >
                 <thead>
                   <tr className="">
@@ -409,11 +410,14 @@ export default function Myorder() {
                   </tr>
                 </tbody>
               </table>
+              </div>
+            
             </TabsContent>
             <TabsContent value="completed">
-              <table
+              <div className="overflow-x-auto w-[100vw] md:w-[60vw] lg:w-full xl:w-[883px] md:px-0 px-[20px]">
+        <table
                 dir="rtl"
-                className="w-full border-separate border-spacing-y-3 mt-6 text-center !rtl"
+                className="w-full border-separate border-spacing-y-3 mt-6 text-center min-w-[883px] !rtl"
               >
                 <thead>
                   <tr className="">
@@ -534,11 +538,14 @@ export default function Myorder() {
                   </tr>
                 </tbody>
               </table>
+              </div>
+      
             </TabsContent>
             <TabsContent value="Cancelled">
-              <table
+              <div className="overflow-x-auto w-[100vw] md:w-[60vw] lg:w-full xl:w-[883px] md:px-0 px-[20px]">
+    <table
                 dir="rtl"
-                className="w-full border-separate border-spacing-y-3 mt-6 text-center !rtl"
+                className="w-full border-separate border-spacing-y-3 mt-6 text-center min-w-[883px] !rtl"
               >
                 <thead>
                   <tr className="">
@@ -659,6 +666,8 @@ export default function Myorder() {
                   </tr>
                 </tbody>
               </table>
+              </div>
+          
             </TabsContent>
           </Tabs>
         </div>
