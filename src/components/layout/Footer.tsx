@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import tiktok from "../../assets/images/tiktok.png";
 import snapchat from "../../assets/images/snapchat.png";
 import whatsapp from "../../assets/images/whatsapp.png";
@@ -14,6 +15,8 @@ import amwal from "../../assets/images/amwal.png";
 import emkan from "../../assets/images/emkan.png";
 import payment from "../../assets/images/payment.png";
 const Footer: React.FC = () => {
+  const navigate = useNavigate();
+  
   const serviceMenuItems = [
     "تقسيط المشتريات",
     "خدمة استبدال الاجهزه",
@@ -33,10 +36,35 @@ const Footer: React.FC = () => {
 
   const customerCareMenuItems = [
     "سياسة الضمان",
-    "سياسة  الاستبدال والايرجاع",
+    "سياسة  الاستبدال والارجاع",
     "خدمة  ما بعد البيع",
     "خدمة نقاط الولاء",
   ];
+
+  const handleCustomerCareItemClick = (item: string) => {
+    switch (item) {
+      case "سياسة الضمان":
+        navigate("/warranty-policy");
+        break;
+      case "سياسة  الاستبدال والارجاع":
+        navigate("/return-policy");
+        break;
+      default:
+        // Handle other menu items if needed
+        break;
+    }
+  };
+
+  const handleAboutItemClick = (item: string) => {
+    switch (item) {
+      case "الشروط و الاحكام":
+        navigate("/terms-and-conditions");
+        break;
+      default:
+        // Handle other menu items if needed
+        break;
+    }
+  };
 
   return (
     <footer
@@ -68,6 +96,7 @@ const Footer: React.FC = () => {
                     key={i}
                     className="text-[#E0E5EB] hover:text-white text-[16px] leading-[22px] text-right bg-transparent border-0 p-0 cursor-pointer"
                     style={{ fontFamily: "Roboto" }}
+                    onClick={() => handleCustomerCareItemClick(item)}
                   >
                     {item}
                   </button>
@@ -86,6 +115,7 @@ const Footer: React.FC = () => {
                     key={i}
                     className="text-[#E0E5EB] hover:text-white text-[16px] leading-[22px] text-right bg-transparent border-0 p-0 cursor-pointer"
                     style={{ fontFamily: "Roboto" }}
+                    onClick={() => handleAboutItemClick(item)}
                   >
                     {item}
                   </button>

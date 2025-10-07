@@ -1,0 +1,145 @@
+import React from 'react';
+import Layout from '@/components/layout/Layout';
+
+const TermsAndConditions = () => {
+  return (
+    <Layout>
+      <div className="container mx-auto px-4 py-8" dir="rtl">
+        {/* Custom Hero Section for Terms and Conditions page */}
+        <div className="w-full max-w-[1264px] h-[347px] rounded-lg mb-16 relative overflow-hidden mx-auto">
+          <img 
+            alt="الشروط والاحكام" 
+            className="w-full h-full object-cover" 
+            src="/src/assets/images/internalbanerimage.jpg" 
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#211c4d33] to-[#211C4D]"></div>
+          <div className="absolute inset-0 flex flex-col justify-center text-right p-4 md:p-0 pr-[57px]">
+            <h1 className="text-white font-roboto font-bold text-3xl md:text-5xl leading-[48px] md:leading-[68px] mb-2 md:mb-4">
+              الشروط والاحكام
+            </h1>
+            <p className="text-white font-roboto font-bold text-xl md:text-2xl leading-[48px] md:leading-[68px]">
+              تعرف علينا
+            </p>
+          </div>
+        </div>
+        
+        {/* Content section with policy details - aligned with hero banner */}
+        <div className="w-full max-w-[1264px] mx-auto py-8 px-4" style={{ gap: '50px' }}>
+          <div className="mb-8 relative">
+            <h1 className="text-right text-[#211C4D] font-roboto font-medium text-[40px] leading-[100%] relative" style={{ width: '100%', maxWidth: '1275px' }}>
+              شروط الاستخدام
+            </h1>
+            <div className="absolute" style={{ top: '-12px', right: '-49px', width: '110px', height: '85.6058px' }}>
+              <img 
+                src="/src/assets/images/Layer_1.png" 
+                alt="Layer 1" 
+                className="w-full h-full object-contain"
+              />
+            </div>
+          </div>
+          
+          <div className="mb-8">
+            <p className="text-right text-[#211C4D] font-roboto font-medium text-[40px] leading-[100%]">
+              مرحباً بك في موقع www.مدينة الهواتف.com الإلكتروني ("الموقع").
+            </p>
+          </div>
+          
+          <div className="mb-8">
+            <h2 className="text-right text-[#211C4D] font-roboto font-bold text-[32px] leading-[24px] mb-4">
+              شروط التسجيل
+            </h2>
+          </div>
+          
+          <div className="mb-8">
+            <p className="text-right text-black text-lg leading-7 mb-4">
+              يحق لك التسجيل كمشترٍ أو بائع والاستفادة من الخدمات إذا توفرت لديك معايير الاهلية التالية:
+            </p>
+            
+            <div className="mb-4">
+              <p className="text-right text-black text-lg leading-7 font-bold">للمشترين:</p>
+              <ol className="text-right text-black text-lg leading-7 list-decimal pr-6">
+                <li className="mb-2">أن تكون بالغاً السن القانونية لتتمكن من شراء المنتجات في بلد إقامتك.</li>
+                <li className="mb-2">أن تكون قادراً على تقديم عنوان في الإمارات العربية المتحدة أو في المملكة العربية السعودية لتسليم المنتجات.</li>
+              </ol>
+            </div>
+            
+            <div className="mb-4">
+              <p className="text-right text-black text-lg leading-7 font-bold">للبائعين:</p>
+              <ol className="text-right text-black text-lg leading-7 list-decimal pr-6">
+                <li className="mb-2">أن يكون لديك شركة تجارية مسجلة وفقاً لقوانين الدولة الخاصة بك.</li>
+                <li className="mb-2">أن يكون لديك ترخيص تجاري سارٍ.</li>
+                <li className="mb-2">أن يمكنك تقديم ما يثبت تفويض الأفراد الذين يقومون بالتسجيل في الموقع أو باستخدامه.</li>
+                <li className="mb-2">تقديم إثبات الهوية للشخص المفوض.</li>
+                <li className="mb-2">تقديم بيانات مصرفية داعمة.</li>
+              </ol>
+            </div>
+            
+            <p className="text-right text-black text-lg leading-7 mb-4">
+              تقر وتوافق على أنه قد تنطبق بعض المتطلبات الإضافية لبعض الفئات من المنتجات.
+            </p>
+            
+            <p className="text-right text-black text-lg leading-7 mb-4">
+              للتسجيل على الموقع، سنحتاج إلى تقديم بعض المعلومات، ولن يتم قبول تسجيلك في الموقع إذا لم يتم تقديم المعلومات اللازمة لنا. لدينا الحق في رفض أي من عمليات التسجيل دون إبداء الأسباب. كما يحق لنا أيضاً القيام بعمليات التحقق اللازمة للتأكد من هويتك ومتطلبات التسجيل.
+            </p>
+            
+            <p className="text-right text-black text-lg leading-7">
+              وبمجرد الانتهاء من التسجيل بنجاح، يستمر التسجيل الخاص بك لفترة غير محددة خاضعاً لاحتمال تعليقه أو إلغائه وفقاً للبند رقم 6 من شروط الاستخدام هذه.
+            </p>
+          </div>
+          
+          <div className="mb-8">
+            <h2 className="text-right text-[#211C4D] font-roboto font-bold text-[32px] leading-[24px] mb-4">
+              أحكام عامة
+            </h2>
+          </div>
+          
+          <div className="mb-8">
+            <ol className="text-right text-black text-lg leading-7 list-decimal pr-6">
+              <li className="mb-4">
+                <span className="font-bold">القانون المطبق:</span> إن شروط الاستخدام هذه وأياً من الحقوق أو الواجبات غير التعاقدية ذات الصلة يجب إخضاعها وتفسيرها للقوانين المطبقة في المملكة العربية السعودية.
+              </li>
+              <li className="mb-4">
+                <span className="font-bold">حل النزاعات:</span> إذا كان لديك أي من المشكلات الخاصة بخدماتنا يُرجى الاتصال بنا‎. وسنعمل جاهدين على حل المشكلة التي تواجهك في أقرب فرصة ممكنة. يتم تسوية أي من النزاعات أو الخلافات المتعلقة بشروط الاستخدام هذه، بما في ذلك أي حقوق أو واجبات غير تعاقدية ذات صلة عن طريق محاكم المملكة العربية السعودية.
+              </li>
+              <li className="mb-4">
+                <span className="font-bold">حقوق الغير:</span> الشخص الذي لا يُعد جزءاً من شروط الاستخدام هذه ليس لديه أي حق في تنفيذ أي من شروطها.
+              </li>
+              <li className="mb-4">
+                <span className="font-bold">علاقة الأطراف:</span> لا يوجد في شروط الاستخدام هذه ما يمكن للأطراف أو للغير تأويله أو تفسيره ليفسر العلاقة بيننا على أنها بين شركاء أو وكلاء أو يوجِد مشروعاً مشتركاً بين الأطراف، ولكنه من المفهوم والواضح أن كل الأطراف في الاتفاق هي أطراف مستقلة.
+              </li>
+              <li className="mb-4">
+                <span className="font-bold">التأكيدات الإضافية:</span> تقوم الأطراف بالتصرفات اللازمة أو الترتيب لاتخاذ التصرفات اللازمة وتحرير المستندات وغيرها من الأمور التي تقع ضمن سلطتها من أجل إنفاذ شروط الاستخدام هذه والتحقق من العمل بها، بما في ذلك على سبيل المثال لا الحصر مساعدة كل طرف على الالتزام بالقانون المعمول به.
+              </li>
+              <li className="mb-4">
+                <span className="font-bold">التنازل:</span> تلتزم شروط الاستخدام هذه بضمان تحقيق الفائدة للأطراف ولخلفائهم المعنيين والمُفوضين رسمياً. توافق على أنك لن تقوم بالتنازل عن أو نقل شروط الاستخدام أو أي من الحقوق أو الواجبات الخاصة بك والمتعلقة بشروط الاستخدام هذه، سواء كان ذلك بشكلٍ مباشر أو غير مباشر، دون الحصول مسبقاً على موافقة خطية من قبلنا.
+              </li>
+              <li className="mb-4">
+                <span className="font-bold">مجمل الاتفاق:</span> إن شروط الاستخدام هذه والوثائق المشار إليها أو المدرجة في شروط الاستخدام تمثل مجمل الاتفاق بين الأطراف فيما يتعلق بموضوع الاتفاقية وتسمو على وتحجب جميع الاتفاقيات والمفاوضات والإقرارات السابقة، الخطية أو الشفهية، ذات الصلة بالموضوع. باستثناء ما هو محدد في شروط الاستخدام والوثائق المشار إليها أو المدرجة في شروط الاستخدام الماثلة فلا توجد أي شروط أو إقرارات أو ضمانات أو تعهدات أو اتفاقيات بين الأطراف سواء كان ذلك مباشراً أو غير مباشر أو جماعياً أو صريحاً أو ضمنياً.
+              </li>
+              <li className="mb-4">
+                <span className="font-bold">التعديلات:</span> لا يحق إجراء أي تعديل على شروط الاستخدام هذه أو إدخال أي إضافة أو تكملتها. نحن نحتفظ بالحق في إدخال أي تعديل أو تغيير أو إضافة أو إكمال شروط الاستخدام هذه في أي وقت أو من وقتٍ لآخر. وسنقوم بنشر النسخة الحالية لشروط الاستخدام على الموقع وستكون سارية المفعول عند نشرها على الموقع أو بناء على الموعد المحدد من جانبنا بصفته "تاريخ السريان" (إن وجد). إن استخدامك المستمر للخدمات في حال حدوث أي تغييرات يُعد موافقة منك على الالتزام بشروط الاستخدام المعدلة.
+              </li>
+              <li className="mb-4">
+                <span className="font-bold">قابلية الفصل بين البنود:</span> إذا ما تم اعتبار أي من أحكام شروط الاستخدام هذه ملغًى من قبل أيٍّ من المحاكم المختصة أو غير قانوني أو غير معمول به فإنه يتم إلغاء هذا لبند من شروط الاستخدام هذه وتستمر باقي الشروط والأحكام قائمة سارية نافذة طالما ظل الجوهر القانوني والاقتصادي للصفقات التي تمت تحت شروطها قائماً دون أي تأثير معاكس على أطرافها.
+              </li>
+              <li className="mb-4">
+                <span className="font-bold">القوة القاهرة:</span> لا يتحمل أي طرف مسؤولية وجود الخسارة أو الضرر أو التأخير أو عدم الوفاء نتيجة للأعمال الخارجة عن السيطرة لأي من الأطراف سواء كان ذلك العمل يمكن توقعه (مثل القضاء والقدر والإجراءات الصادرة عن السلطات التشريعية أو القضائية أو التنظيمية لأي من الحكومة الفيدرالية أو المحلية أو السلطات القضائية أو الإجراءات التي يقوم بها أي من المقاولين من الباطن التابعين لنا أو أي طرف ثالث مورد البضائع أو الخدمات لنا أو الاضطرابات العمالية أو الانقطاع الكامل للتيار الكهربائي أو المقاطعة الاقتصادية).
+              </li>
+              <li className="mb-4">
+                <span className="font-bold">عدم التنازل:</span> إن التنازل عن أي من الأحكام الواردة في شروط الاستخدام لا يُعد تنازلاً عن أي من الأحكام الأخرى (المشابهة أو غير المشابهة)، ولا يعد أي تنازل آخر تنازلاً مستمراً عن أي من الأحكام المعنية، ما لم ننص على ذلك صراحة وخطياً.
+              </li>
+              <li className="mb-4">
+                <span className="font-bold">التواصل:</span> يمكنك التواصل معنا عن طريق الذهاب إلى قسم "الحساب" ثم الضغط على خانة "تحتاج مساعدة؟"
+              </li>
+              <li className="mb-4">
+                <span className="font-bold">استمرار النفاذ:</span> جميع الأحكام التي يُنص على أنها تظل سارية أو التي تسري بطبيعتها بعد إنهاء التعاقد تظل نافذة المفعول بعد إنهاء أو تعليق عضويتك في الموقع.
+              </li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </Layout>
+  );
+};
+
+export default TermsAndConditions;

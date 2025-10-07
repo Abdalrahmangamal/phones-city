@@ -1,32 +1,25 @@
 import Footer from "@/components/layout/Footer";
 import Layout from "@/components/layout/Layout";
+import HeroBanner from "@/components/public/HeroBanner";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
+
 export default function Servces() {
   const { t } = useTranslation();
+  
   return (
     <Layout>
       <div className="container mx-auto px-4 py-8">
         {/* Hero Section - Responsive for mobile */}
-        <div className="w-full max-w-[1264px] h-[347px] rounded-lg mb-16 relative overflow-hidden">
-          {/* Background Image */}
-          <img 
-            src="/src/assets/images/Frame 1321317076.png" 
-            alt="كل ما تحتاجه في مدينه الهواتف" 
-            className="w-full h-full object-cover"/>   
-          {/* Gradient Overlay */}
-          <div 
-            className="absolute inset-0 bg-gradient-to-r from-transparent via-[#211c4d33] to-[#211C4D]"
-          ></div>
-          {/* Text Content - Responsive for mobile, without align-items and with correct padding */}
-          <div className="absolute inset-0 flex flex-col justify-center text-right p-4 md:p-0 pr-[57px]">
-            <h1 className="text-white font-roboto font-bold text-3xl md:text-5xl leading-[48px] md:leading-[68px] mb-2 md:mb-4">
-              كل ما تحتاجه في مدينه الهواتف
-            </h1>
-            <p className="text-white font-roboto font-bold text-base leading-6">
-              استمتع بتجربة استثنائية معاحسن العروض بأفضل الأسعار وخدمة ما بعد البيع المميزة
-            </p>
-          </div>
-        </div>
+        <Link to="/product-details" className="block">
+          <HeroBanner
+            title="كل ما تحتاجه في مدينه الهواتف"
+            description="استمتع بتجربة استثنائية معا حسن العروض بأفضل الأسعار وخدمة ما بعد البيع المميزة"
+            imageUrl="/src/assets/images/Frame 1321317076.png"
+            altText="كل ما تحتاجه في مدينه الهواتف"
+          />
+        </Link>
+        
         {/* Services Description Section - Separated from cards with proper spacing */}
         <div className="w-full py-10">
           <div className="flex flex-col pr-20">
@@ -36,6 +29,7 @@ export default function Servces() {
             </p>
           </div>
         </div>
+        
         {/* Combined Services Cards Section - Responsive grid layout */}
         <div className="w-full">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -64,6 +58,7 @@ export default function Servces() {
                 </p>
               </div>
             </div>
+            
             {/* Service Card 2 - Installment Service */}
             <div className="w-full h-[484px] rounded-lg p-8 relative overflow-hidden bg-gradient-to-b from-[#F9F9F9] to-[#CBD7F9] shadow-[0px_8px_8px_0px_#0000000D]">
               <img 
@@ -89,6 +84,7 @@ export default function Servces() {
                 </p>
               </div>
             </div>
+            
             {/* Service Card 3 - Device Replacement */}
             <div className="w-full h-[484px] rounded-lg p-8 relative overflow-hidden bg-gradient-to-b from-[#F9F9F9] to-[#CBD7F9] shadow-[0px_8px_8px_0px_#0000000D]">
               <img 
@@ -114,6 +110,7 @@ export default function Servces() {
                 </p>
               </div>
             </div>
+            
             {/* Service Card 4 - Repair and Programming */}
             <div className="w-full h-[484px] rounded-lg p-8 relative overflow-hidden bg-gradient-to-b from-[#F9F9F9] to-[#CBD7F9] shadow-[0px_8px_8px_0px_#0000000D]">
               <img 
@@ -139,6 +136,7 @@ export default function Servces() {
                 </p>
               </div>
             </div>
+            
             {/* Service Card 5 - Telecommunications */}
             <div className="w-full h-[484px] rounded-lg p-8 relative overflow-hidden bg-gradient-to-b from-[#F9F9F9] to-[#CBD7F9] shadow-[0px_8px_8px_0px_#0000000D]">
               <img 
@@ -164,6 +162,7 @@ export default function Servces() {
                 </p>
               </div>
             </div>
+            
             {/* Service Card 6 - Customer Service */}
             <div className="w-full h-[484px] rounded-lg p-8 relative overflow-hidden bg-gradient-to-b from-[#F9F9F9] to-[#CBD7F9] shadow-[0px_8px_8px_0px_#0000000D]">
               <img 

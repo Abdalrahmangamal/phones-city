@@ -1,0 +1,104 @@
+import React from 'react';
+import Layout from '@/components/layout/Layout';
+
+const WarrantyPolicy = () => {
+  return (
+    <Layout>
+      <div className="container mx-auto px-4 py-8" dir="rtl">
+        {/* Custom Hero Section for Warranty Policy page */}
+        <div className="w-full max-w-[1264px] h-[347px] rounded-lg mb-16 relative overflow-hidden mx-auto">
+          <img 
+            alt="سياسة الضمان" 
+            className="w-full h-full object-cover" 
+            src="/src/assets/images/internalbanerimage.jpg" 
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#211c4d33] to-[#211C4D]"></div>
+          <div className="absolute inset-0 flex flex-col justify-center text-right p-4 md:p-0 pr-[57px]">
+            <h1 className="text-white font-roboto font-bold text-3xl md:text-5xl leading-[48px] md:leading-[68px] mb-2 md:mb-4">
+              سياسة الضمان
+            </h1>
+            <p className="text-white font-roboto font-bold text-xl md:text-2xl leading-[48px] md:leading-[68px]">
+              تعرف علينا
+            </p>
+          </div>
+        </div>
+        
+        {/* Content section with policy details - aligned with hero banner */}
+        <div className="w-full max-w-[1264px] mx-auto py-8 px-4" style={{ gap: '50px' }}>
+          <div className="mb-8 relative">
+            <h1 className="text-right text-[#211C4D] font-roboto font-bold text-[40px] leading-[36px] relative" style={{ width: '100%', maxWidth: '1275px' }}>
+              سياسة الضمان
+            </h1>
+            <div className="absolute" style={{ top: '-12px', right: '-49px', width: '110px', height: '85.6058px' }}>
+              <img 
+                src="/src/assets/images/Layer_1.png" 
+                alt="Layer 1" 
+                className="w-full h-full object-contain"
+              />
+            </div>
+          </div>
+          
+          <div className="mb-8">
+            <p className="text-right text-[#211C4D] text-xl font-bold">سياسة ضمان المنتجات</p>
+          </div>
+          
+          <div className="mb-8">
+            <ul className="text-right text-black text-lg leading-7 list-disc pr-6">
+              <li className="mb-4">
+                يحق للعميل استبدال أو استرجاع المنتج الذي تم شرائه من الموقع الالكتروني خلال 30 يوم من تاريخ الشراء فقط في حالة وجود عيب صناعة بالمنتج وذلك بناءاً على تقرير فني من الصيانة أو مراكز الخدمة المعتمدة ( وذلك ينطبق أيضاً على منتجات العناية الشخصية حيث أنها تخضع لشروط صحية ) وذلك طبقاً لقانون حماية المستهلك ، وفي حالة انتهاء مدة الـ 30 يوم لن يتم استبدال أو استرجاع الجهاز لأي سببٍ كان ، ويجب على العميل فى هذه الحالة التواصل مع خدمة العملاء 19319 لتسجيل بلاغ صيانة وذلك بالنسبة للأجهزة التى يتم تسجيل بلاغ صيانة لها ، وذلك طبقاً لنص المادة 21 من قانون حماية المستهلك.
+              </li>
+              <li className="mb-4">
+                عند استرجاع أو استبدال المنتج يجب أن تكون الكرتونة ومواد التغليف في حالتها الأصلية وألا يكون قد تم فتح كرتونة المنتج أو استخدامه ويكون بجميع مشتملاته مصحوباً بكافة المستندات الأصلية ، وفي حالة أن هناك هدية على طلب الشراء يجب أن يتم إسترجاعها مع الجهاز و إذا لم يتم إرجاع كافة المرفقات لن يتم الموافقة على طلب الاستبدال أو الاسترجاع ، وفي حالة استرجاع أو استبدال منتج تم شرائه وعليه خصم سعر أو عرض سيتم رد ما قام بدفعه العميل فقط.
+              </li>
+              <li className="mb-4">
+                في حالة رغبة العميل في إستبدال أو استرجاع المنتج رغم عدم وجود عيب صناعة به خلال مدة الـ 14 يوم من تاريخ استلام المنتج ( فيما عدا منتجات العناية الشخصية حيث أنها تخضع لشروط صحية ) طبقاً للمادة 17 من قانون حماية المستهلك
+              </li>
+            </ul>
+          </div>
+          
+          <div className="mb-8">
+            <h2 className="text-right text-[#211C4D] font-roboto font-bold text-[32px] leading-[24px] mb-4">
+              1. فى حالة أنه لم يتم فتح كرتونة الجهاز أو استخدامه والجهاز مازال بحالته الأصلية :
+            </h2>
+          </div>
+          
+          <div className="mb-8">
+            <ul className="text-right text-black text-lg leading-7 list-disc pr-6">
+              <li className="mb-4">
+                طبقاً لنص المادة 17 من قانون حماية المستهلك ، يحق للمستهلك طلب استبدال أو استرداد قيمة المنتج خلال 14 يوم من تاريخ استلام المنتج وذلك إذا لم يكن الجهاز به عيب صناعة ، ولكن بشرط أن يكون بالحالة التى كانت عليها السلعة عند التعاقد (أى لم يتم فتحها أو استخدامها).
+              </li>
+              <li className="mb-4">
+                فى هذه الحالة يتم استبدال المنتج مع تحصيل رد فرق السعر بين الموديلات إن وجد أو استرجاع المنتج ورد قيمته بعد خصم مصاريف الشحن (300 جنيه لأجهزة التكييفات) وذلك طبقاً للمادة 40 فقرة 1 و 2 من قانون حماية المستهلك (يلتزم المورد برد المبلغ المدفوع للعميل بنفس طريقة الدفع ويتحمل المستهلك نفقات الشحن وإعادة المنتج).
+              </li>
+              <li className="mb-4">
+                بالإضافة إلى أنه في حالة الدفع الالكتروني أون لاين عن طريق VISA / Master أو فودافون كاش أو اتصالات كاش سيتم خصم مصاريف إدارية بقيمة (1.5%) من قيمة الجهاز ، أو خصم مصاريف إدارية بقيمة (2.25%) من قيمة الجهاز في حالة الدفع من خلال خدمات فوري ، أو خصم مصاريف إدارية بقيمة (1.45% + 1 جنيه) من قيمة الجهاز في حالة الدفع من خلال ماكينات MPOS أثناء استلام المنتج.
+              </li>
+            </ul>
+          </div>
+          
+          <div className="mb-8">
+            <h2 className="text-right text-[#211C4D] font-roboto font-bold text-[32px] leading-[24px] mb-4">
+              2. في حالة قيام العميل بفتح كرتونة الجهاز :
+            </h2>
+          </div>
+          
+          <div className="mb-8">
+            <ul className="text-right text-black text-lg leading-7 list-disc pr-6">
+              <li className="mb-4">
+                طبقاً لنص المادة 17 من قانون حماية المستهلك ، يحق للمستهلك طلب استبدال أو استرداد قيمة المنتج خلال 14 يوم من تاريخ استلام المنتج وذلك إذا لم يكن الجهاز به عيب صناعة ، ولكن بشرط أن يكون بالحالة التى كانت عليها السلعة عند التعاقد (أى لم يتم فتحها أو استخدامها).
+              </li>
+              <li className="mb-4">
+                فى هذه الحالة يتم استبدال المنتج مع تحصيل رد فرق السعر بين الموديلات إن وجد أو استرجاع المنتج ورد قيمته بعد خصم مصاريف الشحن (300 جنيه لأجهزة التكييفات) وذلك طبقاً للمادة 40 فقرة 1 و 2 من قانون حماية المستهلك (يلتزم المورد برد المبلغ المدفوع للعميل بنفس طريقة الدفع ويتحمل المستهلك نفقات الشحن وإعادة المنتج).
+              </li>
+              <li className="mb-4">
+                بالإضافة إلى أنه في حالة الدفع الالكتروني أون لاين عن طريق VISA / Master أو فودافون كاش أو اتصالات كاش سيتم خصم مصاريف إدارية بقيمة (1.5%) من قيمة الجهاز ، أو خصم مصاريف إدارية بقيمة (2.25%) من قيمة الجهاز في حالة الدفع من خلال خدمات فوري ، أو خصم مصاريف إدارية بقيمة (1.45% + 1 جنيه) من قيمة الجهاز في حالة الدفع من خلال ماكينات MPOS أثناء استلام المنتج.
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </Layout>
+  );
+};
+
+export default WarrantyPolicy;

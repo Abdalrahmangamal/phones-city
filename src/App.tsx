@@ -3,13 +3,17 @@ import { BrowserRouter, Routes, Route, Navigate, useParams } from "react-router-
 import { useSettings } from "@/store/settings";
 import i18n from "@/i18n";
 import Home from "@/pages/Home";
-import About from "@/pages/About";
+import About from "@/pages/about";
 import Servces from "@/pages/Servces";
 import Contact from "@/pages/Contact";
 // import NewHome from "@/pages/new/Home";
 import React from "react";
 import Offers from "./pages/Offers";
 import Login from "./pages/Login";
+import ProductDetails from "./pages/ProductDetails";
+import ReturnPolicy from "./pages/ReturnPolicy";
+import WarrantyPolicy from "./pages/WarrantyPolicy";
+import TermsAndConditions from "./pages/TermsAndConditions";
 
 function LangLayout() {
   const { lang: urlLang } = useParams();
@@ -37,6 +41,10 @@ function LangLayout() {
       <Route path="/contact" element={<Contact/>} />
       <Route path="/offers" element={<Offers/>} />
       <Route path="/login" element={<Login/>} />
+      <Route path="/product-details" element={<ProductDetails/>} />
+      <Route path="/return-policy" element={<ReturnPolicy/>} />
+      <Route path="/warranty-policy" element={<WarrantyPolicy/>} />
+      <Route path="/terms-and-conditions" element={<TermsAndConditions/>} />
     </Routes>
   );
 }
@@ -53,6 +61,10 @@ export default function App() {
               <Route path="/contact" element={<Navigate to={`/${lang}/contact`} replace />} />
               <Route path="/offers" element={<Navigate to={`/${lang}/offers`} replace />} />
               <Route path="/login" element={<Navigate to={`/${lang}/login`} replace />} />
+              <Route path="/product-details" element={<Navigate to={`/${lang}/product-details`} replace />} />
+              <Route path="/return-policy" element={<Navigate to={`/${lang}/return-policy`} replace />} />
+              <Route path="/warranty-policy" element={<Navigate to={`/${lang}/warranty-policy`} replace />} />
+              <Route path="/terms-and-conditions" element={<Navigate to={`/${lang}/terms-and-conditions`} replace />} />
           <Route path="/:lang/*" element={<LangLayout />} />
         </Routes>
       </BrowserRouter>
