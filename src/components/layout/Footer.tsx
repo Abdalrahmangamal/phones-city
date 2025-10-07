@@ -24,6 +24,8 @@ const Footer: React.FC = () => {
     "خدمة برمجه وصيانة الأجهزة",
     "خدمات الاتصالات والانترنت",
     "خدمات عملاء مميزة",
+    "كوارا التقسيط",
+    "مورا التقسيط",
   ];
 
   const aboutMenuItems = [
@@ -36,7 +38,7 @@ const Footer: React.FC = () => {
 
   const customerCareMenuItems = [
     "سياسة الضمان",
-    "سياسة  الاستبدال والارجاع",
+    "سياسة  الاستبدال والايرجاع",
     "خدمة  ما بعد البيع",
     "خدمة نقاط الولاء",
   ];
@@ -46,7 +48,7 @@ const Footer: React.FC = () => {
       case "سياسة الضمان":
         navigate("/warranty-policy");
         break;
-      case "سياسة  الاستبدال والارجاع":
+      case "سياسة  الاستبدال والايرجاع":
         navigate("/return-policy");
         break;
       default:
@@ -59,6 +61,20 @@ const Footer: React.FC = () => {
     switch (item) {
       case "الشروط و الاحكام":
         navigate("/terms-and-conditions");
+        break;
+      default:
+        // Handle other menu items if needed
+        break;
+    }
+  };
+
+  const handleServiceItemClick = (item: string) => {
+    switch (item) {
+      case "كوارا التقسيط":
+        navigate("/about-quara");
+        break;
+      case "مورا التقسيط":
+        navigate("/about-mora");
         break;
       default:
         // Handle other menu items if needed
@@ -134,6 +150,7 @@ const Footer: React.FC = () => {
                     key={i}
                     className="text-[#E0E5EB] hover:text-white text-[16px] leading-[22px] text-right bg-transparent border-0 p-0 cursor-pointer"
                     style={{ fontFamily: "Roboto" }}
+                    onClick={() => handleServiceItemClick(item)}
                   >
                     {item}
                   </button>

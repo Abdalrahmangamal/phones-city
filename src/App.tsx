@@ -14,6 +14,8 @@ import ProductDetails from "./pages/ProductDetails";
 import ReturnPolicy from "./pages/ReturnPolicy";
 import WarrantyPolicy from "./pages/WarrantyPolicy";
 import TermsAndConditions from "./pages/TermsAndConditions";
+import AboutQuara from "./pages/AboutQuara";
+import AboutMora from "./pages/AboutMora";
 
 function LangLayout() {
   const { lang: urlLang } = useParams();
@@ -45,6 +47,8 @@ function LangLayout() {
       <Route path="/return-policy" element={<ReturnPolicy/>} />
       <Route path="/warranty-policy" element={<WarrantyPolicy/>} />
       <Route path="/terms-and-conditions" element={<TermsAndConditions/>} />
+      <Route path="/about-quara" element={<AboutQuara/>} />
+      <Route path="/about-mora" element={<AboutMora/>} />
     </Routes>
   );
 }
@@ -65,6 +69,8 @@ export default function App() {
               <Route path="/return-policy" element={<Navigate to={`/${lang}/return-policy`} replace />} />
               <Route path="/warranty-policy" element={<Navigate to={`/${lang}/warranty-policy`} replace />} />
               <Route path="/terms-and-conditions" element={<Navigate to={`/${lang}/terms-and-conditions`} replace />} />
+              <Route path="/about-quara" element={<Navigate to={`/${lang}/about-quara`} replace />} />
+              <Route path="/about-mora" element={<Navigate to={`/${lang}/about-mora`} replace />} />
           <Route path="/:lang/*" element={<LangLayout />} />
         </Routes>
       </BrowserRouter>
