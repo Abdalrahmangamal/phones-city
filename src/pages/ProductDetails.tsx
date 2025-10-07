@@ -1,6 +1,5 @@
 import React from 'react';
 import Layout from '@/components/layout/Layout';
-import HeroBanner from '@/components/public/HeroBanner';
 
 const ProductDetails: React.FC = () => {
   return (

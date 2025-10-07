@@ -11,7 +11,7 @@ export default function about() {
   
 
 <div className="px-[10px] md:px-[45px]">
-<Internalbanner/>
+<Internalbanner title={"عن مدينه الهواتف"} description={"تعرف علينا"}/>
 <Aboutcityphones/>
 <AboutUsSection/>
 <Location/>
