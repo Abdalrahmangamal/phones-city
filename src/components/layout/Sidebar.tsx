@@ -21,9 +21,9 @@ export default function Sidebar() {
     { icon: <User className="w-5 h-5" />, text: "الحساب الشخصي",link:"/profile" },
     { icon: <ShoppingCart className="w-5 h-5" />, text: "طلباتي",link:"/myorder" },
     { icon: <FileText className="w-5 h-5" />, text: "الفواتير",link:"/bills" },
-    { icon: <Heart className="w-5 h-5" />, text: "المفضلة",link:"/favoiets" },
+    { icon: <Heart className="w-5 h-5" />, text: "المفضلة",link:"/favourite" },
     { icon: <MapPin className="w-5 h-5" />, text: "العنوان",link:"/address" },
-    { icon: <Gift className="w-5 h-5" />, text: "خصومات",link:"/myorder" },
+    { icon: <Gift className="w-5 h-5" />, text: "خصومات",link:"/discounts" },
     { icon: <Wallet className="w-5 h-5" />, text: "المحفظة",link:"/wallet" },
     { icon: <LogOut className="w-5 h-5" />, text: "تسجيل الخروج",link:"/myorder" },
   ];

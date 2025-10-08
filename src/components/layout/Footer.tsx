@@ -14,6 +14,7 @@ import Google from "../../assets/images/Google.png";
 import amwal from "../../assets/images/amwal.png";
 import emkan from "../../assets/images/emkan.png";
 import payment from "../../assets/images/payment.png";
+import ropot from "../../assets/images/ropot.png";
 const Footer: React.FC = () => {
   const navigate = useNavigate();
 
@@ -84,17 +85,17 @@ const Footer: React.FC = () => {
 
   return (
     <footer
-      className="w-full bg-[#211C4D] text-white md:block mt-[80px]"
+      className="w-full bg-[#211C4D] text-white md:block  overflow-visible "
       style={{
         boxSizing: "border-box",
         paddingTop: 72,
         paddingBottom: 24,
-        overflowX: "hidden", // safety to avoid horizontal scroll
+         // safety to avoid horizontal scroll
       }}
     >
       <div
         id="footer-heading"
-        className="max-w-[1440px] mx-auto w-full box-border"
+        className="max-w-[1440px] mx-auto w-full box-border relative"
         style={{ paddingLeft: 24, paddingRight: 24 }}
       >
         {/* Container */}
@@ -347,6 +348,7 @@ const Footer: React.FC = () => {
             </div>
           </div>
         </div>
+      <img src={ropot} className="absolute top-[-65%] z-90 right-0" alt="" />
       </div>
     </footer>
   );

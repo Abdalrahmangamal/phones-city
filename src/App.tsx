@@ -23,6 +23,8 @@ import Singlebills from "./pages/Singlebills";
 import Wallet from "./pages/Wallet";
 import Address from "./pages/Address";
 import Singleaddress from "./pages/Singleaddress";
+import Discounts from "./pages/Discounts";
+import Favourite from "./pages/Favourite";
 
 function LangLayout() {
   const { lang: urlLang } = useParams();
@@ -62,6 +64,8 @@ function LangLayout() {
       <Route path="/singlebills" element={<Singlebills/>} />
       <Route path="/address" element={<Address/>} />
       <Route path="/singleaddress" element={<Singleaddress/>} />
+      <Route path="/discounts" element={<Discounts/>} />
+      <Route path="/favourite" element={<Favourite/>} />
       
       <Route path="/wallet" element={<Wallet/>} />
     </Routes>
@@ -92,7 +96,9 @@ export default function App() {
               <Route path="/singlebills" element={<Navigate to={`/${lang}/singlebills`} replace />} />
               <Route path="/wallet" element={<Navigate to={`/${lang}/wallet`} replace />} />
               <Route path="/address" element={<Navigate to={`/${lang}/address`} replace />} />
+              <Route path="/discounts" element={<Navigate to={`/${lang}/discounts`} replace />} />
               <Route path="/singleaddress" element={<Navigate to={`/${lang}/singleaddress`} replace />} />
+              <Route path="/favourite" element={<Navigate to={`/${lang}/favourite`} replace />} />
           <Route path="/:lang/*" element={<LangLayout />} />
         </Routes>
       </BrowserRouter>

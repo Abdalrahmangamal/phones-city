@@ -3,7 +3,6 @@
 import background from '../../assets/images/background.png'
 import bolitse from '../../assets/images/politssection.png'
 import expotuer from '../../assets/images/expotuer.png'
-import ropot from '../../assets/images/ropot.png'
 import appstore from '../../assets/images/appstore.png'
 import googleplay from '../../assets/images/googleplay.png'
 
@@ -40,13 +39,7 @@ const AppDownloadSection = () => {
           className="w-[349px] h-auto object-cover"
         />
       </div>
-      <div className="absolute bottom-[0px] right-[0px] z-10">
-        <img 
-          src={ropot} 
-          alt="Main visual" 
-          className="w-[160px] h-auto object-cover"
-        />
-      </div>
+    
       
       {/* Decorative gray dots images in a grid pattern */}
       
