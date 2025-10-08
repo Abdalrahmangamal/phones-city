@@ -27,7 +27,7 @@ const AboutQuara = () => {
           </div>
           
           <div className="mb-8">
-            <p className="text-right text-[#211C4D] font-roboto font-medium text-[24px] leading-[48px]">
+            <p className="text-right text-[#211C4DCC] font-roboto font-normal text-[24px] leading-[48px]">
               كوارا هي شركة تمويل توفر خدمة الشراء الآن والدفع لاحقًا بالتقسيط 🛍️<br />
               تساعدك تشتري المنتجات اللي بتحبها وتدفعها على أقساط مريحة بدون الحاجة لأي إجراءات بنكية معقدة.<br />
               ⚡ تتميز بسرعة الموافقة وسهولة التسجيل، وتحتاج فقط بعض البيانات البسيطة.
@@ -35,7 +35,7 @@ const AboutQuara = () => {
           </div>
           
           <div className="mb-8">
-            <h2 className="text-right text-[#211C4D] font-roboto font-bold text-[40px] leading-[24px] mb-4">
+            <h2 className="text-right text-[#211C4D] font-roboto font-bold text-[40px] leading-[36px] mb-4">
               خطوات التسجيل في كوارا
             </h2>
           </div>
@@ -44,7 +44,7 @@ const AboutQuara = () => {
             <h3 className="text-right text-[#211C4D] font-roboto font-bold text-[32px] leading-[24px] mb-4">
               1. إنشاء حساب جديد
             </h3><br/>
-            <ul className="text-right text-black text-lg leading-7 list-disc pr-6">
+            <ul className="text-right text-[#211C4DCC] font-roboto font-normal text-[24px] leading-[48px] list-disc pr-6">
               <li className="mb-2">اضغط على زر «سجّل في كوارا».</li>
               <li className="mb-2">أدخل بياناتك الأساسية (الاسم الكامل، رقم الموبايل، البريد الإلكتروني، الرقم القومي).</li>
             </ul>
@@ -54,7 +54,7 @@ const AboutQuara = () => {
             <h3 className="text-right text-[#211C4D] font-roboto font-bold text-[32px] leading-[24px] mb-4">
               2. تأكيد رقم الموبايل
             </h3><br/>
-            <ul className="text-right text-black text-lg leading-7 list-disc pr-6">
+            <ul className="text-right text-[#211C4DCC] font-roboto font-normal text-[24px] leading-[48px] list-disc pr-6">
               <li className="mb-2">سيصلك كود OTP على رقم هاتفك.</li>
               <li className="mb-2">أدخله لتفعيل حسابك.</li>
             </ul>
@@ -64,7 +64,7 @@ const AboutQuara = () => {
             <h3 className="text-right text-[#211C4D] font-roboto font-bold text-[32px] leading-[24px] mb-4">
               3. رفع مستندات بسيطة
             </h3><br/>      
-            <ul className="text-right text-black text-lg leading-7 list-disc pr-6">
+            <ul className="text-right text-[#211C4DCC] font-roboto font-normal text-[24px] leading-[48px] list-disc pr-6">
               <li className="mb-2">صورة بطاقة الرقم القومي.</li>
               <li className="mb-2">إيصال مرافق حديث (كهرباء أو مياه).</li>
               <li className="mb-2">إثبات دخل إذا وُجد.</li>
@@ -75,7 +75,7 @@ const AboutQuara = () => {
             <h3 className="text-right text-[#211C4D] font-roboto font-bold text-[32px] leading-[24px] mb-4">
               4. ابدأ الشراء بالتقسيط
             </h3><br/>
-            <ul className="text-right text-black text-lg leading-7 list-disc pr-6">
+            <ul className="text-right text-[#211C4DCC] font-roboto font-normal text-[24px] leading-[48px] list-disc pr-6">
               <li className="mb-2">بعد مراجعة البيانات والموافقة عليها، يمكنك شراء المنتجات وتقسيطها فورًا من خلال كوارا.</li>
             </ul>
           </div>
@@ -84,7 +84,7 @@ const AboutQuara = () => {
             <h2 className="text-right text-[#211C4D] font-roboto font-bold text-[40px] leading-[36px] mb-4">
               ⚡ ملاحظات مهمة
             </h2><br/>
-            <ul className="text-right text-black text-lg leading-7 list-disc pr-6">
+            <ul className="text-right text-[#211C4DCC] font-roboto font-normal text-[24px] leading-[48px] list-disc pr-6">
               <li className="mb-2">يجب أن يكون عمرك فوق 21 سنة.</li>
               <li className="mb-2">يجب أن تمتلك بطاقة رقم قومي سارية.</li>
               <li className="mb-2">تتم الموافقة على الطلبات غالبًا خلال دقائق قليلة.</li>
