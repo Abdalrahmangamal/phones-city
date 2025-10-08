@@ -39,13 +39,13 @@ const TermsAndConditions = () => {
           </div>
           
           <div className="mb-8">
-            <p className="text-right text-black text-lg leading-7 mb-4">
+            <p className="text-right text-[#211C4DCC] font-roboto text-[24px] leading-[48px] mb-4" style={{ fontFamily: 'Roboto', fontWeight: 400, fontSize: '24px', lineHeight: '48px' }}>
               1. يحق لك التسجيل كمشترٍ أو بائع والاستفادة من الخدمات إذا توفرت لديك معايير الاهلية التالية:
             </p>
             
             <div className="mb-4">
               <p className="text-right text-black text-lg leading-7 font-bold">a. للمشترين:</p>
-              <ol className="text-right text-black text-lg leading-7 list-[lower-roman] pr-6">
+              <ol className="text-right text-[#211C4DCC] font-roboto text-[24px] leading-[48px] list-[lower-roman] pr-6" style={{ fontFamily: 'Roboto', fontWeight: 400, fontSize: '24px', lineHeight: '48px' }}>
                 <li className="mb-2">أن تكون بالغاً السن القانونية لتتمكن من شراء المنتجات في بلد إقامتك.</li>
                 <li className="mb-2">أن تكون قادراً على تقديم عنوان في الإمارات العربية المتحدة أو في المملكة العربية السعودية لتسليم المنتجات.</li>
               </ol>
@@ -53,7 +53,7 @@ const TermsAndConditions = () => {
             
             <div className="mb-4">
               <p className="text-right text-black text-lg leading-7 font-bold">b. للبائعين:</p>
-              <ol className="text-right text-black text-lg leading-7 list-[lower-roman] pr-6">
+              <ol className="text-right text-[#211C4DCC] font-roboto text-[24px] leading-[48px] list-[lower-roman] pr-6" style={{ fontFamily: 'Roboto', fontWeight: 400, fontSize: '24px', lineHeight: '48px' }}>
                 <li className="mb-2">أن يكون لديك شركة تجارية مسجلة وفقاً لقوانين الدولة الخاصة بك.</li>
                 <li className="mb-2">أن يكون لديك ترخيص تجاري سارٍ.</li>
                 <li className="mb-2">أن يمكنك تقديم ما يثبت تفويض الأفراد الذين يقومون بالتسجيل في الموقع أو باستخدامه.</li>
@@ -62,11 +62,11 @@ const TermsAndConditions = () => {
               </ol>
             </div>
             
-            <p className="text-right text-black text-lg leading-7 mb-4">
+            <p className="text-right text-[#211C4DCC] font-roboto text-[24px] leading-[48px] mb-4" style={{ fontFamily: 'Roboto', fontWeight: 400, fontSize: '24px', lineHeight: '48px' }}>
               2. للتسجيل على الموقع، سنحتاج إلى تقديم بعض المعلومات، ولن يتم قبول تسجيلك في الموقع إذا لم يتم تقديم المعلومات اللازمة لنا. لدينا الحق في رفض أي من عمليات التسجيل دون إبداء الأسباب. كما يحق لنا أيضاً القيام بعمليات التحقق اللازمة للتأكد من هويتك ومتطلبات التسجيل.
             </p>
             
-            <p className="text-right text-black text-lg leading-7">
+            <p className="text-right text-[#211C4DCC] font-roboto text-[24px] leading-[48px]" style={{ fontFamily: 'Roboto', fontWeight: 400, fontSize: '24px', lineHeight: '48px' }}>
               3. وبمجرد الانتهاء من التسجيل بنجاح، يستمر التسجيل الخاص بك لفترة غير محددة خاضعاً لاحتمال تعليقه أو إلغائه وفقاً للبند رقم 6 من شروط الاستخدام هذه.
             </p>
           </div><br/> 
@@ -78,7 +78,7 @@ const TermsAndConditions = () => {
           </div>
           
           <div className="mb-8">
-            <ol className="text-right text-black text-lg leading-7 list-decimal pr-6">
+            <ol className="text-right text-[#211C4DCC] font-roboto text-[24px] leading-[48px] list-decimal pr-6" style={{ fontFamily: 'Roboto', fontWeight: 400, fontSize: '24px', lineHeight: '48px' }}>
               <li className="mb-4">
                 <span className="font-bold">القانون المطبق:</span> إن شروط الاستخدام هذه وأياً من الحقوق أو الواجبات غير التعاقدية ذات الصلة يجب إخضاعها وتفسيرها للقوانين المطبقة في المملكة العربية السعودية.
               </li>

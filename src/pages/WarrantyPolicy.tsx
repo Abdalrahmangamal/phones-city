@@ -30,7 +30,7 @@ const WarrantyPolicy = () => {
           </div>
           
           <div className="mb-12">
-            <ul className="text-right text-black text-lg leading-7 list-disc pr-6">
+            <ul className="text-right text-[#211C4DCC] font-roboto text-[24px] leading-[48px] list-disc pr-6" style={{ fontFamily: 'Roboto', fontWeight: 400, fontSize: '24px', lineHeight: '48px' }}>
               <li className="mb-8">
                 يحق للعميل استبدال أو استرجاع المنتج الذي تم شرائه من الموقع الالكتروني خلال 30 يوم من تاريخ الشراء فقط في حالة وجود عيب صناعة بالمنتج وذلك بناءاً على تقرير فني من الصيانة أو مراكز الخدمة المعتمدة (ذلك ينطبق أيضاً على منتجات العناية الشخصية حيث أنها تخضع لشروط صحية ) وذلك طبقاً لقانون حماية المستهلك ، وفي حالة انتهاء مدة الـ 30 يوم لن يتم استبدال أو استرجاع الجهاز لأي سببٍ كان ، ويجب على العميل فى هذه الحالة التواصل مع خدمة العملاء 19319 لتسجيل بلاغ صيانة وذلك بالنسبة للأجهزة التى يتم تسجيل بلاغ صيانة لها ، وذلك طبقاً لنص المادة 21 من قانون حماية المستهلك.
               </li>
@@ -50,7 +50,7 @@ const WarrantyPolicy = () => {
           </div>
           
           <div className="mb-4">
-            <ul className="text-right text-black text-lg leading-7 list-disc pr-6">
+            <ul className="text-right text-[#211C4DCC] font-roboto text-[24px] leading-[48px] list-disc pr-6" style={{ fontFamily: 'Roboto', fontWeight: 400, fontSize: '24px', lineHeight: '48px' }}>
               <li className="mb-4">
                 طبقاً لنص المادة 17 من ققانون حماية المستهلك ، يحق للمستهلك طلب استبدال أو استرداد قيمة المنتج خلال 14 يوم من تاريخ استلام المنتج وذلك إذا لم يكن الجهاز به عيب صناعة ، ولكن بشرط أن يكون بالحالة التى كانت عليها السلعة عند التعاقد (أى لم يتم فتحها أو استخدامها).
               </li>
@@ -70,7 +70,7 @@ const WarrantyPolicy = () => {
           </div>
           
           <div className="mb-4">
-            <ul className="text-right text-black text-lg leading-7 list-disc pr-6">
+            <ul className="text-right text-[#211C4DCC] font-roboto text-[24px] leading-[48px] list-disc pr-6" style={{ fontFamily: 'Roboto', fontWeight: 400, fontSize: '24px', lineHeight: '48px' }}>
               <li className="mb-4">
                 طبقاً لنص المادة 17 من قانون حماية المستهلك ، يحق للمستهلك طلب استبدال أو استرداد قيمة المنتج خلال 14 يوم من تاريخ استلام المنتج وذلك إذا لم يكن الجهاز به عيب صناعة ، ولكن بشرط أن يكون بالحالة التى كانت عليها السلعة عند التعاقد (أى لم يتم فتحها أو استخدامها).
               </li>
