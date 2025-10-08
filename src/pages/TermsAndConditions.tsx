@@ -1,27 +1,15 @@
 import React from 'react';
 import Layout from '@/components/layout/Layout';
+import InternalBanner from '@/components/public/Internalbanner';
 
 const TermsAndConditions = () => {
   return (
     <Layout>
       <div className="container mx-auto px-4 py-8" dir="rtl">
-        {/* Custom Hero Section for Terms and Conditions page */}
-        <div className="w-full max-w-[1264px] h-[347px] rounded-lg mb-16 relative overflow-hidden mx-auto">
-          <img 
-            alt="الشروط والاحكام" 
-            className="w-full h-full object-cover" 
-            src="/src/assets/images/internalbanerimage.jpg" 
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#211c4d33] to-[#211C4D]"></div>
-          <div className="absolute inset-0 flex flex-col justify-center text-right p-4 md:p-0 pr-[57px]">
-            <h1 className="text-white font-roboto font-bold text-3xl md:text-5xl leading-[48px] md:leading-[68px] mb-2 md:mb-4">
-              الشروط والاحكام
-            </h1>
-            <p className="text-white font-roboto font-bold text-xl md:text-2xl leading-[48px] md:leading-[68px]">
-              تعرف علينا
-            </p>
-          </div>
-        </div>
+        <InternalBanner 
+          title="الشروط والاحكام" 
+          description="تعرف علينا" 
+        />
         
         {/* Content section with policy details - aligned with hero banner */}
         <div className="w-full max-w-[1264px] mx-auto py-8 px-4" style={{ gap: '50px' }}>
@@ -38,7 +26,7 @@ const TermsAndConditions = () => {
             </div>
           </div>
           
-          <div className="mb-8">
+          <div className="mb-16">
             <p className="text-right text-[#211C4D] font-roboto font-medium text-[40px] leading-[100%]">
               مرحباً بك في موقع www.مدينة الهواتف.com الإلكتروني ("الموقع").
             </p>
@@ -52,20 +40,20 @@ const TermsAndConditions = () => {
           
           <div className="mb-8">
             <p className="text-right text-black text-lg leading-7 mb-4">
-              يحق لك التسجيل كمشترٍ أو بائع والاستفادة من الخدمات إذا توفرت لديك معايير الاهلية التالية:
+              1. يحق لك التسجيل كمشترٍ أو بائع والاستفادة من الخدمات إذا توفرت لديك معايير الاهلية التالية:
             </p>
             
             <div className="mb-4">
-              <p className="text-right text-black text-lg leading-7 font-bold">للمشترين:</p>
-              <ol className="text-right text-black text-lg leading-7 list-decimal pr-6">
+              <p className="text-right text-black text-lg leading-7 font-bold">a. للمشترين:</p>
+              <ol className="text-right text-black text-lg leading-7 list-[lower-roman] pr-6">
                 <li className="mb-2">أن تكون بالغاً السن القانونية لتتمكن من شراء المنتجات في بلد إقامتك.</li>
                 <li className="mb-2">أن تكون قادراً على تقديم عنوان في الإمارات العربية المتحدة أو في المملكة العربية السعودية لتسليم المنتجات.</li>
               </ol>
             </div>
             
             <div className="mb-4">
-              <p className="text-right text-black text-lg leading-7 font-bold">للبائعين:</p>
-              <ol className="text-right text-black text-lg leading-7 list-decimal pr-6">
+              <p className="text-right text-black text-lg leading-7 font-bold">b. للبائعين:</p>
+              <ol className="text-right text-black text-lg leading-7 list-[lower-roman] pr-6">
                 <li className="mb-2">أن يكون لديك شركة تجارية مسجلة وفقاً لقوانين الدولة الخاصة بك.</li>
                 <li className="mb-2">أن يكون لديك ترخيص تجاري سارٍ.</li>
                 <li className="mb-2">أن يمكنك تقديم ما يثبت تفويض الأفراد الذين يقومون بالتسجيل في الموقع أو باستخدامه.</li>
@@ -75,17 +63,13 @@ const TermsAndConditions = () => {
             </div>
             
             <p className="text-right text-black text-lg leading-7 mb-4">
-              تقر وتوافق على أنه قد تنطبق بعض المتطلبات الإضافية لبعض الفئات من المنتجات.
-            </p>
-            
-            <p className="text-right text-black text-lg leading-7 mb-4">
-              للتسجيل على الموقع، سنحتاج إلى تقديم بعض المعلومات، ولن يتم قبول تسجيلك في الموقع إذا لم يتم تقديم المعلومات اللازمة لنا. لدينا الحق في رفض أي من عمليات التسجيل دون إبداء الأسباب. كما يحق لنا أيضاً القيام بعمليات التحقق اللازمة للتأكد من هويتك ومتطلبات التسجيل.
+              2. للتسجيل على الموقع، سنحتاج إلى تقديم بعض المعلومات، ولن يتم قبول تسجيلك في الموقع إذا لم يتم تقديم المعلومات اللازمة لنا. لدينا الحق في رفض أي من عمليات التسجيل دون إبداء الأسباب. كما يحق لنا أيضاً القيام بعمليات التحقق اللازمة للتأكد من هويتك ومتطلبات التسجيل.
             </p>
             
             <p className="text-right text-black text-lg leading-7">
-              وبمجرد الانتهاء من التسجيل بنجاح، يستمر التسجيل الخاص بك لفترة غير محددة خاضعاً لاحتمال تعليقه أو إلغائه وفقاً للبند رقم 6 من شروط الاستخدام هذه.
+              3. وبمجرد الانتهاء من التسجيل بنجاح، يستمر التسجيل الخاص بك لفترة غير محددة خاضعاً لاحتمال تعليقه أو إلغائه وفقاً للبند رقم 6 من شروط الاستخدام هذه.
             </p>
-          </div>
+          </div><br/> 
           
           <div className="mb-8">
             <h2 className="text-right text-[#211C4D] font-roboto font-bold text-[32px] leading-[24px] mb-4">
