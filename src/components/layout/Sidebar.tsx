@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import '../../index.css'
 import {
   User,
   ShoppingCart,
@@ -12,20 +13,20 @@ import {
   Menu,
   X,
 } from "lucide-react";
-import { Link } from "react-router-dom";
-
+import {  NavLink } from "react-router-dom";
+import {useLangSync} from '@/hooks/useLangSync'
 export default function Sidebar() {
   const [open, setOpen] = useState(false);
-
+ const {lang} =useLangSync();
   const menuItems = [
-    { icon: <User className="w-5 h-5" />, text: "الحساب الشخصي",link:"/profile" },
-    { icon: <ShoppingCart className="w-5 h-5" />, text: "طلباتي",link:"/myorder" },
-    { icon: <FileText className="w-5 h-5" />, text: "الفواتير",link:"/bills" },
-    { icon: <Heart className="w-5 h-5" />, text: "المفضلة",link:"/favourite" },
-    { icon: <MapPin className="w-5 h-5" />, text: "العنوان",link:"/address" },
-    { icon: <Gift className="w-5 h-5" />, text: "خصومات",link:"/discounts" },
-    { icon: <Wallet className="w-5 h-5" />, text: "المحفظة",link:"/wallet" },
-    { icon: <LogOut className="w-5 h-5" />, text: "تسجيل الخروج",link:"/myorder" },
+    { icon: <User className="w-5 h-5" />, text: "الحساب الشخصي",link:`/${lang}/profile` },
+    { icon: <ShoppingCart className="w-5 h-5" />, text: "طلباتي",link:`/${lang}/myorder` },
+    { icon: <FileText className="w-5 h-5" />, text: "الفواتير",link:`/${lang}/bills` },
+    { icon: <Heart className="w-5 h-5" />, text: "المفضلة",link:`/${lang}/favourite` },
+    { icon: <MapPin className="w-5 h-5" />, text: "العنوان",link:`/${lang}/address` },
+    { icon: <Gift className="w-5 h-5" />, text: "خصومات",link:`/${lang}/discounts` },
+    { icon: <Wallet className="w-5 h-5" />, text: "المحفظة",link:`/${lang}/wallet` },
+    { icon: <LogOut className="w-5 h-5" />, text: "تسجيل الخروج",link:`/${lang}/myorder` },
   ];
 
   return (
@@ -60,11 +61,11 @@ export default function Sidebar() {
               key={idx}
               
             >
-              <Link to={`${item.link}`} className="flex items-center justify-end gap-3 text-gray-700 hover:text-[#2AA0DC] cursor-pointer transition-all">
+              <NavLink to={`${item.link}`} className="flex items-center justify-end gap-3 text-gray-700 hover:text-[#2AA0DC] cursor-pointer transition-all">
               {item.icon}
               <span className="text-[15px]">{item.text}</span>
               
-              </Link>
+              </NavLink>
             </li>
           ))}
         </ul>

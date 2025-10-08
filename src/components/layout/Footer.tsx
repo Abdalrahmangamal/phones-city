@@ -339,7 +339,7 @@ const Footer: React.FC = () => {
             </div>
           </div>
         </div>
-      <img src={ropot} className="absolute top-[-65%] z-90 right-0" alt="" />
+      <img src={ropot} className="absolute top-[-77%] z-90 right-0" alt="" />
       </div>
     </footer>
   );
