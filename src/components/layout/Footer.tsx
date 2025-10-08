@@ -16,7 +16,7 @@ import emkan from "../../assets/images/emkan.png";
 import payment from "../../assets/images/payment.png";
 const Footer: React.FC = () => {
   const navigate = useNavigate();
-  
+
   const serviceMenuItems = [
     "تقسيط المشتريات",
     "خدمة استبدال الاجهزه",
@@ -84,7 +84,7 @@ const Footer: React.FC = () => {
 
   return (
     <footer
-      className="w-full bg-[#211C4D] text-white md:block "
+      className="w-full bg-[#211C4D] text-white md:block mt-[80px]"
       style={{
         boxSizing: "border-box",
         paddingTop: 72,
