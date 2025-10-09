@@ -35,7 +35,7 @@ const AboutQuara = () => {
           </div>
           
           <div className="mb-8">
-            <h2 className="text-right text-[#211C4D] font-roboto font-bold text-[40px] leading-[36px] mb-4">
+            <h2 className="text-right text-[#211C4D] font-roboto font-bold text-[40px] leading-[48px] mb-4">
               خطوات التسجيل في كوارا
             </h2>
           </div>

@@ -42,8 +42,8 @@ const WarrantyPolicy = () => {
             </ul>
           </div>
           
-          <div className="mb-8">
-            <h2 className="text-right text-[#211C4D] font-roboto font-bold text-[32px] leading-[24px] mb-4">
+          <div className="mb-12">
+            <h2 className="text-right text-[#211C4D] font-roboto font-bold text-[32px] leading-[40px] mb-6 md:mb-4">
               1. فى حالة أنه لم يتم فتح كرتونة الجهاز أو استخدامه والجهاز مازال بحالته الأصلية :
             </h2>
           </div>
@@ -62,8 +62,8 @@ const WarrantyPolicy = () => {
             </ul>
           </div>
           
-          <div className="mb-8">
-            <h2 className="text-right text-[#211C4D] font-roboto font-bold text-[32px] leading-[24px] mb-4">
+          <div className="mb-12">
+            <h2 className="text-right text-[#211C4D] font-roboto font-bold text-[32px] leading-[40px] mb-6 md:mb-4">
               2. في حالة قيام العميل بفتح كرتونة الجهاز :
             </h2>
           </div>
