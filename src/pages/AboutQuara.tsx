@@ -14,7 +14,7 @@ const AboutQuara = () => {
         {/* Content section with policy details - aligned with hero banner */}
         <div className="w-full max-w-[1264px] mx-auto py-8 px-4" style={{ gap: '50px' }}>
           <div className="mb-8 relative">
-            <h1 className="text-right text-[#211C4D] font-roboto font-bold text-[40px] leading-[36px] relative" style={{ width: '100%', maxWidth: '1275px' }}>
+            <h1 className="text-right text-[#211C4D] font-roboto font-bold text-[40px] leading-[36px] relative w-full" style={{ maxWidth: '1275px' }}>
               ما هي كوارا (Quara Finance)؟
             </h1>
             <div className="absolute" style={{ top: '-12px', right: '-49px', width: '110px', height: '85.6058px' }}>
@@ -26,7 +26,7 @@ const AboutQuara = () => {
             </div>
           </div>
           
-          <div className="mb-8">
+          <div className="mb-8 w-full">
             <p className="text-right text-[#211C4DCC] font-roboto font-normal text-[24px] leading-[48px]">
               كوارا هي شركة تمويل توفر خدمة الشراء الآن والدفع لاحقًا بالتقسيط 🛍️<br />
               تساعدك تشتري المنتجات اللي بتحبها وتدفعها على أقساط مريحة بدون الحاجة لأي إجراءات بنكية معقدة.<br />
@@ -40,7 +40,7 @@ const AboutQuara = () => {
             </h2>
           </div>
           
-          <div className="mb-8">
+          <div className="mb-8 w-full">
             <h3 className="text-right text-[#211C4D] font-roboto font-bold text-[32px] leading-[24px] mb-4">
               1. إنشاء حساب جديد
             </h3><br/>
@@ -50,7 +50,7 @@ const AboutQuara = () => {
             </ul>
           </div>
           
-          <div className="mb-8">
+          <div className="mb-8 w-full">
             <h3 className="text-right text-[#211C4D] font-roboto font-bold text-[32px] leading-[24px] mb-4">
               2. تأكيد رقم الموبايل
             </h3><br/>
@@ -60,7 +60,7 @@ const AboutQuara = () => {
             </ul>
           </div>
           
-          <div className="mb-8">
+          <div className="mb-8 w-full">
             <h3 className="text-right text-[#211C4D] font-roboto font-bold text-[32px] leading-[24px] mb-4">
               3. رفع مستندات بسيطة
             </h3><br/>      
@@ -71,7 +71,7 @@ const AboutQuara = () => {
             </ul>
           </div>
           
-          <div className="mb-8">
+          <div className="mb-8 w-full">
             <h3 className="text-right text-[#211C4D] font-roboto font-bold text-[32px] leading-[24px] mb-4">
               4. ابدأ الشراء بالتقسيط
             </h3><br/>
@@ -99,8 +99,8 @@ const AboutQuara = () => {
               href="https://quarafinance.com/en/" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="text-[#211C4D] font-roboto font-medium text-[32px] leading-[24px] underline"
-              style={{ width: '1269px', height: '24px' }}
+              className="text-[#211C4D] font-roboto font-medium text-[32px] leading-[24px] underline block w-full"
+              style={{ maxWidth: '1269px', height: '24px' }}
             >
               سجل مع كوارا الان
             </a>

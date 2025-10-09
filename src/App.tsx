@@ -10,6 +10,7 @@ import Contact from "@/pages/Contact";
 import React from "react";
 import Offers from "./pages/Offers";
 import Login from "./pages/Login";
+import Register from "./pages/Register";
 import ProductDetails from "./pages/ProductDetails";
 import ReturnPolicy from "./pages/ReturnPolicy";
 import WarrantyPolicy from "./pages/WarrantyPolicy";
@@ -52,6 +53,7 @@ function LangLayout() {
       <Route path="/contact" element={<Contact/>} />
       <Route path="/offers" element={<Offers/>} />
       <Route path="/login" element={<Login/>} />
+      <Route path="/register" element={<Register/>} />
       <Route path="/product-details" element={<ProductDetails/>} />
       <Route path="/return-policy" element={<ReturnPolicy/>} />
       <Route path="/warranty-policy" element={<WarrantyPolicy/>} />
@@ -84,6 +86,7 @@ export default function App() {
               <Route path="/contact" element={<Navigate to={`/${lang}/contact`} replace />} />
               <Route path="/offers" element={<Navigate to={`/${lang}/offers`} replace />} />
               <Route path="/login" element={<Navigate to={`/${lang}/login`} replace />} />
+              <Route path="/register" element={<Navigate to={`/${lang}/register`} replace />} />
               <Route path="/product-details" element={<Navigate to={`/${lang}/product-details`} replace />} />
               <Route path="/return-policy" element={<Navigate to={`/${lang}/return-policy`} replace />} />
               <Route path="/warranty-policy" element={<Navigate to={`/${lang}/warranty-policy`} replace />} />
