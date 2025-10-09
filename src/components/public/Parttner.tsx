@@ -10,6 +10,7 @@ import {useLangSync} from '@/hooks/useLangSync'
 
 import "../../style.css";
 import { useEffect } from 'react'
+import { Link } from 'react-router-dom'
 
 export default function Parttner() {
   
@@ -55,11 +56,13 @@ export default function Parttner() {
       shadow-[0px_4px_4px_0px_#2D295C40]
     "
   >
+    <Link to={`/${lang}/trademarks`}>
     <img 
       src={logo1} 
       className="!w-[153px] !h-[30px] !object-contain" 
       alt="logo" 
-    />
+      />
+    </Link>
   </SwiperSlide>
 
   <SwiperSlide
@@ -71,11 +74,13 @@ export default function Parttner() {
       shadow-[0px_4px_4px_0px_#2D295C40]
     "
   >
+      <Link to={`/${lang}/trademarks`}>
     <img 
       src={logo2} 
       className="!w-[153px] !h-[30px] !object-contain" 
       alt="logo" 
-    />
+      />
+    </Link>
   </SwiperSlide>
   <SwiperSlide
     className="
@@ -86,26 +91,13 @@ export default function Parttner() {
       shadow-[0px_4px_4px_0px_#2D295C40]
     "
   >
-    <img 
-      src={logo2} 
-      className="!w-[153px] !h-[30px] !object-contain" 
-      alt="logo" 
-    />
-  </SwiperSlide>
-  <SwiperSlide
-    className="
-      !h-[112px] 
-      flex items-center justify-center
-      rounded-[12px] 
-      bg-white 
-      shadow-[0px_4px_4px_0px_#2D295C40]
-    "
-  >
+        <Link to={`/${lang}/trademarks`}>
     <img 
       src={logo3} 
       className="!w-[153px] !h-[30px] !object-contain" 
       alt="logo" 
-    />
+      />
+    </Link>
   </SwiperSlide>
   <SwiperSlide
     className="
@@ -116,11 +108,13 @@ export default function Parttner() {
       shadow-[0px_4px_4px_0px_#2D295C40]
     "
   >
+      <Link to={`/${lang}/trademarks`}>
     <img 
       src={logo4} 
       className="!w-[153px] !h-[30px] !object-contain" 
       alt="logo" 
-    />
+      />
+    </Link>
   </SwiperSlide>
   <SwiperSlide
     className="
@@ -131,11 +125,13 @@ export default function Parttner() {
       shadow-[0px_4px_4px_0px_#2D295C40]
     "
   >
+        <Link to={`/${lang}/trademarks`}>
     <img 
       src={logo1} 
       className="!w-[153px] !h-[30px] !object-contain" 
       alt="logo" 
-    />
+      />
+    </Link>
   </SwiperSlide>
   <SwiperSlide
     className="
@@ -146,11 +142,13 @@ export default function Parttner() {
       shadow-[0px_4px_4px_0px_#2D295C40]
     "
   >
+      <Link to={`/${lang}/trademarks`}>
     <img 
-      src={logo1} 
+      src={logo2} 
       className="!w-[153px] !h-[30px] !object-contain" 
       alt="logo" 
-    />
+      />
+    </Link>
   </SwiperSlide>
   <SwiperSlide
     className="
@@ -161,11 +159,30 @@ export default function Parttner() {
       shadow-[0px_4px_4px_0px_#2D295C40]
     "
   >
+      <Link to={`/${lang}/trademarks`}>
     <img 
-      src={logo1} 
+      src={logo3} 
       className="!w-[153px] !h-[30px] !object-contain" 
       alt="logo" 
-    />
+      />
+    </Link>
+  </SwiperSlide>
+  <SwiperSlide
+    className="
+      !h-[112px] 
+      flex items-center justify-center
+      rounded-[12px] 
+      bg-white 
+      shadow-[0px_4px_4px_0px_#2D295C40]
+    "
+  >
+      <Link to={`/${lang}/trademarks`}>
+    <img 
+      src={logo4} 
+      className="!w-[153px] !h-[30px] !object-contain" 
+      alt="logo" 
+      />
+    </Link>
   </SwiperSlide>
 </Swiper>
 
