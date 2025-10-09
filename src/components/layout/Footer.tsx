@@ -77,7 +77,7 @@ const Footer: React.FC = () => {
 
   return (
     <footer
-      className="w-full bg-[#211C4D] text-white md:block  overflow-visible "
+      className="w-full bg-[#211C4D] text-white md:block   "
       style={{
         boxSizing: "border-box",
         paddingTop: 72,
@@ -88,12 +88,12 @@ const Footer: React.FC = () => {
       <div
         id="footer-heading"
         className="max-w-[1440px] mx-auto w-full box-border relative"
-        style={{ paddingLeft: 24, paddingRight: 24 }}
+      
       >
         {/* Container */}
-        <div className="mx-auto w-full max-w-[1200px]">
+        <div className="mx-auto w-full px- max-w-[1200px]">
           {/* Top row */}
-          <div className="w-full flex flex-wrap items-start justify-between gap-8 md:gap-[80px] lg:gap-[118px]">
+          <div className="w-full flex flex-wrap items-start px-[20px] justify-between gap-8 md:gap-[80px] lg:gap-[118px]">
             {/* Customer Care */}
             <div className="flex-shrink-0 w-full sm:w-1/2 md:w-[170px] lg:w-[196px] flex flex-col gap-4 text-right">
               <h3 className="font-[Cairo] font-semibold text-[24px] leading-[150%] text-white whitespace-normal">
@@ -339,7 +339,7 @@ const Footer: React.FC = () => {
             </div>
           </div>
         </div>
-      <img src={ropot} className="absolute top-[-77%] z-90 right-0" alt="" />
+      <img src={ropot} className="absolute top-[-247px] z-90 right-0" alt="" />
       </div>
     </footer>
   );

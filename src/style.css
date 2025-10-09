@@ -75,10 +75,11 @@
         rotate: 180deg;
       }
 
-      .active{
-            background-color: #FFFFFF1A;
-    padding: 9px 24px;
-    border-radius: 22px;
+      .navactive{
+    background-color: #FFFFFF1A !important;
+    padding: 9px 24px !important;
+    border-radius: 22px ;
+    color: white !important;
       }
       @keyframes rotate-glow {
   0% {

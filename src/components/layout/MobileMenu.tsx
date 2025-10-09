@@ -1,7 +1,17 @@
 "use client";
+import { useTranslation } from "react-i18next";
+import { useLangSync } from "@/hooks/useLangSync";
 
 import * as React from "react";
-import { ChevronDown, Monitor, Smartphone, Tablet, Camera, X } from "lucide-react";
+import {
+  ChevronDown,
+  Monitor,
+  Smartphone,
+  Tablet,
+  Camera,
+  X,
+} from "lucide-react";
+import { Link } from "react-router-dom";
 
 type SubCategory = {
   name: string;
@@ -15,7 +25,11 @@ type Category = {
 };
 
 const categories: Category[] = [
-  { id: "laptops", name: "لابتوب", icon: <Monitor className="w-5 h-5 text-gray-700" /> },
+  {
+    id: "laptops",
+    name: "لابتوب",
+    icon: <Monitor className="w-5 h-5 text-gray-700" />,
+  },
   {
     id: "phones",
     name: "الهواتف الذكيه",
@@ -27,11 +41,17 @@ const categories: Category[] = [
       { name: "أجهزة شاومي" },
     ],
   },
-  { id: "tablets", name: "الأجهزة اللوحية", icon: <Tablet className="w-5 h-5 text-gray-700" /> },
-  { id: "electronics", name: "الأجهزة الإلكترونية الصغيرة", icon: <Camera className="w-5 h-5 text-gray-700" /> },
+  {
+    id: "tablets",
+    name: "الأجهزة اللوحية",
+    icon: <Tablet className="w-5 h-5 text-gray-700" />,
+  },
+  {
+    id: "electronics",
+    name: "الأجهزة الإلكترونية الصغيرة",
+    icon: <Camera className="w-5 h-5 text-gray-700" />,
+  },
 ];
-
-const navLinks = ["الرئيسية", "من نحن", "العروض", "خدماتنا", "تواصل معنا"];
 
 export default function MobileMenu({
   isOpen,
@@ -42,10 +62,39 @@ export default function MobileMenu({
 }) {
   const [openSections, setOpenSections] = React.useState(false);
   const [openCategory, setOpenCategory] = React.useState<string | null>(null);
+const { lang } = useLangSync();
+const { t } = useTranslation();
+
+const navitem = [
+  {
+    link: `/${lang}/`,
+    name: `${t("Home")}`,
+  },
+  {
+    link: `/${lang}/about`,
+    name: `${t("About")}`,
+  },
+  {
+    link: `/${lang}/offers`,
+    name: `${t("Offers")}`,
+  },
+  {
+    link: `/${lang}/servces`,
+    name: `${t("Servces")}`,
+  },
+  {
+    link: `/${lang}/Contact`,
+    name: `${t("Contactus")}`,
+  },
+  {
+    link: `/${lang}/profile`,
+    name: `${t("Profile")}`,
+  },
+];
 
   return (
     <div
-      className={`fixed inset-0 z-50 transition ${
+      className={`fixed inset-0 z-50  transition ${
         isOpen ? "pointer-events-auto" : "pointer-events-none"
       }`}
     >
@@ -131,14 +180,14 @@ export default function MobileMenu({
         {/* Navigation Links */}
         <div className="px-4 py-3">
           <nav className="space-y-2">
-            {navLinks.map((link) => (
-              <a
-                key={link}
-                href="#"
+            {navitem.map((link) => (
+              <Link
+                key={link.link}
+                to={`${link.link}`}
                 className="block px-4 py-2 text-black hover:bg-gray-100 rounded-lg"
               >
-                {link}
-              </a>
+                {link.name}
+              </Link>
             ))}
           </nav>
         </div>

@@ -50,7 +50,7 @@ export default function Sidebar() {
 
       {/* الشريط الجانبي */}
       <aside
-        className={`fixed md:static top-0 right-0 h-full md:h-auto w-[250px] bg-white shadow-lg md:shadow-none rounded-none md:rounded-xl  text-right z-50 transform transition-transform duration-300
+        className={`fixed md:static top-0 right-0 h-full p-[34px] md:h-auto w-[250px] bg-white shadow-lg md:shadow-none rounded-none md:rounded-xl  text-right z-50 transform transition-transform duration-300
         ${open ? "translate-x-0" : "translate-x-full md:translate-x-0"}`}
       >
         <h2 className="text-xl font-semibold mb-6 text-gray-800">مرحباً منه</h2>

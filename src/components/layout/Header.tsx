@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import "../../style.css";
 import { useTranslation } from "react-i18next";
-import {useLangSync} from '@/hooks/useLangSync'
+import { useLangSync } from "@/hooks/useLangSync";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,7 +17,7 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Link ,NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { useState } from "react";
 import MobileMenu from "./MobileMenu";
 import MobileNavbar from "./MobileNavbar";
@@ -28,29 +28,29 @@ export default function Header() {
   const [open] = useState(false);
   // ⬇⬇ state عشان نتحكم في الموبايل منيو
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const {lang} =useLangSync();
-const navitem = [
-  {
-  link:`/${lang}/`,
-  name:`${t("Home")}`
-},
-  {
-  link:`/${lang}/about`,
-  name:`${t("About")}`
-},
-  {
-  link:`/${lang}/offers`,
-  name:`${t("Offers")}`
-},
-  {
-  link:`/${lang}/servces`,
-  name:`${t("Servces")}`
-},
-  {
-  link:`/${lang}/Contact`,
-  name:`${t("Contactus")}`
-},
-]
+  const { lang } = useLangSync();
+  const navitem = [
+    {
+      link: `/${lang}/`,
+      name: `${t("Home")}`,
+    },
+    {
+      link: `/${lang}/about`,
+      name: `${t("About")}`,
+    },
+    {
+      link: `/${lang}/offers`,
+      name: `${t("Offers")}`,
+    },
+    {
+      link: `/${lang}/servces`,
+      name: `${t("Servces")}`,
+    },
+    {
+      link: `/${lang}/Contact`,
+      name: `${t("Contactus")}`,
+    },
+  ];
   return (
     <>
       {/* desktop  header */}
@@ -96,10 +96,11 @@ const navitem = [
               </Link>
               <Link to={""}>
                 <IconButton aria-label="المفضلة">
-                  <Heart className="h-5 w-5 opacity-90" />
+                  <Link to={`/${lang}/favourite`}>
+                    <Heart className="h-5 w-5 opacity-90" />
+                  </Link>
                 </IconButton>
               </Link>
-
               <Link to={"/profile"}>
                 <IconButton aria-label="حسابي">
                   <UserRound className="h-5 w-5 opacity-90" />
@@ -108,7 +109,9 @@ const navitem = [
               <Link to={""}>
                 <IconButton aria-label="عربة التسوق">
                   <span className="relative">
-                    <ShoppingCart className="h-5 w-5 opacity-90" />
+                    <Link to={`/${lang}/myorder`}>
+                      <ShoppingCart className="h-5 w-5 opacity-90" />
+                    </Link>
                     <span className="absolute -right-1 -top-1 h-2.5 w-2.5 rounded-full bg-orange-400" />
                   </span>
                 </IconButton>
@@ -162,15 +165,19 @@ const navitem = [
 
             {/* Main Links */}
             <nav className="hidden items-center lg:gap-15 md:gap-8  text-sm md:flex">
-              {
-                navitem.map((item)=>(
-              <NavLink to={`${item.link}`}  end={item.link === `/${lang}/`} className="xl:text-[24px] text-[15px] font-[400] ">
-                {item.name}
-              </NavLink>
-
-                ))
-              }
-             
+              {navitem.map((item) => (
+                <NavLink
+                  to={`${item.link}`}
+                  end={item.link === `/${lang}/`} // علشان الـ home مايفضلش active دايمًا
+                  className={({ isActive }) =>
+                    `xl:text-[24px] text-[15px] font-[400] text-white hover:text-[#F3AC5D] transition-all duration-300 ${
+                      isActive ? "navactive text-[#F3AC5D]" : ""
+                    }`
+                  }
+                >
+                  {item.name}
+                </NavLink>
+              ))}
             </nav>
 
             {/* category btn */}

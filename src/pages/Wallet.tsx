@@ -14,7 +14,7 @@ export default function Wallet() {
               <p className="text-[#211C4DCC] text-[16px] font-[500]">نقاطي</p>
               <p>270 نقطه</p>
             </div>
-            <div className="w-full  justify-between h-[60px] px-7  mt-[20px] p-5 bg-[#F3AC5D73] flex items-center rounded-[8px]">
+            <div className="w-full  justify-between md:h-[60px] h-full px-7  mt-[20px] p-5 bg-[#F3AC5D73] flex items-center rounded-[8px]">
               <p className="text-[#211C4DCC] text-[24px] font-[500]">
                 تنبيه لك 200 نقطه تنتهي خلال 7 ايام - استخدمها الان
               </p>
@@ -96,7 +96,7 @@ export default function Wallet() {
                       </div>
                     </td>
                     <td className="text-[#211C4D] border-b  font-[500] py-4">
-                      <div className="flex items-center justify-center">
+                      <div className="flex items-center justify-start">
 
                     70
                       </div>
@@ -137,7 +137,7 @@ export default function Wallet() {
                         </div>
                       </div>
                     </td>
-                    <td className="text-[#211C4D] border-b  font-[500] py-4">
+                    <td className="text-[#211C4D] border-b text-start font-[500] py-4">
                     70
                     </td>
                     <td className="text-[#40A529] border-b  font-[500] py-4">

@@ -219,7 +219,7 @@ swiper {
   object-fit: cover;
 }
 .active{
-  color: #2AA0DC;
-  padding: 0px;
+  color: #2AA0DC !important;
+  padding: 0px !important;
   font-weight: 500;
 }
