@@ -14,10 +14,18 @@ const ProductDetails: React.FC = () => {
           />
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#211c4d33] to-[#211C4D]"></div>
           <div className="absolute inset-0 flex flex-col justify-center text-right p-4 md:p-0 pr-[57px]">
-            <h1 className="text-white font-roboto font-bold text-3xl md:text-5xl leading-[48px] md:leading-[68px] mb-2 md:mb-4">
+            <h1 className="text-white font-roboto font-bold text-3xl md:text-5xl leading-[48px] md:leading-[68px] mb-2 md:mb-4" 
+                style={{ 
+                  textShadow: '0px 15px 5px #00000040',
+                  filter: 'drop-shadow(0px 15px 5px rgba(0, 0, 0, 0.25))'
+                }}>
               كيف تشتري من مدينة الهواتف
             </h1>
-            <p className="text-white font-roboto font-bold text-3xl md:text-5xl leading-[48px] md:leading-[68px]">
+            <p className="text-white font-roboto font-bold text-3xl md:text-5xl leading-[48px] md:leading-[68px]" 
+               style={{ 
+                 textShadow: '0px 15px 5px #00000040',
+                 filter: 'drop-shadow(0px 15px 5px rgba(0, 0, 0, 0.25))'
+               }}>
               بالتقسيط وبدون فوائد
             </p>
           </div>

@@ -14,7 +14,7 @@ const TermsAndConditions = () => {
         {/* Content section with policy details - aligned with hero banner */}
         <div className="w-full max-w-[1264px] mx-auto py-8 px-4" style={{ gap: '50px' }}>
           <div className="mb-8 relative">
-            <h1 className="text-right text-[#211C4D] font-roboto font-medium text-[40px] leading-[100%] relative" style={{ width: '100%', maxWidth: '1275px' }}>
+            <h1 className="text-right text-[#211C4D] font-roboto font-medium text-[40px] leading-[100%] relative w-full" style={{ maxWidth: '1275px' }}>
               شروط الاستخدام
             </h1>
             <div className="absolute" style={{ top: '-12px', right: '-49px', width: '110px', height: '85.6058px' }}>
@@ -26,7 +26,7 @@ const TermsAndConditions = () => {
             </div>
           </div>
           
-          <div className="mb-16">
+          <div className="mb-16 w-full">
             <p className="text-right text-[#211C4D] font-roboto font-medium text-[40px] leading-[100%]">
               مرحباً بك في موقع www.مدينة الهواتف.com الإلكتروني ("الموقع").
             </p>
@@ -38,12 +38,12 @@ const TermsAndConditions = () => {
             </h2>
           </div>
           
-          <div className="mb-8">
+          <div className="mb-8 w-full">
             <p className="text-right text-[#211C4DCC] font-roboto text-[24px] leading-[48px] mb-4" style={{ fontFamily: 'Roboto', fontWeight: 400, fontSize: '24px', lineHeight: '48px' }}>
               1. يحق لك التسجيل كمشترٍ أو بائع والاستفادة من الخدمات إذا توفرت لديك معايير الاهلية التالية:
             </p>
             
-            <div className="mb-4">
+            <div className="mb-4 w-full">
               <p className="text-right text-black text-lg leading-7 font-bold">a. للمشترين:</p>
               <ol className="text-right text-[#211C4DCC] font-roboto text-[24px] leading-[48px] list-[lower-roman] pr-6" style={{ fontFamily: 'Roboto', fontWeight: 400, fontSize: '24px', lineHeight: '48px' }}>
                 <li className="mb-2">أن تكون بالغاً السن القانونية لتتمكن من شراء المنتجات في بلد إقامتك.</li>
@@ -51,7 +51,7 @@ const TermsAndConditions = () => {
               </ol>
             </div>
             
-            <div className="mb-4">
+            <div className="mb-4 w-full">
               <p className="text-right text-black text-lg leading-7 font-bold">b. للبائعين:</p>
               <ol className="text-right text-[#211C4DCC] font-roboto text-[24px] leading-[48px] list-[lower-roman] pr-6" style={{ fontFamily: 'Roboto', fontWeight: 400, fontSize: '24px', lineHeight: '48px' }}>
                 <li className="mb-2">أن يكون لديك شركة تجارية مسجلة وفقاً لقوانين الدولة الخاصة بك.</li>
@@ -77,7 +77,7 @@ const TermsAndConditions = () => {
             </h2>
           </div>
           
-          <div className="mb-8">
+          <div className="mb-8 w-full">
             <ol className="text-right text-[#211C4DCC] font-roboto text-[24px] leading-[48px] list-decimal pr-6" style={{ fontFamily: 'Roboto', fontWeight: 400, fontSize: '24px', lineHeight: '48px' }}>
               <li className="mb-4">
                 <span className="font-bold">القانون المطبق:</span> إن شروط الاستخدام هذه وأياً من الحقوق أو الواجبات غير التعاقدية ذات الصلة يجب إخضاعها وتفسيرها للقوانين المطبقة في المملكة العربية السعودية.
