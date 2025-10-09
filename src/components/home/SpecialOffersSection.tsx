@@ -9,6 +9,7 @@ import bluephone from '../../assets/images/bluephone.png'
 import camera from '../../assets/images/camera.png'
 import watch from '../../assets/images/watch.png'
 import {useLangSync} from '@/hooks/useLangSync'
+import { Link } from "react-router-dom";
 type Product = {
   id: number;
   name: string;
@@ -131,7 +132,7 @@ const SpecialOffersSection: React.FC = () => {
             عروض خاصة لك
           </h2>
         </div>
-        <button className="flex  items-center gap-[6px] py-[10px] rounded-[4px]">
+        <Link className="flex  items-center gap-[6px] py-[10px] rounded-[4px]" to={`/trademarkbestoffer`}>
           <span className="font-roboto font-medium md:text-[24px] leading-[20px] text-[#211C4D]">
             عرض المزيد
           </span>
@@ -151,7 +152,7 @@ const SpecialOffersSection: React.FC = () => {
               strokeLinejoin="round"
             />
           </svg>
-        </button>
+        </Link>
       </div>
 
       <div className="w-full h-[0px] border-t border-[#E5E7EB]" />

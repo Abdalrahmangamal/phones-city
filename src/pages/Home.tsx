@@ -22,8 +22,9 @@ import airbuds from "@/assets/images/airbuds.png";
 import product1 from "@/assets/images/product1.png";
 import product2 from "@/assets/images/product2.png";
 import type {Product} from '@/types/index'
-
+import {useLangSync} from '@/hooks/useLangSync'
 const NewHome = () => {
+  const {lang} =useLangSync();
   const products: Product[] = [
   {
     id: 1,
@@ -80,14 +81,14 @@ const NewHome = () => {
                 description:
                   "استمتع بتجربة استثنائية مع أحدث الهواتف بأفضل الأسعار وخدمة ما بعد البيع المميزة",
                 bg: `${image}`,
-                link: "/shop",
+                link: "/Trademarkbestoffer",
               },
               {
                 title: "عروض خاصة جدًا",
                 description:
                   "خصومات حصرية على جميع الماركات العالمية لفترة محدودة",
                 bg: `${image}`,
-                link: "/offers",
+                link: "/Trademarkbestoffer",
               },
             ]}
           />
@@ -101,7 +102,7 @@ const NewHome = () => {
           />
           <ProductCategoriesSection />
           <LatestOffers />
-          <Bestseller title={"الأكثر مبيعاً"} products={products} />
+          <Bestseller title={"الأكثر مبيعاً"} btn={true} link={`/${lang}/Trademarksbestseller`} products={products} />
           <SpecialOffersSection />
           <TestimonialsSection />
           <section className="px-0 -mx-[10px] md:-mx-[45px]">

@@ -1,22 +1,24 @@
 import { useState } from "react";
 import { Rating, RatingButton } from "@/components/ui/shadcn-io/rating";
 import addtocart from "@/assets/images/addtocart.png";
-
-interface ProductCardProps {
-  name: string;
-  discount?: string;
-  price: number;
-  isNew?: boolean;
-  variations?: { color: string; image: string }[];
-}
+import type {Product} from '@/types/index'
+// interface ProductCardProps {
+//   name: string;
+//   discount?: string;
+//   price: number;
+//   isNew?: boolean;
+//   favourite?:boolean;
+//   variations?: { color: string; image: string }[];
+// }
 
 export default function ProductCard({
   name,
   discount,
   price,
+  favourite = false ,
   isNew = false,
   variations = [],
-}: ProductCardProps) {
+}: Product) {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const currentImage = variations[selectedIndex]?.image;
 
@@ -32,7 +34,22 @@ export default function ProductCard({
 
         <div className="flex w-full items-center justify-between absolute right-0 top-0">
           <div className="bg-[#EEF1F6] flex items-center justify-center w-[36px] h-[36px] rounded-full">
-            <svg
+            {favourite === true ? (  <svg
+              width="21"
+              height="18"
+              viewBox="0 0 21 18"
+              fill="red"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M6.9 1.96094C4.11914 1.96094 1.75 4.04024 1.75 6.74073C1.75 8.60369 2.62235 10.1721 3.77849 11.4714C4.93066 12.7661 6.41714 13.853 7.76097 14.7626L10.0796 16.332C10.3335 16.5039 10.6665 16.5039 10.9204 16.332L13.239 14.7626C14.5829 13.853 16.0693 12.7661 17.2215 11.4714C18.3777 10.1721 19.25 8.60369 19.25 6.74073C19.25 4.04024 16.8809 1.96094 14.1 1.96094C12.6665 1.96094 11.4052 2.63308 10.5 3.50277C9.59484 2.63308 8.33347 1.96094 6.9 1.96094Z"
+                stroke=""
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>):(
+                <svg
               width="21"
               height="18"
               viewBox="0 0 21 18"
@@ -47,6 +64,10 @@ export default function ProductCard({
                 strokeLinejoin="round"
               />
             </svg>
+            )
+          
+
+            }
           </div>
 
           {isNew && (
