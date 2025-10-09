@@ -77,7 +77,7 @@ const Footer: React.FC = () => {
 
   return (
     <footer
-      className="w-full bg-[#211C4D] text-white md:block   "
+      className=" bg-[#211C4D] text-white md:block   "
       style={{
         boxSizing: "border-box",
         paddingTop: 72,

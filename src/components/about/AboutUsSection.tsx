@@ -32,11 +32,14 @@ export default function AboutUsSection() {
     alt="صورة للمكان"
     className="object-cover w-full h-full"
   />
+<div className="w-full h-full top-0 right-0 absolute bg-[linear-gradient(90deg,rgba(33,28,77,0.28)_0%,rgba(33,28,77,0.2156)_30.77%,rgba(33,28,77,0.252)_50.48%,rgba(33,28,77,0)_94.71%)]
+">
 
+</div>
   {/* نصف دائرة على الجهة اليسرى */}
 <div className="absolute end-0 top-0 w-1/2 h-full flex items-center justify-start  overflow-hidden">
   <div className="w-full h-full bg-[#211C4D]/70 backdrop-blur-sm rounded-r-[9999px] flex items-center px-6">
-    <h2 className="text-white font-bold text-[35px] drop-shadow-lg z-10">
+    <h2 className="text-white font-bold text-[35px] drop-shadow-lg z-10 [text-shadow:-1px_11px_2px_rgba(0,0,0,0.25)]">
       صوره للمكان
     </h2>
   </div>
