@@ -28,6 +28,9 @@ import Discounts from "./pages/Discounts";
 import Favourite from "./pages/Favourite";
 import Trademarks from "./pages/Trademarks";
 import Trademarksbestseller from "./pages/Trademarksbestseller";
+import Trademarkscategory from "./pages/Trademarkscategory";
+import Trademarkbestoffer from "./pages/Trademarkbestoffer";
+import ScrollToTop from "@/components/ScrollToTop";
 
 function LangLayout() {
   const { lang: urlLang } = useParams();
@@ -48,6 +51,7 @@ function LangLayout() {
 
   return (
     <Routes>
+      
       {/* <Route path="" element={<NewHome />} /> */}
       <Route path="/" element={<Home />} />
       <Route path="/about" element={<About/>} />
@@ -72,6 +76,8 @@ function LangLayout() {
       <Route path="/favourite" element={<Favourite/>} />
       <Route path="/trademarks" element={<Trademarks/>} />
       <Route path="/trademarksbestseller" element={<Trademarksbestseller/>} />
+      <Route path="/trademarkscategory" element={<Trademarkscategory/>} />
+      <Route path="/trademarkbestoffer" element={<Trademarkbestoffer/>} />
       
       <Route path="/wallet" element={<Wallet/>} />
     </Routes>
@@ -83,7 +89,9 @@ export default function App() {
   return (
     <div className="flex flex-col min-h-screen"> {/* Added flex-col and min-h-screen to ensure footer stays at bottom */}
       <BrowserRouter>
+                <ScrollToTop />
         <Routes>
+
           <Route path="/" element={<Navigate to={`/${lang}`} replace />} />
               <Route path="/about" element={<Navigate to={`/${lang}/about`} replace />} />
               <Route path="/servces" element={<Navigate to={`/${lang}/servces`} replace />} />
@@ -107,6 +115,8 @@ export default function App() {
               <Route path="/singleaddress" element={<Navigate to={`/${lang}/singleaddress`} replace />} />
               <Route path="/trademarks" element={<Navigate to={`/${lang}/trademarks`} replace />} />
               <Route path="/trademarksbestseller" element={<Navigate to={`/${lang}/trademarksbestseller`} replace />} />
+              <Route path="/trademarkscategory" element={<Navigate to={`/${lang}/trademarkscategory`} replace />} />
+              <Route path="/trademarkbestoffer" element={<Navigate to={`/${lang}/trademarkbestoffer`} replace />} />
           <Route path="/:lang/*" element={<LangLayout />} />
         </Routes>
       </BrowserRouter>

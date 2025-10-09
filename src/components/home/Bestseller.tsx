@@ -7,7 +7,10 @@ interface BestsellerProps {
   title: string;
   link?: string;
   btn?: boolean;
+  style?: string;
+  id?: number;
   products: Product[];
+  favourite?:boolean;
 }
 
 export default function Bestseller({
@@ -15,6 +18,9 @@ export default function Bestseller({
   link,
   btn,
   products,
+  style,
+  
+  
 }: BestsellerProps) {
   return (
     <div className="mt-[80px]">
@@ -54,7 +60,9 @@ export default function Bestseller({
       </div>
 
       {/* المنتجات */}
-      <div className="grid md:grid-cols-4 sm:grid-cols-2 grid-cols-1 gap-[20px] justify-items-center mt-[60px]  ">
+      <div
+        className={`grid md:grid-cols-4 ${style} sm:grid-cols-2 grid-cols-1 gap-[20px] justify-items-center mt-[60px] `}
+      >
         {products.map((item) => (
           <ProductCard
             key={item.id}
@@ -62,7 +70,9 @@ export default function Bestseller({
             discount={item.discount}
             price={item.price}
             isNew={item.isNew}
+            favourite={item.favourite}
             variations={item.variations}
+            id={item.id}
           />
         ))}
       </div>

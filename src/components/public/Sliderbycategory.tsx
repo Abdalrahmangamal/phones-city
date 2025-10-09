@@ -62,7 +62,7 @@ export default function CategorySlider() {
         {categories.map((cat, i) => (
           <SwiperSlide key={i}>
             <Link
-              to={`/${lang}/category/${cat.name}`}
+              to={`/${lang}/trademarkscategory`}
               className="flex flex-col items-center justify-center bg-white rounded-xl py-4 px-3 shadow-[0_4px_8px_#0000001a] hover:shadow-lg transition-all duration-200"
             >
               <img
