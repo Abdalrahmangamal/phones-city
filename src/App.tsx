@@ -121,7 +121,7 @@ export default function App() {
           <Route path="/:lang/*" element={<LangLayout />} />
         </Routes>
       </BrowserRouter>
-      <img src={ropot} className="fixed z-[500] w-[150px] h-[150px] bottom-0 right-0" alt="" />
+      <img src={ropot} className="fixed z-[500] w-[250px] h-[200px] bottom-[-20px] right-[-30px]" alt="" />
     </div>
   );
 }

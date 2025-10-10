@@ -3,7 +3,6 @@ import HeroSection from "@/components/public/HeroSection";
 import BannerSection from "@/components/public/BannerSection";
 import ProductCategoriesSection from "@/components/home/ProductCategoriesSection";
 // import NewTrendingProductsSection from '@/components/custom/NewTrendingProductsSection';
-import SpecialOffersSection from "@/components/home/SpecialOffersSection";
 import TestimonialsSection from "@/components/home/TestimonialsSection";
 import FrameSection from "@/components/home/FrameSection";
 // import Share2Section from '@/components/custom/Share2Section';
@@ -69,6 +68,50 @@ const NewHome = () => {
       ],
     },
   ];
+  const products2: Product[] = [
+    {
+      id: 1,
+      name: "لابتوب ابل ماك بوك برو 2024",
+      price: 8999,
+      discount: "16",
+      variations: [
+        { color: "#fff", image:  airbuds},
+        { color: "#000", image: bluephone },
+        { color: "#f68b1f", image:orangelabtop  },
+      ],
+    },
+    {
+      id: 2,
+      name: "ايفون 15 برو",
+      discount: "16",
+      price: 7499,
+      variations: [
+        { color: "#ccc", image:  product2 },
+        { color: "#000", image:  bluephone},
+        { color: "#f68b1f", image: airbuds },
+      ],
+    },
+    {
+      id: 3,
+      name: "ايفون 15 برو",
+      discount: "16",
+      price: 7499,
+      variations: [
+        { color: "red", image: product1 },
+        { color: "#000", image: product2 },
+      ],
+    },
+    {
+      id: 4,
+      name: "ايفون 15 برو",
+      discount: "16",
+      price: 7499,
+      variations: [
+        { color: "#ccc", image: bluephone },
+        { color: "#000", image: watch },
+      ],
+    },
+  ];
 
   return (
     <Layout>
@@ -81,6 +124,27 @@ const NewHome = () => {
                 title: "أحدث الهواتف الذكية",
                 description:
                   "استمتع بتجربة استثنائية مع أحدث الهواتف بأفضل الأسعار وخدمة ما بعد البيع المميزة",
+                bg: `${image}`,
+                link: "/Trademarkbestoffer",
+              },
+              {
+                title: "عروض خاصة جدًا",
+                description:
+                  "خصومات حصرية على جميع الماركات العالمية لفترة محدودة",
+                bg: `${image}`,
+                link: "/Trademarkbestoffer",
+              },
+              {
+                title: "عروض خاصة جدًا",
+                description:
+                  "خصومات حصرية على جميع الماركات العالمية لفترة محدودة",
+                bg: `${image}`,
+                link: "/Trademarkbestoffer",
+              },
+              {
+                title: "عروض خاصة جدًا",
+                description:
+                  "خصومات حصرية على جميع الماركات العالمية لفترة محدودة",
                 bg: `${image}`,
                 link: "/Trademarkbestoffer",
               },
@@ -109,7 +173,12 @@ const NewHome = () => {
             link={`/${lang}/Trademarksbestseller`}
             products={products}
           />
-          <SpecialOffersSection />
+          <Bestseller
+            title={"عروض خاصة لك"}
+            btn={true}
+            link={`/${lang}/Trademarksbestseller`}
+            products={products2}
+          />
           <TestimonialsSection />
           <FrameSection />
           <CertificationBadgesSection />

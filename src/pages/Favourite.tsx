@@ -146,11 +146,11 @@ export default function Favourite() {
       <Layout>
         <div className="flex flex-col md:flex-row justify-center gap-[30px] mt-[80px]">
           <Sidebar />
-          <div className="md:w-[1000px] px-5 md:px-0">
+          <div className="md:w-[1100px] px-5 md:px-0">
             <Bestseller
               title={"المنتجات المفضله"}
               btn={false}
-              style="md:!grid-cols-3"
+              style="lg:!grid-cols-2 xl:!grid-cols-3 !gap-19 md:!grid-cols-1"
               products={products}
                          />
           </div>

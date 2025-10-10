@@ -1,7 +1,7 @@
 import locationpen from "../../assets/images/locationpen.png";
 export default function Location() {
   return (
-    <div>
+    <div className="lg:px-[90px] px-2 pt-20 md:pt-0">
       <div className="flex items-end justify-start gap-[10px]">
         <img src={locationpen} alt="" />
         <h1 className="text-[40px] font-[700] text-[#211C4D]">العنوان</h1>

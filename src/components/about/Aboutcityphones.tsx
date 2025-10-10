@@ -1,6 +1,6 @@
 export default function Aboutcityphones() {
   return (
-    <div className="mt-[30px] text-start">
+    <div className="mt-[30px] text-start lg:px-[90px] px-2 pt-20 md:pt-0">
       <h1 className="font-[700] text-[40px] text-[#211C4D]">
         عن مدينه الهواتف
       </h1>

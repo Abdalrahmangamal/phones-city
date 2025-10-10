@@ -67,11 +67,11 @@ export default function Header() {
               <img
                 src={logo}
                 alt="مدينة الهواتف"
-                width={157}
-                height={24}
+                width={127}
+                height={20}
                 className="h-[70px] w-[70px] object-contain"
               />
-              <h1 className="flex items-center text-[24px] font-[700] ">
+              <h1 className="flex items-center text-[20px] font-[700] ">
                 مدينة الهواتف
               </h1>
             </Link>
@@ -79,9 +79,14 @@ export default function Header() {
             <div className="mx-auto hidden flex-1 max-w-[500px] justify-center items-center md:flex">
               <div className="relative w-full max-w-2xl">
                 <Input
-                  placeholder="ابحث عن المنتجات"
-                  className="h-10 rounded-full bg-transparent border-white text-white placeholder:text-white/60 focus-visible:ring-white/40"
+                  placeholder="بحث"
+                  className="h-[48px] rounded-full px-9  bg-transparent border-white text-white placeholder:text-[#6C727F] focus-visible:ring-white/40"
                 />
+                <svg className="absolute right-3 top-3" width="18" height="24" viewBox="0 0 18 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M8.25 5.90625C5.29873 5.90625 2.90625 8.29873 2.90625 11.25C2.90625 14.2013 5.29873 16.5938 8.25 16.5938C11.2013 16.5938 13.5938 14.2013 13.5938 11.25C13.5938 8.29873 11.2013 5.90625 8.25 5.90625ZM1.59375 11.25C1.59375 7.57385 4.57385 4.59375 8.25 4.59375C11.9261 4.59375 14.9062 7.57385 14.9062 11.25C14.9062 14.9261 11.9261 17.9062 8.25 17.9062C4.57385 17.9062 1.59375 14.9261 1.59375 11.25Z" fill="white"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M12.0235 15.0235C12.2797 14.7672 12.6953 14.7672 12.9515 15.0235L16.214 18.286C16.4703 18.5422 16.4703 18.9578 16.214 19.214C15.9578 19.4703 15.5422 19.4703 15.286 19.214L12.0235 15.9515C11.7672 15.6953 11.7672 15.2797 12.0235 15.0235Z" fill="white"/>
+</svg>
+
               </div>
             </div>
 
@@ -181,7 +186,7 @@ export default function Header() {
             </nav>
 
             {/* category btn */}
-            <DropdownMenu>
+            <DropdownMenu dir="rtl">
               <DropdownMenuTrigger asChild>
                 <Button className="w-[150px] bg-transparent">
                   <div className="flex items-center justify-center gap-[10px]">
@@ -241,7 +246,8 @@ export default function Header() {
 
               <DropdownMenuContent className="w-56" align="start">
                 <DropdownMenuGroup>
-                  <DropdownMenuItem className="flex justify-between text-right">
+                  <DropdownMenuItem className="flex justify-between text-start">
+                    
                     لاب توب
                   </DropdownMenuItem>
 

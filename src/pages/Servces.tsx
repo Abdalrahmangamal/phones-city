@@ -23,7 +23,7 @@ export default function Servces() {
         </div>
 
         {/* Combined Services Cards Section - Responsive grid layout */}
-        <div className="w-full">
+        <div className="w-full lg:px-[90px] px-2 pt-20 md:pt-0">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {/* Service Card 1 - Electronics Sales */}
             <div className="w-full h-[484px] rounded-lg p-8 relative overflow-hidden bg-gradient-to-b from-[#F9F9F9] to-[#CBD7F9] shadow-[0px_8px_8px_0px_#0000000D]">
@@ -45,7 +45,7 @@ export default function Servces() {
                     className="w-full h-[210px] object-contain"
                   />
                 </div>
-                <h3 className="text-[#211C4D] font-roboto font-medium text-2xl leading-none mb-4 text-center">
+                <h3 className="text-[#211C4D] font-roboto font-medium text-2xl leading-[30px] mb-4 text-center">
                   بيع الأجهزة الاكترونية و الأجهزه الكهربائية المنزلية
                 </h3>
                 <p className="text-[#211C4DCC] font-roboto font-normal text-base leading-6 text-center">
