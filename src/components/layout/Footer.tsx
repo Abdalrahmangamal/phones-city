@@ -76,272 +76,140 @@ const Footer: React.FC = () => {
   };
 
   return (
-    <footer
-      className=" bg-[#211C4D] text-white md:block   "
-      style={{
-        boxSizing: "border-box",
-        paddingTop: 72,
-        paddingBottom: 24,
-         // safety to avoid horizontal scroll
-      }}
-    >
-      <div
-        id="footer-heading"
-        className="max-w-[1440px] mx-auto w-full box-border relative"
-      
-      >
-        {/* Container */}
-        <div className="mx-auto w-full px- max-w-[1200px]">
-          {/* Top row */}
-          <div className="w-full flex flex-wrap items-start px-[20px] justify-between gap-8 md:gap-[80px] lg:gap-[118px]">
-            {/* Customer Care */}
-            <div className="flex-shrink-0 w-full sm:w-1/2 md:w-[170px] lg:w-[196px] flex flex-col gap-4 text-right">
-              <h3 className="font-[Cairo] font-semibold text-[24px] leading-[150%] text-white whitespace-normal">
-                رعاية العميل
-              </h3>
-              <div className="flex flex-col gap-2">
-                {customerCareMenuItems.map((item, i) => (
-                  <button
-                    key={i}
-                    className="text-[#E0E5EB] hover:text-white text-[16px] leading-[22px] text-right bg-transparent border-0 p-0 cursor-pointer"
-                    style={{ fontFamily: "Roboto" }}
-                    onClick={() => handleCustomerCareItemClick(item)}
-                  >
-                    {item}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* About */}
-            <div className="flex-shrink-0 w-full sm:w-1/2 md:w-[170px] lg:w-[196px] flex flex-col gap-4 text-right">
-              <h3 className="font-roboto font-semibold text-[24px] leading-[150%] text-white whitespace-normal">
-                عن مدينة الهواتف
-              </h3>
-              <div className="flex flex-col gap-2">
-                {aboutMenuItems.map((item, i) => (
-                  <button
-                    key={i}
-                    className="text-[#E0E5EB] hover:text-white text-[16px] leading-[22px] text-right bg-transparent border-0 p-0 cursor-pointer"
-                    style={{ fontFamily: "Roboto" }}
-                    onClick={() => handleAboutItemClick(item)}
-                  >
-                    {item}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Services */}
-            <div className="flex-shrink-0 w-full sm:w-1/2 md:w-[150px] lg:w-[170px] flex flex-col gap-4 text-right">
-              <h3 className="font-roboto font-semibold text-[24px] leading-[28px] text-white whitespace-normal mb-2">
-                خدمه مدينه الهواتف
-              </h3>
-              <div className="flex flex-col gap-2 mt-1">
-                {serviceMenuItems.map((item, i) => (
-                  <button
-                    key={i}
-                    className="text-[#E0E5EB] hover:text-white text-[16px] leading-[22px] text-right bg-transparent border-0 p-0 cursor-pointer"
-                    style={{ fontFamily: "Roboto" }}
-                  >
-                    {item}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Brand & socials (rightmost visually) */}
-            <div className="flex-1 min-w-[220px] max-w-[420px] w-full sm:w-1/2 md:w-[320px] lg:w-[373px] flex flex-col gap-4 text-right">
-              <h2 className="font-roboto font-bold text-[24px] leading-[100%] text-white whitespace-normal">
-                مدينة الهواتف
-              </h2>
-
-              <p
-                className="text-[#CAD0D9] text-[16px] leading-[150%]"
+<footer
+  className="bg-[#211C4D] text-white"
+  style={{
+    boxSizing: "border-box",
+    paddingTop: 72,
+    paddingBottom: 24,
+  }}
+>
+  <div
+    id="footer-heading"
+    className="max-w-[1440px] mx-auto w-full relative px-5 sm:px-8 md:px-10"
+  >
+    {/* Container */}
+    <div className="max-w-[1200px] mx-auto">
+      {/* Top row */}
+      <div className="w-full flex flex-wrap justify-between gap-y-10 md:gap-y-12 gap-x-6 md:gap-x-10 lg:gap-x-[118px]">
+        {/* Customer Care */}
+        <div className="w-full sm:w-[48%] md:w-[200px] flex flex-col gap-3 text-right">
+          <h3 className="font-[Cairo] font-semibold text-[22px] sm:text-[24px] leading-[150%]">
+            رعاية العميل
+          </h3>
+          <div className="flex flex-col gap-2">
+            {customerCareMenuItems.map((item, i) => (
+              <button
+                key={i}
+                className="text-[#E0E5EB] hover:text-white text-[15px] sm:text-[16px] text-right bg-transparent border-0 p-0 cursor-pointer"
                 style={{ fontFamily: "Roboto" }}
+                onClick={() => handleCustomerCareItemClick(item)}
               >
-                لمعرفة كل جديد عنا ...... تابع حساباتنا على وسائل التواصل
-                الاجتماعي وحساباتنا على جوجل.
-              </p>
-
-              {/* Social icons row */}
-              <div className="w-full mt-1">
-                <div className="flex justify-end">
-                  <div className="flex items-center gap-3 flex-wrap">
-                    <a
-                      href="#"
-                      className="w-9 h-9 rounded-full bg-white flex items-center justify-center overflow-hidden flex-shrink-0 transition-all duration-200 hover:bg-gray-100 hover:shadow-md"
-                    >
-                      <img
-                        src={tiktok}
-                        alt="tiktok"
-                        className="w-5 h-5 object-contain block"
-                        style={{ display: "block" }}
-                      />
-                    </a>
-
-                    <a
-                      href="#"
-                      className="w-9 h-9 rounded-full bg-white flex items-center justify-center overflow-hidden flex-shrink-0 transition-all duration-200 hover:bg-gray-100 hover:shadow-md"
-                    >
-                      <img
-                        src={snapchat}
-                        alt="snapchat"
-                        className="w-5 h-5 object-contain block"
-                        style={{ display: "block" }}
-                      />
-                    </a>
-
-                    <a
-                      href="#"
-                      className="w-9 h-9 rounded-full bg-white flex items-center justify-center overflow-hidden flex-shrink-0 transition-all duration-200 hover:bg-gray-100 hover:shadow-md"
-                    >
-                      <img
-                        src={whatsapp}
-                        alt="whatsapp"
-                        className="w-5 h-5 object-contain block"
-                        style={{ display: "block" }}
-                      />
-                    </a>
-
-                    <a
-                      href="#"
-                      className="w-9 h-9 rounded-full bg-white flex items-center justify-center overflow-hidden flex-shrink-0 transition-all duration-200 hover:bg-gray-100 hover:shadow-md"
-                    >
-                      <img
-                        src={x}
-                        alt="x"
-                        className="w-5 h-5 object-contain block"
-                        style={{ display: "block" }}
-                      />
-                    </a>
-
-                    <a
-                      href="#"
-                      className="w-9 h-9 rounded-full bg-white flex items-center justify-center overflow-hidden flex-shrink-0 transition-all duration-200 hover:bg-gray-100 hover:shadow-md"
-                    >
-                      <img
-                        src={insta}
-                        alt="instagram"
-                        className="w-5 h-5 object-contain block"
-                        style={{ display: "block" }}
-                      />
-                    </a>
-
-                    <a
-                      href="#"
-                      className="w-9 h-9 rounded-full bg-white flex items-center justify-center overflow-hidden flex-shrink-0 transition-all duration-200 hover:bg-gray-100 hover:shadow-md"
-                    >
-                      <img
-                        src={facebook}
-                        alt="facebook"
-                        className="w-5 h-5 object-contain block"
-                        style={{ display: "block" }}
-                      />
-                    </a>
-                  </div>
-                </div>
-              </div>
-
-              {/* Badges */}
-              <div className="w-full mt-4">
-                <div className="flex justify-end">
-                  <div
-                    className="flex items-center gap-3 "
-                    style={{ maxWidth: "100%" }}
-                  >
-                    <a href="/">
-                      <img
-                        src={googleanalytic}
-                        alt="googleanalytic"
-                        className="h-10 object-contain rounded-lg block"
-                        style={{ maxWidth: 140, width: "auto", height: 40 }}
-                      />
-                    </a>
-                    <a href="/">
-                      <img
-                        src={googletagmaneger}
-                        alt="googletagmaneger"
-                        className="h-10 object-contain rounded-lg block"
-                        style={{ maxWidth: 140, width: "auto", height: 40 }}
-                      />
-                    </a>
-                    <a href="/">
-                      <img
-                        src={blue}
-                        alt="blue"
-                        className="h-10 object-contain rounded-lg block"
-                        style={{ maxWidth: 140, width: "auto", height: 40 }}
-                      />
-                    </a>
-                    <a href="/">
-                      <img
-                        src={drive}
-                        alt="Google Play"
-                        className="h-10 object-contain rounded-lg block"
-                        style={{ maxWidth: 140, width: "auto", height: 40 }}
-                      />
-                    </a>
-                    <a href="/">
-                      <img
-                        src={Google}
-                        alt="Google"
-                        className="h-10 object-contain rounded-lg block"
-                        style={{ maxWidth: 140, width: "auto", height: 40 }}
-                      />
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Divider */}
-
-          {/* Bottom row: copyright & payments */}
-          <div className="w-full mt-4 flex flex-col md:flex-row items-center justify-between gap-4 pb-6">
-            <div className="flex items-center">
-              <p
-                className="text-[#CAD0D9] text-sm"
-                style={{ fontFamily: "Roboto" }}
-              >
-                {/* لو مش عايز تظهر رسالة الكوبي رايت سيبها فاضية أو احذف النص */}
-              </p>
-            </div>
-
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-3">
-                <img
-                  src={amwal}
-                  alt="Amwal"
-                  className="h-6 object-contain rounded"
-                  style={{ height: 24, maxWidth: 120 }}
-                />
-                <img
-                  src={emkan}
-                  alt="Amkan"
-                  className="object-contain h-[21px] rounded w-[73px]"
-                />
-                {/* هنا حطينا صورة الـ SVG قبل فيزا، بنستخدم encodeURI لضمان التعامل مع المسافات بالاسم */}
-                <img
-                  src={payment}
-                  alt="copyright-payments"
-                  className="object-contain block"
-                  style={{
-                    height: 23,
-                    maxWidth: 220,
-                    width: "auto",
-                    flexShrink: 0, // يمنع الصورة من التمدد والتسبب في overflow
-                    marginRight: 8,
-                  }}
-                />
-              </div>
-            </div>
+                {item}
+              </button>
+            ))}
           </div>
         </div>
-      <img src={ropot} className="absolute top-[-247px] z-90 right-0" alt="" />
+
+        {/* About */}
+        <div className="w-full sm:w-[48%] md:w-[200px] flex flex-col gap-3 text-right">
+          <h3 className="font-roboto font-semibold text-[22px] sm:text-[24px] leading-[150%]">
+            عن مدينة الهواتف
+          </h3>
+          <div className="flex flex-col gap-2">
+            {aboutMenuItems.map((item, i) => (
+              <button
+                key={i}
+                className="text-[#E0E5EB] hover:text-white text-[15px] sm:text-[16px] text-right bg-transparent border-0 p-0 cursor-pointer"
+                style={{ fontFamily: "Roboto" }}
+                onClick={() => handleAboutItemClick(item)}
+              >
+                {item}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Services */}
+        <div className="w-full sm:w-[48%] md:w-[180px] flex flex-col gap-3 text-right">
+          <h3 className="font-roboto font-semibold text-[22px] sm:text-[24px] leading-[150%]">
+            خدمه مدينه الهواتف
+          </h3>
+          <div className="flex flex-col gap-2">
+            {serviceMenuItems.map((item, i) => (
+              <button
+                key={i}
+                className="text-[#E0E5EB] hover:text-white text-[15px] sm:text-[16px] text-right bg-transparent border-0 p-0 cursor-pointer"
+                style={{ fontFamily: "Roboto" }}
+              >
+                {item}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Brand & Socials */}
+        <div className="w-full md:flex-1 flex flex-col gap-4 text-right">
+          <h2 className="font-roboto font-bold text-[22px] sm:text-[24px] leading-[100%]">
+            مدينة الهواتف
+          </h2>
+
+          <p className="text-[#CAD0D9] text-[15px] sm:text-[16px] leading-[150%]" style={{ fontFamily: "Roboto" }}>
+            لمعرفة كل جديد عنا ...... تابع حساباتنا على وسائل التواصل الاجتماعي وحساباتنا على جوجل.
+          </p>
+
+          {/* Social icons */}
+          <div className="flex justify-end mt-2">
+            <div className="flex items-center gap-2 sm:gap-3 flex-wrap justify-end">
+              {[tiktok, snapchat, whatsapp, x, insta, facebook].map((icon, i) => (
+                <a
+                  key={i}
+                  href="#"
+                  className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white flex items-center justify-center transition-all hover:bg-gray-100 hover:shadow-md"
+                >
+                  <img src={icon} alt="social" className="w-4 h-4 sm:w-5 sm:h-5 object-contain" />
+                </a>
+              ))}
+            </div>
+          </div>
+
+          {/* Badges */}
+          <div className="flex justify-end flex-wrap gap-2 sm:gap-3 mt-4">
+            {[googleanalytic, googletagmaneger, blue, drive, Google].map((img, i) => (
+              <a key={i} href="/" className="inline-block">
+                <img
+                  src={img}
+                  alt="badge"
+                  className="h-9 sm:h-10 object-contain rounded-lg"
+                  style={{ maxWidth: 130 }}
+                />
+              </a>
+            ))}
+          </div>
+        </div>
       </div>
-    </footer>
+
+      {/* Divider */}
+      <div className="border-t border-[#ffffff22] my-6" />
+
+      {/* Bottom row */}
+      <div className="w-full flex flex-col md:flex-row items-center justify-between gap-3 md:gap-6">
+        <p className="text-[#CAD0D9] text-[13px] sm:text-sm" style={{ fontFamily: "Roboto" }}>
+          جميع الحقوق محفوظة © مدينة الهواتف
+        </p>
+
+        <div className="flex items-center gap-2 sm:gap-4 flex-wrap justify-center">
+          <img src={amwal} alt="Amwal" className="h-5 sm:h-6 object-contain rounded" />
+          <img src={emkan} alt="Amkan" className="h-5 sm:h-[21px] rounded" />
+          <img src={payment} alt="Payments" className="h-5 sm:h-[23px] object-contain" />
+        </div>
+      </div>
+    </div>
+
+    {/* Decorative element */}
+
+  </div>
+</footer>
   );
 };
 

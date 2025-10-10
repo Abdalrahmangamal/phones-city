@@ -45,6 +45,12 @@ const TestimonialsSection = () => {
       image: placeholderImage
     },
     {
+      name: "سارة محمد",
+      rating: 5.0,
+      text: "أفضل خدمة عملاء حصلت عليها، محترفين جداً وسريعين في الاستجابة.",
+      image: placeholderImage
+    },
+    {
       name: "خالد عبدالله",
       rating: 4.2,
       text: "جودة المنتج ممتازة والتوصيل في الوقت المحدد.",
@@ -65,7 +71,7 @@ const TestimonialsSection = () => {
   };
 
   return (
-    <section className="w-full max-w-[1400px] min-h-[500px] lg:h-[900px] mx-auto flex items-center justify-center py-10 lg:py-0 lg:mt-6 relative overflow-hidden px-4 sm:px-6">
+    <section className="w-full  lg:px-[90px] px-2 pt-20 md:pt-0 min-h-[500px] lg:h-[900px]  flex items-center justify-center py-10 lg:py-0 lg:mt-6 relative overflow-hidden ">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-10 w-full items-center relative z-10">
         {/* الجزء الأيمن - 1/3 من الشاشة */}
         <div className="flex flex-col items-start gap-4 lg:gap-6 relative z-20 text-right order-1 lg:order-1 lg:col-span-1">

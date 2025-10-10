@@ -23,7 +23,7 @@ export default function Bestseller({
   
 }: BestsellerProps) {
   return (
-    <div className="mt-[80px]">
+    <div className="mt-[80px] lg:px-[90px] px-2 pt-20 md:pt-0">
       {/* العنوان */}
       <div className="flex items-center w-full justify-between relative">
         <div className="relative">
@@ -61,7 +61,7 @@ export default function Bestseller({
 
       {/* المنتجات */}
       <div
-        className={`grid md:grid-cols-4 ${style} sm:grid-cols-2 grid-cols-1 gap-[20px] justify-items-center mt-[60px] `}
+        className={`grid xl:grid-cols-4 ${style} sm:grid-cols-2 grid-cols-1 gap-[20px] justify-items-center mt-[60px] `}
       >
         {products.map((item) => (
           <ProductCard

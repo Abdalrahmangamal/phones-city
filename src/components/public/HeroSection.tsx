@@ -26,8 +26,12 @@
     useEffect(() => {}, [lang]);
     
     return (
+      <div className="lg:px-[90px] px-2 pt-20 md:pt-0 ">
+
       <Swiper
         key={lang}
+        speed={1400}
+
         dir={lang === "ar" ? "rtl" : "ltr"}
         autoplay={{
           delay: 4000,
@@ -36,14 +40,14 @@
         loop={true}
         pagination={{ clickable: true }}
         modules={[Pagination, Autoplay]}
-        className="mySwiper h-[400px] mt-6"
+        className="mySwiper h-[400px] rounded-[16px] mt-6 "
       >{slides.map((slide,index)=>(
         
-        <SwiperSlide key={index} className="relative rounded-[16px]">
+        <SwiperSlide key={index} className="relative ">
           <img
             src={slide.bg}
             alt={`Slide `}
-            className="w-full absolute rounded-[16px] h-full object-cover"
+            className="w-full absolute  h-full object-cover"
           />
           <div className="z-[1]  w-full flex flex-col justify-start items-start h-full pt-[40px] pr-[40px]">
             <h1 className="font-[700] md:text-[3rem] text-[1.2rem] mt-[30px] md:mt-[0px] text-[#FFFFFF] textshad">
@@ -86,13 +90,14 @@
             </Link>
           </div>
           {/* Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-r rounded-[16px] from-[#211C4D0A] via-[#211C4D22] to-[#211C4D6B]"></div>
+          <div className="absolute inset-0 bg-gradient-to-r  from-[#211C4D0A] via-[#211C4D22] to-[#211C4D6B]"></div>
         </SwiperSlide>
       ))
 
       }
 
       </Swiper>
+      </div>
     );
   };
 

@@ -184,17 +184,17 @@ export default function Trademarks() {
   return (
     <div>
       <Layout>
-        <div className=" lg:px-[45px]  pt-20 md:pt-0 flex-grow">
+        <div>
           <Offerherosection
             title={"افضل اجهزه ابل "}
             description={
               "استمتع بتجربة استثنائية مع أحدث الاجهزه بأفضل الأسعار وخدمة ما بعد البيع المميزة"
             }
           />
-          <div className="mx-[-4px] md:-mx-[45px]">
+        
 
           <Sliderbycategory />
-          </div>
+          
           <Bestseller title={"الأكثر مبيعاً"} products={products} />
           <BannerSection image={sceondbanner} />
           <div className="my-12">

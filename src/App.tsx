@@ -5,6 +5,7 @@ import i18n from "@/i18n";
 import Home from "@/pages/Home";
 import About from "@/pages/About";
 import Servces from "@/pages/Servces";
+import ropot from '@/assets/images/ropot.png'
 import Contact from "@/pages/Contact";
 // import NewHome from "@/pages/new/Home";
 import React from "react";
@@ -87,7 +88,7 @@ function LangLayout() {
 export default function App() {
   const { lang } = useSettings();
   return (
-    <div className="flex flex-col min-h-screen"> {/* Added flex-col and min-h-screen to ensure footer stays at bottom */}
+    <div className="flex flex-col min-h-screen relative"> 
       <BrowserRouter>
                 <ScrollToTop />
         <Routes>
@@ -120,6 +121,7 @@ export default function App() {
           <Route path="/:lang/*" element={<LangLayout />} />
         </Routes>
       </BrowserRouter>
+      <img src={ropot} className="fixed z-[500] w-[150px] h-[150px] bottom-0 right-0" alt="" />
     </div>
   );
 }

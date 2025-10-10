@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import '../../style.css'
 export default function LatestOffers() {
   return (
-    <div className="w-full mt-[60px] md:mt-[80px] relative px-4 md:px-0">
+    <div className="w-full mt-[60px] lg:px-[90px] px-2 pt-20 md:pt-0 md:mt-[80px] relative  md:px-0">
       {/* Title */}
       <h1 className="text-[28px] md:text-[40px] font-[700] text-[#211C4D] text-center">
         أحدث العروض

@@ -121,7 +121,7 @@ const SpecialOffersSection: React.FC = () => {
   );
 
   return (
-    <div className="w-full flex mt-[80px] flex-col items-start gap-[32px]">
+    <div className="w-full flex mt-[80px] flex-col lg:px-[90px] px-2 pt-20 md:pt-0 items-start gap-[32px]">
       {/* header */}
       <div className="w-full flex items-center justify-between relative">
         <div className="relative">

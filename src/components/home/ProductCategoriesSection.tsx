@@ -19,6 +19,8 @@ const ProductCategoriesSection: React.FC = () => {
     }, [lang]); 
   
   return (
+    <div className="lg:px-[90px] px-2 pt-20 md:pt-0">
+
     <div className="relative my-6">
       <h1 className="text-center text-[#211C4D] text-[40px] font-[700]">
         الاقسام
@@ -113,6 +115,7 @@ const ProductCategoriesSection: React.FC = () => {
       <div className="absolute top-[10%] right-[42%] z-[1]">
         <img src={svg1} alt="" />
       </div>
+    </div>
     </div>
   );
 };

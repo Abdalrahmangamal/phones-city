@@ -20,8 +20,8 @@ export default function Register() {
       />
       <img src={toppattern} alt="" className="absolute left-0 z-4" />
 
-      <div className="min-h-screen flex md:mt-0 mt-[60px] md:p-0 px-4 z-3 flex-col md:flex-row items-center justify-center gap-4 relative">
-        <div className="bg-white rounded-[20px] md:w-[400px] w-full text-start pt-4 form-wrap">
+      <div className="min-h-screen flex md:mt-0 mt-[60px] md:p-0 px-4 z-3 flex-col md:flex-row items-center justify-center gap-30 relative">
+        <div className="bg-white scale-[0.9] rounded-[20px] md:w-[400px] w-full text-start pt-4 form-wrap">
           <h2 className="text-[32px] font-[600] text-[#211C4D] mb-3 text-right leading-[32px] tracking-[-0.52px]">
             انشاء حساب جديد
           </h2>
@@ -129,7 +129,7 @@ export default function Register() {
         </div>
 
         <div className="flex items-center justify-center">
-          <img src={loginimage} className="scale-[0.7]" alt="" />
+          <img src={loginimage} className="scale-[0.9]" alt="" />
         </div>
         <img src={bottompattern} className="absolute bottom-0 right-0" alt="" />
       </div>

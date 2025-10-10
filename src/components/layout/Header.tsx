@@ -56,11 +56,11 @@ export default function Header() {
       {/* desktop  header */}
       <header
         dir="rtl"
-        className="w-full border-b h-[170px] hidden md:block border-white/10 bg-[#211a44] text-white"
+        className="w-full border-b  items-center justify-center h-[170px] hidden md:flex border-white/10 bg-[#211a44] text-white"
       >
-        <div className="container h-full flex flex-col justify-around mx-auto px-3 md:px-6">
+        <div className="container  flex flex-col w-full h-[170px] justify-around  lg:px-[90px] px-2 pt-20 md:pt-0">
           {/* Top row */}
-          <div className="flex items-center gap-3 py-3 lg:px-[50px]">
+          <div className="flex items-center gap-3 py-3 ">
             {/* Logo */}
 
             <Link to={""} className="flex items-center gap-2">
@@ -89,7 +89,7 @@ export default function Header() {
             <div className="flex items-center gap-2">
               <Link
                 to="/login"
-                className="w-[187px] h-[48px] rounded-[16px] bg-[#FFFFFF1A] flex items-center justify-center text-[24px] font-[400] 
+                className="w-[160px] h-[40px] rounded-[16px] bg-[#FFFFFF1A] flex items-center justify-center text-[19px] font-[400] 
   text-white transition-all duration-300 hover:bg-white hover:text-[#211C4D]"
               >
                 تسجيل الدخول
@@ -120,7 +120,7 @@ export default function Header() {
           </div>
 
           {/* Bottom nav */}
-          <div className="flex items-center w-full !justify-between lg:px-[50px] gap-4 pb-3">
+          <div className="flex items-center w-full !justify-between  gap-4 pb-3">
             {/* Language */}
             <div className="relative inline-block text-left">
               <DropdownMenu>
@@ -164,13 +164,13 @@ export default function Header() {
             </div>
 
             {/* Main Links */}
-            <nav className="hidden items-center lg:gap-15 md:gap-8  text-sm md:flex">
+            <nav className="hidden items-center lg:gap-2 h-[53px]   text-sm md:flex">
               {navitem.map((item) => (
                 <NavLink
                   to={`${item.link}`}
                   end={item.link === `/${lang}/`} // علشان الـ home مايفضلش active دايمًا
                   className={({ isActive }) =>
-                    `xl:text-[24px] text-[15px] font-[400] text-white hover:text-[#F3AC5D] transition-all duration-300 ${
+                    `xl:text-[20px] lg:text-[15px] py-[9px] px-[24px] md:text-[12px] font-[400] text-white hover:text-[#F3AC5D] transition-all duration-300 ${
                       isActive ? "navactive text-[#F3AC5D]" : ""
                     }`
                   }
@@ -186,7 +186,7 @@ export default function Header() {
                 <Button className="w-[150px] bg-transparent">
                   <div className="flex items-center justify-center gap-[10px]">
                     <svg
-                      className="!w-[30px] !h-[30px]"
+                      className="!w-[25px] !h-[25px]"
                       width="23"
                       height="25"
                       viewBox="0 0 28 25"
@@ -219,10 +219,10 @@ export default function Header() {
                       />
                     </svg>
 
-                    <p className="text-[24px] text-[#E0E5EB]">الأقسام</p>
+                    <p className="text-[19px] text-[#E0E5EB]">الأقسام</p>
                     <svg
                       className="ml-[10px]"
-                      width="14"
+                      width="13"
                       height="9"
                       viewBox="0 0 14 9"
                       fill="none"

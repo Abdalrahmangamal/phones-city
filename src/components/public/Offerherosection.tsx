@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-
+import herooffer from '@/assets/images/herooffer.png'
 interface offerherotype {
   title: string;
   description: string;
@@ -17,13 +17,13 @@ export default function Offerherosection({
   link,
 }: offerherotype) {
   return (
-    <div>
+    <div className="lg:px-[90px] px-2 pt-20 md:pt-0 ">
       <div
         className={`w-full max-w-[1264px] mt-[50px] ${style}  h-[351px] rounded-lg mb-16 relative overflow-hidden`}
       >
         {/* Background Image */}
         <img
-          src="/src/assets/images/Frame 1321317076.png"
+          src={herooffer}
           alt="كل ما تحتاجه في مدينه الهواتف"
           className="w-full h-full object-cover"
         />
