@@ -1,28 +1,26 @@
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation,Autoplay } from 'swiper/modules';
-import { Swiper as SwiperType } from 'swiper';
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Autoplay } from "swiper/modules";
+import { Swiper as SwiperType } from "swiper";
 // import 'swiper/css';
 // import 'swiper/css/navigation';
-import blue from '../../assets/images/Ellipse 2.png';
-import gray from '../../assets/images/Ellipse 1.png';
-import placeholderImage from '../../assets/images/image_placeholder.png';
-import arrowUp from '../../assets/images/arrowup.png';
-import arrowDown from '../../assets/images/arrowdown.png';
-import { useEffect, useRef } from 'react';
-import {useLangSync} from '@/hooks/useLangSync'
-import pattern from '../../assets/images/Layer_1.png'
+import blue from "../../assets/images/Ellipse 2.png";
+import gray from "../../assets/images/Ellipse 1.png";
+import placeholderImage from "../../assets/images/image_placeholder.png";
+import arrowUp from "../../assets/images/arrowup.png";
+import arrowDown from "../../assets/images/arrowdown.png";
+import { useEffect, useRef } from "react";
+import { useLangSync } from "@/hooks/useLangSync";
+import pattern from "../../assets/images/Layer_1.png";
 const TestimonialsSection = () => {
-  const {lang} = useLangSync();
-    useEffect(() => {
-      // لما اللغة تتغير، ممكن تعيد تهيئة السلايدر
-      // هنا ممكن تحتاج تستدعي أي دالة من Swiper لإعادة التهيئة
-      // مثلاً: swiperRef.ref.current?.update() لو انت مستخدم ref
-  
-      // مثال بسيط لإعادة التهيئة (لو فيه ref للـ Swiper):
-      // swiperRef.current?.update();
-  
-    }, [lang]); // كل ما الـ lang تتغير، هيعمل التأثير ده
-  
+  const { lang } = useLangSync();
+  useEffect(() => {
+    // لما اللغة تتغير، ممكن تعيد تهيئة السلايدر
+    // هنا ممكن تحتاج تستدعي أي دالة من Swiper لإعادة التهيئة
+    // مثلاً: swiperRef.ref.current?.update() لو انت مستخدم ref
+    // مثال بسيط لإعادة التهيئة (لو فيه ref للـ Swiper):
+    // swiperRef.current?.update();
+  }, [lang]); // كل ما الـ lang تتغير، هيعمل التأثير ده
+
   const swiperRef = useRef<SwiperType | null>(null);
 
   const testimonials = [
@@ -30,32 +28,32 @@ const TestimonialsSection = () => {
       name: "يزن مؤمن محمود",
       rating: 4.8,
       text: "الخدمة جيدة جدًا، خاصة في التوصيل السريع جداً، ليس فقط سريعاً بالنسبة لنا، بل الجودة أيضاً رقم واحد، أوصي بشدة بـ مدينة الهواتف لكم.",
-      image: placeholderImage
+      image: placeholderImage,
     },
     {
       name: "أحمد علي",
       rating: 4.5,
       text: "تجربة رائعة، سأعود مرة أخرى!",
-      image: placeholderImage
+      image: placeholderImage,
     },
     {
       name: "سارة محمد",
       rating: 5.0,
       text: "أفضل خدمة عملاء حصلت عليها، محترفين جداً وسريعين في الاستجابة.",
-      image: placeholderImage
+      image: placeholderImage,
     },
     {
       name: "سارة محمد",
       rating: 5.0,
       text: "أفضل خدمة عملاء حصلت عليها، محترفين جداً وسريعين في الاستجابة.",
-      image: placeholderImage
+      image: placeholderImage,
     },
     {
       name: "خالد عبدالله",
       rating: 4.2,
       text: "جودة المنتج ممتازة والتوصيل في الوقت المحدد.",
-      image: placeholderImage
-    }
+      image: placeholderImage,
+    },
   ];
 
   const handlePrev = () => {
@@ -84,23 +82,23 @@ const TestimonialsSection = () => {
 
           {/* أزرار التحكم */}
           <div className="flex mt-4 lg:mt-8 justify-center lg:justify-start w-full lg:w-auto lg:mr-[50px] gap-4">
-            <button 
+            <button
               className="swiper-button-prev-custom p-2 hover:bg-gray-100 rounded transition-colors"
               onClick={handlePrev}
             >
-              <img 
-                src={arrowDown} 
-                alt="السابق" 
+              <img
+                src={arrowDown}
+                alt="السابق"
                 className="w-5 h-5 lg:w-6 lg:h-6 object-contain"
               />
             </button>
-            <button 
+            <button
               className="swiper-button-next-custom p-2 hover:bg-gray-100 rounded transition-colors"
               onClick={handleNext}
             >
-              <img 
-                src={arrowUp} 
-                alt="التالي" 
+              <img
+                src={arrowUp}
+                alt="التالي"
                 className="w-5 h-5 lg:w-6 lg:h-6 object-contain"
               />
             </button>
@@ -109,38 +107,36 @@ const TestimonialsSection = () => {
 
         {/* الجزء الأيسر - 2/3 من الشاشة */}
         <div className="relative flex justify-start items-start h-full order-2 lg:order-2 lg:col-span-2">
-          
           {/* الخلفيات - تبدأ من نفس النقطة على اليسار */}
           <div className="absolute left-0 top-1/2 transform -translate-y-1/2 flex items-center justify-start z-0">
-            <img 
-              src={blue} 
-              alt="" 
-              className="opacity-100 object-cover min-w-[300px] min-h-[300px] sm:min-w-[500px] sm:min-h-[500px] lg:min-w-[806px] lg:min-h-[806px]" 
+            <img
+              src={blue}
+              alt=""
+              className="opacity-100 object-cover min-w-[300px] min-h-[300px] sm:min-w-[500px] sm:min-h-[500px] lg:min-w-[806px] lg:min-h-[806px]"
             />
           </div>
           <div className="absolute left-0 top-1/2 transform -translate-y-1/2 flex items-center justify-start z-0">
-            <img 
-              src={gray} 
-              alt="" 
-              className="opacity-100 object-cover min-w-[350px] min-h-[300px] sm:min-w-[550px] sm:min-h-[500px] lg:min-w-[868px] lg:min-h-[806px]" 
+            <img
+              src={gray}
+              alt=""
+              className="opacity-100 object-cover min-w-[350px] min-h-[300px] sm:min-w-[550px] sm:min-h-[500px] lg:min-w-[868px] lg:min-h-[806px]"
             />
           </div>
-          
+
           {/* الـ Slider - يأخذ 2/3 من الشاشة */}
           <div className="w-full h-full flex items-center justify-center z-20 relative ml-0 lg:ml-8">
             <div className="w-full max-w-[900px] mx-auto px-2 sm:px-4">
               <Swiper
-              key={lang}
+                key={lang}
                 dir={lang === "ar" ? "rtl" : "ltr"}
-
-                modules={[Navigation,Autoplay ]}
+                modules={[Navigation, Autoplay]}
                 spaceBetween={20}
                 loop={true}
                 slidesPerView={1}
                 autoplay={{
-    delay: 2000, // ⏱ الوقت بين كل سلايد بالمللي ثانية
-    disableOnInteraction: false, // ⛔ ما يوقفش لو المستخدم تفاعل
-  }}
+                  delay: 2000, // ⏱ الوقت بين كل سلايد بالمللي ثانية
+                  disableOnInteraction: false, // ⛔ ما يوقفش لو المستخدم تفاعل
+                }}
                 centeredSlides={true}
                 breakpoints={{
                   480: { slidesPerView: 1, spaceBetween: 15 },
@@ -164,20 +160,20 @@ const TestimonialsSection = () => {
                             src={testimonial.image}
                             alt={testimonial.name}
                             className="rounded-full object-cover flex-shrink-0 mr-2 sm:mr-3"
-                            style={{ width: '60px', height: '60px' }}
+                            style={{ width: "60px", height: "60px" }}
                           />
                           <div className="flex-1 text-right">
                             <h3 className="text-base sm:text-lg lg:text-[20px] font-bold text-[#211C4D] mb-1">
                               {testimonial.name}
                             </h3>
-                            <div className="flex justify-start items-center gap-1 sm:gap-2">
+                            <div className="flex justify-start items-center gap-1 ">
                               {[...Array(5)].map((_, i) => (
                                 <span
                                   key={i}
-                                  className={`text-lg sm:text-xl w-[20px] h-[20px] sm:w-[25px] sm:h-[25px] lg:w-[30px] lg:h-[30px] flex items-center justify-center ${
+                                  className={`text-lg sm:text-xl w-[20px] h-[20px] sm:w-[25px] sm:h-[25px] lg:w-[25px] lg:h-[20px] flex items-center justify-center ${
                                     i < Math.round(testimonial.rating)
-                                      ? 'text-[#F3AC5D]'
-                                      : 'text-gray-300'
+                                      ? "text-[#F3AC5D]"
+                                      : "text-gray-300"
                                   }`}
                                 >
                                   ★

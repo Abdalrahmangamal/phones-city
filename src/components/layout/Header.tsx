@@ -58,7 +58,7 @@ export default function Header() {
         dir="rtl"
         className="w-full border-b  items-center justify-center h-[170px] hidden md:flex border-white/10 bg-[#211a44] text-white"
       >
-        <div className="container  flex flex-col w-full h-[170px] justify-around  lg:px-[90px] px-2 pt-20 md:pt-0">
+        <div className="  flex flex-col w-full h-[170px] justify-around  lg:px-[90px] px-2 pt-20 md:pt-0">
           {/* Top row */}
           <div className="flex items-center gap-3 py-3 ">
             {/* Logo */}

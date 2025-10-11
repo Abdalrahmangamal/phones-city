@@ -22,6 +22,7 @@ import product1 from "@/assets/images/product1.png";
 import product2 from "@/assets/images/product2.png";
 import type { Product } from "@/types/index";
 import { useLangSync } from "@/hooks/useLangSync";
+import SpecialOffersSection from "@/components/home/SpecialOffersSection";
 const NewHome = () => {
   const { lang } = useLangSync();
   const products: Product[] = [
@@ -111,6 +112,26 @@ const NewHome = () => {
         { color: "#000", image: watch },
       ],
     },
+    {
+      id: 4,
+      name: "ايفون 15 برو",
+      discount: "16",
+      price: 7499,
+      variations: [
+        { color: "#ccc", image: bluephone },
+        { color: "#000", image: watch },
+      ],
+    },
+    {
+      id: 4,
+      name: "ايفون 15 برو",
+      discount: "16",
+      price: 7499,
+      variations: [
+        { color: "#ccc", image: bluephone },
+        { color: "#000", image: watch },
+      ],
+    },
   ];
 
   return (
@@ -173,12 +194,8 @@ const NewHome = () => {
             link={`/${lang}/Trademarksbestseller`}
             products={products}
           />
-          <Bestseller
-            title={"عروض خاصة لك"}
-            btn={true}
-            link={`/${lang}/Trademarksbestseller`}
-            products={products2}
-          />
+        
+          <SpecialOffersSection title={"عروض خاصه لك"} products={products2}/>
           <TestimonialsSection />
           <FrameSection />
           <CertificationBadgesSection />

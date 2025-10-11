@@ -29,7 +29,7 @@ export default function ProductCard({
       <div className="flex items-center justify-center relative">
         <img
           src={currentImage}
-          className="w-[220px] object-contain h-[220px]"
+          className="!w-[220px] object-contain !h-[220px]"
           alt={name}
         />
 
