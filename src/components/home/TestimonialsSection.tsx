@@ -152,7 +152,7 @@ const TestimonialsSection = () => {
               >
                 {testimonials.map((testimonial, index) => (
                   <SwiperSlide key={index}>
-                    <div className="flex items-center justify-center">
+                    <div className="flex items-center !w-[500px] justify-center">
                       <div className="bg-white p-4 sm:p-5 rounded-[16px] shadow-lg w-full max-w-[320px] sm:max-w-[300px] lg:max-w-[900px] h-[280px] sm:h-[300px] lg:h-[304px] relative">
                         {/* Header Section */}
                         <div className="flex items-start justify-between mb-3 sm:mb-4 gap-2 sm:gap-3 mt-4 sm:mt-6">
@@ -170,7 +170,7 @@ const TestimonialsSection = () => {
                               {[...Array(5)].map((_, i) => (
                                 <span
                                   key={i}
-                                  className={`text-lg sm:text-xl w-[20px] h-[20px] sm:w-[25px] sm:h-[25px] lg:w-[25px] lg:h-[20px] flex items-center justify-center ${
+                                  className={`text-lg sm:text-[25px] w-[20px] h-[20px] sm:w-[25px] sm:h-[25px] lg:w-[20px] lg:h-[20px] flex items-center justify-center ${
                                     i < Math.round(testimonial.rating)
                                       ? "text-[#F3AC5D]"
                                       : "text-gray-300"
@@ -188,7 +188,7 @@ const TestimonialsSection = () => {
 
                         {/* Text */}
                         <div className="p-2 sm:p-4 bg-white mb-2 sm:mb-3">
-                          <p className="text-[#211C4D] text-base sm:text-lg lg:text-[20px] xl:text-[24px] font-[500] leading-relaxed text-right">
+                          <p className="text-[#211C4D] text-base sm:text-lg lg:text-[18px] font-[500] leading-relaxed text-right">
                             {testimonial.text}
                           </p>
                         </div>
