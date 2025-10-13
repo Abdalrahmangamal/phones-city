@@ -32,6 +32,7 @@ import Trademarksbestseller from "./pages/Trademarksbestseller";
 import Trademarkscategory from "./pages/Trademarkscategory";
 import Trademarkbestoffer from "./pages/Trademarkbestoffer";
 import ScrollToTop from "@/components/ScrollToTop";
+import Singleproduct from "./pages/Singleproduct";
 
 function LangLayout() {
   const { lang: urlLang } = useParams();
@@ -79,6 +80,7 @@ function LangLayout() {
       <Route path="/trademarksbestseller" element={<Trademarksbestseller/>} />
       <Route path="/trademarkscategory" element={<Trademarkscategory/>} />
       <Route path="/trademarkbestoffer" element={<Trademarkbestoffer/>} />
+      <Route path="/singleproduct" element={<Singleproduct/>} />
       
       <Route path="/wallet" element={<Wallet/>} />
     </Routes>
@@ -118,6 +120,7 @@ export default function App() {
               <Route path="/trademarksbestseller" element={<Navigate to={`/${lang}/trademarksbestseller`} replace />} />
               <Route path="/trademarkscategory" element={<Navigate to={`/${lang}/trademarkscategory`} replace />} />
               <Route path="/trademarkbestoffer" element={<Navigate to={`/${lang}/trademarkbestoffer`} replace />} />
+              <Route path="/singleproduct" element={<Navigate to={`/${lang}/singleproduct`} replace />} />
           <Route path="/:lang/*" element={<LangLayout />} />
         </Routes>
       </BrowserRouter>

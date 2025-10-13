@@ -223,7 +223,7 @@ export default function Offers() {
   return (
     <Layout>
       <div>
-        <div className="md:px-[45px]">
+        <div>
           <NewHeroSection
             slides={[
               {
