@@ -8,6 +8,7 @@ import product5 from '@/assets/images/orangelabtop.png'
 export default function gallery() {
   const [selectedImage, setSelectedImage] = useState(0);
   const [isWishlisted, setIsWishlisted] = useState(false);
+  
   const productImages = [
     `${product1}`,
     `${product2}`,
