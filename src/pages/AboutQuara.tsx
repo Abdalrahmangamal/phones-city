@@ -13,11 +13,11 @@ const AboutQuara = () => {
         
         {/* Content section with policy details - aligned with hero banner */}
         <div className="w-full max-w-[1264px] mx-auto py-8 px-4" style={{ gap: '50px' }}>
-          <div className="mb-16 relative">
-            <h1 className="text-right text-[#211C4D] font-roboto font-bold text-[40px] leading-[48px] relative w-full pb-8" style={{ maxWidth: '1275px' }}>
+          <div className=" relative">
+            <h1 className="text-right text-[#211C4D] font-roboto font-bold text-[28px] md:text-[32px] leading-[48px] relative w-full pb-8" style={{ maxWidth: '1275px' }}>
               ما هي كوارا (Quara Finance)؟
             </h1>
-            <div className="absolute" style={{ top: '-12px', right: '-49px', width: '110px', height: '85.6058px' }}>
+            <div className="absolute top-[45px] right-[-49px] w-[100px]" >
               <img 
                 src="/src/assets/images/Layer_1.png" 
                 alt="Layer 1" 
@@ -27,7 +27,7 @@ const AboutQuara = () => {
           </div>
           
           <div className="mb-12 w-full">
-            <p className="text-right text-[#211C4DCC] font-roboto font-normal text-[24px] leading-[48px]">
+            <p className="text-right text-[#211C4DCC] font-roboto font-normal text-[20px] leading-[48px]">
               كوارا هي شركة تمويل توفر خدمة الشراء الآن والدفع لاحقًا بالتقسيط 🛍️<br />
               تساعدك تشتري المنتجات اللي بتحبها وتدفعها على أقساط مريحة بدون الحاجة لأي إجراءات بنكية معقدة.<br />
               ⚡ تتميز بسرعة الموافقة وسهولة التسجيل، وتحتاج فقط بعض البيانات البسيطة.
@@ -35,36 +35,36 @@ const AboutQuara = () => {
           </div>
           
           <div className="mb-10">
-            <h2 className="text-right text-[#211C4D] font-roboto font-bold text-[40px] leading-[48px] mb-6">
+            <h2 className="text-right text-[#211C4D] font-roboto font-bold text-[28px] md:text-[32px] leading-[48px] mb-6">
               خطوات التسجيل في كوارا
             </h2>
           </div>
           
           <div className="mb-10 w-full">
-            <h3 className="text-right text-[#211C4D] font-roboto font-bold text-[32px] leading-[24px] mb-6">
+            <h3 className="text-right text-[#211C4D] font-roboto font-bold text-[24px] md:text-[28px] leading-[24px] mb-6">
               1. إنشاء حساب جديد
             </h3><br/>
-            <ul className="text-right text-[#211C4DCC] font-roboto font-normal text-[24px] leading-[48px] list-disc pr-6">
+            <ul className="text-right text-[#211C4DCC] font-roboto font-normal  text-[20px] leading-[48px] list-disc pr-6">
               <li className="mb-3">اضغط على زر «سجّل في كوارا».</li>
               <li className="mb-3">أدخل بياناتك الأساسية (الاسم الكامل، رقم الموبايل، البريد الإلكتروني، الرقم القومي).</li>
             </ul>
           </div>
           
           <div className="mb-10 w-full">
-            <h3 className="text-right text-[#211C4D] font-roboto font-bold text-[32px] leading-[24px] mb-6">
+            <h3 className="text-right text-[#211C4D] font-roboto font-bold text-[24px] md:text-[28px] leading-[24px] mb-6">
               2. تأكيد رقم الموبايل
             </h3><br/>
-            <ul className="text-right text-[#211C4DCC] font-roboto font-normal text-[24px] leading-[48px] list-disc pr-6">
+            <ul className="text-right text-[#211C4DCC] font-roboto font-normal  text-[20px] leading-[48px] list-disc pr-6">
               <li className="mb-3">سيصلك كود OTP على رقم هاتفك.</li>
               <li className="mb-3">أدخله لتفعيل حسابك.</li>
             </ul>
           </div>
           
           <div className="mb-10 w-full">
-            <h3 className="text-right text-[#211C4D] font-roboto font-bold text-[32px] leading-[24px] mb-6">
+            <h3 className="text-right text-[#211C4D] font-roboto font-bold text-[24px] md:text-[28px] leading-[24px] mb-6">
               3. رفع مستندات بسيطة
             </h3><br/>      
-            <ul className="text-right text-[#211C4DCC] font-roboto font-normal text-[24px] leading-[48px] list-disc pr-6">
+            <ul className="text-right text-[#211C4DCC] font-roboto font-normal  text-[20px] leading-[48px] list-disc pr-6">
               <li className="mb-3">صورة بطاقة الرقم القومي.</li>
               <li className="mb-3">إيصال مرافق حديث (كهرباء أو مياه).</li>
               <li className="mb-3">إثبات دخل إذا وُجد.</li>
@@ -72,19 +72,19 @@ const AboutQuara = () => {
           </div>
           
           <div className="mb-10 w-full">
-            <h3 className="text-right text-[#211C4D] font-roboto font-bold text-[32px] leading-[24px] mb-6">
+            <h3 className="text-right text-[#211C4D] font-roboto font-bold text-[24px] md:text-[28px] leading-[24px] mb-6">
               4. ابدأ الشراء بالتقسيط
             </h3><br/>
-            <ul className="text-right text-[#211C4DCC] font-roboto font-normal text-[24px] leading-[48px] list-disc pr-6">
+            <ul className="text-right text-[#211C4DCC] font-roboto font-normal  text-[20px] leading-[48px] list-disc pr-6">
               <li className="mb-3">بعد مراجعة البيانات والموافقة عليها، يمكنك شراء المنتجات وتقسيطها فورًا من خلال كوارا.</li>
             </ul>
           </div>
           
           <div className="mb-10">
-            <h2 className="text-right text-[#211C4D] font-roboto font-bold text-[40px] leading-[36px] mb-6">
+            <h2 className="text-right text-[#211C4D] font-roboto font-bold text-[30px] md:text-[34px] leading-[36px] mb-6">
               ⚡ ملاحظات مهمة
             </h2><br/>
-            <ul className="text-right text-[#211C4DCC] font-roboto font-normal text-[24px] leading-[48px] list-disc pr-6">
+            <ul className="text-right text-[#211C4DCC] font-roboto font-normal  text-[20px] leading-[48px] list-disc pr-6">
               <li className="mb-3">يجب أن يكون عمرك فوق 21 سنة.</li>
               <li className="mb-3">يجب أن تمتلك بطاقة رقم قومي سارية.</li>
               <li className="mb-3">تتم الموافقة على الطلبات غالبًا خلال دقائق قليلة.</li>
@@ -92,14 +92,14 @@ const AboutQuara = () => {
           </div>
           
           <div className="mb-24">
-            <h2 className="text-right text-[#211C4D] font-roboto font-bold text-[40px] leading-[48px] mb-6">
+            <h2 className="text-right text-[#211C4D] font-roboto font-bold text-[30px] md:text-[32px] leading-[48px] mb-6">
               رابط التسجيل مع كوارا
             </h2>
             <a 
               href="https://quarafinance.com/en/" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="text-[#211C4D] font-roboto font-medium text-[32px] leading-[24px] underline block w-full"
+              className="text-[#211C4D] font-roboto font-medium text-[28px] md:text-[28px] leading-[24px] underline block w-full"
               style={{ maxWidth: '1269px', height: '24px' }}
             >
               سجل مع كوارا الان

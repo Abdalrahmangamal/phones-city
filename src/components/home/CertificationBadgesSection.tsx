@@ -18,7 +18,7 @@ const CertificationBadgesSection: React.FC = () => {
   };
 
   return (
-    <div className="w-full !my-30 max-w-[1280px] h-auto flex flex-col md:flex-row items-start md:items-center gap-6 md:gap-[80px] mx-auto p-4">
+    <div className="w-full my-[30px] md:!my-30 max-w-[1280px] h-auto flex flex-row items-start md:items-center gap-6 md:gap-[80px] mx-auto p-4">
       {/* Left Section */}
       <div className="flex flex-col w-full md:w-[504px] gap-4">
         <div className="relative">
@@ -27,7 +27,7 @@ const CertificationBadgesSection: React.FC = () => {
           </div>
           <h2
             id="cert-known-title"
-            className="font-roboto font-semibold text-[28px] md:text-[40px] leading-[36px] text-[#211C4D] relative z-10 text-center"
+            className="font-roboto font-semibold text-[20px] md:text-[40px] leading-[36px] text-[#211C4D]  relative z-10 text-center"
           >
             شهادة توثيق معروف
           </h2>
@@ -43,7 +43,7 @@ const CertificationBadgesSection: React.FC = () => {
                 <img
                   src={certficate1}
                   alt="شهادة معروف - Thumbnail"
-                  className="max-w-full h-[150px] block"
+                  className="max-w-full h-[80px] md:h-[150px] block object-contain"
                 />
               </button>
             </DialogTrigger>
@@ -78,7 +78,7 @@ const CertificationBadgesSection: React.FC = () => {
           </div>
           <h2
             id="cert-verify-title"
-            className="font-roboto font-semibold text-[28px] md:text-[40px] leading-[36px] text-[#211C4D] relative z-10 text-center"
+            className="font-roboto font-semibold text-[20px] md:text-[40px] leading-[36px] text-[#211C4D]  relative z-10 text-center"
           >
             شهادة توثيق
           </h2>
@@ -94,7 +94,7 @@ const CertificationBadgesSection: React.FC = () => {
                 <img
                   src={certficate2}
                   alt="شهادة التوثيق - Thumbnail"
-                  className="max-w-full h-[120px] block"
+                  className="max-w-full h-[80px] md:h-[120px] block object-contain"
                 />
               </button>
             </DialogTrigger>

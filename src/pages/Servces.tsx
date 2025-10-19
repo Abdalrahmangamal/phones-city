@@ -2,20 +2,26 @@ import Layout from "@/components/layout/Layout";
 import Offerherosection from "@/components/public/Offerherosection";
 import Ellipse from "@/assets/images/Ellipse 3.png";
 import Ellipse5 from "@/assets/images/Ellipse 5.png";
+import img1 from '@/assets/images/isometric view of laptop, tablet, notebook, smartwatch.png'
+import img2 from '@/assets/images/Hourglass And Stack of Coins For Installment.png'
+import img3 from '@/assets/images/Group 1000005944.png'
+import img4 from '@/assets/images/Engineer working with robotic arm.png'
+import img5 from '@/assets/images/planet.png'
+import img6 from '@/assets/images/documentation.png'
 export default function Servces() {
   return (
     <Layout>
-      <div className="container mx-auto px-4 py-8">
+      <div>
         {/* Hero Section - Responsive for mobile */}
         <Offerherosection title={"كل ما تحتاجه في مدينه الهواتف"} description={"استمتع بتجربة استثنائية معاحسن العروض بأفضل الأسعار وخدمة ما بعد البيع المميزة"} />
 
         {/* Services Description Section - Separated from cards with proper spacing */}
         <div className="w-full py-10">
-          <div className="flex flex-col pr-20">
-            <h2 className="text-[#211C4D] font-roboto font-bold text-[40px] leading-9 mb-2">
+          <div className="flex flex-col px-[10px]">
+            <h2 className="text-[#211C4D] font-roboto font-bold text-[24px] md:text-[40px] leading-9 mb-2">
               في مدينه الهواتف
             </h2>
-            <p className="text-[#211C4DCC] font-roboto font-normal text-2xl leading-10 text-right">
+            <p className="text-[#211C4DCC] font-roboto font-normal text-[20px] md:text-2xl leading-10 text-right">
               نوفر لك تجربة شراء وصيانة متكاملة في مكان واحد لتلبية جميع
               احتياجاتك في عالم الهواتف و الاجهزة الذكية:
             </p>
@@ -40,7 +46,7 @@ export default function Servces() {
               <div className="flex flex-col items-center justify-center h-full">
                 <div className="mb-6">
                   <img
-                    src="/src/assets/images/isometric view of laptop, tablet, notebook, smartwatch.png"
+                    src={img1}
                     alt="بيع الأجهزة الاكترونية و الأجهزه الكهربائية المنزلية"
                     className="w-full h-[210px] object-contain"
                   />
@@ -70,7 +76,7 @@ export default function Servces() {
               <div className="flex flex-col items-center justify-center h-full">
                 <div className="mb-6">
                   <img
-                    src="/src/assets/images/Hourglass And Stack of Coins For Installment.png"
+                    src={img2}
                     alt="خدمة الشراء بالتقسيط"
                     className="w-full h-[210px] object-contain"
                   />
@@ -100,7 +106,7 @@ export default function Servces() {
               <div className="flex flex-col items-center justify-center h-full">
                 <div className="mb-6">
                   <img
-                    src="/src/assets/images/Group 1000005944.png"
+                    src={img3}
                     alt="استبدال الاجهزة"
                     className="w-full h-[210px] object-contain"
                   />
@@ -129,7 +135,7 @@ export default function Servces() {
               <div className="flex flex-col items-center justify-center h-full">
                 <div className="mb-6">
                   <img
-                    src="/src/assets/images/Engineer working with robotic arm.png"
+                    src={img4}
                     alt="صيانة وبرمجة جميع الاجهزة"
                     className="w-full h-[210px] object-contain"
                   />
@@ -158,7 +164,7 @@ export default function Servces() {
               <div className="flex flex-col items-center justify-center h-full">
                 <div className="mb-6">
                   <img
-                    src="/src/assets/images/planet.png"
+                    src={img5}
                     alt="خدمات الاتصالات و الانترنت"
                     className="w-full h-[210px] object-contain"
                   />
@@ -173,7 +179,7 @@ export default function Servces() {
             </div>
 
             {/* Service Card 6 - Customer Service */}
-            <div className="w-full h-[484px] rounded-lg p-8 relative overflow-hidden bg-gradient-to-b from-[#F9F9F9] to-[#CBD7F9] shadow-[0px_8px_8px_0px_#0000000D]">
+            <div className="w-full mb-[80px] h-[484px] rounded-lg p-8 relative overflow-hidden bg-gradient-to-b from-[#F9F9F9] to-[#CBD7F9] shadow-[0px_8px_8px_0px_#0000000D]">
               <img
                 src={Ellipse}
                 alt=""
@@ -187,7 +193,7 @@ export default function Servces() {
               <div className="flex flex-col items-center justify-center h-full">
                 <div className="mb-6">
                   <img
-                    src="/src/assets/images/documentation.png"
+                    src={img6}
                     alt="نقديم خدمات عملاء مميزة"
                     className="w-full h-[210px] object-contain"
                   />

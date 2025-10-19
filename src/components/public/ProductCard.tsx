@@ -18,6 +18,7 @@ export default function ProductCard({
   price,
   favourite = false,
   isNew = false,
+  containerstyle,
   variations = [],
 }: Product) {
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -26,17 +27,18 @@ export default function ProductCard({
   const [inCart, setInCart] = useState(false);
   const { lang } = useLangSync();
   return (
-    <Link
-      className="max-w-[350px] col-span-1 bg-white w-[300px] h-[400px] rounded-[16px] p-[15px] shadow-[0px_4px_4px_0px_#00000040]"
-      to={`/${lang}/singleproduct`}
+    <div
+      className={`max-w-[350px] md:!w-[320px] scale-[0.9] ${containerstyle} md:scale-[1] col-span-1 bg-white w-[300px] md:h-[400px] h-[350px] rounded-[16px] p-[15px] shadow-[0px_4px_4px_0px_#00000040]`}
     >
       {/* الصورة */}
       <div className="flex items-center justify-center relative">
-        <img
-          src={currentImage}
-          className="!w-[220px] object-contain !h-[220px]"
-          alt={name}
-        />
+        <Link to={`/${lang}/singleproduct`}>
+          <img
+            src={currentImage}
+            className="md:!w-[220px] !h-[160px] !w-[160px] object-contain md:!h-[220px]"
+            alt={name}
+          />
+        </Link>
 
         <div className="flex w-full items-center justify-between absolute right-0 top-0">
           <div
@@ -96,9 +98,11 @@ export default function ProductCard({
       </div>
 
       {/* الاسم */}
-      <h2 className="text-[24px] font-[500] text-[#211C4D] line-clamp-1 mt-[10px]">
-        {name}
-      </h2>
+      <Link to={`/${lang}/singleproduct`}>
+        <h2 className="text-[15px] md:text-[24px] font-[500] text-[#211C4D] line-clamp-1 mt-[10px]">
+          {name}
+        </h2>
+      </Link>
 
       {/* الألوان */}
       {variations.length > 0 && (
@@ -132,11 +136,15 @@ export default function ProductCard({
       {/* السعر + زر السلة */}
       <div className="flex items-center justify-between mt-[10px] w-full">
         <div className="relative flex gap-3">
-          <p className="text-[#211C4D] text-[18px] font-[500]">{price} ر.س</p>
-          <p className="text-[#211C4D] text-[18px] font-[500]">{price} ر.س</p>
+          <p className="text-[#211C4D] md:text-[18px] text-[11px] font-[500]">
+            {price} ر.س
+          </p>
+          <p className="text-[#211C4D] md:text-[18px] text-[11px] font-[500]">
+            {price} ر.س
+          </p>
           <svg
             width="87"
-            className="absolute top-3 left-0 z-1"
+            className="absolute top-2 md:top-3 w-[50px] md:w-[87px] left-0 z-1"
             height="5"
             viewBox="0 0 87 5"
             fill="none"
@@ -208,6 +216,6 @@ export default function ProductCard({
           )}
         </div>
       </div>
-    </Link>
+    </div>
   );
 }

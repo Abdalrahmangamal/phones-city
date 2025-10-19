@@ -30,7 +30,7 @@
 
       <Swiper
         key={lang}
-        speed={1400}
+        speed={1000}
 
         dir={lang === "ar" ? "rtl" : "ltr"}
         autoplay={{
@@ -40,7 +40,7 @@
         loop={true}
         pagination={{ clickable: true }}
         modules={[Pagination, Autoplay]}
-        className="mySwiper h-[400px] rounded-[16px] mt-6 "
+        className="mySwiper md:h-[400px] h-[250px] rounded-[16px] mt-6 "
       >{slides.map((slide,index)=>(
         
         <SwiperSlide key={index} className="relative ">
@@ -49,18 +49,21 @@
             alt={`Slide `}
             className="w-full absolute  h-full object-cover"
           />
-          <div className="z-[1]  w-full flex flex-col justify-start items-start h-full pt-[40px] pr-[40px]">
-            <h1 className="font-[700] md:text-[3rem] text-[1.2rem] mt-[30px] md:mt-[0px] text-[#FFFFFF] textshad">
+          <div className="z-[1]  w-full flex flex-col  justify-start items-start h-full pt-[40px] pr-[40px]">
+            <h1 className="font-[700] md:text-[3rem] text-[1.2rem] mt-[0px] md:mt-[0px] text-[#FFFFFF] textshad">
               {slide.title}
             </h1>
 
-            <p className="font-[700] md:text-[20px] text-[15px] max-w-[50%] text-[#FFFFFF] mt-[25px] md:max-w-[36%] text-start">
+            <p className="font-[700] md:text-[20px] text-[15px] max-w-[70%] text-[#FFFFFF] mt-[20px] md:max-w-[36%] text-start">
 {slide.description}
             </p>
             <Link
               to={`${slide.link}`}
               className="
-      w-[116px] h-[42px] 
+      md:w-[116px] md:h-[42px]
+      w-[80px] h-[35px]
+      text-[10px] 
+      md:text-[18px]
       text-white 
       mt-[25px] 
       bg-[#F3AC5D] 

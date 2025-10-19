@@ -17,7 +17,7 @@ export default function gallery() {
     `${product5}`,
   ];
   return (
-    <div>
+    <div className="md:w-full ">
       <div className="space-y-4">
         <div className="relative bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-8 aspect-[4/3] flex items-center justify-center">
           <div className="absolute top-4 left-4 bg-destructive text-white px-3 py-1 rounded text-sm font-bold">
@@ -43,7 +43,7 @@ export default function gallery() {
         </div>
 
         {/* Thumbnail Images */}
-        <div className="flex gap-3 justify-center">
+        <div className="flex gap-3 flex-wrap justify-center">
           {productImages.map((img, idx) => (
             <button
               key={idx}

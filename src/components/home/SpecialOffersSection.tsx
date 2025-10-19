@@ -36,14 +36,14 @@ const SpecialOffersSection: React.FC<SpecialOffersProps> = ({ products }) => {
 
 
   return (
-    <div className="w-full flex mt-[80px] flex-col lg:px-[90px] px-2 pt-20 md:pt-0 items-start gap-[32px]">
+    <div className="w-full flex  md:mt-[80px] flex-col lg:px-[90px] px-2 pt-20 md:pt-0 items-start gap-[32px]">
       {/* header */}
       <div className="w-full flex items-center justify-between relative">
         <div className="relative">
-          <div className="absolute -top-2 -right-4 z-0">
+          <div className="absolute md:-top-2 right-[200px] md:-right-4 z-5">
             <img src="/Layer_1.svg" alt="" className="opacity-100" />
           </div>
-          <h2 className="font-roboto font-semibold md:text-[40px] text-[30px] leading-[36px] text-[#211C4D] relative z-10">
+          <h2 className="font-roboto font-semibold md:!text-[40px] text-[24px] leading-[36px] text-[#211C4D] relative z-10">
             عروض خاصة لك
           </h2>
         </div>
@@ -86,11 +86,11 @@ const SpecialOffersSection: React.FC<SpecialOffersProps> = ({ products }) => {
   }}
         spaceBetween={5}
         slidesPerView={4}
-        className="w-full h-[500px]"
+        className="w-full h-[350px] md:h-[500px]"
           breakpoints={{
     350: {
-      slidesPerView: 1, // من أول شاشات الموبايل الكبير (تابلت صغير)
-      
+      slidesPerView: 2, // من أول شاشات الموبايل الكبير (تابلت صغير)
+      spaceBetween: 15,
     },
     640: {
       slidesPerView: 2, // من أول شاشات الموبايل الكبير (تابلت صغير)

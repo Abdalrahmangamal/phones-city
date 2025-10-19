@@ -8,8 +8,8 @@ export default function contact() {
       <Layout>
     <div>
 
-      <div className="md:px-[45px] px-[0px]">
-      <Internalbanner />
+      <div>
+      <Internalbanner title={"تواصل معنا"}  />
       <Contactform />
       <Location />
       </div>

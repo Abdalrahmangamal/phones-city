@@ -69,7 +69,7 @@ const TestimonialsSection = () => {
   };
 
   return (
-    <section className="w-full  lg:px-[90px] px-2 pt-20 md:pt-0 min-h-[500px] lg:h-[900px]  flex items-center justify-center py-10 lg:py-0 lg:mt-6 relative overflow-hidden ">
+    <section className="w-full  lg:px-[90px] px-2 pt-5 md:pt-0 min-h-[500px] lg:h-[900px]  flex items-center justify-center py-10 lg:py-0 lg:mt-6 relative overflow-hidden ">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-10 w-full items-center relative z-10">
         {/* الجزء الأيمن - 1/3 من الشاشة */}
         <div className="flex flex-col items-start gap-4 lg:gap-6 relative z-20 text-right order-1 lg:order-1 lg:col-span-1">
@@ -153,7 +153,7 @@ const TestimonialsSection = () => {
                 {testimonials.map((testimonial, index) => (
                   <SwiperSlide key={index}>
                     <div className="flex items-center !w-[500px] justify-center">
-                      <div className="bg-white p-4 sm:p-5 rounded-[16px] shadow-lg w-full max-w-[320px] sm:max-w-[300px] lg:max-w-[900px] h-[280px] sm:h-[300px] lg:h-[304px] relative">
+                      <div className="bg-white p-4 sm:p-5 rounded-[16px] shadow-lg w-full max-w-[320px] sm:max-w-[300px] lg:max-w-[900px] h-[240px] sm:h-[300px] lg:h-[304px] relative">
                         {/* Header Section */}
                         <div className="flex items-start justify-between mb-3 sm:mb-4 gap-2 sm:gap-3 mt-4 sm:mt-6">
                           <img

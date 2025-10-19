@@ -12,14 +12,14 @@ const WarrantyPolicy = () => {
         {/* Content section with policy details - aligned with hero banner */}
         <div className="w-full max-w-[1264px] mx-auto py-8 px-4" style={{ gap: '50px' }}>
           <div className="mb-8 relative">
-            <h1 className="text-right text-[#211C4D] font-roboto font-bold text-[40px] leading-[36px] relative w-full" style={{ maxWidth: '1275px' }}>
+            <h1 className="text-right text-[#211C4D] font-roboto font-bold text-[24px] md:text-[40px] leading-[36px] relative w-full" style={{ maxWidth: '1275px' }}>
               سياسة الضمان
             </h1>
             <div className="absolute" style={{ top: '-12px', right: '-49px', width: '110px', height: '85.6058px' }}>
               <img 
                 src="/src/assets/images/Layer_1.png" 
                 alt="Layer 1" 
-                className="w-full h-full object-contain"
+                className=" h-full object-contain w-[100px]"
               />
             </div>
           </div>
@@ -29,7 +29,7 @@ const WarrantyPolicy = () => {
           </div>
           
           <div className="mb-12 w-full">
-            <ul className="text-right text-[#211C4DCC] font-roboto text-[24px] leading-[48px] list-disc pr-6" style={{ fontFamily: 'Roboto', fontWeight: 400, fontSize: '24px', lineHeight: '48px' }}>
+            <ul className="text-right text-[#211C4DCC] font-roboto !text-[20px] leading-[48px] list-disc pr-6" style={{ fontFamily: 'Roboto', fontWeight: 400, fontSize: '24px', lineHeight: '48px' }}>
               <li className="mb-8">
                 يحق للعميل استبدال أو استرجاع المنتج الذي تم شرائه من الموقع الالكتروني خلال 30 يوم من تاريخ الشراء فقط في حالة وجود عيب صناعة بالمنتج وذلك بناءاً على تقرير فني من الصيانة أو مراكز الخدمة المعتمدة (ذلك ينطبق أيضاً على منتجات العناية الشخصية حيث أنها تخضع لشروط صحية ) وذلك طبقاً لقانون حماية المستهلك ، وفي حالة انتهاء مدة الـ 30 يوم لن يتم استبدال أو استرجاع الجهاز لأي سببٍ كان ، ويجب على العميل فى هذه الحالة التواصل مع خدمة العملاء 19319 لتسجيل بلاغ صيانة وذلك بالنسبة للأجهزة التى يتم تسجيل بلاغ صيانة لها ، وذلك طبقاً لنص المادة 21 من قانون حماية المستهلك.
               </li>
@@ -43,13 +43,13 @@ const WarrantyPolicy = () => {
           </div>
           
           <div className="mb-12">
-            <h2 className="text-right text-[#211C4D] font-roboto font-bold text-[32px] leading-[40px] mb-6 md:mb-4">
+            <h2 className="text-right text-[#211C4D] font-roboto font-bold text-[24px] md:text-[28px] leading-[40px] mb-6 md:mb-4">
               1. فى حالة أنه لم يتم فتح كرتونة الجهاز أو استخدامه والجهاز مازال بحالته الأصلية :
             </h2>
           </div>
           
           <div className="mb-4 w-full">
-            <ul className="text-right text-[#211C4DCC] font-roboto text-[24px] leading-[48px] list-disc pr-6" style={{ fontFamily: 'Roboto', fontWeight: 400, fontSize: '24px', lineHeight: '48px' }}>
+            <ul className="text-right text-[#211C4DCC] font-roboto !text-[20px] leading-[48px] list-disc pr-6" style={{ fontFamily: 'Roboto', fontWeight: 400, fontSize: '24px', lineHeight: '48px' }}>
               <li className="mb-4">
                 طبقاً لنص المادة 17 من ققانون حماية المستهلك ، يحق للمستهلك طلب استبدال أو استرداد قيمة المنتج خلال 14 يوم من تاريخ استلام المنتج وذلك إذا لم يكن الجهاز به عيب صناعة ، ولكن بشرط أن يكون بالحالة التى كانت عليها السلعة عند التعاقد (أى لم يتم فتحها أو استخدامها).
               </li>
@@ -63,13 +63,13 @@ const WarrantyPolicy = () => {
           </div>
           
           <div className="mb-12">
-            <h2 className="text-right text-[#211C4D] font-roboto font-bold text-[32px] leading-[40px] mb-6 md:mb-4">
+            <h2 className="text-right text-[#211C4D] font-roboto font-bold text-[28px] leading-[40px] mb-6 md:mb-4">
               2. في حالة قيام العميل بفتح كرتونة الجهاز :
             </h2>
           </div>
           
           <div className="mb-4 w-full">
-            <ul className="text-right text-[#211C4DCC] font-roboto text-[24px] leading-[48px] list-disc pr-6" style={{ fontFamily: 'Roboto', fontWeight: 400, fontSize: '24px', lineHeight: '48px' }}>
+            <ul className="text-right text-[#211C4DCC] font-roboto !text-[20px] leading-[48px] list-disc pr-6" style={{ fontFamily: 'Roboto', fontWeight: 400, fontSize: '24px', lineHeight: '48px' }}>
               <li className="mb-4">
                 طبقاً لنص المادة 17 من قانون حماية المستهلك ، يحق للمستهلك طلب استبدال أو استرداد قيمة المنتج خلال 14 يوم من تاريخ استلام المنتج وذلك إذا لم يكن الجهاز به عيب صناعة ، ولكن بشرط أن يكون بالحالة التى كانت عليها السلعة عند التعاقد (أى لم يتم فتحها أو استخدامها).
               </li>

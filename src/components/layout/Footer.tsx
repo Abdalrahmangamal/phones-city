@@ -93,7 +93,7 @@ const Footer: React.FC = () => {
       {/* Top row */}
       <div className="w-full flex flex-wrap justify-between gap-y-10 md:gap-y-12 gap-x-6 md:gap-x-10 lg:gap-x-[118px]">
         {/* Customer Care */}
-        <div className="w-full sm:w-[48%] md:w-[200px] flex flex-col gap-3 text-right">
+        <div className="w-[45%] sm:w-[48%] md:w-[200px] flex flex-col gap-3 text-right">
           <h3 className="font-[Cairo] font-semibold text-[22px] sm:text-[24px] leading-[150%]">
             رعاية العميل
           </h3>
@@ -112,7 +112,7 @@ const Footer: React.FC = () => {
         </div>
 
         {/* About */}
-        <div className="w-full sm:w-[48%] md:w-[200px] flex flex-col gap-3 text-right">
+        <div className="w-[48%] sm:w-[48%] md:w-[200px] flex flex-col gap-3 text-right">
           <h3 className="font-roboto font-semibold text-[22px] sm:text-[24px] leading-[150%]">
             عن مدينة الهواتف
           </h3>

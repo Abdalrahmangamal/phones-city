@@ -23,13 +23,13 @@ export default function Bestseller({
   
 }: BestsellerProps) {
   return (
-    <div className="mt-[80px] lg:px-[90px] px-2 pt-20 md:pt-0">
+    <div className="mt-[20px] lg:px-[90px] px-2 pt-20 md:pt-20">
       {/* العنوان */}
-      <div className="flex items-center w-full justify-between relative">
+      <div className="flex items-center px-[10px] w-full justify-between relative">
         <div className="relative">
-          <p className="text-[#211C4D] font-[600] text-[40px]">{title}</p>
+          <p className="text-[#211C4D] font-[600] text-[24px] md:text-[40px]">{title}</p>
           <img
-            className="absolute top-[50px] right-[-40px]"
+            className="absolute top-0 md:top-[10px] w-[80px] md:w-[100px] object-contain right-[-50px]"
             src={pattern}
             alt=""
           />
@@ -61,10 +61,11 @@ export default function Bestseller({
 
       {/* المنتجات */}
       <div
-        className={`grid xl:grid-cols-4 ${style} sm:grid-cols-2 grid-cols-1 gap-[20px] justify-items-center mt-[60px] `}
+        className={`grid xl:grid-cols-4 ${style} sm:grid-cols-2 grid-cols-2 gap-[20px] justify-items-center mt-[60px] `}
       >
         {products.map((item) => (
           <ProductCard
+          containerstyle={"!w-[200px]"}
             key={item.id}
             name={item.name}
             discount={item.discount}

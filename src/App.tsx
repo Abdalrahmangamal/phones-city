@@ -5,7 +5,6 @@ import i18n from "@/i18n";
 import Home from "@/pages/Home";
 import About from "@/pages/About";
 import Servces from "@/pages/Servces";
-import ropot from '@/assets/images/ropot.png'
 import Contact from "@/pages/Contact";
 // import NewHome from "@/pages/new/Home";
 import React from "react";
@@ -18,22 +17,23 @@ import WarrantyPolicy from "./pages/WarrantyPolicy";
 import TermsAndConditions from "./pages/TermsAndConditions";
 import AboutQuara from "./pages/AboutQuara";
 import AboutMora from "./pages/AboutMora";
-import Profile from "./pages/Profile";
-import Myorder from "./pages/Myorder";
-import Bills from "./pages/Bills";
+import Profile from "./pages/profile/Profile";
+import Myorder from "./pages/profile/Myorder";
+import Bills from "./pages/profile/Bills";
 import Singlebills from "./pages/Singlebills";
-import Wallet from "./pages/Wallet";
-import Address from "./pages/Address";
+import Wallet from "./pages/profile/Wallet";
+import Address from "./pages/profile/Address";
 import Singleaddress from "./pages/Singleaddress";
-import Discounts from "./pages/Discounts";
-import Favourite from "./pages/Favourite";
+import Discounts from "./pages/profile/Discounts";
+import Favourite from "./pages/profile/Favourite";
 import Trademarks from "./pages/Trademarks";
 import Trademarksbestseller from "./pages/Trademarksbestseller";
 import Trademarkscategory from "./pages/Trademarkscategory";
 import Trademarkbestoffer from "./pages/Trademarkbestoffer";
 import ScrollToTop from "@/components/ScrollToTop";
 import Singleproduct from "./pages/Singleproduct";
-
+import ChatBot from "./components/layout/Chatbot";
+import Checkout from '@/pages/chekout/Checkout'
 function LangLayout() {
   const { lang: urlLang } = useParams();
   const { lang, setLang } = useSettings();
@@ -81,6 +81,7 @@ function LangLayout() {
       <Route path="/trademarkscategory" element={<Trademarkscategory/>} />
       <Route path="/trademarkbestoffer" element={<Trademarkbestoffer/>} />
       <Route path="/singleproduct" element={<Singleproduct/>} />
+      <Route path="/checkout" element={<Checkout/>} />
       
       <Route path="/wallet" element={<Wallet/>} />
     </Routes>
@@ -121,10 +122,11 @@ export default function App() {
               <Route path="/trademarkscategory" element={<Navigate to={`/${lang}/trademarkscategory`} replace />} />
               <Route path="/trademarkbestoffer" element={<Navigate to={`/${lang}/trademarkbestoffer`} replace />} />
               <Route path="/singleproduct" element={<Navigate to={`/${lang}/singleproduct`} replace />} />
+              <Route path="/checkout" element={<Navigate to={`/${lang}/checkout`} replace />} />
           <Route path="/:lang/*" element={<LangLayout />} />
         </Routes>
       </BrowserRouter>
-      <img src={ropot} className="fixed z-[500] w-[250px] h-[200px] bottom-[-20px] right-[-30px]" alt="" />
+      <ChatBot/>
     </div>
   );
 }
