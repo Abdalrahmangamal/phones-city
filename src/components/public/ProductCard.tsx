@@ -28,7 +28,7 @@ export default function ProductCard({
   const { lang } = useLangSync();
   return (
     <div
-      className={`max-w-[350px] md:!w-[320px] scale-[0.9] ${containerstyle} md:scale-[1] col-span-1 bg-white w-[300px] md:h-[400px] h-[350px] rounded-[16px] p-[15px] shadow-[0px_4px_4px_0px_#00000040]`}
+      className={`max-w-[350px] md:!w-[320px] scale-[0.9] ${containerstyle} md:scale-[1] col-span-1 bg-white w-full min-h-[350px] md:min-h-[400px] rounded-[16px] p-[15px] shadow-[0px_4px_4px_0px_#00000040] flex flex-col`}
     >
       {/* الصورة */}
       <div className="flex items-center justify-center relative">
@@ -117,6 +117,7 @@ export default function ProductCard({
                   : "border-gray-300"
               }`}
               style={{ backgroundColor: variant.color }}
+              title={`Select color ${variant.color}`}
             ></button>
           ))}
         </div>

@@ -3,27 +3,21 @@ import pattern from "../../assets/images/Layer_1.png";
 import { Link } from "react-router-dom";
 import type { Product } from "@/types/index";
 
-interface BestsellerProps {
+interface MostSearchedProps {
   title: string;
   link?: string;
   btn?: boolean;
-  style?: string;
-  id?: number;
   products: Product[];
-  favourite?:boolean;
 }
 
-export default function Bestseller({
+export default function MostSearched({
   title,
   link,
   btn,
   products,
-  style,
-  
-  
-}: BestsellerProps) {
+}: MostSearchedProps) {
   return (
-    <div className="mt-[20px] lg:px-[90px] px-2 pt-20 md:pt-20">
+    <div className="mt-[20px] lg:px-[90px] px-2 pt-10 md:pt-10">
       {/* العنوان */}
       <div className="flex items-center px-[10px] w-full justify-between relative">
         <div className="relative">
@@ -60,13 +54,11 @@ export default function Bestseller({
       </div>
 
       {/* المنتجات */}
-      <div
-        className={`grid xl:grid-cols-4 ${style} sm:grid-cols-2 grid-cols-1 gap-[30px] mt-[60px]`}
-      >
+      <div className="grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-2 grid-cols-1 gap-[30px] mt-[60px]">
         {products.map((item) => (
           <div key={item.id} className="flex justify-center">
             <ProductCard
-              containerstyle={"!w-full max-w-[280px]"}
+              containerstyle={"!w-full max-w-[280px] h-full"}
               name={item.name}
               discount={item.discount}
               price={item.price}
