@@ -25,12 +25,12 @@ const StarIcon = ({ rating, index, active }: { rating: number, index: number, ac
 
   return (
     <svg
-      width="44"
-      height="44"
+      width="36"
+      height="36"
       viewBox="0 0 37 37"
       fill={active ? '#F3AC5D' : 'none'}
       xmlns="http://www.w3.org/2000/svg"
-      style={{ cursor: 'pointer' }}
+      className="cursor-pointer"
     >
       <path
         d="M18.5 2.3125L22.8375 11.0375L32.375 12.4375L25.4375 19.1875L27.175 28.6875L18.5 24.1L9.825 28.6875L11.5625 19.1875L4.625 12.4375L14.1625 11.0375L18.5 2.3125Z"
@@ -49,64 +49,33 @@ const ReviewPopup = ({ onClose }: { onClose: () => void }) => {
   const [comment, setComment] = useState('');
 
   return (
-    <div
-      style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '100%',
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        zIndex: 1000,
-      }}
+    <div 
+      className="fixed inset-0 bg-black/50 flex justify-center items-center z-50 p-4"
+      onClick={onClose}
     >
-      <div
-        style={{
-          width: '699px',
-          borderRadius: '24px',
-          padding: '48px',
-          backgroundColor: 'white',
-          boxShadow: '0px 30px 80px 0px #0000001A',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'space-between',
-          gap: '20px'
-        }}
+      <div 
+        className="w-full max-w-[699px] rounded-3xl p-6 bg-white shadow-[0px_30px_80px_0px_rgba(0,0,0,0.1)] flex flex-col justify-between gap-5 max-h-[90vh] overflow-y-auto"
+        onClick={(e) => e.stopPropagation()}
       >
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'relative' }}>
-          <h2
-            style={{
-              fontFamily: 'Roboto',
-              fontWeight: 500,
-              fontSize: '18px',
-              lineHeight: '32px',
-              color: '#211C4D',
-              textAlign: 'center',
-              width: '100%'
-            }}
-          >
+        <div className="flex justify-center items-center relative">
+          <h2 className="font-roboto font-medium text-base md:text-lg leading-8 text-[#211C4D] text-center w-full">
             ارسال مراجعتك
           </h2>
-          <button onClick={onClose} style={{ background: 'none', border: 'none', fontSize: '24px', cursor: 'pointer', position: 'absolute', right: 0 }}>&times;</button>
+          <button 
+            onClick={onClose} 
+            className="absolute right-0 bg-none border-none text-2xl cursor-pointer p-2 rounded-full flex items-center justify-center"
+            aria-label="إغلاق"
+          >
+            &times;
+          </button>
         </div>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', alignItems: 'center' }}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', alignItems: 'center' }}>
-            <label
-              style={{
-                fontFamily: 'Roboto',
-                fontWeight: 400,
-                fontSize: '16px',
-                lineHeight: '19.2px',
-                color: '#211C4D',
-              }}
-            >
+        <div className="flex flex-col gap-6 items-center">
+          <div className="flex flex-col gap-1 items-center">
+            <label className="font-roboto font-normal text-sm md:text-base leading-[19.2px] text-[#211C4D]">
               قيم الطلب
             </label>
-            <div style={{ display: 'flex', gap: '4px' }}>
+            <div className="flex gap-1">
               {[1, 2, 3, 4, 5].map((star) => (
                 <div key={star} onClick={() => setRating(star)}>
                   <StarIcon rating={rating} index={star} active={star <= rating} />
@@ -119,35 +88,11 @@ const ReviewPopup = ({ onClose }: { onClose: () => void }) => {
             placeholder="ارسال مراجعتك ............."
             value={comment}
             onChange={(e) => setComment(e.target.value)}
-            style={{
-              width: '100%',
-              height: '168px',
-              borderRadius: '16px',
-              padding: '23px 15px',
-              background: '#F6F6F6',
-              border: 'none',
-              resize: 'none',
-              fontFamily: 'Roboto',
-              fontSize: '14px',
-              color: '#211C4D',
-            }}
+            className="w-full h-[120px] rounded-2xl p-4 bg-[#F6F6F6] border-none resize-none font-roboto text-sm md:text-base text-[#211C4D]"
           />
         </div>
 
-        <button
-          style={{
-            width: '100%',
-            height: '61px',
-            borderRadius: '16px',
-            background: '#F3AC5D',
-            color: 'white',
-            border: 'none',
-            fontFamily: 'Roboto',
-            fontWeight: 700,
-            fontSize: '24px',
-            cursor: 'pointer',
-          }}
-        >
+        <button className="w-full h-[50px] rounded-2xl bg-[#F3AC5D] text-white border-none font-roboto font-bold text-lg md:text-xl cursor-pointer hover:bg-[#e09a4d] transition-colors">
           ارسال
         </button>
       </div>

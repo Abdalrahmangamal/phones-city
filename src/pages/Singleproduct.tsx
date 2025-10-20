@@ -10,9 +10,9 @@ export default function ProductPage() {
     <Layout>
       <div className="min-h-screen bg-background lg:px-[90px] px-2 pt-20 md:pt-0" dir="rtl">
         {/* Main Content */}
-        <main className="container mx-auto px-4 py-8">
-          <div className="bg-card rounded-lg shadow-sm p-8">
-            <div className="grid lg:grid-cols-2 gap-12">
+        <main className="container mx-auto px-2 md:px-4 py-4 md:py-8">
+          <div className="bg-card rounded-lg shadow-sm p-4 md:p-8">
+            <div className="grid lg:grid-cols-2 gap-6 md:gap-12">
               {/* Product Images */}
               <Gallery />
               {/* Product Details */}
