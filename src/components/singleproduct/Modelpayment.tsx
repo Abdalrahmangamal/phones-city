@@ -1,6 +1,7 @@
 "use client"
 
-import { X } from "lucide-react"
+import { X, ShoppingCart } from "lucide-react"
+import frameImage from "@/assets/images/Frame 427318964.png"
 
 interface TabbyModalProps {
   isOpen: boolean
@@ -11,10 +12,10 @@ export function TabbyModal({ isOpen, onClose }: TabbyModalProps) {
   if (!isOpen) return null
 
   const paymentPlans = [
-    { installments: 4, monthlyAmount: "337.25", color: "bg-blue-100 text-blue-600" },
-    { installments: 6, monthlyAmount: "237.25", color: "bg-green-100 text-green-600" },
-    { installments: 9, monthlyAmount: "137.25", color: "bg-yellow-100 text-yellow-600" },
-    { installments: 12, monthlyAmount: "90.25", color: "bg-pink-100 text-pink-600" },
+    { installments: 4, monthlyAmount: "337.25" },
+    { installments: 6, monthlyAmount: "237.25" },
+    { installments: 9, monthlyAmount: "137.25" },
+    { installments: 12, monthlyAmount: "90.25" },
   ]
 
   const usageSteps = [
@@ -27,40 +28,38 @@ export function TabbyModal({ isOpen, onClose }: TabbyModalProps) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={onClose}>
       <div
-        className="relative max-h-[90vh] w-full max-w-md overflow-y-auto rounded-2xl bg-white shadow-xl"
+        className="relative max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl bg-[#EDEFF0] shadow-xl"
         onClick={(e) => e.stopPropagation()}
         dir="rtl"
       >
         {/* Header */}
-        <div className="sticky top-0 z-10 flex items-center justify-between border-b bg-white px-6 py-4">
-          <button onClick={onClose} className="rounded-full p-1 transition-colors hover:bg-gray-100" aria-label="إغلاق">
-            <X className="h-5 w-5 text-gray-600" />
+        <div className="sticky top-0 z-10 flex items-center justify-between border-b bg-[#EDEFF0] px-6 py-4">
+          <div className="text-2xl font-bold text-[#211C4D]">tabby</div>
+          <button onClick={onClose} className="rounded-full p-1 transition-colors hover:bg-gray-200" aria-label="إغلاق">
+            <X className="h-[33px] w-[33px] text-[#211C4D]" />
           </button>
-          <div className="text-lg font-semibold text-gray-900">tabby</div>
         </div>
 
         {/* Content */}
         <div className="p-6">
-          {/* Hero Section */}
-          <div className="mb-6 overflow-hidden rounded-2xl bg-gradient-to-br from-purple-900 to-purple-700">
-            <div className="p-8 text-center">
-              <div className="mb-4 flex justify-center">
-                <img src="/diverse-woman-smiling.png" alt="Woman" className="h-24 w-24 rounded-full object-cover" />
-              </div>
-              <h2 className="mb-2 text-2xl font-bold text-white">احفظ بشترة سداد أطول</h2>
-              <p className="text-sm text-purple-200">قسم مشترياتك بما يصل الى 60 شهر</p>
-            </div>
+          {/* Hero Image */}
+          <div className="mb-6 flex justify-center">
+            <img 
+              src={frameImage} 
+              alt="tabby illustration" 
+              className="h-[424px] w-[560px] rounded-[70px] object-cover"
+            />
           </div>
 
           {/* Payment Plans */}
-          <div className="mb-6 space-y-3">
+          <div className="mb-4 space-y-4">
             {paymentPlans.map((plan) => (
-              <div key={plan.installments} className="flex items-center justify-between rounded-lg border p-4">
+              <div key={plan.installments} className="flex items-center justify-between rounded-2xl bg-[#FAFAFA] p-6">
                 <div className="text-right">
-                  <div className="text-lg font-bold text-gray-900">{plan.monthlyAmount} ر.س / شهر</div>
-                  <div className="text-sm text-orange-500">بدون فوائد أو رسوم</div>
+                  <div className="text-2xl font-bold text-[#211C4D]">{plan.monthlyAmount} رس / شهر</div>
+                  <div className="text-base text-[#F3AC5D]">بلا رسوم أو فوائد</div>
                 </div>
-                <div className={`rounded-full px-4 py-1.5 text-sm font-semibold ${plan.color}`}>
+                <div className="rounded-lg px-4 py-2 text-sm font-bold bg-[#2AA0DC26] text-[#211C4D]">
                   {plan.installments} دفعات
                 </div>
               </div>
@@ -68,44 +67,56 @@ export function TabbyModal({ isOpen, onClose }: TabbyModalProps) {
           </div>
 
           {/* Usage Steps */}
-          <div className="mb-6">
-            <h3 className="mb-4 text-right text-lg font-semibold text-gray-900">آلية الاستخدام</h3>
-            <ol className="space-y-3">
+          <div className="mb-4 rounded-2xl bg-[#FAFAFA] p-6">
+            <h3 className="mb-4 text-2xl font-bold text-[#211C4D]">الية الاستخدام</h3>
+            <div className="space-y-3">
               {usageSteps.map((step, index) => (
-                <li key={index} className="flex items-start gap-3 text-right text-sm text-gray-700">
-                  <span className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-gray-200 text-xs font-semibold text-gray-700">
+                <div key={index} className="flex items-start gap-2">
+                  <span className="mt-1 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-[#2AA0DC26] text-xs font-bold text-[#211C4D]">
                     {index + 1}
                   </span>
-                  <span className="pt-0.5">{step}</span>
-                </li>
+                  <span className="text-base font-bold text-[#211C4D]">{step}</span>
+                </div>
               ))}
-            </ol>
+            </div>
           </div>
 
-          {/* Info Sections */}
-          <div className="mb-6 space-y-4">
-            <div className="rounded-lg bg-gray-50 p-4">
-              <h4 className="mb-2 flex items-center gap-2 text-right text-sm font-semibold text-gray-900">
-                <span>📞</span>
-                تواصل بنا للمزيد
-              </h4>
-              <p className="text-right text-xs text-gray-600">
-                تواصل معنا للحصول على المزيد من المعلومات حول خيارات الدفع
-              </p>
+          {/* Trust Section */}
+          <div className="mb-4 rounded-2xl bg-[#FAFAFA] p-6">
+            <div className="flex items-start gap-4">
+              <div className="rounded-full bg-[#2A255B0D] p-2">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 12C14.7614 12 17 9.76142 17 7C17 4.23858 14.7614 2 12 2C9.23858 2 7 4.23858 7 7C7 9.76142 9.23858 12 12 12Z" stroke="#211C4D" strokeWidth="2"/>
+                  <path d="M20.59 22C20.59 18.13 16.74 15 12 15C7.26 15 3.41 18.13 3.41 22" stroke="#211C4D" strokeWidth="2" strokeLinecap="round"/>
+                </svg>
+              </div>
+              <div>
+                <h4 className="mb-2 text-xl font-bold text-[#211C4D]">يثق بنا الملايين</h4>
+                <p className="text-[#211C4D80]">
+                  أكثر من 20 مليون متسوق يكتشفون المنتجات ويدفعون كما يناسبهم مع تابي
+                </p>
+              </div>
             </div>
+          </div>
 
-            <div className="rounded-lg bg-gray-50 p-4">
-              <h4 className="mb-2 flex items-center gap-2 text-right text-sm font-semibold text-gray-900">
-                <span>🛡️</span>
-                تسوق بأمان مع تابي
-              </h4>
-              <p className="text-right text-xs text-gray-600">معلوماتك محمية بأعلى معايير الأمان والخصوصية</p>
+          {/* Security Section */}
+          <div className="mb-6 rounded-2xl bg-[#FAFAFA] p-6">
+            <div className="flex items-start gap-4">
+              <div className="rounded-full bg-[#2A255B0D] p-2">
+                <ShoppingCart className="h-6 w-6 text-[#211C4D]" />
+              </div>
+              <div>
+                <h4 className="mb-2 text-xl font-bold text-[#211C4D]">تسوّق بأمان مع تابي</h4>
+                <p className="text-[#211C4D80]">
+                  معلوماتك محمية بأعلى معايير الأمان والخصوصية
+                </p>
+              </div>
             </div>
           </div>
 
           {/* CTA Button */}
-          <button className="w-full rounded-lg bg-orange-400 py-3 text-base font-semibold text-white transition-colors hover:bg-orange-500">
-            سجل الآن تابي
+          <button className="w-full rounded-2xl bg-[#F3AC5D] py-4 text-xl font-bold text-white transition-colors hover:bg-[#e09a4d]">
+            سجل مع تابي
           </button>
         </div>
       </div>

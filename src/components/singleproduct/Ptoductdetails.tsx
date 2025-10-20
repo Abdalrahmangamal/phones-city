@@ -8,12 +8,14 @@ import emkn from "@/assets/images/emkann.png";
 import amwal from "@/assets/images/amwal.png";
 import { useState } from "react";
 import { TabbyModal } from "@/components/singleproduct/Modelpayment";
+import { TamaraModal } from "@/components/singleproduct/TamaraModal";
 import { Link } from "react-router-dom";
 
 export default function Ptoductdetails() {
   const [selectedColor, setSelectedColor] = useState("blue");
   const [quantity, setQuantity] = useState(1);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isTabbyModalOpen, setIsTabbyModalOpen] = useState(false);
+  const [isTamaraModalOpen, setIsTamaraModalOpen] = useState(false);
 
   const colors = [
     { name: "black", value: "#000000" },
@@ -22,38 +24,65 @@ export default function Ptoductdetails() {
     { name: "white", value: "#FFFFFF" },
     { name: "blue", value: "#1E3A8A" },
   ];
-  const paymentmethod = [
+  
+  const paymentMethods = [
     {
+      id: "tamara",
       img: tamara,
+      name: "تامارا",
       description:
         "او قسم فاتورتك علي 3 دفعات بقيمه 24,020 رس بدون رسوم تأخير ، متوافقه مع الشريعه الاسلاميه ",
+      modal: "tamara"
     },
     {
+      id: "tabby",
       img: tabby,
+      name: "تابي",
       description:
         "او قسم فاتورتك علي 4 دفعات بقيمه 15,920 رس بدون رسوم تأخير ، متوافقه مع الشريعه الاسلاميه ",
+      modal: "tabby"
     },
     {
+      id: "madfu",
       img: madfu,
+      name: "مدفوع",
       description:
         "4 دفعات بقيمة 15,920 رس / شهر، وبدون رسوم تأخير ! ومتوافقه مع الشريعه الاسلاميه ",
+      modal: "tabby"
     },
     {
+      id: "mispay",
       img: mispay,
+      name: "ميسباي",
       description:
         "4 دفعات بقيمة 15,920 رس /شهر، بدون رسوم تأخير ! ومتوافقه مع الشريعه الاسلاميه ",
+      modal: "tabby"
     },
     {
+      id: "emkn",
       img: emkn,
+      name: "امكن",
       description:
         "4 دفعات بقيمة 15,920 رس /شهر، بدون رسوم تأخير ! ومتوافقه مع الشريعه الاسلاميه ",
+      modal: "tabby"
     },
     {
+      id: "amwal",
       img: amwal,
+      name: "أمـوال",
       description:
         "قسّطها إلى 6 دفعات مع البنك وبدون فوائد ، متوافقه مع الشريعه الاسلاميه ",
+      modal: "tabby"
     },
   ];
+
+  const openModal = (modalType: string) => {
+    if (modalType === "tamara") {
+      setIsTamaraModalOpen(true);
+    } else {
+      setIsTabbyModalOpen(true);
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -111,31 +140,34 @@ export default function Ptoductdetails() {
 
       {/* Payment Options */}
       <div className="space-y-3 pt-6">
-        {paymentmethod.map((item) => (
-          <div className="flex items-center  gap-3 p-3 md:h-[72px] h-full rounded-lg border-1 border-[#0000004D]">
-            <p className="md:text-[16px] text-[10px] font-[600] text-[#211C4D]">
-              {item.description}
-              <button
-                onClick={() => setIsModalOpen(true)}
-                className="  underline cursor-pointer decoration-[#211C4D] underline-offset-2 border-none bg-none"
-              >
-                لمعرفة التفاصيل
-              </button>
-            </p>
-
+        {paymentMethods.map((item) => (
+          <div key={item.id} className="flex items-center gap-3 p-3 md:h-[72px] h-full rounded-lg border border-[#0000004D]">
+            <div className="flex-1">
+              <p className="md:text-[16px] text-[10px] font-[600] text-[#211C4D]">
+                {item.description}
+                <button
+                  onClick={() => openModal(item.modal)}
+                  className="underline cursor-pointer decoration-[#211C4D] underline-offset-2 border-none bg-none"
+                  aria-label={`معرفة التفاصيل عن ${item.name}`}
+                >
+                  لمعرفة التفاصيل
+                </button>
+              </p>
+            </div>
             <div className="px-4 py-1 rounded text-sm font-bold text-card">
-              <img src={item.img} className="w-[120px]" alt="" />
+              <img src={item.img} className="w-[120px]" alt={item.name} />
             </div>
           </div>
         ))}
       </div>
 
       {/* Quantity and Add to Cart */}
-      <div className="flex md:justify-between justify-center flex-wrap items-center  pt-4">
+      <div className="flex md:justify-between justify-center flex-wrap items-center pt-4">
         <div className="flex items-center border-2 w-[159px] h-[62px] border-border rounded-lg overflow-hidden">
           <button
             onClick={() => setQuantity(Math.max(1, quantity - 1))}
             className="px-4 py-2 h-full hover:bg-accent transition-colors"
+            aria-label="تقليل الكمية"
           >
             <Minus className="w-4 h-4" />
           </button>
@@ -145,6 +177,7 @@ export default function Ptoductdetails() {
           <button
             onClick={() => setQuantity(quantity + 1)}
             className="px-4 py-2 bg-[#2AA0DC] h-full text-white hover:text-black hover:bg-accent transition-colors"
+            aria-label="زيادة الكمية"
           >
             <Plus className="w-4 h-4" />
           </button>
@@ -152,16 +185,19 @@ export default function Ptoductdetails() {
         <Button
           variant="outline"
           size="lg"
-          className="px-6 w-[215px] h-[64px] border-2 border-black   bg-transparent text-[25px]"
+          className="px-6 w-[215px] h-[64px] border-2 border-black bg-transparent text-[25px]"
         >
           إضافة للسلة
         </Button>
         <Link 
-          className=" bg-[#2AA0DC] w-[215px] h-[64px] hover:bg-primary/90 rounded-[8px] flex items-center justify-center text-primary-foreground font-[600] text-[25px]" to={"/checkout"}        >
+          className="bg-[#2AA0DC] w-[215px] h-[64px] hover:bg-primary/90 rounded-[8px] flex items-center justify-center text-primary-foreground font-[600] text-[25px]" 
+          to={"/checkout"}
+        >
           اشتري الآن
         </Link>
       </div>
-      <TabbyModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      <TabbyModal isOpen={isTabbyModalOpen} onClose={() => setIsTabbyModalOpen(false)} />
+      <TamaraModal isOpen={isTamaraModalOpen} onClose={() => setIsTamaraModalOpen(false)} />
     </div>
   );
 }

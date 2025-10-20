@@ -1,3 +1,5 @@
+import Comments from "@/components/singleproduct/Comments"
+
 export default function Informationproduct() {
   const specifications = [
     { label: "العلامة التجارية :", value: "HP" },
@@ -18,8 +20,14 @@ export default function Informationproduct() {
     "نظام تشغيل حديث: يعمل على أحدث نظام تشغيل ويندوز 11 لتعزيز الأمان وتجربة المستخدم.",
     "شاشة نابضة بالحياة: شاشة LED FHD IPS مقاس 15.6 أنش مع سطوع 250 ووحدة مضيئة في البكسل ومعدل تحديث 144 .",
   ];
+  
+  const handleWriteReview = () => {
+    // This would typically open a modal or navigate to a review page
+    console.log("Write review clicked");
+  };
+
   return (
-    <div className="  rounded-lg bg-white p-8 " dir="rtl">
+    <div className="rounded-lg bg-white p-8" dir="rtl">
       {/* Main Title */}
       <h1 className="mb-8 text-right text-3xl font-bold text-gray-900">
         تفاصيل المنتج
@@ -38,7 +46,7 @@ export default function Informationproduct() {
               className="grid grid-cols-[1fr_auto] justify-between items-center gap-4"
             >
               <div className="flex items-center gap-4">
-                <div className="whitespace-nowrap text-right text-base  text-[#211C4DCC]">
+                <div className="whitespace-nowrap text-right text-base text-[#211C4DCC]">
                   {spec.label}
                 </div>
                 <div className="h-px flex-1 border-b border-dotted border-gray-300" />
@@ -52,7 +60,7 @@ export default function Informationproduct() {
       </div>
 
       {/* About Section */}
-      <div>
+      <div className="mb-12">
         <h2 className="mb-6 text-right text-[32px] font-semibold text-[#211C4D]">
           عن هذا المنتج
         </h2>
@@ -69,6 +77,9 @@ export default function Informationproduct() {
           ))}
         </ul>
       </div>
+
+      {/* Comments Section */}
+      <Comments onWriteReview={handleWriteReview} />
     </div>
   );
 }
