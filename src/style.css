@@ -1,5 +1,3 @@
-
-
 .swiper {
   width: 100%;
 }
@@ -118,8 +116,41 @@
 .animate-logo-glow {
   animation: logo-glow 2.5s ease-in-out infinite;
 }
-@media (min-width: 768px) and (max-width: 1000px) {
 
+/* Specific fixes for 1024px screen width */
+@media (min-width: 1020px) and (max-width: 1030px) {
+  /* Ensure proper height for payment options */
+  .lg\:h-\[72px\] {
+    height: 72px !important;
+  }
+  
+  /* Ensure proper width for quantity selector */
+  .lg\:w-\[159px\] {
+    width: 159px !important;
+  }
+  
+  /* Ensure proper width for buttons */
+  .lg\:w-\[216px\] {
+    width: 216px !important;
+  }
+  
+  .lg\:w-\[215px\] {
+    width: 215px !important;
+  }
+  
+  /* Ensure proper text sizing */
+  .lg\:text-\[16px\] {
+    font-size: 16px !important;
+  }
+  
+  /* Ensure proper icon sizing */
+  .w-5\.h-5 {
+    width: 20px !important;
+    height: 20px !important;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1000px) {
   .btnoffer{
     width: 60px;
     font-size: 10px;
@@ -135,6 +166,7 @@
     scale: 0.5;
   }
 }
+
 .tabs-trigger[data-state="active"] {
   color: #1b1741; /* اللون الغامق وقت الـactive */
   border-bottom: 2px solid #1b1741; /* الخط اللي تحت */

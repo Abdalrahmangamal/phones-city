@@ -141,9 +141,9 @@ export default function Ptoductdetails() {
       {/* Payment Options */}
       <div className="space-y-3 pt-4 md:pt-6">
         {paymentMethods.map((item) => (
-          <div key={item.id} className="flex flex-col md:flex-row md:items-center gap-3 p-3 rounded-lg border border-[#0000004D] lg1024-payment-option">
+          <div key={item.id} className="flex flex-col lg:flex-row lg:items-center gap-3 p-3 lg:h-[72px] rounded-lg border border-[#0000004D]">
             <div className="flex-1">
-              <p className="text-xs md:text-[16px] font-[600] text-[#211C4D] lg1024-payment-text">
+              <p className="text-xs lg:text-[16px] font-[600] text-[#211C4D]">
                 {item.description}
                 <button
                   onClick={() => openModal(item.modal)}
@@ -154,44 +154,44 @@ export default function Ptoductdetails() {
                 </button>
               </p>
             </div>
-            <div className="px-3 py-1 md:px-4 md:py-1 rounded text-sm font-bold text-card">
-              <img src={item.img} className="w-[80px] md:w-[120px] lg1024-payment-img" alt={item.name} />
+            <div className="px-3 py-1 lg:px-4 lg:py-1 rounded text-sm font-bold text-card">
+              <img src={item.img} className="w-[80px] lg:w-[120px]" alt={item.name} />
             </div>
           </div>
         ))}
       </div>
 
       {/* Quantity and Add to Cart */}
-      <div className="flex flex-col md:flex-row justify-center items-center gap-4 md:gap-6 pt-4 w-full">
-        <div className="flex items-center border-2 w-[140px] md:w-[159px] h-[50px] md:h-[62px] border-border rounded-lg overflow-hidden">
+      <div className="flex flex-col lg:flex-row lg:justify-between items-center gap-4 lg:gap-6 pt-4 w-full">
+        <div className="flex items-center border-2 w-full lg:w-[159px] h-[62px] border-border rounded-lg overflow-hidden">
           <button
             onClick={() => setQuantity(Math.max(1, quantity - 1))}
-            className="px-3 py-2 h-full hover:bg-accent transition-colors flex items-center justify-center lg1024-quantity-btn"
+            className="px-3 py-2 h-full hover:bg-accent transition-colors flex-1 flex items-center justify-center"
             aria-label="تقليل الكمية"
           >
-            <Minus className="w-4 h-4" />
+            <Minus className="w-5 h-5" />
           </button>
-          <span className="px-2 py-2 border-x-2 border-border font-bold min-w-[40px] text-center text-sm md:text-base flex items-center justify-center">
+          <span className="px-4 py-2 border-x-2 border-border font-bold min-w-[43px] text-center text-lg flex items-center justify-center h-full">
             {quantity}
           </span>
           <button
             onClick={() => setQuantity(quantity + 1)}
-            className="px-3 py-2 bg-[#2AA0DC] h-full text-white hover:text-black hover:bg-accent transition-colors flex items-center justify-center lg1024-quantity-btn"
+            className="px-3 py-2 bg-[#2AA0DC] h-full text-white hover:text-black hover:bg-accent transition-colors flex-1 flex items-center justify-center"
             aria-label="زيادة الكمية"
           >
-            <Plus className="w-4 h-4" />
+            <Plus className="w-5 h-5" />
           </button>
         </div>
-        <div className="flex gap-3 md:gap-4">
+        <div className="flex flex-col sm:flex-row gap-3 lg:gap-4 w-full lg:w-auto">
           <Button
             variant="outline"
             size="lg"
-            className="px-4 md:px-6 w-[180px] md:w-[215px] h-[50px] md:h-[64px] border-2 border-black bg-transparent text-xl md:text-[25px] lg1024-cart-btn"
+            className="w-full sm:w-auto lg:w-[216px] h-[62px] border-2 border-black bg-transparent text-[24px] font-semibold"
           >
             إضافة للسلة
           </Button>
-          <Link 
-            className="bg-[#2AA0DC] w-[180px] md:w-[215px] h-[50px] md:h-[64px] hover:bg-primary/90 rounded-[8px] flex items-center justify-center text-primary-foreground font-[600] text-xl md:text-[25px] lg1024-buy-now-btn" 
+          <Link
+            className="bg-[#2AA0DC] w-full sm:w-auto lg:w-[215px] h-[62px] hover:bg-primary/90 rounded-[8px] flex items-center justify-center text-primary-foreground font-semibold text-[24px]"
             to={"/checkout"}
           >
             اشتري الآن
