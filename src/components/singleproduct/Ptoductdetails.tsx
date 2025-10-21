@@ -141,7 +141,8 @@ export default function Ptoductdetails() {
       {/* Payment Options */}
       <div className="space-y-3 pt-4 md:pt-6">
         {paymentMethods.map((item) => (
-          <div key={item.id} className="flex flex-col lg:flex-row lg:items-center gap-3 p-3 lg:h-[72px] rounded-lg border border-[#0000004D]">
+          // Fixed: Removed fixed height that was causing layout issues
+          <div key={item.id} className="flex flex-col lg:flex-row lg:items-center gap-3 p-3 rounded-lg border border-[#0000004D]">
             <div className="flex-1">
               <p className="text-xs lg:text-[16px] font-[600] text-[#211C4D]">
                 {item.description}
@@ -162,8 +163,9 @@ export default function Ptoductdetails() {
       </div>
 
       {/* Quantity and Add to Cart */}
-      <div className="flex flex-col lg:flex-row lg:justify-between items-center gap-4 lg:gap-6 pt-4 w-full">
-        <div className="flex items-center border-2 w-full lg:w-[159px] h-[62px] border-border rounded-lg overflow-hidden">
+      {/* Fixed: Improved responsive layout for quantity selector and buttons */}
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 pt-4 w-full">
+        <div className="flex items-center border-2 w-full md:w-[159px] h-[62px] border-border rounded-lg overflow-hidden">
           <button
             onClick={() => setQuantity(Math.max(1, quantity - 1))}
             className="px-3 py-2 h-full hover:bg-accent transition-colors flex-1 flex items-center justify-center"
@@ -182,16 +184,16 @@ export default function Ptoductdetails() {
             <Plus className="w-5 h-5" />
           </button>
         </div>
-        <div className="flex flex-col sm:flex-row gap-3 lg:gap-4 w-full lg:w-auto">
+        <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
           <Button
             variant="outline"
             size="lg"
-            className="w-full sm:w-auto lg:w-[216px] h-[62px] border-2 border-black bg-transparent text-[24px] font-semibold"
+            className="w-full sm:w-auto md:w-[216px] h-[62px] border-2 border-black bg-transparent text-[24px] font-semibold"
           >
             إضافة للسلة
           </Button>
           <Link
-            className="bg-[#2AA0DC] w-full sm:w-auto lg:w-[215px] h-[62px] hover:bg-primary/90 rounded-[8px] flex items-center justify-center text-primary-foreground font-semibold text-[24px]"
+            className="bg-[#2AA0DC] w-full sm:w-auto md:w-[215px] h-[62px] hover:bg-primary/90 rounded-[8px] flex items-center justify-center text-primary-foreground font-semibold text-[24px]"
             to={"/checkout"}
           >
             اشتري الآن

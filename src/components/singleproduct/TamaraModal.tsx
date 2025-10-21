@@ -173,7 +173,9 @@ export function TamaraModal({ isOpen, onClose }: TamaraModalProps) {
             </p>
 
             <a
-              href="#"
+              href="https://tamara.co/ar-sa/terms-and-conditions"
+              target="_blank"
+              rel="noopener noreferrer"
               className="text-indigo-600 hover:underline text-xs md:text-sm font-medium"
             >
               لمزيد من التفاصيل، يرجى زيارة الشروط والأحكام
@@ -183,27 +185,27 @@ export function TamaraModal({ isOpen, onClose }: TamaraModalProps) {
               <img
                 src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_Pay_logo.svg"
                 alt="Apple Pay"
-                className="h-4 md:h-6"
+                className="h-4 md:h-6 bg-white p-1 rounded"
               />
               <img
                 src="https://upload.wikimedia.org/wikipedia/commons/1/16/Mada_logo.svg"
                 alt="Mada"
-                className="h-4 md:h-6"
+                className="h-4 md:h-6 bg-white p-1 rounded"
               />
               <img
                 src="https://upload.wikimedia.org/wikipedia/commons/3/30/American_Express_logo_%282018%29.svg"
                 alt="Amex"
-                className="h-4 md:h-6"
+                className="h-4 md:h-6 bg-white p-1 rounded"
               />
               <img
                 src="https://upload.wikimedia.org/wikipedia/commons/0/04/Mastercard-logo.png"
                 alt="Mastercard"
-                className="h-4 md:h-6"
+                className="h-4 md:h-6 bg-white p-1 rounded"
               />
               <img
                 src="https://upload.wikimedia.org/wikipedia/commons/0/04/Visa.svg"
                 alt="Visa"
-                className="h-4 md:h-6"
+                className="h-4 md:h-6 bg-white p-1 rounded"
               />
             </div>
           </div>
