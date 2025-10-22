@@ -1,0 +1,208 @@
+/* Samsung S24 Ultra Responsive Styles */
+/* Screen Size: 6.8 inches (1440 x 3120 pixels) */
+/* Aspect Ratio: 19.5:9 */
+
+/* S24 Ultra specific styles */
+@media screen and (min-width: 390px) and (max-width: 430px) {
+  .s24-frame-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  /* Ensure proper spacing for feature cards on S24 Ultra */
+  .s24-frame-grid > div {
+    min-height: auto;
+  }
+  
+  /* S24 Ultra specific styles for partner section - show 4 logos */
+  .s24-partner-swiper {
+    transform: scale(0.9);
+    transform-origin: top center;
+  }
+  
+  /* S24 Ultra specific styles for categories section - show 4 items */
+  .s24-categories-swiper {
+    transform: scale(0.85);
+    transform-origin: top center;
+  }
+  
+  /* S24 Ultra specific styles for app download section */
+  .s24-app-section {
+    display: block !important;
+    transform: scale(0.73);
+    transform-origin: top left;
+  }
+}
+
+/* Media query for Samsung S24 Ultra using viewport logical resolution */
+@media screen and (max-width: 384px) and (min-device-pixel-ratio: 3.5) {
+  .s24-container {
+    max-width: 1440px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+  
+  .s24-heading {
+    font-size: 2.5rem;
+    line-height: 1.2;
+  }
+  
+  .s24-subheading {
+    font-size: 1.75rem;
+    line-height: 1.3;
+  }
+  
+  .s24-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2rem;
+  }
+  
+  .s24-feature-card {
+    max-width: 100%;
+    min-height: 140px;
+  }
+  
+  .s24-feature-icon {
+    width: 4rem;
+    height: 4rem;
+  }
+  
+  .s24-feature-title {
+    font-size: 1.5rem;
+  }
+  
+  .s24-feature-text {
+    font-size: 1.125rem;
+  }
+  
+  .s24-icon {
+    width: 5rem;
+    height: 5rem;
+  }
+  
+  .s24-app-section {
+    display: block;
+    height: 600px;
+    min-height: 530px;
+  }
+  
+  .s24-main-image,
+  .s24-overlay-image {
+    top: 40px;
+    left: 180px;
+  }
+  
+  .s24-bottom-image {
+    bottom: -20px;
+    left: 100px;
+  }
+  
+  .s24-ellipse-border {
+    top: 100px;
+    left: 100px;
+    width: 550px;
+    height: 550px;
+  }
+  
+  .s24-blur-element:first-child {
+    top: 20px;
+    left: 70px;
+    width: 550px;
+    height: 700px;
+  }
+  
+  .s24-blur-element:last-child {
+    top: 400px;
+    left: 350px;
+    width: 200px;
+    height: 200px;
+  }
+  
+  .s24-content {
+    top: 60px;
+    right: 80px;
+    width: 700px;
+    height: 350px;
+  }
+  
+  .s24-title {
+    font-size: 2.5rem;
+  }
+  
+  .s24-subtitle {
+    font-size: 1.75rem;
+  }
+  
+  .s24-buttons {
+    gap: 2rem;
+  }
+  
+  .s24-google-play,
+  .s24-app-store {
+    width: 200px;
+    height: 60px;
+  }
+  
+  /* S24 Ultra specific styles for partner section */
+  .s24-partner-swiper .swiper-slide {
+    transform: scale(0.9);
+  }
+  
+  /* S24 Ultra specific styles for categories section */
+  .s24-categories-swiper .swiper-slide {
+    transform: scale(0.85);
+  }
+}
+
+/* Fallback media query for Samsung S24 Ultra */
+@media screen and (max-width: 412px) and (min-device-pixel-ratio: 3.5) {
+  .s24-container {
+    max-width: 1440px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+  
+  .s24-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2rem;
+  }
+  
+  .s24-app-section {
+    display: block;
+    height: 600px;
+    min-height: 530px;
+  }
+  
+  /* S24 Ultra specific styles for partner section */
+  .s24-partner-swiper .swiper-slide {
+    transform: scale(0.9);
+  }
+  
+  /* S24 Ultra specific styles for categories section */
+  .s24-categories-swiper .swiper-slide {
+    transform: scale(0.85);
+  }
+}
+
+/* Responsive fixes for small screens to prevent text overlap */
+@media (max-width: 768px) {
+  .s24-frame-grid > div {
+    min-height: 120px;
+  }
+}
+
+@media (max-width: 480px) {
+  .s24-frame-grid > div {
+    min-height: 100px;
+  }
+}
+
+/* General responsive improvements for all devices */
+@media (max-width: 768px) {
+  .s24-app-section {
+    display: none;
+  }
+}

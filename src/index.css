@@ -1,6 +1,7 @@
 @import "tailwindcss";
 /* index.css */
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+@import "./components/s24-ultra/s24-responsive.css";
 
 [dir="rtl"] {
   direction: rtl;
