@@ -5,7 +5,7 @@ import Gallery from "@/components/singleproduct/Gallery";
 import Ptoductdetails from "@/components/singleproduct/Ptoductdetails";
 import Informationproduct from "@/components/singleproduct/Informationproduct";
 import FeaturedHeroSection from "@/components/home/FeaturedHeroSection";
-import Bestseller from "@/components/home/Bestseller";
+import BestSellingProducts from "@/components/singleproduct/BestSellingProducts";
 import heroImage from "@/assets/images/herooffer.png";
 import orangelabtop from "@/assets/images/orangelabtop.png";
 import bluephone from "@/assets/images/bluephone.png";
@@ -88,7 +88,7 @@ export default function ProductPage() {
           />
           
           {/* Best Selling Products Section */}
-          <Bestseller
+          <BestSellingProducts
             title={"الأكثر مبيعاً"}
             btn={true}
             link="/Trademarksbestseller"

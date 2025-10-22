@@ -1,24 +1,21 @@
-"use client";
-import React from "react";
-import { Link } from "react-router-dom";
 import ProductCard from "../public/ProductCard";
-import type { Product } from '@/types/index';
+import pattern from "../../assets/images/Layer_1.png";
+import { Link } from "react-router-dom";
+import type { Product } from "@/types/index";
 
-interface SpecialOffersProps {
-  products: Product[];
-  title?: string;
+interface BestSellingProductsProps {
+  title: string;
   link?: string;
   btn?: boolean;
-  style?: string;
+  products: Product[];
 }
 
-const SpecialOffersSection: React.FC<SpecialOffersProps> = ({ 
-  products, 
-  title = "عروض خاصة لك",
+export default function BestSellingProducts({
+  title,
   link,
-  btn = true,
-  style
-}) => {
+  btn,
+  products,
+}: BestSellingProductsProps) {
   return (
     <div className="mt-[20px] lg:px-[90px] px-2 pt-20 md:pt-20">
       {/* العنوان */}
@@ -27,7 +24,7 @@ const SpecialOffersSection: React.FC<SpecialOffersProps> = ({
           <p className="text-[#211C4D] font-[600] text-[24px] md:text-[40px]">{title}</p>
           <img
             className="absolute top-0 md:top-[10px] w-[80px] md:w-[100px] object-contain right-[-50px]"
-            src="/Layer_1.svg"
+            src={pattern}
             alt=""
           />
         </div>
@@ -35,7 +32,7 @@ const SpecialOffersSection: React.FC<SpecialOffersProps> = ({
         {btn && (
           <Link
             className="text-[#211C4D] text-[24px] flex items-center gap-[10px] font-[500]"
-            to={link || "/trademarkbestoffer"}
+            to={link || "#"}
           >
             عرض المزيد
             <svg
@@ -57,25 +54,22 @@ const SpecialOffersSection: React.FC<SpecialOffersProps> = ({
       </div>
 
       {/* المنتجات */}
-      <div
-        className={`grid xl:grid-cols-3 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-2 grid-cols-2 gap-[20px] justify-items-center mt-[60px]`}
-      >
+      <div className="grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-2 grid-cols-1 gap-[30px] mt-[60px]">
         {products.map((item) => (
-          <ProductCard
-            containerstyle={"!w-[200px]"}
-            key={item.id}
-            name={item.name}
-            discount={item.discount}
-            price={item.price}
-            isNew={item.isNew}
-            favourite={item.favourite}
-            variations={item.variations}
-            id={item.id}
-          />
+          <div key={item.id} className="flex justify-center">
+            <ProductCard
+              containerstyle={"!w-full max-w-[280px]"}
+              name={item.name}
+              discount={item.discount}
+              price={item.price}
+              isNew={item.isNew}
+              favourite={item.favourite}
+              variations={item.variations}
+              id={item.id}
+            />
+          </div>
         ))}
       </div>
     </div>
   );
-};
-
-export default SpecialOffersSection;
+}

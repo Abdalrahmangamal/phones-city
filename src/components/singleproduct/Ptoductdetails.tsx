@@ -141,10 +141,9 @@ export default function Ptoductdetails() {
       {/* Payment Options */}
       <div className="space-y-3 pt-4 md:pt-6">
         {paymentMethods.map((item) => (
-          // Fixed: Removed fixed height that was causing layout issues
-          <div key={item.id} className="flex flex-col lg:flex-row lg:items-center gap-3 p-3 rounded-lg border border-[#0000004D]">
+          <div key={item.id} className="flex flex-col md:flex-row md:items-center gap-3 p-3 md:h-[72px] h-full rounded-lg border border-[#0000004D]">
             <div className="flex-1">
-              <p className="text-xs lg:text-[16px] font-[600] text-[#211C4D]">
+              <p className="text-xs md:text-[16px] font-[600] text-[#211C4D]">
                 {item.description}
                 <button
                   onClick={() => openModal(item.modal)}
@@ -155,45 +154,44 @@ export default function Ptoductdetails() {
                 </button>
               </p>
             </div>
-            <div className="px-3 py-1 lg:px-4 lg:py-1 rounded text-sm font-bold text-card">
-              <img src={item.img} className="w-[80px] lg:w-[120px]" alt={item.name} />
+            <div className="px-3 py-1 md:px-4 md:py-1 rounded text-sm font-bold text-card">
+              <img src={item.img} className="w-[80px] md:w-[120px]" alt={item.name} />
             </div>
           </div>
         ))}
       </div>
 
       {/* Quantity and Add to Cart */}
-      {/* Fixed: Improved responsive layout for quantity selector and buttons */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 pt-4 w-full">
-        <div className="flex items-center border-2 w-full md:w-[159px] h-[62px] border-border rounded-lg overflow-hidden">
+      <div className="flex flex-col md:flex-row md:justify-between justify-center flex-wrap items-center gap-4 md:gap-0 pt-4">
+        <div className="flex items-center border-2 w-[140px] md:w-[159px] h-[50px] md:h-[62px] border-border rounded-lg overflow-hidden">
           <button
             onClick={() => setQuantity(Math.max(1, quantity - 1))}
-            className="px-3 py-2 h-full hover:bg-accent transition-colors flex-1 flex items-center justify-center"
+            className="px-3 md:px-4 py-2 h-full hover:bg-accent transition-colors"
             aria-label="تقليل الكمية"
           >
-            <Minus className="w-5 h-5" />
+            <Minus className="w-4 h-4" />
           </button>
-          <span className="px-4 py-2 border-x-2 border-border font-bold min-w-[43px] text-center text-lg flex items-center justify-center h-full">
+          <span className="px-4 md:px-6 py-2 border-x-2 border-border font-bold min-w-[40px] md:min-w-[60px] text-center text-sm md:text-base">
             {quantity}
           </span>
           <button
             onClick={() => setQuantity(quantity + 1)}
-            className="px-3 py-2 bg-[#2AA0DC] h-full text-white hover:text-black hover:bg-accent transition-colors flex-1 flex items-center justify-center"
+            className="px-3 md:px-4 py-2 bg-[#2AA0DC] h-full text-white hover:text-black hover:bg-accent transition-colors"
             aria-label="زيادة الكمية"
           >
-            <Plus className="w-5 h-5" />
+            <Plus className="w-4 h-4" />
           </button>
         </div>
-        <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+        <div className="flex flex-col md:flex-row gap-3 md:gap-4">
           <Button
             variant="outline"
             size="lg"
-            className="w-full sm:w-auto md:w-[216px] h-[62px] border-2 border-black bg-transparent text-[24px] font-semibold"
+            className="px-4 md:px-6 w-[180px] md:w-[215px] h-[50px] md:h-[64px] border-2 border-black bg-transparent text-xl md:text-[25px]"
           >
             إضافة للسلة
           </Button>
-          <Link
-            className="bg-[#2AA0DC] w-full sm:w-auto md:w-[215px] h-[62px] hover:bg-primary/90 rounded-[8px] flex items-center justify-center text-primary-foreground font-semibold text-[24px]"
+          <Link 
+            className="bg-[#2AA0DC] w-[180px] md:w-[215px] h-[50px] md:h-[64px] hover:bg-primary/90 rounded-[8px] flex items-center justify-center text-primary-foreground font-[600] text-xl md:text-[25px]" 
             to={"/checkout"}
           >
             اشتري الآن

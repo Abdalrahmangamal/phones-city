@@ -61,21 +61,20 @@ export default function Bestseller({
 
       {/* المنتجات */}
       <div
-        className={`grid xl:grid-cols-4 ${style} sm:grid-cols-2 grid-cols-1 gap-[30px] mt-[60px]`}
+        className={`grid xl:grid-cols-4 ${style} sm:grid-cols-2 grid-cols-2 gap-[20px] justify-items-center mt-[60px] `}
       >
         {products.map((item) => (
-          <div key={item.id} className="flex justify-center">
-            <ProductCard
-              containerstyle={"!w-full max-w-[280px]"}
-              name={item.name}
-              discount={item.discount}
-              price={item.price}
-              isNew={item.isNew}
-              favourite={item.favourite}
-              variations={item.variations}
-              id={item.id}
-            />
-          </div>
+          <ProductCard
+          containerstyle={"!w-[200px]"}
+            key={item.id}
+            name={item.name}
+            discount={item.discount}
+            price={item.price}
+            isNew={item.isNew}
+            favourite={item.favourite}
+            variations={item.variations}
+            id={item.id}
+          />
         ))}
       </div>
     </div>
