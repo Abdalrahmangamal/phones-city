@@ -25,6 +25,8 @@ export default function LatestOffers() {
       <div className="flex flex-col md:flex-row items-start justify-center pt-[40px] md:pt-[50px] gap-[20px]">
 
         {/* Left section (Laptops) */}
+
+        
         <div className="relative flex items-end justify-center md:h-[700px] h-[400px] w-full md:w-[36%] rounded-[16px] ">
           <img
             src={laptops}
