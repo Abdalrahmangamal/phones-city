@@ -1,13 +1,26 @@
 import OrderSummarySection from "./OrderSummarySection";
-import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 
-export default function Checkoutaddress() {
-  const navigate = useNavigate();
+export default function Checkoutaddress({ 
+  onNavigateToNextStep,
+  onNavigateBack
+}: { 
+  onNavigateToNextStep?: () => void;
+  onNavigateBack?: () => void;
+}) {
 
   const handleNext = () => {
-    // Navigate to the next step (payment page)
-    navigate("/checkout/payment");
+    // Call the navigation callback to go to the next step
+    if (onNavigateToNextStep) {
+      onNavigateToNextStep();
+    }
+  };
+
+  const handleBack = () => {
+    // Call the navigation callback to go back to the previous step
+    if (onNavigateBack) {
+      onNavigateBack();
+    }
   };
 
   return (
@@ -96,19 +109,27 @@ export default function Checkoutaddress() {
             </div>
           </div>
           
-          {/* Next Button */}
-          <Button 
-            className="w-full mt-8 h-[56px] bg-[#F3AC5D] rounded-[16px] text-[24px] text-white font-normal hover:bg-[#e09a4d] transition-colors"
-            onClick={handleNext}
-          >
-            التالي
-          </Button>
+          {/* Navigation Buttons */}
+          <div className="flex gap-4 mt-8">
+            <Button 
+              className="flex-1 h-[56px] bg-[#F3AC5D] rounded-[16px] text-[24px] text-white font-normal hover:bg-[#e09a4d] transition-colors"
+              onClick={handleNext}
+            >
+              التالي
+            </Button>
+            <Button 
+              className="flex-1 h-[56px] bg-[#E5E5E5] rounded-[16px] text-[24px] text-[#211C4D] font-normal hover:bg-[#d5d5d5] transition-colors"
+              onClick={handleBack}
+            >
+              رجوع
+            </Button>
+          </div>
         </div>
       </div>
       
       {/* Right Side - Order Summary */}
       <div className="w-full lg:w-[536px]">
-        <OrderSummarySection />
+        <OrderSummarySection currentStep={1} onNavigateToNextStep={onNavigateToNextStep} />
       </div>
     </div>
   );

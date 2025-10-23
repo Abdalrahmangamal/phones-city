@@ -8,7 +8,13 @@ import amwal from "@/assets/images/amwal.png";
 import { TamaraModal } from "@/components/singleproduct/TamaraModal";
 import { TabbyModal } from "@/components/singleproduct/Modelpayment";
 
-export default function OrderSummarySection({ onNavigateToNextStep }: { onNavigateToNextStep?: () => void }) {
+export default function OrderSummarySection({ 
+  onNavigateToNextStep, 
+  currentStep 
+}: { 
+  onNavigateToNextStep?: () => void;
+  currentStep?: number;
+}) {
   const [isPointsToggleOn, setIsPointsToggleOn] = useState(false);
   const [isTamaraModalOpen, setIsTamaraModalOpen] = useState(false);
   const [isTabbyModalOpen, setIsTabbyModalOpen] = useState(false);

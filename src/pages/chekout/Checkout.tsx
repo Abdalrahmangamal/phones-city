@@ -18,9 +18,21 @@ export default function CheckoutPage() {
   }, []);
 
   const steps = [
-    { title: "ملخص الطلب", number: order, componunt: <Cheackoutsummary onNavigateToNextStep={() => setActiveStep(1)} /> },
-    { title: "العنوان", number: step2, componunt: <Checkoutaddress /> },
-    { title: "الدفع", number: step3, componunt: <Checkoutpayment /> },
+    { 
+      title: "ملخص الطلب", 
+      number: order, 
+      componunt: <Cheackoutsummary onNavigateToNextStep={() => setActiveStep(1)} /> 
+    },
+    { 
+      title: "العنوان", 
+      number: step2, 
+      componunt: <Checkoutaddress onNavigateToNextStep={() => setActiveStep(2)} onNavigateBack={() => setActiveStep(0)} /> 
+    },
+    { 
+      title: "الدفع", 
+      number: step3, 
+      componunt: <Checkoutpayment onNavigateBack={() => setActiveStep(1)} /> 
+    },
   ];
 
   return (
