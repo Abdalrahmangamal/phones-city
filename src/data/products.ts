@@ -1,12 +1,23 @@
-[
+import macbookImage from "@/assets/images/macbook.png";
+import iphoneImage from "@/assets/images/bluephone.png";
+import laptopImage from "@/assets/images/laptops.png";
+import watchImage from "@/assets/images/watch.png";
+import airpodsImage from "@/assets/images/airbuds.png";
+import chargersImage from "@/assets/images/chargers.png";
+import product1Image from "@/assets/images/product1.png";
+import product2Image from "@/assets/images/product2.png";
+import orangelabtopImage from "@/assets/images/orangelabtop.png";
+import airImage from "@/assets/images/air.png";
+
+export const productsData = [
   {
     "id": 1,
     "name": "MacBook Air M2",
     "category": "Laptop",
     "brand": "Apple",
     "variants": [
-      { "color": "Silver", "image": "https://images.unsplash.com/photo-1619942442228-cc7e7e06e35b" },
-      { "color": "Space Gray", "image": "https://images.unsplash.com/photo-1603808033192-082d79b9b99b" }
+      { "color": "Silver", "image": macbookImage },
+      { "color": "Space Gray", "image": laptopImage }
     ],
     "price": 52000,
     "discount": 5,
@@ -22,8 +33,8 @@
     "category": "Laptop",
     "brand": "Dell",
     "variants": [
-      { "color": "Graphite", "image": "https://images.unsplash.com/photo-1587829741301-dc798b83add3" },
-      { "color": "Platinum", "image": "https://images.unsplash.com/photo-1587202372775-a92cc03d6f84" }
+      { "color": "Graphite", "image": laptopImage },
+      { "color": "Platinum", "image": orangelabtopImage }
     ],
     "price": 47000,
     "discount": 10,
@@ -39,8 +50,8 @@
     "category": "Phone",
     "brand": "Apple",
     "variants": [
-      { "color": "Black Titanium", "image": "https://images.unsplash.com/photo-1696361909117-4479a2394127" },
-      { "color": "White Titanium", "image": "https://images.unsplash.com/photo-1696361909050-4b92b6b31479" }
+      { "color": "Black Titanium", "image": iphoneImage },
+      { "color": "White Titanium", "image": airImage }
     ],
     "price": 65000,
     "discount": 0,
@@ -56,8 +67,8 @@
     "category": "Phone",
     "brand": "Samsung",
     "variants": [
-      { "color": "Titanium Gray", "image": "https://images.unsplash.com/photo-1705609438015-68f719ce7bfa" },
-      { "color": "Titanium Blue", "image": "https://images.unsplash.com/photo-1705609441433-c0dcad33791b" }
+      { "color": "Titanium Gray", "image": iphoneImage },
+      { "color": "Titanium Blue", "image": airImage }
     ],
     "price": 60000,
     "discount": 7,
@@ -73,8 +84,8 @@
     "category": "Watch",
     "brand": "Apple",
     "variants": [
-      { "color": "Midnight", "image": "https://images.unsplash.com/photo-1600181953609-9b2eecce27a6" },
-      { "color": "Silver", "image": "https://images.unsplash.com/photo-1586810164849-1d26ebc6f8e1" }
+      { "color": "Midnight", "image": watchImage },
+      { "color": "Silver", "image": watchImage }
     ],
     "price": 21000,
     "discount": 3,
@@ -90,8 +101,8 @@
     "category": "Watch",
     "brand": "Samsung",
     "variants": [
-      { "color": "Graphite", "image": "https://images.unsplash.com/photo-1624695852624-0c80ad02a4d1" },
-      { "color": "Gold", "image": "https://images.unsplash.com/photo-1624695852812-25f232cb43a2" }
+      { "color": "Graphite", "image": watchImage },
+      { "color": "Gold", "image": watchImage }
     ],
     "price": 18500,
     "discount": 5,
@@ -107,7 +118,7 @@
     "category": "Earphones",
     "brand": "Apple",
     "variants": [
-      { "color": "White", "image": "https://images.unsplash.com/photo-1585386959984-a41552231693" }
+      { "color": "White", "image": airpodsImage }
     ],
     "price": 10500,
     "discount": 8,
@@ -123,8 +134,8 @@
     "category": "Earphones",
     "brand": "Samsung",
     "variants": [
-      { "color": "Bora Purple", "image": "https://images.unsplash.com/photo-1616594039964-d7f9f9db8b5a" },
-      { "color": "Graphite", "image": "https://images.unsplash.com/photo-1616594039442-bfa5d8f8a7c7" }
+      { "color": "Bora Purple", "image": airpodsImage },
+      { "color": "Graphite", "image": airpodsImage }
     ],
     "price": 9500,
     "discount": 10,
@@ -140,8 +151,8 @@
     "category": "Headphones",
     "brand": "Sony",
     "variants": [
-      { "color": "Black", "image": "https://images.unsplash.com/photo-1606813902649-f9e20a506e8b" },
-      { "color": "Silver", "image": "https://images.unsplash.com/photo-1606813902433-96b12bb9bfb8" }
+      { "color": "Black", "image": airpodsImage },
+      { "color": "Silver", "image": airpodsImage }
     ],
     "price": 17500,
     "discount": 15,
@@ -157,8 +168,8 @@
     "category": "Charger",
     "brand": "Anker",
     "variants": [
-      { "color": "White", "image": "https://images.unsplash.com/photo-1616353071091-5a5e8d4b6c63" },
-      { "color": "Blue", "image": "https://images.unsplash.com/photo-1624312068056-74a2a996a96f" }
+      { "color": "White", "image": chargersImage },
+      { "color": "Blue", "image": chargersImage }
     ],
     "price": 850,
     "discount": 0,
@@ -174,7 +185,7 @@
     "category": "Charger",
     "brand": "Apple",
     "variants": [
-      { "color": "White", "image": "https://images.unsplash.com/photo-1591201621158-3b38b9a77f55" }
+      { "color": "White", "image": chargersImage }
     ],
     "price": 2700,
     "discount": 12,
@@ -190,8 +201,8 @@
     "category": "Charger",
     "brand": "Baseus",
     "variants": [
-      { "color": "Black", "image": "https://images.unsplash.com/photo-1631951063240-d99bcacbff74" },
-      { "color": "White", "image": "https://images.unsplash.com/photo-1631951063194-5b9a6c1b6f29" }
+      { "color": "Black", "image": chargersImage },
+      { "color": "White", "image": chargersImage }
     ],
     "price": 1450,
     "discount": 10,
@@ -207,8 +218,8 @@
     "category": "Accessory",
     "brand": "Apple",
     "variants": [
-      { "color": "Midnight", "image": "https://images.unsplash.com/photo-1617052319070-8f4d3c4d0e2c" },
-      { "color": "Red", "image": "https://images.unsplash.com/photo-1617052320049-9a623c066a0a" }
+      { "color": "Midnight", "image": product1Image },
+      { "color": "Red", "image": product2Image }
     ],
     "price": 1800,
     "discount": 0,
@@ -224,8 +235,8 @@
     "category": "Accessory",
     "brand": "Spigen",
     "variants": [
-      { "color": "Clear", "image": "https://images.unsplash.com/photo-1617052342133-9e3d7ab2370a" },
-      { "color": "Matte Black", "image": "https://images.unsplash.com/photo-1617052343191-03d42d587b5d" }
+      { "color": "Clear", "image": product1Image },
+      { "color": "Matte Black", "image": product2Image }
     ],
     "price": 900,
     "discount": 5,
@@ -241,8 +252,8 @@
     "category": "Speaker",
     "brand": "JBL",
     "variants": [
-      { "color": "Black", "image": "https://images.unsplash.com/photo-1585386959984-a41552231693" },
-      { "color": "Red", "image": "https://images.unsplash.com/photo-1585386960665-5f5a0f21c159" }
+      { "color": "Black", "image": airpodsImage },
+      { "color": "Red", "image": airpodsImage }
     ],
     "price": 3400,
     "discount": 8,
@@ -258,8 +269,8 @@
     "category": "Speaker",
     "brand": "Anker",
     "variants": [
-      { "color": "Black", "image": "https://images.unsplash.com/photo-1624312068056-74a2a996a96f" },
-      { "color": "Blue", "image": "https://images.unsplash.com/photo-1624312067878-7404da1a3f93" }
+      { "color": "Black", "image": airpodsImage },
+      { "color": "Blue", "image": airpodsImage }
     ],
     "price": 1200,
     "discount": 6,
@@ -275,8 +286,8 @@
     "category": "Accessory",
     "brand": "Logitech",
     "variants": [
-      { "color": "Graphite", "image": "https://images.unsplash.com/photo-1606813902649-f9e20a506e8b" },
-      { "color": "Pale Gray", "image": "https://images.unsplash.com/photo-1606813902433-96b12bb9bfb8" }
+      { "color": "Graphite", "image": airpodsImage },
+      { "color": "Pale Gray", "image": airpodsImage }
     ],
     "price": 3300,
     "discount": 4,
@@ -292,8 +303,8 @@
     "category": "Tablet",
     "brand": "Samsung",
     "variants": [
-      { "color": "Graphite", "image": "https://images.unsplash.com/photo-1696361909050-4b92b6b31479" },
-      { "color": "Lavender", "image": "https://images.unsplash.com/photo-1705609441433-c0dcad33791b" }
+      { "color": "Graphite", "image": laptopImage },
+      { "color": "Lavender", "image": laptopImage }
     ],
     "price": 39000,
     "discount": 9,
@@ -309,8 +320,8 @@
     "category": "Phone",
     "brand": "OnePlus",
     "variants": [
-      { "color": "Lunar Silver", "image": "https://images.unsplash.com/photo-1696361909117-4479a2394127" },
-      { "color": "Titan Black", "image": "https://images.unsplash.com/photo-1696361909050-4b92b6b31479" }
+      { "color": "Lunar Silver", "image": iphoneImage },
+      { "color": "Titan Black", "image": airImage }
     ],
     "price": 45000,
     "discount": 10,
@@ -326,7 +337,7 @@
     "category": "Earphones",
     "brand": "Sony",
     "variants": [
-      { "color": "Black", "image": "https://images.unsplash.com/photo-1616594039964-d7f9f9db8b5a" }
+      { "color": "Black", "image": airpodsImage }
     ],
     "price": 9200,
     "discount": 5,
@@ -336,4 +347,4 @@
     "isFavorite": false,
     "description": "True wireless noise-cancelling earbuds."
   }
-]
+];

@@ -8,7 +8,7 @@ type CartItem = {
   name: string; 
   price: number; 
   qty: number;
-  image?: string; // Added image property
+  image?: string | any; // Updated to accept both string and imported images
   productId?: number; // Added product ID for reference
 };
 type CartState = {

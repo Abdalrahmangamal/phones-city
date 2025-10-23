@@ -1,14 +1,5 @@
 import { useCart } from "@/store/cart";
-import productsData from "@/data/data.json";
-
-// Type for our product data
-type ProductData = {
-  id: number;
-  name: string;
-  price: number;
-  variants: { color: string; image: string }[];
-  // ... other properties
-};
+import { productsData } from "@/data/products";
 
 // Function to add sample products to cart
 export const addSampleProductsToCart = () => {
@@ -22,7 +13,7 @@ export const addSampleProductsToCart = () => {
   // If we don't have sample products, add them
   if (!hasSampleProducts) {
     // Add first product (MacBook)
-    const macBook = productsData[0] as ProductData;
+    const macBook = productsData[0];
     add({
       id: `product-${macBook.id}-0`,
       name: macBook.name,
@@ -33,7 +24,7 @@ export const addSampleProductsToCart = () => {
     });
     
     // Add second product (iPhone)
-    const iPhone = productsData[2] as ProductData;
+    const iPhone = productsData[2];
     add({
       id: `product-${iPhone.id}-0`,
       name: iPhone.name,

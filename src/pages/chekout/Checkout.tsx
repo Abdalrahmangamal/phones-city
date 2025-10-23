@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
 import order from "@/assets/images/order.png";
 import step2 from "@/assets/images/step2.png";
 import step3 from "@/assets/images/step3.png";
@@ -83,8 +82,8 @@ export default function CheckoutPage() {
           </div>
         </div>
 
-        {/* Navigation Buttons - Removed the "رجوع" button as requested */}
-        <div className="bg-white   py-6">
+        {/* Navigation Buttons - Removed as requested since we have the complete order button in the summary */}
+        {/* <div className="bg-white   py-6">
           <div className="max-w-7xl mx-auto px-4 flex justify-center gap-4">
             <Button
               className="w-[400px] h-[56px] bg-[#F3AC5D] !opacity-[100%] rounded-[16px] flex items-center justify-center text-[24px] text-[white]"
@@ -95,7 +94,7 @@ export default function CheckoutPage() {
               {activeStep === steps.length - 1 ? "إنهاء" : "التالي"}
             </Button>
           </div>
-        </div>
+        </div> */}
       </div>
     </Layout>
   );
