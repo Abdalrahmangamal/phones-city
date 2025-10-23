@@ -85,7 +85,8 @@ export default function Parttner() {
         {partnerimg.map((item) => (
           <SwiperSlide
             className="
-      !h-[112px] 
+      !h-[70px]
+      md:!h-[120px] 
       flex items-center justify-center
       rounded-[12px] 
       bg-white 
@@ -95,7 +96,7 @@ export default function Parttner() {
             <Link to={`/${lang}/trademarks`}>
               <img
                 src={item.img}
-                className="md:w-[153px] !w-[120px] !h-[12px] md:!h-[30px] !object-contain"
+                className="md:!w-[153px] !w-[50px] !h-[12px] md:!h-[30px] !object-contain"
                 alt="logo"
               />
             </Link>

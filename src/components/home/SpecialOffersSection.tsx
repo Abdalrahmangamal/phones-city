@@ -58,7 +58,7 @@ const SpecialOffersSection: React.FC<SpecialOffersProps> = ({
 
       {/* المنتجات */}
       <div
-        className={`grid xl:grid-cols-3 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-2 grid-cols-2 gap-[20px] justify-items-center mt-[60px]`}
+        className={`grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-2 grid-cols-2 gap-[20px] justify-items-center mt-[60px]`}
       >
         {products.map((item) => (
           <ProductCard
