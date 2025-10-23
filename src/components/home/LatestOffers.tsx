@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 import '../../style.css'
 export default function LatestOffers() {
   return (
-    <div className="w-full lg:px-[90px] px-2 md:pt-0 md:mt-[80px] relative md:px-0">
+    <div className="w-full  lg:px-[90px] px-2  md:pt-0 md:mt-[80px] relative  md:px-0">
       {/* Title */}
       <h1 className="text-[24px] mb-[25px] md:text-[40px] font-[700] text-[#211C4D] text-center">
         أحدث العروض
@@ -22,15 +22,13 @@ export default function LatestOffers() {
       />
 
       {/* Layout wrapper */}
-      <div className="flex flex-col md:flex-row items-start justify-center pt-[40px] md:pt-[50px] gap-[20px]">
+      <div className="flex flex-col h-[100vh] md:flex-row items-start justify-center pt-[40px] md:pt-[50px] gap-[20px]">
 
         {/* Left section (Laptops) */}
-
-        
-        <div className="relative flex items-end justify-center md:h-[700px] h-[400px] w-full md:w-[36%] rounded-[16px] ">
+        <div className="relative flex items-end justify-center h-[50vh]   md:h-[100vh] w-full md:w-[36%] rounded-[16px] ">
           <img
             src={laptops}
-            className=" top-0 left-0 w-full h-full object-fill"
+            className=" top-0 left-0 w-full h-[50vh] md:h-[100vh] object-fill"
             alt=""
           />
           <img
@@ -52,10 +50,10 @@ export default function LatestOffers() {
         </div>
 
         {/* Right section (multiple boxes) */}
-        <div className="flex flex-col gap-[20px] w-full md:w-[60%]">
+        <div className="flex flex-col gap-[20px] h-[100vh] w-full md:w-[60%]">
           {/* Row 1 */}
-          <div className="flex flex-col md:flex-row gap-[20px]">
-              <div  className="w-full md:h-[200px] h-[120px] rounded-[16px] relative overflow-hidden">
+          <div className="flex flex-row gap-[20px]">
+              <div  className="w-full h-[120px] md:h-[200px] rounded-[16px] relative overflow-hidden">
                 <img src={bgsmalloffer} className="  w-full h-full " alt="" />
                 <img src={control} className=" absolute object-contain top-0 left-0  w-full h-full " alt="" />
                 <div className="absolute inset-0 top-[10px] md:top-[20px] z-[2] mr-[20px] mt-[20px] text-right">
@@ -69,7 +67,7 @@ export default function LatestOffers() {
                   </Link>
                 </div>
               </div>
-              <div  className="w-full md:h-[200px] h-[120px] rounded-[16px] relative overflow-hidden">
+              <div  className="w-full h-[120px] md:h-[200px] rounded-[16px] relative overflow-hidden">
                 <img src={bgsmalloffer} className="  w-full h-full " alt="" />
                 <img src={control} className=" absolute object-contain top-0 left-0  w-full h-full " alt="" />
                 <div className="absolute inset-0 top-[10px] md:top-[20px] z-[2] mr-[20px] mt-[20px] text-right">
@@ -83,10 +81,13 @@ export default function LatestOffers() {
                   </Link>
                 </div>
               </div>
+              
+        
+            
           </div>
 
           {/* Playstation */}
-          <div className="relative w-full md:h-[300px] h-[150px] rounded-[16px] overflow-hidden">
+          <div className="relative w-full md:h-auto h-[150px] rounded-[16px] overflow-hidden">
             <img src={largbgoffers} className="w-full h-full object-fill" alt="" />
             <img src={ps5} className="absolute z-1 left-[15%] top-0 w-[130px] md:w-[230px]" alt="" />
             <div className="absolute inset-0 flex flex-col bigtitle items-center md:pl-[350px] pl-[150px] justify-center text-center">
@@ -102,8 +103,8 @@ export default function LatestOffers() {
           </div>
 
           {/* Row 2 (same as Row 1) */}
-              <div className="flex flex-col md:flex-row gap-[20px]">
-              <div  className="w-full md:h-[200px] h-[120px] rounded-[16px] relative overflow-hidden">
+              <div className="flex flex-row gap-[20px]">
+              <div  className="w-full h-[120px] md:h-[200px] rounded-[16px] relative overflow-hidden">
                 <img src={bgsmalloffer} className="  w-full h-full " alt="" />
                 <img src={control} className=" absolute object-contain top-0 left-0  w-full h-full " alt="" />
                 <div className="absolute inset-0 top-[10px] md:top-[20px] z-[2] mr-[20px] mt-[20px] text-right">
@@ -117,7 +118,7 @@ export default function LatestOffers() {
                   </Link>
                 </div>
               </div>
-              <div  className="w-full md:h-[200px] h-[120px] rounded-[16px] relative overflow-hidden">
+              <div  className="w-full h-[120px] md:h-[200px] rounded-[16px] relative overflow-hidden">
                 <img src={bgsmalloffer} className="  w-full h-full " alt="" />
                 <img src={control} className=" absolute object-contain top-0 left-0  w-full h-full " alt="" />
                 <div className="absolute inset-0 top-[10px] md:top-[20px] z-[2] mr-[20px] mt-[20px] text-right">
@@ -131,6 +132,9 @@ export default function LatestOffers() {
                   </Link>
                 </div>
               </div>
+              
+        
+            
           </div>
         </div>
       </div>
