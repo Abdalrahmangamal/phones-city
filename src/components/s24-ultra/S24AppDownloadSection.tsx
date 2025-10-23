@@ -3,19 +3,11 @@ import bolitse from '../../assets/images/politssection.png'
 import expotuer from '../../assets/images/expotuer.png'
 import appstore from '../../assets/images/appstore.png'
 import googleplay from '../../assets/images/googleplay.png'
-import useS24Ultra from '@/hooks/useS24Ultra';
-import S24AppDownloadSection from '@/components/s24-ultra/S24AppDownloadSection';
+// import './s24-responsive.css'; // Import S24 Ultra specific styles (now imported globally)
 
-const AppDownloadSection = () => {
-  const isS24Ultra = useS24Ultra();
-  
-  // If device is S24 Ultra, render the S24 Ultra specific component
-  if (isS24Ultra) {
-    return <S24AppDownloadSection />;
-  }
-
+const S24AppDownloadSection = () => {
   return (
-    <div className="relative w-full h-[530px] hidden md:block overflow-hidden mt-6">
+    <div className="relative w-full h-[530px] s24-app-section overflow-hidden mt-6">
       {/* Background blur elements */}
       <div 
         className="absolute top-[52.5px] left-[105px]  w-[480px] h-[646.996px] rounded-full opacity-50"
@@ -97,4 +89,4 @@ const AppDownloadSection = () => {
   );
 };
 
-export default AppDownloadSection;
+export default S24AppDownloadSection;

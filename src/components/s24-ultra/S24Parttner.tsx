@@ -6,22 +6,12 @@ import logo4 from "../../assets/images/logo4.png";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { useLangSync } from "@/hooks/useLangSync";
 // Import Swiper styles
-// import "swiper/css";
-
 import "../../style.css";
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
-import useS24Ultra from "@/hooks/useS24Ultra";
-import S24Parttner from "@/components/s24-ultra/S24Parttner";
+// import './s24-responsive.css'; // Import S24 Ultra specific styles (now imported globally)
 
-export default function Parttner() {
-  const isS24Ultra = useS24Ultra();
-  
-  // If device is S24 Ultra, render the S24 Ultra specific component
-  if (isS24Ultra) {
-    return <S24Parttner />;
-  }
-
+export default function S24Parttner() {
   const partnerimg = [
     {
       img: logo1,
@@ -63,7 +53,7 @@ export default function Parttner() {
   return (
     <div>
       <div className="relative flex items-center justify-center">
-        <h1 className="md:text-[40px] text-[24px] font-[700]  text-[#211C4D]">
+        <h1 className="md:text-[40px] text-[24px] font-[700] text-[#211C4D]">
           العلامات التجارية
         </h1>
         <img src={pattern} className="absolute w-[80px] top-2 md:top-[20px] right-[18%] md:right-[36%]" alt="" />
@@ -75,12 +65,12 @@ export default function Parttner() {
         spaceBetween={20}
         dir={lang === "ar" ? "rtl" : "ltr"}
         breakpoints={{
-          320: { slidesPerView: 4 },  // Changed from 3 to 4 for mobile
-          640: { slidesPerView: 4 },  // Changed from 3 to 4 for small screens
-          768: { slidesPerView: 4 },  // Keep 4 for tablets
-          1024: { slidesPerView: 6 }, // Keep 6 for desktop
+          320: { slidesPerView: 4 }, // Show 4 logos on small screens
+          640: { slidesPerView: 4 }, // Show 4 logos on small screens
+          768: { slidesPerView: 4 }, // Show 4 logos on tablets
+          1024: { slidesPerView: 6 }, // Show 6 logos on desktop
         }}
-        className="mySwiper !px-[20px] md:px-[0px] h-[200px] pt-[50px] mt-[60px]"
+        className="mySwiper !px-[20px] md:px-[0px] h-[200px] pt-[50px] mt-[60px] s24-partner-swiper"
       >
         {partnerimg.map((item) => (
           <SwiperSlide

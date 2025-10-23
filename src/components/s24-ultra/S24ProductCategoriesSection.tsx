@@ -12,18 +12,10 @@ import { useLangSync } from '@/hooks/useLangSync'
 import "../../style.css";
 import { Navigation , Autoplay } from "swiper/modules";
 import { useEffect } from "react";
-import useS24Ultra from '@/hooks/useS24Ultra';
-import S24ProductCategoriesSection from '@/components/s24-ultra/S24ProductCategoriesSection';
+// import './s24-responsive.css'; // Import S24 Ultra specific styles (now imported globally)
 
-const ProductCategoriesSection: React.FC = () => {
+const S24ProductCategoriesSection: React.FC = () => {
   const {lang}= useLangSync();
-  const isS24Ultra = useS24Ultra();
-  
-  // If device is S24 Ultra, render the S24 Ultra specific component
-  if (isS24Ultra) {
-    return <S24ProductCategoriesSection />;
-  }
-  
     useEffect(() => {
     }, [lang]); 
   
@@ -47,16 +39,16 @@ const ProductCategoriesSection: React.FC = () => {
   loop={true}
         navigation={true}                 // 👈 تفعل الأسهم
         modules={[Navigation ,Autoplay]} // 👈 تضيف Navigation هنا
-        className="mySwiper h-[260px] md:!h-[400px]"
+        className="mySwiper h-[260px] md:!h-[400px] s24-categories-swiper"
         breakpoints={{
           320: {       // موبايل صغير
-            slidesPerView: 4,  // Changed from 3 to 4
+            slidesPerView: 4,  // Show 4 items on small screens
           },
           640: {       // موبايل كبير
-            slidesPerView: 4,  // Changed from 3 to 4
+            slidesPerView: 4,  // Show 4 items on larger screens
           },
           768: {       // تابلت
-            slidesPerView: 4,  // Changed from 3 to 4
+            slidesPerView: 4,  // Show 4 items on tablets
           },
           1024: {      // لابتوب
             slidesPerView: 4,
@@ -129,4 +121,4 @@ const ProductCategoriesSection: React.FC = () => {
   );
 };
 
-export default ProductCategoriesSection;
+export default S24ProductCategoriesSection;
