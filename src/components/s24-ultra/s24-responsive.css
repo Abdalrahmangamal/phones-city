@@ -2,8 +2,8 @@
 /* Screen Size: 6.8 inches (1440 x 3120 pixels) */
 /* Aspect Ratio: 19.5:9 */
 
-/* S24 Ultra specific styles */
-@media screen and (min-width: 390px) and (max-width: 430px) {
+/* Expanded range for S24 Ultra specific styles */
+@media screen and (min-width: 320px) and (max-width: 480px) {
   .s24-frame-grid {
     grid-template-columns: repeat(2, 1fr);
   }

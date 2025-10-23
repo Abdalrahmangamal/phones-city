@@ -5,10 +5,10 @@ const useS24Ultra = () => {
 
   useEffect(() => {
     const checkS24Ultra = () => {
-      // Detect Samsung S24 Ultra using screen width between 390px and 430px
+      // Detect Samsung S24 Ultra using screen width between 320px and 480px
       // and device pixel ratio of at least 3.5
-      const isS24 = window.screen.width >= 390 && 
-                   window.screen.width <= 430 && 
+      const isS24 = window.screen.width >= 320 && 
+                   window.screen.width <= 480 && 
                    window.devicePixelRatio >= 3.5;
       setIsS24Ultra(isS24);
     };
