@@ -1,11 +1,9 @@
 import { useCart } from "@/store/cart";
 import { Minus, Plus, X } from "lucide-react";
 import OrderSummarySection from "./OrderSummarySection";
-import { useNavigate } from "react-router-dom";
 
-export default function Cheackoutsummary() {
+export default function Cheackoutsummary({ onNavigateToNextStep }: { onNavigateToNextStep?: () => void }) {
   const { items, remove, add } = useCart();
-  const navigate = useNavigate();
 
   // Handle quantity changes
   const handleQuantityChange = (id: string, newQty: number) => {
@@ -13,12 +11,6 @@ export default function Cheackoutsummary() {
     if (item && newQty > 0) {
       add({ ...item, qty: newQty });
     }
-  };
-
-  // Handle complete order
-  const handleCompleteOrder = () => {
-    // Navigate to the next step (address page)
-    navigate("/checkout/address");
   };
 
   return (
@@ -91,19 +83,11 @@ export default function Cheackoutsummary() {
             </div>
           ))}
         </div>
-        
-        {/* Complete Order Button - This will be moved to the OrderSummarySection */}
-        {/* <button 
-          className="w-full mt-8 h-[56px] bg-[#F3AC5D] rounded-[16px] text-[24px] text-white font-normal hover:bg-[#e09a4d] transition-colors"
-          onClick={handleCompleteOrder}
-        >
-          اتمام الطلب
-        </button> */}
       </div>
       
       {/* Right Side - Order Summary */}
       <div className="w-full lg:w-[536px]">
-        <OrderSummarySection />
+        <OrderSummarySection onNavigateToNextStep={onNavigateToNextStep} />
       </div>
     </div>
   );

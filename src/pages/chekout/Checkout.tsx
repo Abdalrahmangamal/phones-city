@@ -18,7 +18,7 @@ export default function CheckoutPage() {
   }, []);
 
   const steps = [
-    { title: "ملخص الطلب", number: order, componunt: <Cheackoutsummary /> },
+    { title: "ملخص الطلب", number: order, componunt: <Cheackoutsummary onNavigateToNextStep={() => setActiveStep(1)} /> },
     { title: "العنوان", number: step2, componunt: <Checkoutaddress /> },
     { title: "الدفع", number: step3, componunt: <Checkoutpayment /> },
   ];

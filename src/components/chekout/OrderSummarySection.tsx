@@ -8,7 +8,7 @@ import amwal from "@/assets/images/amwal.png";
 import { TamaraModal } from "@/components/singleproduct/TamaraModal";
 import { TabbyModal } from "@/components/singleproduct/Modelpayment";
 
-export default function OrderSummarySection() {
+export default function OrderSummarySection({ onNavigateToNextStep }: { onNavigateToNextStep?: () => void }) {
   const [isPointsToggleOn, setIsPointsToggleOn] = useState(false);
   const [isTamaraModalOpen, setIsTamaraModalOpen] = useState(false);
   const [isTabbyModalOpen, setIsTabbyModalOpen] = useState(false);
@@ -63,6 +63,13 @@ export default function OrderSummarySection() {
       setIsTamaraModalOpen(true);
     } else {
       setIsTabbyModalOpen(true);
+    }
+  };
+
+  // Handle complete order - call the navigation callback
+  const handleCompleteOrder = () => {
+    if (onNavigateToNextStep) {
+      onNavigateToNextStep();
     }
   };
 
@@ -157,6 +164,7 @@ export default function OrderSummarySection() {
         
         <button 
           className="inline-flex items-center justify-center gap-2 whitespace-nowrap disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive shadow-xs px-4 py-2 has-[>svg]:px-3 w-full mt-8 h-[56px] bg-[#F3AC5D] rounded-[16px] text-[24px] text-white font-normal hover:bg-[#e09a4d] transition-colors"
+          onClick={handleCompleteOrder}
         >
           اتمام الطلب
         </button>
