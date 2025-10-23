@@ -7,6 +7,7 @@ export interface Product {
   isNew?: boolean;
   discount?: string;
   variations?: { color: string; image: string }[];
+  image?: string; // Added image property
 }
 // types.ts
 export type Fulfillment = "delivery" | "pickup";

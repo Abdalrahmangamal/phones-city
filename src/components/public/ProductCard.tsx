@@ -3,6 +3,8 @@ import { Rating, RatingButton } from "@/components/ui/shadcn-io/rating";
 import type { Product } from "@/types/index";
 import { useLangSync } from "@/hooks/useLangSync";
 import { Link } from "react-router-dom";
+import { useCart } from "@/store/cart"; // Added cart import
+
 // interface ProductCardProps {
 //   name: string;
 //   discount?: string;
@@ -20,12 +22,29 @@ export default function ProductCard({
   isNew = false,
   containerstyle,
   variations = [],
+  id,
+  image, // Added image prop
 }: Product) {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [isfav, setisfav] = useState(favourite);
-  const currentImage = variations[selectedIndex]?.image;
+  const currentImage = variations[selectedIndex]?.image || image;
   const [inCart, setInCart] = useState(false);
   const { lang } = useLangSync();
+  const { add } = useCart(); // Added cart hook
+
+  // Function to add to cart
+  const addToCart = () => {
+    add({
+      id: `${id}-${selectedIndex}`, // Unique ID for cart item
+      name,
+      price,
+      qty: 1,
+      image: currentImage,
+      productId: id
+    });
+    setInCart(true);
+  };
+
   return (
     <div
       className={`max-w-[350px] md:!w-[320px] scale-[0.9] ${containerstyle} md:scale-[1] col-span-1 bg-white w-full min-h-[350px] md:min-h-[400px] rounded-[16px] p-[15px] shadow-[0px_4px_4px_0px_#00000040] flex flex-col`}
@@ -158,7 +177,7 @@ export default function ProductCard({
           </svg>
         </div>
         <div
-          onClick={() => setInCart(!inCart)}
+          onClick={addToCart} // Updated to use addToCart function
           className={`w-[40px] h-[40px] flex items-center justify-center rounded-[8px] cursor-pointer transition ${
             inCart ? "bg-[#211C4D]" : "bg-[#EEF1F6] hover:bg-[#dfe3ea]"
           }`}

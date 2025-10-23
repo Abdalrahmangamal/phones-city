@@ -3,7 +3,14 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { useSettings } from "./settings";
 
-type CartItem = { id: string; name: string; price: number; qty: number };
+type CartItem = { 
+  id: string; 
+  name: string; 
+  price: number; 
+  qty: number;
+  image?: string; // Added image property
+  productId?: number; // Added product ID for reference
+};
 type CartState = {
   items: CartItem[];
   add: (item: CartItem) => void;
