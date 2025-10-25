@@ -40,7 +40,7 @@
         loop={true}
         pagination={{ clickable: true }}
         modules={[Pagination, Autoplay]}
-        className="mySwiper md:h-[400px] h-[250px] rounded-[16px] mt-6 "
+        className="mySwiper md:h-[400px] h-[200px] rounded-[16px] mt-6 "
       >{slides.map((slide,index)=>(
         
         <SwiperSlide key={index} className="relative ">
@@ -50,22 +50,22 @@
             className="w-full absolute  h-full object-cover"
           />
           <div className="z-[1]  w-full flex flex-col  justify-start items-start h-full pt-[40px] pr-[40px]">
-            <h1 className="font-[700] md:text-[3rem] text-[1.2rem] mt-[0px] md:mt-[0px] text-[#FFFFFF] textshad">
+            <h1 className="font-[700] md:text-[3rem] text-[0.8rem] mt-[0px] md:mt-[0px] text-[#FFFFFF] textshad">
               {slide.title}
             </h1>
 
-            <p className="font-[700] md:text-[20px] text-[15px] max-w-[70%] text-[#FFFFFF] mt-[20px] md:max-w-[36%] text-start">
+            <p className="font-[700] md:text-[20px] text-[10px] max-w-[70%] text-[#FFFFFF] mt-[15px] md:mt-[20px] md:max-w-[36%] text-start">
 {slide.description}
             </p>
             <Link
               to={`${slide.link}`}
               className="
       md:w-[116px] md:h-[42px]
-      w-[80px] h-[35px]
-      text-[10px] 
+      w-[70px] h-[30px]
+      text-[7px] 
       md:text-[18px]
       text-white 
-      mt-[25px] 
+      mt-[18px] 
       bg-[#F3AC5D] 
       rounded-[8px] 
       flex items-center justify-center 

@@ -171,3 +171,25 @@
   color: #1b1741; /* اللون الغامق وقت الـactive */
   border-bottom: 2px solid #1b1741; /* الخط اللي تحت */
 }
+@media  (max-width: 600px) {
+.category div{
+  width: 165px;
+  height: 165px;
+}
+.category h2{
+  font-size: 16px !important;
+}
+.imgg{
+  width: 120px !important;
+  height: 120px !important;}
+  .iconframe{
+    width: 40px !important;
+    height: 40px !important;
+  }
+  .iconframetext h4{
+    font-size: 16px !important;
+  }
+  .iconframetext p{
+    font-size: 11px !important;
+  }
+}

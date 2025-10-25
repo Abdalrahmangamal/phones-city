@@ -1,38 +1,21 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
 import order from "@/assets/images/order.png";
 import step2 from "@/assets/images/step2.png";
 import step3 from "@/assets/images/step3.png";
 import Cheackoutsummary from "@/components/chekout/Cheackoutsummary";
 import Checkoutaddress from "@/components/chekout/Checkoutaddress";
 import Checkoutpayment from "@/components/chekout/Checkoutpayment";
-import { addSampleProductsToCart } from "@/utils/cartHelpers";
 import Layout from "@/components/layout/Layout";
 export default function CheckoutPage() {
   const [activeStep, setActiveStep] = useState(0);
 
-  // Add sample products to cart when component mounts
-  useEffect(() => {
-    addSampleProductsToCart();
-  }, []);
-
   const steps = [
-    { 
-      title: "ملخص الطلب", 
-      number: order, 
-      componunt: <Cheackoutsummary onNavigateToNextStep={() => setActiveStep(1)} /> 
-    },
-    { 
-      title: "العنوان", 
-      number: step2, 
-      componunt: <Checkoutaddress onNavigateToNextStep={() => setActiveStep(2)} onNavigateBack={() => setActiveStep(0)} /> 
-    },
-    { 
-      title: "الدفع", 
-      number: step3, 
-      componunt: <Checkoutpayment onNavigateBack={() => setActiveStep(1)} /> 
-    },
+    { title: "ملخص الطلب", number: order, componunt: <Cheackoutsummary /> },
+    { title: "العنوان", number: step2, componunt: <Checkoutaddress /> },
+    { title: "الدفع", number: step3, componunt: <Checkoutpayment /> },
   ];
 
   return (
@@ -87,18 +70,26 @@ export default function CheckoutPage() {
 
         {/* Main Content - Step Content Area */}
         <div className="w-full mx-auto px-4 py-8">
-          <div className="bg-white rounded-lg p-8 min-h-96">
+          <div className="bg-white  rounded-lg lg:p-8 min-h-96">
             <div className="text-center text-gray-400">
               <p className="text-lg"> {steps[activeStep].componunt}</p>
             </div>
           </div>
         </div>
 
-        {/* Navigation Buttons - Removed as requested since we have the complete order button in the summary */}
-        {/* <div className="bg-white   py-6">
-          <div className="max-w-7xl mx-auto px-4 flex justify-center gap-4">
+        {/* Navigation Buttons */}
+        <div className="bg-white   py-6">
+          <div className="max-w-7xl mx-auto px-4 flex-wrap flex justify-around gap-4">
             <Button
-              className="w-[400px] h-[56px] bg-[#F3AC5D] !opacity-[100%] rounded-[16px] flex items-center justify-center text-[24px] text-[white]"
+              variant="outline"
+              className="md:w-[400px] w-full h-[56px] bg-[#211C4D] !opacity-[100%] rounded-[16px] flex items-center justify-center text-[24px] text-[white]"
+              onClick={() => setActiveStep(Math.max(0, activeStep - 1))}
+              disabled={activeStep === 0}
+            >
+              رجوع
+            </Button>
+            <Button
+              className="md:w-[400px] w-full h-[56px] bg-[#F3AC5D] !opacity-[100%] rounded-[16px] flex items-center justify-center text-[24px] text-[white]"
               onClick={() =>
                 setActiveStep(Math.min(steps.length - 1, activeStep + 1))
               }
@@ -106,7 +97,7 @@ export default function CheckoutPage() {
               {activeStep === steps.length - 1 ? "إنهاء" : "التالي"}
             </Button>
           </div>
-        </div> */}
+        </div>
       </div>
     </Layout>
   );

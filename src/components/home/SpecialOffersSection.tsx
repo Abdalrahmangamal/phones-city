@@ -1,79 +1,132 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation,Autoplay } from "swiper/modules";
+// import "swiper/css";
+import "swiper/css/navigation";
+
+import {useLangSync} from '@/hooks/useLangSync'
 import { Link } from "react-router-dom";
 import ProductCard from "../public/ProductCard";
 import type { Product } from '@/types/index';
+// type Product = {
+//   id: number;
+//   name: string;
+//   image: string;
+//   originalPrice: string;
+//   discountedPrice: string;
+  
+//   discount: string;
+//   rating: number;
+//   reviews: number;
+//   colors: string[];
+// };
 
 interface SpecialOffersProps {
   products: Product[];
   title?: string;
-  link?: string;
-  btn?: boolean;
-  style?: string;
 }
+const SpecialOffersSection: React.FC<SpecialOffersProps> = ({ products,title }) => {
+  const {lang} =useLangSync();
+  useEffect(() => {
 
-const SpecialOffersSection: React.FC<SpecialOffersProps> = ({ 
-  products, 
-  title = "عروض خاصة لك",
-  link,
-  btn = true,
-  style
-}) => {
+
+  }, [lang]); // كل ما الـ lang تتغير، هيعمل التأثير ده
+
+
+
+
   return (
-    <div className="mt-[20px] lg:px-[90px] px-2 pt-20 md:pt-20">
-      {/* العنوان */}
-      <div className="flex items-center px-[10px] w-full justify-between relative">
+    <div className="w-full flex  md:mt-[80px] flex-col lg:px-[90px] px-2 pt-20 md:pt-0 items-start gap-[32px]">
+      {/* header */}
+      <div className="w-full flex items-center justify-between relative">
         <div className="relative">
-          <p className="text-[#211C4D] font-[600] text-[24px] md:text-[40px]">{title}</p>
-          <img
-            className="absolute top-0 md:top-[10px] w-[80px] md:w-[100px] object-contain right-[-50px]"
-            src="/Layer_1.svg"
-            alt=""
-          />
+          <div className="absolute md:-top-2 right-[200px] md:-right-4 z-5">
+            <img src="/Layer_1.svg" alt="" className="opacity-100" />
+          </div>
+          <h2 className="font-roboto font-semibold md:!text-[40px] text-[24px] leading-[36px] text-[#211C4D] relative z-10">
+        
+            {title}
+          </h2>
         </div>
-
-        {btn && (
-          <Link
-            className="text-[#211C4D] text-[24px] flex items-center gap-[10px] font-[500]"
-            to={link || "/trademarkbestoffer"}
-          >
+        <Link className="flex  items-center gap-[6px] py-[10px] rounded-[4px]" to={`/trademarkbestoffer`}>
+          <span className="font-roboto font-medium md:text-[24px] leading-[20px] text-[#211C4D]">
             عرض المزيد
-            <svg
-              width="10"
-              height="18"
-              viewBox="0 0 10 18"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                fillRule="evenodd"
-                clipRule="evenodd"
-                d="M8.64 16.95C8.27 17.35 7.69 17.34 7.33 16.93L1.03 9.76C0.68 9.35 0.68 8.69 1.05 8.29L7.49 1.25C7.86 0.85 8.45 0.85 8.81 1.26C9.16 1.67 9.16 2.33 8.79 2.73L3.01 9.04L8.66 15.48C9.02 15.89 9.01 16.55 8.64 16.95Z"
-                fill="#211C4D"
-              />
-            </svg>
-          </Link>
-        )}
+          </span>
+          <svg
+          className="w-[18px] md:w-[25px]"
+            width="25.47"
+            height="28.44"
+            viewBox="0 0 25 28"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M14.5 5L8.5 13L14.5 21"
+              stroke="#211C4D"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </Link>
       </div>
 
-      {/* المنتجات */}
-      <div
-        className={`grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-2 grid-cols-2 gap-[20px] justify-items-center mt-[60px]`}
+      <div className="w-full h-[0px] border-t border-[#E5E7EB]" />
+
+      {/* slider */}
+      <Swiper
+      key={lang}
+        modules={[Navigation , Autoplay]}
+        navigation
+        loop={true}
+          dir={lang === "ar" ? "rtl" : "ltr"}
+
+        autoplay={{
+    delay: 4000, // ⏱ الوقت بين كل سلايد بالمللي ثانية
+    disableOnInteraction: false, // ⛔ ما يوقفش لو المستخدم تفاعل
+  }}
+        spaceBetween={5}
+        slidesPerView={4}
+        className="w-full h-[350px] md:h-[500px]"
+          breakpoints={{
+    350: {
+      slidesPerView: 2, // من أول شاشات الموبايل الكبير (تابلت صغير)
+      spaceBetween: 15,
+    },
+    640: {
+      slidesPerView: 2, // من أول شاشات الموبايل الكبير (تابلت صغير)
+      spaceBetween: 15,
+    },
+    768: {
+      slidesPerView: 3, // التابلت
+      spaceBetween: 20,
+    },
+    1024: {
+      slidesPerView: 3, // الديسكتوب
+    },
+    1280: {
+      slidesPerView: 4, // الشاشات الكبيرة
+      
+    },
+  }}
+
       >
         {products.map((item) => (
+          <SwiperSlide key={item.id}>
           <ProductCard
-            containerstyle={"!w-[200px]"}
-            key={item.id}
-            name={item.name}
-            discount={item.discount}
-            price={item.price}
-            isNew={item.isNew}
-            favourite={item.favourite}
-            variations={item.variations}
-            id={item.id}
-          />
+                    key={item.id}
+                    name={item.name}
+                    discount={item.discount}
+                    price={item.price}
+                    isNew={item.isNew}
+                    favourite={item.favourite}
+                    variations={item.variations}
+                    id={item.id}
+                  />
+          </SwiperSlide>
         ))}
-      </div>
+      </Swiper>
     </div>
   );
 };

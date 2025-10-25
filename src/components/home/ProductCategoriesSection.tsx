@@ -26,7 +26,18 @@ const ProductCategoriesSection: React.FC = () => {
   
     useEffect(() => {
     }, [lang]); 
-  
+  const categories = [
+  { image: image1, title: "الهواتف الذكيه" },
+  { image: image2, title: "لابتوب" },
+  { image: image3, title: "العاب الفيديو" },
+  { image: image4, title: "الساعات الذكيه" },
+  { image: image5, title: "السماعات" },
+  { image: image6, title: "الكيمرات و الداش كام" },
+  { image: image1, title: "الهواتف الذكيه" },
+  { image: image1, title: "الهواتف الذكيه" },
+  { image: image1, title: "الهواتف الذكيه" },
+];
+
   return (
     <div className="lg:px-[90px] px-2 pt-5 md:pt-0">
 
@@ -34,93 +45,44 @@ const ProductCategoriesSection: React.FC = () => {
       <h1 className="text-center text-[#211C4D] text-[28px] md:text-[40px] font-[700]">
         الاقسام
       </h1>
-      <Swiper
-      key={lang}
-        dir={lang === "ar" ? "rtl" : "ltr"}
-
-        slidesPerView={6}
-        spaceBetween={0}
-        autoplay={{
-    delay: 4000, // ⏱ الوقت بين كل سلايد بالمللي ثانية
-    disableOnInteraction: false, // ⛔ ما يوقفش لو المستخدم تفاعل
+  <Swiper
+  key={lang}
+  dir={lang === "ar" ? "rtl" : "ltr"}
+  slidesPerView={6}
+  spaceBetween={0}
+  autoplay={{
+    delay: 4000,
+    disableOnInteraction: false,
   }}
   loop={true}
-        navigation={true}                 // 👈 تفعل الأسهم
-        modules={[Navigation ,Autoplay]} // 👈 تضيف Navigation هنا
-        className="mySwiper h-[260px] md:!h-[400px]"
-        breakpoints={{
-          320: {       // موبايل صغير
-            slidesPerView: 4,  // Changed from 3 to 4
-          },
-          640: {       // موبايل كبير
-            slidesPerView: 4,  // Changed from 3 to 4
-          },
-          768: {       // تابلت
-            slidesPerView: 4,  // Changed from 3 to 4
-          },
-          1024: {      // لابتوب
-            slidesPerView: 4,
-          },
-          1280: {      // ديسكتوب كبير
-            slidesPerView: 6,
-          },
-        }}
-      >
-        <SwiperSlide className="flex flex-col items-center justify-center scale-[0.5] md:scale-[1]">
-          <div className="w-[200px] h-[200px] shadow-[0px_7px_29px_0px_rgba(100,100,111,0.2)] rounded-full flex items-center justify-center bg-[white]">
-            <img src={image1} alt="" className="!w-[140px] !h-[140px] !object-contain" />
-          </div>
-          <h2 className="text-[#211C4D] font-[700] text-[24px]">الهواتف الذكيه</h2>
-        </SwiperSlide>
-        <SwiperSlide className="flex flex-col items-center justify-center scale-[0.5] md:scale-[1]">
-          <div className="w-[200px] h-[200px] shadow-[0px_7px_29px_0px_rgba(100,100,111,0.2)] rounded-full flex items-center justify-center bg-[white]">
-            <img src={image2} alt="" className="!w-[140px] !h-[140px] !object-contain" />
-          </div>
-          <h2 className="text-[#211C4D] font-[700] text-[24px]">لابتوب</h2>
-        </SwiperSlide>
-        <SwiperSlide className="flex flex-col items-center justify-center scale-[0.5] md:scale-[1]">
-          <div className="w-[200px] h-[200px] shadow-[0px_7px_29px_0px_rgba(100,100,111,0.2)] rounded-full flex items-center justify-center bg-[white]">
-            <img src={image3} alt="" className="!w-[140px] !h-[140px] !object-contain" />
-          </div>
-          <h2 className="text-[#211C4D] font-[700] text-[24px]">العاب الفيديو</h2>
-        </SwiperSlide>
-        <SwiperSlide className="flex flex-col items-center justify-center scale-[0.5] md:scale-[1]">
-          <div className="w-[200px] h-[200px] shadow-[0px_7px_29px_0px_rgba(100,100,111,0.2)] rounded-full flex items-center justify-center bg-[white]">
-            <img src={image4} alt="" className="!w-[140px] !h-[140px] !object-contain" />
-          </div>
-          <h2 className="text-[#211C4D] font-[700] text-[24px]">الساعات الذكيه </h2>
-        </SwiperSlide>
-        <SwiperSlide className="flex flex-col items-center justify-center scale-[0.5] md:scale-[1]">
-          <div className="w-[200px] h-[200px] shadow-[0px_7px_29px_0px_rgba(100,100,111,0.2)] rounded-full flex items-center justify-center bg-[white]">
-            <img src={image5} alt="" className="!w-[140px] !h-[140px] !object-contain" />
-          </div>
-          <h2 className="text-[#211C4D] font-[700] text-[24px]">السماعات </h2>
-        </SwiperSlide>
-        <SwiperSlide className="flex flex-col items-center justify-center scale-[0.5] md:scale-[1]">
-          <div className="w-[200px] h-[200px] shadow-[0px_7px_29px_0px_rgba(100,100,111,0.2)] rounded-full flex items-center justify-center bg-[white]">
-            <img src={image6} alt="" className="!w-[140px] !h-[140px] !object-contain" />
-          </div>
-          <h2 className="text-[#211C4D] font-[700] text-[24px]">الكيمرات و الداش كام</h2>
-        </SwiperSlide>
-        <SwiperSlide className="flex flex-col items-center justify-center scale-[0.5] md:scale-[1]">
-          <div className="w-[200px] h-[200px] shadow-[0px_7px_29px_0px_rgba(100,100,111,0.2)] rounded-full flex items-center justify-center bg-[white]">
-            <img src={image1} alt="" className="!w-[140px] !h-[140px] !object-contain" />
-          </div>
-          <h2 className="text-[#211C4D] font-[700] text-[24px]">الهواتف الذكيه</h2>
-        </SwiperSlide>
-        <SwiperSlide className="flex flex-col items-center justify-center scale-[0.5] md:scale-[1]">
-          <div className="w-[200px] h-[200px] shadow-[0px_7px_29px_0px_rgba(100,100,111,0.2)] rounded-full flex items-center justify-center bg-[white]">
-            <img src={image1} alt="" className="!w-[140px] !h-[140px] !object-contain" />
-          </div>
-          <h2 className="text-[#211C4D] font-[700] text-[24px]">الهواتف الذكيه</h2>
-        </SwiperSlide>
-        <SwiperSlide className="flex flex-col items-center justify-center scale-[0.5] md:scale-[1]">
-          <div className="w-[200px] h-[200px] shadow-[0px_7px_29px_0px_rgba(100,100,111,0.2)] rounded-full flex items-center justify-center bg-[white]">
-            <img src={image1} alt="" className="!w-[140px] !h-[140px] !object-contain" />
-          </div>
-          <h2 className="text-[#211C4D] font-[700] text-[24px]">الهواتف الذكيه</h2>
-        </SwiperSlide>
-      </Swiper>
+  navigation={true}
+  modules={[Navigation, Autoplay]}
+  className="mySwiper h-[260px] md:!h-[400px]"
+  breakpoints={{
+    320: { slidesPerView: 4 },
+    640: { slidesPerView: 4 },
+    768: { slidesPerView: 4 },
+    1024: { slidesPerView: 4 },
+    1280: { slidesPerView: 6 },
+  }}
+>
+  {categories.map((cat, index) => (
+    <SwiperSlide
+      key={index}
+      className="flex flex-col items-center category justify-center scale-[0.5] md:scale-[1]"
+    >
+      <div className="w-[200px] h-[200px]   shadow-[0px_7px_29px_0px_rgba(100,100,111,0.2)] rounded-full flex items-center justify-center bg-[white]">
+        <img
+          src={cat.image}
+          alt={cat.title}
+          className="!w-[140px] !h-[140px] imgg !object-contain"
+        />
+      </div>
+      <h2 className="text-[#211C4D] font-[700] text-[24px]">{cat.title}</h2>
+    </SwiperSlide>
+  ))}
+</Swiper>
+
       <div className="absolute md:top-[10%] top-[2%] right-[25%] md:right-[42%] z-[1]">
         <img src={svg1} alt="" />
       </div>
