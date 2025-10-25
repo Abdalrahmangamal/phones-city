@@ -14,7 +14,6 @@ import Google from "../../assets/images/Google.png";
 import amwal from "../../assets/images/amwal.png";
 import emkan from "../../assets/images/emkan.png";
 import payment from "../../assets/images/payment.png";
-import ropot from "../../assets/images/ropot.png";
 const Footer: React.FC = () => {
   const navigate = useNavigate();
   
@@ -42,13 +41,7 @@ const Footer: React.FC = () => {
     "خدمة نقاط الولاء",
   ];
 
-  const handleServiceItemClick = (item: string) => {
-    switch (item) {
-      default:
-        // Handle other menu items if needed
-        break;
-    }
-  };
+  
 
   const handleCustomerCareItemClick = (item: string) => {
     switch (item) {
@@ -91,9 +84,9 @@ const Footer: React.FC = () => {
     {/* Container */}
     <div className="max-w-[1200px] mx-auto">
       {/* Top row */}
-      <div className="w-full flex flex-wrap justify-between gap-y-10 md:gap-y-12 gap-x-6 md:gap-x-10 lg:gap-x-[118px]">
+      <div className="w-full grid md:!grid-cols-5 grid-cols-3 gap-y-10 md:gap-y-12 gap-x-6 md:gap-x-10 lg:gap-x-[118px]">
         {/* Customer Care */}
-        <div className="w-[45%] sm:w-[48%] md:w-[200px] flex flex-col gap-3 text-right">
+        <div className="w-full  md:w-[200px] flex flex-col gap-3 text-right">
           <h3 className="font-[Cairo] font-semibold text-[22px] sm:text-[24px] leading-[150%]">
             رعاية العميل
           </h3>
@@ -112,7 +105,7 @@ const Footer: React.FC = () => {
         </div>
 
         {/* About */}
-        <div className="w-[48%] sm:w-[48%] md:w-[200px] flex flex-col gap-3 text-right">
+        <div className="w-full  md:w-[200px] flex flex-col gap-3 text-right">
           <h3 className="font-roboto font-semibold text-[22px] sm:text-[24px] leading-[150%]">
             عن مدينة الهواتف
           </h3>
@@ -131,7 +124,7 @@ const Footer: React.FC = () => {
         </div>
 
         {/* Services */}
-        <div className="w-full sm:w-[48%] md:w-[180px] flex flex-col gap-3 text-right">
+        <div className="w-full  md:w-[180px] flex flex-col gap-3 text-right">
           <h3 className="font-roboto font-semibold text-[22px] sm:text-[24px] leading-[150%]">
             خدمه مدينه الهواتف
           </h3>
@@ -149,7 +142,7 @@ const Footer: React.FC = () => {
         </div>
 
         {/* Brand & Socials */}
-        <div className="w-full md:flex-1 flex flex-col gap-4 text-right">
+        <div className="w-full md:flex-1 md:col-span-2 col-span-3 flex flex-col gap-4 text-right">
           <h2 className="font-roboto font-bold text-[22px] sm:text-[24px] leading-[100%]">
             مدينة الهواتف
           </h2>
@@ -159,7 +152,7 @@ const Footer: React.FC = () => {
           </p>
 
           {/* Social icons */}
-          <div className="flex justify-end mt-2">
+          <div className="flex justify-start mt-2">
             <div className="flex items-center gap-2 sm:gap-3 flex-wrap justify-end">
               {[tiktok, snapchat, whatsapp, x, insta, facebook].map((icon, i) => (
                 <a
@@ -174,7 +167,7 @@ const Footer: React.FC = () => {
           </div>
 
           {/* Badges */}
-          <div className="flex justify-end flex-wrap gap-2 sm:gap-3 mt-4">
+          <div className="flex justify-start flex-wrap gap-2 sm:gap-3 mt-4">
             {[googleanalytic, googletagmaneger, blue, drive, Google].map((img, i) => (
               <a key={i} href="/" className="inline-block">
                 <img
@@ -198,7 +191,7 @@ const Footer: React.FC = () => {
           جميع الحقوق محفوظة © مدينة الهواتف
         </p>
 
-        <div className="flex items-center gap-2 sm:gap-4 flex-wrap justify-center">
+        <div className="flex items-center gap-0 md:gap-0 scale-[0.7] md:scale-[1] sm:gap-4 flex- justify-center">
           <img src={amwal} alt="Amwal" className="h-5 sm:h-6 object-contain rounded" />
           <img src={emkan} alt="Amkan" className="h-5 sm:h-[21px] rounded" />
           <img src={payment} alt="Payments" className="h-5 sm:h-[23px] object-contain" />

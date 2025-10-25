@@ -16,7 +16,7 @@ export default function Servces() {
         <Offerherosection title={"كل ما تحتاجه في مدينه الهواتف"} description={"استمتع بتجربة استثنائية معاحسن العروض بأفضل الأسعار وخدمة ما بعد البيع المميزة"} />
 
         {/* Services Description Section - Separated from cards with proper spacing */}
-        <div className="w-full py-10">
+        <div className="w-full py-10 lg:px-[90px] px-2 pt-20 md:pt-0">
           <div className="flex flex-col px-[10px]">
             <h2 className="text-[#211C4D] font-roboto font-bold text-[24px] md:text-[40px] leading-9 mb-2">
               في مدينه الهواتف

@@ -163,10 +163,10 @@ export default function Ptoductdetails() {
 
       {/* Quantity and Add to Cart */}
       <div className="flex flex-col md:flex-row md:justify-between justify-center flex-wrap items-center gap-4 md:gap-0 pt-4">
-        <div className="flex items-center border-2 w-[140px] md:w-[159px] h-[50px] md:h-[62px] border-border rounded-lg overflow-hidden">
+        <div className="flex items-center justify-between border-2 w-[180px] md:w-[159px] h-[50px] md:h-[62px] border-border rounded-lg overflow-hidden">
           <button
             onClick={() => setQuantity(Math.max(1, quantity - 1))}
-            className="px-3 md:px-4 py-2 h-full hover:bg-accent transition-colors"
+            className="px-3 md:px-4 py-2 h-full bg-gray-200 hover:bg-accent transition-colors"
             aria-label="تقليل الكمية"
           >
             <Minus className="w-4 h-4" />
@@ -186,12 +186,12 @@ export default function Ptoductdetails() {
           <Button
             variant="outline"
             size="lg"
-            className="px-4 md:px-6 w-[180px] md:w-[215px] h-[50px] md:h-[64px] border-2 border-black bg-transparent text-xl md:text-[25px]"
+            className="px-4 md:px-6 w-[180px] md:w-[200px] h-[50px] md:h-[64px] border-2 border-black bg-transparent text-xl md:text-[25px]"
           >
             إضافة للسلة
           </Button>
           <Link 
-            className="bg-[#2AA0DC] w-[180px] md:w-[215px] h-[50px] md:h-[64px] hover:bg-primary/90 rounded-[8px] flex items-center justify-center text-primary-foreground font-[600] text-xl md:text-[25px]" 
+            className="bg-[#2AA0DC] w-[180px] md:w-[200px] h-[50px] md:h-[64px] hover:bg-primary/90 rounded-[8px] flex items-center justify-center text-primary-foreground font-[600] text-xl md:text-[25px]" 
             to={"/checkout"}
           >
             اشتري الآن

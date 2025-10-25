@@ -188,13 +188,14 @@ const NewHome = () => {
           />
           <ProductCategoriesSection />
           <LatestOffers />
-          <Bestseller
+          {/* <Bestseller
             title={"الأكثر مبيعاً"}
             btn={true}
             link={`/${lang}/Trademarksbestseller`}
             products={products}
-          />
+          /> */}
         
+          <SpecialOffersSection title={"الأكثر مبيعاً"} products={products2}/>
           <SpecialOffersSection title={"عروض خاصه لك"} products={products2}/>
           <TestimonialsSection />
           <FrameSection />
