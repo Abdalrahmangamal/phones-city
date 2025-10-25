@@ -201,8 +201,9 @@
 }
 
 /* General responsive improvements for all devices */
-@media (max-width: 768px) {
+/* Remove the rule that hides the app section on mobile */
+/* @media (max-width: 768px) {
   .s24-app-section {
     display: none;
   }
-}
+} */
