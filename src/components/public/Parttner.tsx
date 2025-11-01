@@ -80,7 +80,7 @@ export default function Parttner() {
           768: { slidesPerView: 4 },  // Keep 4 for tablets
           1024: { slidesPerView: 6 }, // Keep 6 for desktop
         }}
-        className="mySwiper !px-[20px] md:px-[0px] h-[200px] pt-[50px] mt-[60px]"
+        className="mySwiper !px-[20px] md:px-[0px] h-[100px] md:h-[130px] pt-[50px] mt-[60px]"
       >
         {partnerimg.map((item) => (
           <SwiperSlide

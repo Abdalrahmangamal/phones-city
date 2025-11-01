@@ -4,6 +4,7 @@ export interface Product {
   containerstyle?:string;
   price: number;
   favourite?: boolean;
+  imagecard?:string;
   isNew?: boolean;
   discount?: string;
   variations?: { color: string; image: string }[];

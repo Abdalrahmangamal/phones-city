@@ -66,7 +66,7 @@ const FrameSection: React.FC = () => {
   ];
 
   return (
-    <div className="w-full min-h-[600px] mt-15 lg:min-h-[750px] relative mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="w-full min-h-[600px] mt-15 lg:min-h-[800px] relative mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <img
         src={topYellow}
         alt="Top decorative frame"
@@ -75,9 +75,9 @@ const FrameSection: React.FC = () => {
       <img
         src={bottomYellow}
         alt="Bottom decorative frame"
-        className="absolute bottom-0 right-0 w-[50vw] max-w-[550px] h-auto object-cover z-0"
+        className="absolute bottom-0 right-0 w-[50vw] max-w-[550px] md:w-[25vw] lg:w-[30vw] h-auto object-cover z-0"
       />
-      <div className="relative z-10 max-w-7xl mx-auto">
+      <div className="relative z-10 max-w-7xl mx-auto ">
         <div className="flex items-center justify-center lg:justify-center w-full lg:w-auto">
           <img src={pattern} alt="" className="w-12 h-12 lg:w-20 lg:h-20 " />
           <h2 className="text-center text-[#211C4D] text-[clamp(24px,5vw,36px)] font-[700] mb-4 ml-6">
@@ -89,7 +89,7 @@ const FrameSection: React.FC = () => {
           "كل ميزة صممناها عشان نخلي تسوقك اسهل , اسرع , اضمن ."
         </h5>
         {/* Added custom class 's24-frame-grid' for S24 Ultra responsive grid */}
-        <div className="grid grid-cols-2 pt-8 pb-14 sm:grid-cols-2 lg:grid-cols-3 gap-6 s24-frame-grid">
+        <div className="grid grid-cols-2 pt-8 pb-14 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:!pb-[90px] s24-frame-grid">
           {features.map((feature, index) => (
             <div
               key={index}

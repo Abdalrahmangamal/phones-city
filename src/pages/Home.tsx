@@ -195,8 +195,8 @@ const NewHome = () => {
             products={products}
           /> */}
         
-          <SpecialOffersSection title={"الأكثر مبيعاً"} products={products2}/>
-          <SpecialOffersSection title={"عروض خاصه لك"} products={products2}/>
+          <SpecialOffersSection title={"الأكثر مبيعاً"} products={products2} style={"pt-0"}/>
+          <SpecialOffersSection title={"عروض خاصه لك"} products={products2} style="pt-10"/>
           <TestimonialsSection />
           <FrameSection />
           <CertificationBadgesSection />

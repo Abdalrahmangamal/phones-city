@@ -1,135 +1,98 @@
-import background from '../../assets/images/background.png'
-import bolitse from '../../assets/images/politssection.png'
-import expotuer from '../../assets/images/expotuer.png'
-import appstore from '../../assets/images/appstore.png'
-import googleplay from '../../assets/images/googleplay.png'
-import useS24Ultra from '@/hooks/useS24Ultra';
-import S24AppDownloadSection from '@/components/s24-ultra/S24AppDownloadSection';
+import background from "../../assets/images/background.png";
+import bolitse from "../../assets/images/politssection.png";
+import expotuer from "../../assets/images/expotuer.png";
+import appstore from "../../assets/images/appstore.png";
+import googleplay from "../../assets/images/googleplay.png";
+import useS24Ultra from "@/hooks/useS24Ultra";
+import S24AppDownloadSection from "@/components/s24-ultra/S24AppDownloadSection";
 
 const AppDownloadSection = () => {
   const isS24Ultra = useS24Ultra();
-  
-  // If device is S24 Ultra, render the S24 Ultra specific component
+
   if (isS24Ultra) {
-    console.log("Rendering S24 Ultra version");
     return <S24AppDownloadSection />;
   }
 
-  console.log("Rendering regular version");
   return (
     <div className="w-full">
-      {/* Desktop version - hidden on mobile */}
-      <div className="relative w-full h-[530px] hidden md:block overflow-hidden mt-6">
-        {/* Background blur elements */}
-        <div 
-          className="absolute top-[52.5px] left-[105px]  w-[480px] h-[646.996px] rounded-full opacity-50"
-        ></div>
-        
-        <div 
-          className="absolute top-[457.5px] left-[391px] w-[169.258px] h-[158.996px] rounded-full opacity-50"
-          style={{ background: '#EFAA5B', filter: 'blur(200px)' }}
-        ></div>
-        
-        {/* Decorative ellipse border */}
-        <div 
-          className="absolute top-[141.5px] left-[138px] w-[480px] h-[480px] rounded-full border-4 border-[#2AA0DC]"
-        ></div>
-        
-        {/* Main visual image */}
-        <div className="absolute top-[58.5px] left-[205px] z-10">
-          <img 
-            src={background} 
-            alt="Main visual" 
-            className="w-[349px] h-auto object-cover"
+      {/* Desktop / Tablet */}
+      <div className="relative w-full hidden md:block overflow-hidden mt-6 md:h-[350px] lg:h-[530px] xl:h-[580px]">
+        {/* Glow / Blur Elements */}
+      
+
+
+        {/* Images */}
+        <div className="absolute top-[10%] md:top-auto md:bottom-[0%] left-[18%] md:left-[9%]  z-10 w-[280px] md:w-[230px]  lg:w-[360px]">
+          <img src={background} alt="main visual" className="w-full h-auto" />
+          <img
+            src={expotuer}
+            alt="decor"
+            className="absolute top-0 left-0 w-full h-auto"
           />
         </div>
-        <div className="absolute top-[58.5px] left-[205px] z-10">
-          <img 
-            src={expotuer} 
-            alt="Main visual" 
-            className="w-[349px] h-auto object-cover"
+
+        <div className="absolute bottom-0 left-[10%] md:left-[5%] md:w-[300px] z-0">
+          <img
+            src={bolitse}
+            alt="dots decoration"
+            className="h-[220px] md:h-[260px] lg:h-[300px]"
           />
         </div>
-      
-        {/* Decorative gray dots images in a grid pattern */}
-        <div className='absolute bottom-[0px] left-[135px] z-9'>
-          <img src={bolitse} className='h-[300px]' alt="" />
-        </div>
-      
-        {/* Text content and app download buttons */}
-        <div className="absolute top-[80.5px] right-[100px] w-[614px] h-[323px] flex flex-col gap-[40px] pr-[24px] pl-[24px]">
-          <div className="flex flex-col gap-[15px]">
-            <h2 
-              className="font-roboto font-bold text-[40px] text-[#211C4D] leading-[150%] text-right"
-              
-            >
+
+        {/* Text & Buttons */}
+        <div className="absolute top-[15%] right-[8%] w-[60%] md:max-w-[50%] max-w-[600px] flex flex-col gap-6">
+          <div className="flex flex-col gap-3 text-right">
+            <h2 className="font-roboto font-bold text-[#211C4D] leading-[1.4] text-[28px] md:text-[27px] md:mt-0 lg:text-[35px] xl:text-[42px]">
               قم بتحميل تطبيقنا واحصل علي خصم 10% وتسوق افضل
             </h2>
-            
-            <p className="font-roboto font-medium text-[24px] leading-[200%] text-right">
+            <p className="font-roboto font-medium text-[#211C4D] text-[16px] md:text-[20px] lg:text-[24px] leading-relaxed">
               «اطلب ما تريد في أي وقت ومن أي مكان، واستلمه في أسرع وقت»
             </p>
           </div>
-          
-          {/* App Store Buttons */}
-          <div className="flex gap-[40px]">
-            <div className="w-[179.753px] h-[52px] rounded cursor-pointer">
-              <img 
-                src={googleplay}
-                alt="Get it on Google Play" 
-                className="w-full h-full object-contain"
-              />
-            </div>
 
-            <div className="w-[180px] h-[52px] cursor-pointer">
-              <img 
-                src={appstore} 
-                alt="Download on the App Store" 
-                className="w-full h-full object-contain"
-              />
-            </div>
+          <div className="flex gap-6 md:gap-10">
+            <img
+              src={googleplay}
+              alt="Google Play"
+              className="w-[140px] md:w-[160px] lg:w-[180px] cursor-pointer hover:scale-105 transition"
+            />
+            <img
+              src={appstore}
+              alt="App Store"
+              className="w-[140px] md:w-[160px] lg:w-[180px] cursor-pointer hover:scale-105 transition"
+            />
           </div>
         </div>
       </div>
 
-      {/* Mobile version - Always visible on mobile devices */}
-      <div className="w-full md:hidden bg-white py-8 px-4 mt-6">
+      {/* Mobile */}
+      <div className="md:hidden bg-white py-8 pb-0 md:pb-8 px-4 mt-6">
         <div className="flex flex-col items-center text-center">
-          <h2 className="font-roboto font-bold text-2xl text-[#211C4D] mb-3">
+          <h2 className="font-roboto font-bold text-xl sm:text-2xl text-[15px] text-[#211C4D] mb-3">
             قم بتحميل تطبيقنا واحصل علي خصم 10% وتسوق افضل
           </h2>
-          
-          <p className="font-roboto font-medium text-lg text-[#211C4D] mb-6">
+          <p className="font-roboto font-medium text-base sm:text-lg text-[12px] text-[#211C4D] mb-6">
             «اطلب ما تريد في أي وقت ومن أي مكان، واستلمه في أسرع وقت»
           </p>
-          
-          {/* App Store Buttons */}
-          <div className="flex gap-4 mb-6">
-            <div className="w-32 h-12 cursor-pointer">
-              <img 
-                src={googleplay}
-                alt="Get it on Google Play" 
-                className="w-full h-full object-contain"
-              />
-            </div>
 
-            <div className="w-32 h-12 cursor-pointer">
-              <img 
-                src={appstore} 
-                alt="Download on the App Store" 
-                className="w-full h-full object-contain"
-              />
-            </div>
-          </div>
-          
-          {/* Main visual image moved to the bottom */}
-          <div className="mt-4">
-            <img 
-              src={background} 
-              alt="Main visual" 
-              className="w-48 h-auto mx-auto"
+          <div className="flex gap-3 sm:gap-4 mb-6">
+            <img
+              src={googleplay}
+              alt="Google Play"
+              className="w-20 sm:w-32 h-8 sm:h-12 object-contain cursor-pointer"
+            />
+            <img
+              src={appstore}
+              alt="App Store"
+              className="w-20 sm:w-32 h-8 sm:h-12 object-contain cursor-pointer"
             />
           </div>
+
+          <img
+            src={background}
+            alt="App visual"
+            className="w-[70%] max-w-[150px]  md:max-w-[250px] mx-auto mt-4"
+          />
         </div>
       </div>
     </div>

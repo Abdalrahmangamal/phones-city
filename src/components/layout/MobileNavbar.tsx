@@ -3,7 +3,7 @@ import { useState } from "react";
 import { ShoppingCart, Heart, Search, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Link } from "react-router-dom";
-import {useLangSync} from '@/hooks/useLangSync'
+import { useLangSync } from "@/hooks/useLangSync";
 interface MobileNavbarProps {
   onMenuToggle: () => void;
   isMenuOpen: boolean;
@@ -12,7 +12,7 @@ interface MobileNavbarProps {
 export default function MobileNavbar({ onMenuToggle }: MobileNavbarProps) {
   const [showSearch, setShowSearch] = useState(false);
   const [query, setQuery] = useState("");
-  const {lang}= useLangSync()
+  const { lang } = useLangSync();
   return (
     <>
       {/* Navbar */}
@@ -25,11 +25,20 @@ export default function MobileNavbar({ onMenuToggle }: MobileNavbarProps) {
               <div className="w-6 h-0.5 bg-white rounded-full"></div>
               <div className="w-6 h-0.5 bg-white rounded-full"></div>
             </div>
-            <span className="text-white font-bold text-base">مدينة الهواتف</span>
+            <span className="text-white font-bold text-base">
+              مدينة الهواتف
+            </span>
           </button>
 
           {/* Action buttons */}
           <div className="flex items-center gap-2">
+            <Link
+              to="/login"
+              className="w-[90px] h-[30px] rounded-[16px] bg-[#FFFFFF1A] flex items-center justify-center text-[10px] font-[400] 
+              text-white transition-all duration-300 hover:bg-white hover:text-[#211C4D]"
+            >
+              تسجيل الدخول
+            </Link>
             <button
               className="flex items-center justify-center w-10 h-10 rounded-full bg-[#333D4C]"
               onClick={() => setShowSearch(!showSearch)}
@@ -41,11 +50,14 @@ export default function MobileNavbar({ onMenuToggle }: MobileNavbarProps) {
               )}
             </button>
 
-            <Link  className="flex items-center justify-center w-10 h-10 rounded-full bg-[#333D4C] relative" to={`/${lang}/favourite`}>
+            {/* <Link  className="flex items-center justify-center w-10 h-10 rounded-full bg-[#333D4C] relative" to={`/${lang}/favourite`}>
               <Heart className="text-white w-5 h-5" />
-            </Link>
+            </Link> */}
 
-            <Link className="flex items-center justify-center w-10 h-10 rounded-full bg-[#333D4C] relative" to={`/${lang}/myorder`}>
+            <Link
+              className="flex items-center justify-center w-10 h-10 rounded-full bg-[#333D4C] relative"
+              to={`/${lang}/myorder`}
+            >
               <ShoppingCart className="w-4 h-4 text-[#E0E5EB]" />
               <span className="absolute -top-2 -right-2 w-5 h-5 rounded-full border-2 border-[#222934] bg-[#F3AC5D] flex items-center justify-center text-[10px] text-white font-bold">
                 3

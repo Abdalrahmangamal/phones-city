@@ -10,8 +10,12 @@ import {
   Tablet,
   Camera,
   X,
+  Globe,
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
+import { Button } from "../ui/button";
+import { useState } from "react";
 
 type SubCategory = {
   name: string;
@@ -64,6 +68,8 @@ export default function MobileMenu({
   const [openCategory, setOpenCategory] = React.useState<string | null>(null);
 const { lang } = useLangSync();
 const { t } = useTranslation();
+  const { i18n } = useTranslation();
+  const [open] = useState(false);
 
 const navitem = [
   {
@@ -179,17 +185,64 @@ const navitem = [
 
         {/* Navigation Links */}
         <div className="px-4 py-3">
-          <nav className="space-y-2">
-            {navitem.map((link) => (
-              <Link
-                key={link.link}
-                to={`${link.link}`}
-                className="block px-4 py-2 text-black hover:bg-gray-100 rounded-lg"
-              >
-                {link.name}
-              </Link>
-            ))}
-          </nav>
+        <nav className="space-y-2">
+  {navitem.map((link) => (
+    <Link
+      key={link.link}
+      to={link.link}
+      className="block px-4 py-2 text-black hover:bg-gray-100 rounded-lg"
+    >
+      {link.name}
+    </Link>
+  ))}
+
+  <div className="relative inline-block text-left">
+  <DropdownMenu>
+    <DropdownMenuTrigger asChild>
+      <button className="flex items-center gap-1 px-3 py-1.5 rounded-md border border-gray-200 bg-white hover:bg-gray-50 text-gray-800 text-sm font-medium shadow-sm transition-all duration-200">
+        <Globe className="h-4 w-4 text-gray-600" />
+        <span className="text-gray-700">عربي</span>
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 16 16"
+          xmlns="http://www.w3.org/2000/svg"
+          className={`transition-transform duration-200 text-gray-500 ${
+            open ? "rotate-180" : ""
+          }`}
+        >
+          <path
+            d="M8 10L4 6h8L8 10z"
+            fill="currentColor"
+          />
+        </svg>
+      </button>
+    </DropdownMenuTrigger>
+
+    <DropdownMenuContent
+      align="end"
+      sideOffset={6}
+      dir={lang==="ar"? "rtl": "ltr"}
+      className="z-[9999] rounded-lg border !text-start border-gray-200 bg-white shadow-lg min-w-[120px] overflow-hidden"
+    >
+      <DropdownMenuItem
+        onClick={() => i18n.changeLanguage("ar")}
+        className="px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer transition-colors"
+      >
+      العربية
+      </DropdownMenuItem>
+      <DropdownMenuItem
+        onClick={() => i18n.changeLanguage("en")}
+        className="px-3 py-2 text-sm text-gray-700 !text-start hover:bg-gray-100 cursor-pointer transition-colors"
+      >
+       English
+      </DropdownMenuItem>
+    </DropdownMenuContent>
+  </DropdownMenu>
+</div>
+
+</nav>
+
         </div>
       </div>
     </div>

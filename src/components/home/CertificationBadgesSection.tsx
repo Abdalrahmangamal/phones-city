@@ -18,7 +18,7 @@ const CertificationBadgesSection: React.FC = () => {
   };
 
   return (
-    <div className="w-full my-[30px] md:!my-30 max-w-[1280px] h-auto flex flex-row items-start md:items-center gap-6 md:gap-[80px] mx-auto p-4">
+    <div className="w-full my-[30px] md:!my-10 lg:my-30 max-w-[1280px]  h-auto flex flex-row items-start gap-6 md:gap-[80px] mx-auto p-4">
       {/* Left Section */}
       <div className="flex flex-col w-full md:w-[504px] gap-4">
         <div className="relative">
@@ -27,7 +27,7 @@ const CertificationBadgesSection: React.FC = () => {
           </div>
           <h2
             id="cert-known-title"
-            className="font-roboto font-semibold text-[20px] md:text-[40px] leading-[36px] text-[#211C4D]  relative z-10 text-center"
+            className="font-roboto font-semibold text-[20px] md:text-[30px] leading-[36px] text-[#211C4D]  relative z-10 text-center"
           >
             شهادة توثيق معروف
           </h2>
@@ -71,14 +71,14 @@ const CertificationBadgesSection: React.FC = () => {
       </div>
 
       {/* Right Section */}
-      <div className="flex flex-col w-full md:w-[708px] gap-4">
+      <div className="flex flex-col w-full md:w-[708px] justify-start gap-4">
         <div className="relative">
           <div className="absolute top-0 right-47 z-0">
             <img src="/Layer_1.svg" alt="" />
           </div>
           <h2
             id="cert-verify-title"
-            className="font-roboto font-semibold text-[20px] md:text-[40px] leading-[36px] text-[#211C4D]  relative z-10 text-center"
+            className="font-roboto font-semibold text-[20px] md:text-[30px] leading-[36px] text-[#211C4D]  relative z-10 text-center"
           >
             شهادة توثيق
           </h2>

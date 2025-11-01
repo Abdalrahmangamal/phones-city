@@ -26,7 +26,7 @@
     useEffect(() => {}, [lang]);
     
     return (
-      <div className="lg:px-[90px] px-2 pt-20 md:pt-0 ">
+      <div className="xl:px-[90px] px-2 pt-20 md:pt-0 ">
 
       <Swiper
         key={lang}

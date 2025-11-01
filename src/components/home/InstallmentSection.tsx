@@ -8,7 +8,7 @@ interface installmenttype{
 }
 export default function InstallmentSection({title,coaralink,moralink}:installmenttype) {
   return (
-    <div className='lg:px-[90px] px-2 pt-5 md:pt-0'>
+    <div className='xl:px-[90px] px-2 pt-0 md:pt-0'>
 
     <div className='md:h-[300px] h-[150px] w-ful0l  bg-[#4058A61A] md:pt-[5px] pt-[10px] rounded-[16px] px-5'>
         <p className='md:text-[38px] lg:text-[42px] mt-3 text-[11px] font-[500] text-[#211C4D]'>{title}</p>

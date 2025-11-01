@@ -9,9 +9,9 @@ import { Link } from "react-router-dom";
 import "../../style.css";
 export default function LatestOffers() {
   return (
-    <div className="w-full  lg:px-[90px] px-2  md:pt-0 md:mt-[80px] relative  md:px-0">
+    <div className="w-full translate-y-[-50px]  md:h-[60vh] xl:h-[100vh] xl:px-[90px] px-2 pt-8 md:pt-0 relative  md:px-0">
       {/* Title */}
-      <h1 className="text-[24px] mb-[25px] md:text-[40px] font-[700] text-[#211C4D] text-center">
+      <h1 className="text-[24px] mb-[0px] md:text-[40px] font-[700] text-[#211C4D] text-center">
         أحدث العروض
       </h1>
 
@@ -22,12 +22,12 @@ export default function LatestOffers() {
       />
 
       {/* Layout wrapper */}
-      <div className="flex flex-col md:flex-row items-center md:h-[60vh] xl:h-[100vh] md:items-start justify-center pt-[40px] md:pt-[50px] gap-[20px]">
+      <div className="flex flex-col md:flex-row items-center h-full md:items-start justify-center pt-[40px] md:pt-[50px] gap-[20px]">
         {/* Left section (Laptops) */}
-        <div className="relative hidden md:flex  items-end justify-center h-full  w-[300px]    md:w-[36%] rounded-[16px] ">
+        <div className="relative hidden md:flex  items-end justify-center md:!h-full  w-[300px]    md:w-[36%] rounded-[16px] ">
           <img
             src={laptops}
-            className=" top-0 left-0 w-full h-[50vh] md:h-full object-fill"
+            className=" top-0 left-0 w-full h-[50vh] md:!h-full object-fill"
             alt=""
           />
           <img
@@ -36,8 +36,8 @@ export default function LatestOffers() {
             alt=""
           />
 
-          <div className="z-[2] absolute flex flex-col bottom-[-20px] justify-center items-center pb-[40px] md:pb-[100px] text-center">
-            <h1 className="text-white font-[700] text-[32px] md:text-[56px]">
+          <div className="z-[2] absolute flex flex-col bottom-[-20px] justify-center items-center pb-[40px] md:pb-[50px] lg:pb-[100px] text-center">
+            <h1 className="text-white font-[700] text-[32px] md:text-[35px] lg:text-[54px]">
               لابتوب
             </h1>
             <p className="text-[18px] md:text-[24px] text-[#F3AC5D] font-[700] mt-1">
@@ -82,18 +82,18 @@ export default function LatestOffers() {
         <div className="flex flex-col gap-[20px] h-full justify-between  w-full md:w-[60%]">
           {/* Row 1 */}
           <div className="flex flex-row gap-[20px]">
-            <div className="w-full h-[120px] md:h-[200px] rounded-[16px] relative overflow-hidden">
+            <div className="w-full h-[120px] md:h-full lg:h-[175px] rounded-[16px] relative overflow-hidden">
               <img src={bgsmalloffer} className="  w-full h-full " alt="" />
               <img
                 src={control}
                 className=" absolute object-contain top-0 left-0  w-full h-full "
                 alt=""
               />
-              <div className="absolute inset-0 top-[10px] md:top-[20px] z-[2] mr-[20px] mt-[20px] text-right">
-                <h1 className="text-[10px] md:text-[24px] font-[700] text-[#211C4D] md:text-[#211C4D]">
+              <div className="absolute inset-0 top-[10px] md:top-[0px] z-[2] mr-[20px] mt-[20px] md:mt-[10px] text-right">
+                <h1 className="text-[10px] md:text-[15px] font-[700] lg:text-[24px] text-[#211C4D] md:text-[#211C4D]">
                   إكسسوارات الألعاب
                 </h1>
-                <p className="text-[#211C4D] md:text-[#211C4D] text-[8px] md:text-[18px] textoffer">
+                <p className="text-[#211C4D] md:text-[#211C4D] text-[8px] md:!text-[12px] lg:!text-[18px] textoffer">
                   خصم يصل إلى 30%
                 </p>
                 <Link
@@ -104,18 +104,18 @@ export default function LatestOffers() {
                 </Link>
               </div>
             </div>
-            <div className="w-full h-[120px] md:h-[200px] rounded-[16px] relative overflow-hidden">
+            <div className="w-full min-h-[120px] md:h-full lg:h-[175px] rounded-[16px] relative overflow-hidden">
               <img src={bgsmalloffer} className="  w-full h-full " alt="" />
               <img
                 src={control}
                 className=" absolute object-contain top-0 left-0  w-full h-full "
                 alt=""
               />
-              <div className="absolute inset-0 top-[10px] md:top-[20px] z-[2] mr-[20px] mt-[20px] text-right">
-                <h1 className="text-[10px] md:text-[24px] font-[700] text-[#211C4D] md:text-[#211C4D]">
+              <div className="absolute inset-0 top-[10px] md:top-[0px] z-[2] mr-[20px] mt-[20px] md:mt-[10px] text-right">
+                <h1 className="text-[10px] md:text-[15px] font-[700] lg:text-[24px] text-[#211C4D] md:text-[#211C4D]">
                   إكسسوارات الألعاب
                 </h1>
-                <p className="text-[#211C4D] md:text-[#211C4D] text-[8px] md:text-[18px] textoffer">
+                <p className="text-[#211C4D] md:text-[#211C4D] text-[8px] md:!text-[12px] lg:!text-[18px] textoffer">
                   خصم يصل إلى 30%
                 </p>
                 <Link
@@ -158,18 +158,18 @@ export default function LatestOffers() {
 
           {/* Row 2 (same as Row 1) */}
           <div className="flex flex-row gap-[20px]">
-            <div className="w-full h-[120px] md:h-[200px] rounded-[16px] relative overflow-hidden">
+            <div className="w-full h-[120px] md:h-full lg:h-[175px] rounded-[16px] relative overflow-hidden">
               <img src={bgsmalloffer} className="  w-full h-full " alt="" />
               <img
                 src={control}
                 className=" absolute object-contain top-0 left-0  w-full h-full "
                 alt=""
               />
-              <div className="absolute inset-0 top-[10px] md:top-[20px] z-[2] mr-[20px] mt-[20px] text-right">
-                <h1 className="text-[10px] md:text-[24px] font-[700] text-[#211C4D] md:text-[#211C4D]">
+              <div className="absolute inset-0 top-[10px] md:top-[0px] z-[2] mr-[20px] mt-[20px] md:mt-[10px] text-right">
+                <h1 className="text-[10px] md:text-[15px] font-[700] lg:text-[24px] text-[#211C4D] md:text-[#211C4D]">
                   إكسسوارات الألعاب
                 </h1>
-                <p className="text-[#211C4D] md:text-[#211C4D] text-[8px] md:text-[18px] textoffer">
+                <p className="text-[#211C4D] md:text-[#211C4D] text-[8px] md:!text-[12px] lg:!text-[18px] textoffer">
                   خصم يصل إلى 30%
                 </p>
                 <Link
@@ -180,18 +180,18 @@ export default function LatestOffers() {
                 </Link>
               </div>
             </div>
-            <div className="w-full h-[120px] md:h-[200px] rounded-[16px] relative overflow-hidden">
+            <div className="w-full h-[120px] md:h-full lg:h-[175px] rounded-[16px] relative overflow-hidden">
               <img src={bgsmalloffer} className="  w-full h-full " alt="" />
               <img
                 src={control}
                 className=" absolute object-contain top-0 left-0  w-full h-full "
                 alt=""
               />
-              <div className="absolute inset-0 top-[10px] md:top-[20px] z-[2] mr-[20px] mt-[20px] text-right">
-                <h1 className="text-[10px] md:text-[24px] font-[700] text-[#211C4D] md:text-[#211C4D]">
+              <div className="absolute inset-0 top-[10px] md:top-[0px] z-[2] mr-[20px] mt-[20px] md:mt-[10px] text-right">
+                <h1 className="text-[10px] md:text-[15px] font-[700] lg:text-[24px] text-[#211C4D] md:text-[#211C4D]">
                   إكسسوارات الألعاب
                 </h1>
-                <p className="text-[#211C4D] md:text-[#211C4D] text-[8px] md:text-[18px] textoffer">
+                <p className="text-[#211C4D] md:text-[#211C4D] text-[8px] md:!text-[12px] lg:!text-[18px] textoffer">
                   خصم يصل إلى 30%
                 </p>
                 <Link

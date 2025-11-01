@@ -18,6 +18,7 @@ export default function ProductCard({
   name,
   discount,
   price,
+  imagecard,
   favourite = false,
   isNew = false,
   containerstyle,
@@ -50,11 +51,11 @@ export default function ProductCard({
       className={`max-w-[350px] md:!w-[320px] scale-[0.9] ${containerstyle} md:scale-[1] col-span-1 bg-white w-full min-h-[350px] md:min-h-[400px] rounded-[16px] p-[15px] shadow-[0px_4px_4px_0px_#00000040] flex flex-col`}
     >
       {/* الصورة */}
-      <div className="flex items-center justify-center relative">
+      <div className="flex items-center justify-center pt-7 md:pt-0 relative">
         <Link to={`/${lang}/singleproduct`}>
           <img
             src={currentImage}
-            className="md:!w-[220px] !h-[160px] !w-[160px] object-contain md:!h-[220px]"
+            className={`md:!w-[220px] h-[160px] w-[160px] object-contain md:!h-[220px] ${imagecard}`}
             alt={name}
           />
         </Link>
@@ -143,14 +144,19 @@ export default function ProductCard({
       )}
 
       {/* التقييم */}
-      <div className="flex mt-[10px] items-center justify-start gap-1">
+      <div className="flex mt-[10px] items-center justify-start gap-0">
         <Rating defaultValue={3} className="pointer-events-none">
-          {Array.from({ length: 5 }).map((_, index) => (
-            <RatingButton className="text-yellow-500" key={index} />
-          ))}
-        </Rating>
+  {Array.from({ length: 5 }).map((_, index) => (
+    <RatingButton
+      key={index}
+      className="text-yellow-500 [&>svg]:w-3 [&>svg]:h-3 md:[&>svg]:h-5 md:[&>svg]:w-5"
+    />
+  ))}
+</Rating>
 
-        <p className="text-[#9CA3AF] text-[14px]">(125)</p>
+
+
+        <p className="text-[#9CA3AF] text-[10px] md:!w-[15px]">(125)</p>
       </div>
 
       {/* السعر + زر السلة */}
