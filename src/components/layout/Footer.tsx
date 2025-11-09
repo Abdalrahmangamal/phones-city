@@ -87,14 +87,14 @@ const Footer: React.FC = () => {
       <div className="w-full grid md:!grid-cols-5 grid-cols-3 gap-y-10 md:gap-y-12 gap-x-6 md:gap-x-10 lg:gap-x-[118px]">
         {/* Customer Care */}
         <div className="w-full  md:w-[200px] flex flex-col gap-3 text-right">
-          <h3 className="font-[Cairo] font-semibold text-[22px] sm:text-[24px] leading-[150%]">
+          <h3 className="font-[Cairo] font-semibold text-[22px] sm:text-[18px] lg:text-[24px] leading-[150%]">
             رعاية العميل
           </h3>
           <div className="flex flex-col gap-2">
             {customerCareMenuItems.map((item, i) => (
               <button
                 key={i}
-                className="text-[#E0E5EB] hover:text-white text-[15px] sm:text-[16px] text-right bg-transparent border-0 p-0 cursor-pointer"
+                className="text-[#E0E5EB] hover:text-white text-[15px] sm:text-[12px] lg:text-[18px] text-right bg-transparent border-0 p-0 cursor-pointer"
                 style={{ fontFamily: "Roboto" }}
                 onClick={() => handleCustomerCareItemClick(item)}
               >
@@ -106,14 +106,14 @@ const Footer: React.FC = () => {
 
         {/* About */}
         <div className="w-full  md:w-[200px] flex flex-col gap-3 text-right">
-          <h3 className="font-roboto font-semibold text-[22px] sm:text-[24px] leading-[150%]">
+          <h3 className="font-[Cairo] font-semibold text-[22px] sm:text-[18px] lg:text-[24px] leading-[150%]">
             عن مدينة الهواتف
           </h3>
           <div className="flex flex-col gap-2">
             {aboutMenuItems.map((item, i) => (
               <button
                 key={i}
-                className="text-[#E0E5EB] hover:text-white text-[15px] sm:text-[16px] text-right bg-transparent border-0 p-0 cursor-pointer"
+                className="text-[#E0E5EB] hover:text-white text-[15px] sm:text-[12px] lg:text-[16px] text-right bg-transparent border-0 p-0 cursor-pointer"
                 style={{ fontFamily: "Roboto" }}
                 onClick={() => handleAboutItemClick(item)}
               >
@@ -125,14 +125,14 @@ const Footer: React.FC = () => {
 
         {/* Services */}
         <div className="w-full  md:w-[180px] flex flex-col gap-3 text-right">
-          <h3 className="font-roboto font-semibold text-[22px] sm:text-[24px] leading-[150%]">
+          <h3 className="font-[Cairo] font-semibold text-[22px] sm:text-[18px] lg:text-[24px] leading-[150%]">
             خدمه مدينه الهواتف
           </h3>
           <div className="flex flex-col gap-2">
             {serviceMenuItems.map((item, i) => (
               <button
                 key={i}
-                className="text-[#E0E5EB] hover:text-white text-[15px] sm:text-[16px] text-right bg-transparent border-0 p-0 cursor-pointer"
+                className="text-[#E0E5EB] hover:text-white text-[15px] sm:text-[12px] lg:text-[16px] text-right bg-transparent border-0 p-0 cursor-pointer"
                 style={{ fontFamily: "Roboto" }}
               >
                 {item}
@@ -143,11 +143,11 @@ const Footer: React.FC = () => {
 
         {/* Brand & Socials */}
         <div className="w-full md:flex-1 md:col-span-2 col-span-3 flex flex-col gap-4 text-right">
-          <h2 className="font-roboto font-bold text-[22px] sm:text-[24px] leading-[100%]">
+          <h2 className="font-[Cairo] font-semibold text-[22px] sm:text-[18px]  lg:text-[24px] leading-[150%]">
             مدينة الهواتف
           </h2>
 
-          <p className="text-[#CAD0D9] text-[15px] sm:text-[16px] leading-[150%]" style={{ fontFamily: "Roboto" }}>
+          <p className="text-[#CAD0D9] text-[15px] sm:text-[12px] lg:text-[16px] leading-[150%]" style={{ fontFamily: "Roboto" }}>
             لمعرفة كل جديد عنا ...... تابع حساباتنا على وسائل التواصل الاجتماعي وحساباتنا على جوجل.
           </p>
 
@@ -158,7 +158,7 @@ const Footer: React.FC = () => {
                 <a
                   key={i}
                   href="#"
-                  className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white flex items-center justify-center transition-all hover:bg-gray-100 hover:shadow-md"
+                  className="w-8 h-8 sm:w-7 sm:h-7 lg:w-9 lg:h-9 rounded-full bg-white flex items-center justify-center transition-all hover:bg-gray-100 hover:shadow-md"
                 >
                   <img src={icon} alt="social" className="w-4 h-4 sm:w-5 sm:h-5 object-contain" />
                 </a>
@@ -173,7 +173,7 @@ const Footer: React.FC = () => {
                 <img
                   src={img}
                   alt="badge"
-                  className="h-9 sm:h-10 object-contain rounded-lg"
+                  className="h-9 sm:h-7 lg:h-10 object-contain rounded-lg"
                   style={{ maxWidth: 130 }}
                 />
               </a>
@@ -192,9 +192,9 @@ const Footer: React.FC = () => {
         </p>
 
         <div className="flex items-center gap-0 md:gap-0 scale-[0.7] md:scale-[1] sm:gap-4 flex- justify-center">
-          <img src={amwal} alt="Amwal" className="h-5 sm:h-6 object-contain rounded" />
-          <img src={emkan} alt="Amkan" className="h-5 sm:h-[21px] rounded" />
-          <img src={payment} alt="Payments" className="h-5 sm:h-[23px] object-contain" />
+          <img src={amwal} alt="Amwal" className="h-5 lg:h-6 sm:h-[4] object-contain rounded" />
+          <img src={emkan} alt="Amkan" className="h-5 lg:h-[21px] sm:h-[15px]  rounded" />
+          <img src={payment} alt="Payments" className="h-5 lg:h-[23px] sm:h-[18px] object-contain" />
         </div>
       </div>
     </div>

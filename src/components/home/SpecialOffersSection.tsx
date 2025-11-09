@@ -83,10 +83,10 @@ const SpecialOffersSection: React.FC<SpecialOffersProps> = ({ products,title ,st
         loop={true}
           dir={lang === "ar" ? "rtl" : "ltr"}
 
-  //       autoplay={{
-  //   delay: 4000, // ⏱ الوقت بين كل سلايد بالمللي ثانية
-  //   disableOnInteraction: false, // ⛔ ما يوقفش لو المستخدم تفاعل
-  // }}
+        autoplay={{
+    delay: 4000, // ⏱ الوقت بين كل سلايد بالمللي ثانية
+    disableOnInteraction: false, // ⛔ ما يوقفش لو المستخدم تفاعل
+  }}
         
         slidesPerView={4}
         className="w-full h-[350px] md:h-[500px]"

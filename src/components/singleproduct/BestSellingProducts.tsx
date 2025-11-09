@@ -17,7 +17,7 @@ export default function BestSellingProducts({
   products,
 }: BestSellingProductsProps) {
   return (
-    <div className="mt-[20px] lg:px-[90px] px-2 pt-20 md:pt-20">
+    <div className="mt-[20px] lg:px-[90px]  pt-20 md:pt-20">
       {/* العنوان */}
       <div className="flex items-center px-[10px] w-full justify-between relative">
         <div className="relative">
@@ -54,7 +54,7 @@ export default function BestSellingProducts({
       </div>
 
       {/* المنتجات */}
-      <div className="grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-2 grid-cols-1 gap-[30px] mt-[60px]">
+      <div className="grid xl:grid-cols-4 lg:grid-cols-3  grid-cols-3 lg:gap-[30px] mt-[60px]">
         {products.map((item) => (
           <div key={item.id} className="flex justify-center">
             <ProductCard
@@ -66,6 +66,8 @@ export default function BestSellingProducts({
               favourite={item.favourite}
               variations={item.variations}
               id={item.id}
+                  imagecard="!h-[100px] !w-[100px]"
+            containerstyle="!p-2 pb-3 !rounded-[10px] !min-h-fit"
             />
           </div>
         ))}

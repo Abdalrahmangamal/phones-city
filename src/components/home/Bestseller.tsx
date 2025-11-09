@@ -10,7 +10,7 @@ interface BestsellerProps {
   style?: string;
   id?: number;
   products: Product[];
-  favourite?:boolean;
+  favourite?: boolean;
 }
 
 export default function Bestseller({
@@ -20,14 +20,15 @@ export default function Bestseller({
   products,
   style,
   
-  
 }: BestsellerProps) {
   return (
     <div className="mt-[20px] lg:px-[90px] px-2 pt-20 md:pt-20">
       {/* العنوان */}
       <div className="flex items-center px-[10px] w-full justify-between relative">
         <div className="relative">
-          <p className="text-[#211C4D] font-[600] text-[24px] md:text-[40px]">{title}</p>
+          <p className="text-[#211C4D] font-[600] text-[24px] md:text-[40px]">
+            {title}
+          </p>
           <img
             className="absolute top-0 md:top-[10px] w-[80px] md:w-[100px] object-contain right-[-50px]"
             src={pattern}
@@ -61,11 +62,11 @@ export default function Bestseller({
 
       {/* المنتجات */}
       <div
-        className={`grid xl:grid-cols-4 ${style} sm:grid-cols-2 grid-cols-2 gap-[20px] justify-items-center mt-[60px] `}
+        className={`grid xl:grid-cols-4 ${style} sm:grid-cols-3 grid-cols-3 gap-[2px] md:gap-[20px] justify-items-center mt-[60px] `}
       >
         {products.map((item) => (
           <ProductCard
-          containerstyle={"!w-[200px]"}
+            containerstyle={"!w-[200px]"}
             key={item.id}
             name={item.name}
             discount={item.discount}
@@ -74,6 +75,8 @@ export default function Bestseller({
             favourite={item.favourite}
             variations={item.variations}
             id={item.id}
+            imagecard="!h-[100px] !w-[100px]"
+            containerstyle="!p-2 pb-3 !rounded-[10px] !min-h-fit"
           />
         ))}
       </div>

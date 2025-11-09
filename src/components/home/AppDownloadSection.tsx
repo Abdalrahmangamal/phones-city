@@ -32,11 +32,11 @@ const AppDownloadSection = () => {
         </div>
 
         <div className="absolute bottom-0 left-[10%] md:left-[5%] md:w-[300px] z-0">
-          <img
+          {/* <img
             src={bolitse}
             alt="dots decoration"
-            className="h-[220px] md:h-[260px] lg:h-[300px]"
-          />
+            className="h-[220px] md:h-[260px] md:hidden lg:block lg:h-[300px]"
+          /> */}
         </div>
 
         {/* Text & Buttons */}

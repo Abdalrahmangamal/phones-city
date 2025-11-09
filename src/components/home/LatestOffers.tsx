@@ -61,7 +61,7 @@ export default function LatestOffers() {
             </p>
             <Link
               to={""}
-              className="w-[100px] h-[35px] md:w-[116px] md:h-[42px] text-white mt-[10px] md:mt-[20px] bg-[#F3AC5D] rounded-[8px] flex items-center justify-center gap-2 transition-all duration-300 ease-in-out hover:bg-[#e79940] hover:shadow-[0_8px_20px_rgba(243,172,93,0.5)] hover:scale-105"
+              className="w-[100px] h-[35px] md:w-[116px] md:h-[42px] text-white mt-[30px] md:mt-[20px] bg-[#F3AC5D] rounded-[8px] flex items-center justify-center gap-2 transition-all duration-300 ease-in-out hover:bg-[#e79940] hover:shadow-[0_8px_20px_rgba(243,172,93,0.5)] hover:scale-105"
             >
               تسوق الآن
             </Link>
@@ -73,7 +73,7 @@ export default function LatestOffers() {
           />
           <img
             src={lapimg}
-            className="absolute z-1 right-2 top-0 w-[130px] md:w-[230px]"
+            className="absolute z-1 right-2 top-[-10px] w-[130px] md:w-[230px]"
             alt=""
           />
         </div>
@@ -89,7 +89,7 @@ export default function LatestOffers() {
                 className=" absolute object-contain top-0 left-0  w-full h-full "
                 alt=""
               />
-              <div className="absolute inset-0 top-[10px] md:top-[0px] z-[2] mr-[20px] mt-[20px] md:mt-[10px] text-right">
+              <div className="absolute inset-0 top-[0px] md:top-[0px] z-[2] mr-[20px] mt-[15px] md:mt-[10px] text-right">
                 <h1 className="text-[10px] md:text-[15px] font-[700] lg:text-[24px] text-[#211C4D] md:text-[#211C4D]">
                   إكسسوارات الألعاب
                 </h1>
@@ -98,7 +98,7 @@ export default function LatestOffers() {
                 </p>
                 <Link
                   to={""}
-                  className="text-[8px] w-[50px] md:text-[16px] h-[30px] md:w-[117px] md:h-[30px] text-[#F3AC5D] mt-[15px] bg-[#211C4D] hover:text-[#211C4D] rounded-[8px] flex items-center justify-center transition-all duration-300 ease-in-out hover:bg-[#e79940] hover:shadow-[0_8px_20px_rgba(243,172,93,0.5)] hover:scale-105 btnoffer"
+                  className="text-[8px] w-[50px] md:text-[16px] h-[30px] md:w-[117px] md:h-[30px] text-[#F3AC5D] mt-[30px] bg-[#211C4D] hover:text-[#211C4D] rounded-[8px] flex items-center justify-center transition-all duration-300 ease-in-out hover:bg-[#e79940] hover:shadow-[0_8px_20px_rgba(243,172,93,0.5)] hover:scale-105 btnoffer"
                 >
                   تسوق الآن
                 </Link>
@@ -111,7 +111,7 @@ export default function LatestOffers() {
                 className=" absolute object-contain top-0 left-0  w-full h-full "
                 alt=""
               />
-              <div className="absolute inset-0 top-[10px] md:top-[0px] z-[2] mr-[20px] mt-[20px] md:mt-[10px] text-right">
+              <div className="absolute inset-0 top-[0px] md:top-[0px] z-[2] mr-[20px] mt-[15px] md:mt-[10px] text-right">
                 <h1 className="text-[10px] md:text-[15px] font-[700] lg:text-[24px] text-[#211C4D] md:text-[#211C4D]">
                   إكسسوارات الألعاب
                 </h1>
@@ -120,7 +120,7 @@ export default function LatestOffers() {
                 </p>
                 <Link
                   to={""}
-                  className="text-[8px] w-[50px] md:text-[16px] h-[30px] md:w-[117px] md:h-[30px] text-[#F3AC5D] mt-[15px] bg-[#211C4D] hover:text-[#211C4D] rounded-[8px] flex items-center justify-center transition-all duration-300 ease-in-out hover:bg-[#e79940] hover:shadow-[0_8px_20px_rgba(243,172,93,0.5)] hover:scale-105 btnoffer"
+                  className="text-[8px] w-[50px] md:text-[16px] h-[30px] md:w-[117px] md:h-[30px] text-[#F3AC5D] mt-[30px] bg-[#211C4D] hover:text-[#211C4D] rounded-[8px] flex items-center justify-center transition-all duration-300 ease-in-out hover:bg-[#e79940] hover:shadow-[0_8px_20px_rgba(243,172,93,0.5)] hover:scale-105 btnoffer"
                 >
                   تسوق الآن
                 </Link>
@@ -165,7 +165,7 @@ export default function LatestOffers() {
                 className=" absolute object-contain top-0 left-0  w-full h-full "
                 alt=""
               />
-              <div className="absolute inset-0 top-[10px] md:top-[0px] z-[2] mr-[20px] mt-[20px] md:mt-[10px] text-right">
+              <div className="absolute inset-0 top-[0px] md:top-[0px] z-[2] mr-[20px] mt-[15px] md:mt-[10px] text-right">
                 <h1 className="text-[10px] md:text-[15px] font-[700] lg:text-[24px] text-[#211C4D] md:text-[#211C4D]">
                   إكسسوارات الألعاب
                 </h1>
@@ -174,7 +174,7 @@ export default function LatestOffers() {
                 </p>
                 <Link
                   to={""}
-                  className="text-[8px] w-[50px] md:text-[16px] h-[30px] md:w-[117px] md:h-[30px] text-[#F3AC5D] mt-[15px] bg-[#211C4D] hover:text-[#211C4D] rounded-[8px] flex items-center justify-center transition-all duration-300 ease-in-out hover:bg-[#e79940] hover:shadow-[0_8px_20px_rgba(243,172,93,0.5)] hover:scale-105 btnoffer"
+                  className="text-[8px] w-[50px] md:text-[16px] h-[30px] md:w-[117px] md:h-[30px] text-[#F3AC5D] mt-[30px] bg-[#211C4D] hover:text-[#211C4D] rounded-[8px] flex items-center justify-center transition-all duration-300 ease-in-out hover:bg-[#e79940] hover:shadow-[0_8px_20px_rgba(243,172,93,0.5)] hover:scale-105 btnoffer"
                 >
                   تسوق الآن
                 </Link>
@@ -187,7 +187,7 @@ export default function LatestOffers() {
                 className=" absolute object-contain top-0 left-0  w-full h-full "
                 alt=""
               />
-              <div className="absolute inset-0 top-[10px] md:top-[0px] z-[2] mr-[20px] mt-[20px] md:mt-[10px] text-right">
+              <div className="absolute inset-0 top-[0px] md:top-[0px] z-[2] mr-[20px] mt-[15px] md:mt-[10px] text-right">
                 <h1 className="text-[10px] md:text-[15px] font-[700] lg:text-[24px] text-[#211C4D] md:text-[#211C4D]">
                   إكسسوارات الألعاب
                 </h1>
@@ -196,7 +196,7 @@ export default function LatestOffers() {
                 </p>
                 <Link
                   to={""}
-                  className="text-[8px] w-[50px] md:text-[16px] h-[30px] md:w-[117px] md:h-[30px] text-[#F3AC5D] mt-[15px] bg-[#211C4D] hover:text-[#211C4D] rounded-[8px] flex items-center justify-center transition-all duration-300 ease-in-out hover:bg-[#e79940] hover:shadow-[0_8px_20px_rgba(243,172,93,0.5)] hover:scale-105 btnoffer"
+                  className="text-[8px] w-[50px] md:text-[16px] h-[30px] md:w-[117px] md:h-[30px] text-[#F3AC5D] mt-[30px] bg-[#211C4D] hover:text-[#211C4D] rounded-[8px] flex items-center justify-center transition-all duration-300 ease-in-out hover:bg-[#e79940] hover:shadow-[0_8px_20px_rgba(243,172,93,0.5)] hover:scale-105 btnoffer"
                 >
                   تسوق الآن
                 </Link>

@@ -23,6 +23,8 @@ import MobileMenu from "./MobileMenu";
 import MobileNavbar from "./MobileNavbar";
 
 export default function Header() {
+  const [isSectionOpen, setIsSectionOpen] = useState(false);
+
   // language btn
   const { t, i18n } = useTranslation();
   const [open] = useState(false);
@@ -305,12 +307,29 @@ export default function Header() {
       {/* mobile header */}
       <div className="md:hidden">
         {/* المنيو */}
-        <MobileMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
-        {/* النافبار */}
-        <MobileNavbar
-          onMenuToggle={() => setIsMenuOpen(!isMenuOpen)}
-          isMenuOpen={isMenuOpen}
-        />
+      <MobileMenu
+  isOpen={isMenuOpen}
+  onClose={() => setIsMenuOpen(false)}
+  openSections={isSectionOpen}
+  setOpenSections={setIsSectionOpen}
+/>
+
+<MobileNavbar
+  onMenuToggle={() => setIsMenuOpen(!isMenuOpen)}
+  onSectionToggle={() => {
+    // لو المنيو لسه مقفولة، افتحها ووسّع الأقسام فورًا
+    if (!isMenuOpen) {
+      setIsMenuOpen(true);
+      setIsSectionOpen(true);
+    } else {
+      // لو مفتوحة بالفعل، غيّر حالة الأقسام فقط
+      setIsSectionOpen(!isSectionOpen);
+    }
+  }}
+  isMenuOpen={isMenuOpen}
+/>
+
+
       </div>
     </>
   );

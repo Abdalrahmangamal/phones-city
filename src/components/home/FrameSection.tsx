@@ -89,7 +89,7 @@ const FrameSection: React.FC = () => {
           "كل ميزة صممناها عشان نخلي تسوقك اسهل , اسرع , اضمن ."
         </h5>
         {/* Added custom class 's24-frame-grid' for S24 Ultra responsive grid */}
-        <div className="grid grid-cols-2 pt-8 pb-14 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:!pb-[90px] s24-frame-grid">
+        <div className="grid grid-cols-2 pt-8 pb-24 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:!pb-[90px] s24-frame-grid">
           {features.map((feature, index) => (
             <div
               key={index}
@@ -101,7 +101,7 @@ const FrameSection: React.FC = () => {
                 className="w-12 h-12 iconframe sm:w-16 sm:h-16 flex-shrink-0"
               />
               <div className="flex iconframetext  flex-col items-start gap-2">
-                <h4 className="text-[#211C4D] text-[clamp(18px,3vw,22px)] font-[700]">
+                <h4 className="text-[#211C4D] !text-[12px] md:text-[clamp(18px,3vw,22px)] font-[700]">
                   {feature.title}
                 </h4>
                 <p className="text-[#211C4D] text-[clamp(14px,2vw,16px)] font-[400]">
