@@ -10,6 +10,7 @@ const useS24Ultra = () => {
       const isS24 = window.screen.width >= 320 && 
                    window.screen.width <= 480 && 
                    window.devicePixelRatio >= 3.5;
+      
       setIsS24Ultra(isS24);
     };
 
