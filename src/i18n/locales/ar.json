@@ -5,5 +5,18 @@
   "Servces": "خدماتنا",
   "Contactus": "تواصل معنا",
   "Profile": "الملف الشخصي",
-  "favourite": "المفضلة"
+  "favourite": "المفضلة",
+  "Name": "الاسم",
+  "Email": "البريد الالكتروني",
+  "Phone": "رقم الهاتف",
+  "Password": "الرقم السري",
+  "Enter":"ادخل",
+  "Password_confirmation": "تأكيد الرقم السري",
+  "Emailisrequired": "البريد الإلكتروني مطلوب",
+  "Notavalidemail": "ليس بريد إلكتروني صالح",
+  "Phoneisrequired": "الهاتف مطلوب",
+  "Passwordmustbeatleast6characters": "يجب أن تتكون كلمة المرور من 6 أحرف على الأقل",
+  "Passwordconfirmationmustbeatleast6characters": "يجب أن يتكون تأكيد كلمة المرور من 6 أحرف على الأقل",
+  "Passwordsdonotmatch": "كلمات المرور غير متطابقة",
+  "Nameisrequired": "الاسم مطلوب"
 }

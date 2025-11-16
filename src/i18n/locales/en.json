@@ -5,6 +5,17 @@
   "Servces": "Servces",
   "Contactus": "Contactus",
   "Profile":"Profile",
-    "favourite": "favourite"
-
+  "favourite": "favourite",
+  "Name": "Name",
+  "Email": "Email",
+  "Phone": "Phone",
+  "Password": "Password",
+  "Password_confirmation": "Confirm Password",
+  "Emailisrequired": "Email is required",
+  "Notavalidemail": "Not a valid email",
+  "Phoneisrequired": "Phone is required",
+  "Passwordmustbeatleast6characters": "Password must be at least 6 characters",
+  "Passwordconfirmationmustbeatleast6characters": "Password confirmation must be at least 6 characters",
+  "Passwordsdonotmatch": "Passwords do not match",
+  "Nameisrequired": "Name is required"
 }
