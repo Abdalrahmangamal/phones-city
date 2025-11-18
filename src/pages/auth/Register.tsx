@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
-import { useState } from "react";
+import {useState } from "react";
 import loginimage from "@/assets/images/loginimage.png";
 import smalllogo from "@/assets/images/smalllogo.png";
 import toppattern from "@/assets/images/toppatern.png";
@@ -11,8 +11,10 @@ import type { SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import z from "zod";
 import { useTranslation } from "react-i18next";
-
+import { useAuthStore } from "@/store/useauthstore";
+import VerifyCode from "@/components/auth/VerifyCode";
 export default function Register() {
+  const { sendRegisterData } = useAuthStore();
   // translate
   const { t } = useTranslation();
 
@@ -60,6 +62,11 @@ export default function Register() {
 
     reset();
     console.log("VALID DATA:", result.data);
+    if (!result.success) {
+      console.log(result.error);
+      return; // ← لازم تطلع من الفانكشن
+    }
+    sendRegisterData(result.data);
   };
   const signupInputs = [
     {
@@ -108,8 +115,10 @@ export default function Register() {
       ),
     },
   ];
+
   return (
     <div>
+      <VerifyCode isopen={true} />
       <img
         src={smalllogo}
         className="smalllogo absolute md:right-[60px] right-2 top-5 z-10 w-auto"
@@ -129,7 +138,11 @@ export default function Register() {
           >
             {/* الاسم */}
             {signupInputs.map((inputt) => (
-              <div className={`relative ${inputt.name==="password_confirmation"? "col-span-2":""}`}>
+              <div
+                className={`relative ${
+                  inputt.name === "password_confirmation" ? "col-span-2" : ""
+                }`}
+              >
                 <label className="block mb-2 text-[18px] font-semibold text-[#211C4DB2]">
                   {t(`${inputt.title}`)}
                 </label>
@@ -248,8 +261,8 @@ export default function Register() {
 
             {/* زر التسجيل */}
             <button
-  type="submit"
-  className="
+              type="submit"
+              className="
     col-span-2 w-full h-[54px] bg-[#2AA0DC] rounded-[32px] text-[20px] font-bold text-white mt-2
     transition-all duration-300 ease-out
     hover:bg-[#238ec4]
@@ -257,10 +270,9 @@ export default function Register() {
     hover:shadow-[0_8px_20px_rgba(42,160,220,0.35)]
     active:scale-[0.98]
   "
->
-  تسجيل الدخول
-</button>
-
+            >
+              تسجيل الدخول
+            </button>
 
             {/* تسجيل عبر السوشيال */}
             <div className="col-span-2 flex flex-col items-center gap-3 mt-4">

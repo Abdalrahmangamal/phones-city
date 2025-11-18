@@ -193,3 +193,6 @@
     font-size: 11px !important;
   }
 }
+.MuiOtpInput-TextField	{
+  width: 50px;  
+}
