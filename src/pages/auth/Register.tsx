@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
-import {useState } from "react";
+import { useState } from "react";
 import loginimage from "@/assets/images/loginimage.png";
 import smalllogo from "@/assets/images/smalllogo.png";
 import toppattern from "@/assets/images/toppatern.png";
@@ -14,13 +14,13 @@ import { useTranslation } from "react-i18next";
 import { useAuthStore } from "@/store/useauthstore";
 import VerifyCode from "@/components/auth/VerifyCode";
 export default function Register() {
-  const { sendRegisterData } = useAuthStore();
+  const { sendRegisterData ,error} = useAuthStore();
   // translate
   const { t } = useTranslation();
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
+  const [openverifymodal, setopenverifymodal] =useState(false)
   // ✅ Zod Schema
   const signupSchema = z
     .object({
@@ -55,15 +55,15 @@ export default function Register() {
     mode: "onChange",
     resolver: zodResolver(signupSchema),
   });
-
+  
   // Manual Validation
   const onSubmit: SubmitHandler<ISignup> = (data) => {
     const result = signupSchema.safeParse(data);
-
     reset();
     console.log("VALID DATA:", result.data);
     if (!result.success) {
       console.log(result.error);
+      setopenverifymodal(true)
       return; // ← لازم تطلع من الفانكشن
     }
     sendRegisterData(result.data);
@@ -80,15 +80,15 @@ export default function Register() {
       title: "Email",
       type: "text",
       name: "email",
-      register: register("email"),
-      error: errors.email?.message,
+      register: register("email") ,
+      error: errors.email?.message || error?.email,
     },
     {
       title: "Phone",
       type: "Number",
       name: "phone",
       register: register("phone"),
-      error: errors.phone?.message,
+      error: errors.phone?.message || error?.phone,
     },
     {
       title: "Password",
@@ -118,7 +118,7 @@ export default function Register() {
 
   return (
     <div>
-      <VerifyCode isopen={true} />
+      <VerifyCode isopen={openverifymodal} />
       <img
         src={smalllogo}
         className="smalllogo absolute md:right-[60px] right-2 top-5 z-10 w-auto"

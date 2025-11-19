@@ -12,11 +12,16 @@ interface VerifyCodetypes{
     code:string;
     email:string;
 }
+interface Logintypes{
+    email:string;
+    password:string;
+}
 interface AuthState {
   loading: boolean;
   error: string | null;
   sendRegisterData: (data: RegisterData) => Promise<any>;
   sendVerifyCode: (data: VerifyCodetypes) => Promise<any>;
+  sendLogin: (data: Logintypes) => Promise<any>;
 }
 const baseUrl = import.meta.env.VITE_BASE_URL;
 export const useAuthStore = create<AuthState>((set) => ({
@@ -37,8 +42,8 @@ export const useAuthStore = create<AuthState>((set) => ({
       localStorage.setItem("userData", JSON.stringify(res.data));
 
     } catch (err) {
-      set({ loading:false });
-      console.log(err);
+      set({ loading:false ,error:err?.response?.data.data });
+      console.log(err?.response?.data.data);
     }finally{
         set({ loading:false });
     }
@@ -47,6 +52,24 @@ export const useAuthStore = create<AuthState>((set) => ({
     try {
       set({ loading: true });
       const res = await axios.post(`${baseUrl}api/v1/auth/verify-code`, data, {
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          "Accept-Language": "en",
+        },
+      });
+      console.log(res.data);
+    } catch (err) {
+      set({ loading:false });
+      console.log(err);
+    }finally{
+        set({ loading:false });
+    }
+  },
+  sendLogin: async (data) => {
+    try {
+      set({ loading: true });
+      const res = await axios.post(`${baseUrl}api/v1/auth/login`, data, {
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
