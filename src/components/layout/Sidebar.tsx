@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import '../../index.css'
+import "../../index.css";
 import {
   User,
   ShoppingCart,
@@ -13,20 +13,58 @@ import {
   Menu,
   X,
 } from "lucide-react";
-import {  NavLink } from "react-router-dom";
-import {useLangSync} from '@/hooks/useLangSync'
+import { NavLink,useNavigation } from "react-router-dom";
+import { useLangSync } from "@/hooks/useLangSync";
 export default function Sidebar() {
+  const navigate = useNavigation();
   const [open, setOpen] = useState(false);
- const {lang} =useLangSync();
+  const { lang } = useLangSync();
   const menuItems = [
-    { icon: <User className="w-5 h-5" />, text: "الحساب الشخصي",link:`/${lang}/profile` },
-    { icon: <ShoppingCart className="w-5 h-5" />, text: "طلباتي",link:`/${lang}/myorder` },
-    { icon: <FileText className="w-5 h-5" />, text: "الفواتير",link:`/${lang}/bills` },
-    { icon: <Heart className="w-5 h-5" />, text: "المفضلة",link:`/${lang}/favourite` },
-    { icon: <MapPin className="w-5 h-5" />, text: "العنوان",link:`/${lang}/address` },
-    { icon: <Gift className="w-5 h-5" />, text: "خصومات",link:`/${lang}/discounts` },
-    { icon: <Wallet className="w-5 h-5" />, text: "المحفظة",link:`/${lang}/wallet` },
-    { icon: <LogOut className="w-5 h-5" />, text: "تسجيل الخروج",link:`/${lang}/myorder` },
+    {
+      icon: <User className="w-5 h-5" />,
+      text: "الحساب الشخصي",
+      link: `/${lang}/profile`,
+    },
+    {
+      icon: <ShoppingCart className="w-5 h-5" />,
+      text: "طلباتي",
+      link: `/${lang}/myorder`,
+    },
+    {
+      icon: <FileText className="w-5 h-5" />,
+      text: "الفواتير",
+      link: `/${lang}/bills`,
+    },
+    {
+      icon: <Heart className="w-5 h-5" />,
+      text: "المفضلة",
+      link: `/${lang}/favourite`,
+    },
+    {
+      icon: <MapPin className="w-5 h-5" />,
+      text: "العنوان",
+      link: `/${lang}/address`,
+    },
+    {
+      icon: <Gift className="w-5 h-5" />,
+      text: "خصومات",
+      link: `/${lang}/discounts`,
+    },
+    {
+      icon: <Wallet className="w-5 h-5" />,
+      text: "المحفظة",
+      link: `/${lang}/wallet`,
+    },
+    {
+      icon: <LogOut className="w-5 h-5" />,
+      text: "تسجيل الخروج",
+      link: `/`,
+      action: () => {
+        localStorage.removeItem("userData");
+        localStorage.removeItem("token");
+        navigate(`/${lang}/login`);
+      },
+    },
   ];
 
   return (
@@ -57,14 +95,17 @@ export default function Sidebar() {
 
         <ul className="flex flex-col gap-4 items-start">
           {menuItems.map((item, idx) => (
-            <li
-              key={idx}
-              
-            >
-              <NavLink to={`${item.link}`} className="flex items-center justify-end gap-3 text-gray-700 hover:text-[#2AA0DC] cursor-pointer transition-all">
-              {item.icon}
-              <span className="text-[15px]">{item.text}</span>
-              
+            <li key={idx}>
+              <NavLink
+                to={`${item.link}`}
+                onClick={() => {
+                  if (item.action) item.action();
+                  setOpen(false); // يقفل السايدبار لما اضغط
+                }}
+                className="flex items-center justify-end gap-3 text-gray-700 hover:text-[#2AA0DC] cursor-pointer transition-all"
+              >
+                {item.icon}
+                <span className="text-[15px]">{item.text}</span>
               </NavLink>
             </li>
           ))}

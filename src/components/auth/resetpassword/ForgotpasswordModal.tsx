@@ -1,5 +1,4 @@
 import * as React from "react";
-import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useEffect } from "react";
@@ -7,31 +6,34 @@ import { useAuthStore } from "@/store/useauthstore";
 import "@/style.css";
 interface VerifyData {
   isopen: boolean;
+  onClose: () => void;
 }
 
-export default function VerifyCode({ isopen }: VerifyData) {
+
+export default function ForgotpasswordModal({ isopen ,onClose }: VerifyData) {
   const [open, setOpen] = React.useState(false);
-  const { sendVerifyCode } = useAuthStore();
+  const { forgotpassword } = useAuthStore();
 
   const handleClose = () => {
     setOpen(false);
+    onClose();
   };
   useEffect(() => {
     setOpen(isopen);
   }, [isopen]);
-  const [otp, setOtp] = React.useState("");
+  
+  const [otp] = React.useState("");
 
  
   console.log(otp);
 
-const userdata = JSON.parse(localStorage.getItem("userData") || "{}").data.user.email;
+const userdata = JSON.parse(localStorage.getItem("userData") || "{}")?.data?.user?.email ||"";
  console.log(userdata)
  const VerifyCodetypes={
     email:userdata,
-    code:otp
  }
-const handlesendotp = ()=>{
-sendVerifyCode(VerifyCodetypes)
+const handlesendemail = ()=>{
+forgotpassword(VerifyCodetypes)
 }
   return (
     <>
@@ -71,7 +73,7 @@ sendVerifyCode(VerifyCodetypes)
             </div>
           </div>
           <div>
-            <button onClick={handlesendotp} className="bg-[#2AA0DC] w-[400px] h-[52px] my-5 rounded-[32px] text-[24px] text-white">
+            <button onClick={handlesendemail} className="bg-[#2AA0DC] w-[400px] h-[52px] my-5 rounded-[32px] text-[24px] text-white">
               استمر
             </button>
           </div>

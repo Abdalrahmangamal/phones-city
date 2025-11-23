@@ -1,34 +1,69 @@
-import Layout from '@/components/layout/Layout';
-import InternalBanner from '@/components/public/Internalbanner';
+import Layout from "@/components/layout/Layout";
+import InternalBanner from "@/components/public/Internalbanner";
+import { usePageStore } from "@/store/customerCareStore";
+import { useEffect } from "react";
+import { useLangSync } from "@/hooks/useLangSync";
 
 const WarrantyPolicy = () => {
+  const { page, fetchPage } = usePageStore();
+  const { lang } = useLangSync();
+
+  useEffect(() => {
+    fetchPage("warranty-policy", lang);
+  }, [fetchPage, lang]);
   return (
     <Layout>
-      <div className="container mx-auto px-4 py-8" dir="rtl">
-        <InternalBanner 
-          title="سياسة الضمان" 
-          description="تعرف علينا" 
-        />
+      <div
+        className="container mx-auto px-4 py-8"
+        dir={`${lang === "ar" ? "rtl" : "ltr"} `}
+      >
+        <InternalBanner title={`${page?.title}`} description={`${page?.short_description}`} />
         {/* Content section with policy details - aligned with hero banner */}
-        <div className="w-full max-w-[1264px] mx-auto py-8 px-4" style={{ gap: '50px' }}>
-          <div className="mb-8 relative">
-            <h1 className="text-right text-[#211C4D] font-roboto font-bold text-[24px] md:text-[40px] leading-[36px] relative w-full" style={{ maxWidth: '1275px' }}>
-              سياسة الضمان
+        <div
+          className="w-full max-w-[1264px] mx-auto py-8 px-4"
+          dir={`${lang === 'ar' ? 'rtl' : 'ltr'} `}
+
+          style={{ gap: "50px" }}
+        >
+          <div className="mb-8 relative" dir={`${lang === 'ar' ? 'rtl' : 'ltr'} text-left `}
+>
+            <h1
+              className=" text-[#211C4D] font-roboto font-bold text-[24px] md:text-[40px] leading-[36px] relative w-full"
+              style={{ maxWidth: "1275px" }}
+              
+            >
+              {page?.title}
             </h1>
-            <div className="absolute" style={{ top: '-12px', right: '-49px', width: '110px', height: '85.6058px' }}>
-              <img 
-                src="/src/assets/images/Layer_1.png" 
-                alt="Layer 1" 
+            <div
+              className="absolute"
+              style={{
+                top: "-12px",
+                right: "-49px",
+                width: "110px",
+                height: "85.6058px",
+              }}
+            >
+              <img
+                src="/src/assets/images/Layer_1.png"
+                alt="Layer 1"
                 className=" h-full object-contain w-[100px]"
               />
             </div>
           </div>
-          
+
           <div className="mb-2">
-            <p className="text-right text-[#211C4D] text-xl font-bold">سياسة ضمان المنتجات</p>
+            <p className=" text-[#211C4D] text-xl font-bold">
+              {page?.short_description}
+            </p>
           </div>
-          
-          <div className="mb-12 w-full">
+          <div>
+            <div
+              dir={`${lang === "ar" ? "rtl" : "ltr"} `}
+              className="prose max-w-full"
+              dangerouslySetInnerHTML={{ __html: page?.description || "" }}
+            ></div>
+          </div>
+          {/* <div className="mb-12 w-full">
             <ul className="text-right text-[#211C4DCC] font-roboto !text-[20px] leading-[48px] list-disc pr-6" style={{ fontFamily: 'Roboto', fontWeight: 400, fontSize: '24px', lineHeight: '48px' }}>
               <li className="mb-8">
                 يحق للعميل استبدال أو استرجاع المنتج الذي تم شرائه من الموقع الالكتروني خلال 30 يوم من تاريخ الشراء فقط في حالة وجود عيب صناعة بالمنتج وذلك بناءاً على تقرير فني من الصيانة أو مراكز الخدمة المعتمدة (ذلك ينطبق أيضاً على منتجات العناية الشخصية حيث أنها تخضع لشروط صحية ) وذلك طبقاً لقانون حماية المستهلك ، وفي حالة انتهاء مدة الـ 30 يوم لن يتم استبدال أو استرجاع الجهاز لأي سببٍ كان ، ويجب على العميل فى هذه الحالة التواصل مع خدمة العملاء 19319 لتسجيل بلاغ صيانة وذلك بالنسبة للأجهزة التى يتم تسجيل بلاغ صيانة لها ، وذلك طبقاً لنص المادة 21 من قانون حماية المستهلك.
@@ -60,9 +95,9 @@ const WarrantyPolicy = () => {
                 بالإضافة إلى أنه في حالة الدفع الالكتروني أون لاين عن طريق VISA / Master أو فودافون كاش أو اتصالات كاش سيتم خصم مصاريف إدارية بقيمة (1.5%) من قيمة الجهاز ، أو خصم مصاريف إدارية بقيمة (2.25%) من قيمة الجهاز في حالة الدفع من خلال خدمات فوري ، أو خصم مصاريف إدارية بقيمة (1.45% + 1 جنيه) من قيمة الجهاز في حالة الدفع من خلال ماكينات MPOS أثناء استلام المنتج.
               </li>
             </ul>
-          </div>
-          
-          <div className="mb-12">
+          </div> */}
+
+          {/* <div className="mb-12">
             <h2 className="text-right text-[#211C4D] font-roboto font-bold text-[28px] leading-[40px] mb-6 md:mb-4">
               2. في حالة قيام العميل بفتح كرتونة الجهاز :
             </h2>
@@ -80,7 +115,7 @@ const WarrantyPolicy = () => {
                 بالإضافة إلى أنه في حالة الدفع الالكتروني أون لاين عن طريق VISA / Master أو فودافون كاش أو اتصالات كاش سيتم خصم مصاريف إدارية بقيمة (1.5%) من قيمة الجهاز ، أو خصم مصاريف إدارية بقيمة (2.25%) من قيمة الجهاز في حالة الدفع من خلال خدمات فوري ، أو خصم مصاريف إدارية بقيمة (1.45% + 1 جنيه) من قيمة الجهاز في حالة الدفع من خلال ماكينات MPOS أثناء استلام المنتج.
               </li>
             </ul>
-          </div>
+          </div> */}
         </div>
       </div>
     </Layout>

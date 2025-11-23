@@ -1,20 +1,43 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import loginimage from "@/assets/images/loginimage.png";
 import smalllogo from "@/assets/images/smalllogo.png";
 import toppatern from "@/assets/images/toppatern.png";
 import bottompattern from "@/assets/images/bottompattern.png";
 import ForgotpasswordModal from "@/components/auth/resetpassword/ForgotpasswordModal";
-import { Dialog, DialogTrigger } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-
+import { useForm } from "react-hook-form";
+import type { SubmitHandler } from "react-hook-form";
+import {useAuthStore} from '@/store/useauthstore'
+type loginInputs = {
+  email: string;
+  password: string;
+};
 export default function Login() {
+  const { sendLogin } = useAuthStore();
+  const navigate = useNavigate();
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<loginInputs>();
+  const onSubmit: SubmitHandler<loginInputs> = async  (data, e) => {
+    e?.preventDefault();
+    console.log("submitted", data);
+    sendLogin(data)
+      const res = await sendLogin(data);
+    if (res?.data?.token) {
+      navigate("/"); // ← شغال دلوقتي
+    }
+  };
+  // console.log(watch("example"))
   const [showPassword, setShowPassword] = useState(false);
   const [openforgetpassmodal, setopenforgetpassmodal] = useState(false);
-const handelopenforgetpass=()=>{
-setopenforgetpassmodal(true)
-}
+  const handelopenforgetpass = () => {
+    setopenforgetpassmodal(true);
+  };
+ 
   return (
     <div>
       <div className="w-full flex relative">
@@ -35,7 +58,10 @@ setopenforgetpassmodal(true)
             برجى تسجيل الدخول إلى حسابك
           </p>
 
-          <form className="space-y-5 text-right">
+          <form
+            className="space-y-5 text-right"
+            onSubmit={handleSubmit(onSubmit)}
+          >
             {/* البريد الإلكتروني */}
             <div>
               <label className="block mb-2 md:mb-0 text-[24px] font-[500] text-[#211C4DB2]">
@@ -43,6 +69,7 @@ setopenforgetpassmodal(true)
               </label>
               <input
                 type="email"
+                {...register("email")}
                 placeholder="username@gmail.com"
                 className="w-full p-3 border rounded-lg h-[50px] outline-none focus:ring-2 focus:ring-[#0B60B0]"
               />
@@ -57,6 +84,7 @@ setopenforgetpassmodal(true)
                 <input
                   type={showPassword ? "text" : "password"}
                   placeholder="********"
+                  {...register("password")}
                   className="w-full p-3 border rounded-lg outline-none focus:ring-2 focus:ring-[#0B60B0]"
                 />
                 <span
@@ -68,15 +96,16 @@ setopenforgetpassmodal(true)
               </div>
 
               {/* Dialog */}
-             
-                <p
-                  onClick={handelopenforgetpass}
-                    // variant="ghost"
-                    className="p-0 m-0 bg-transparent hover:bg-transparent focus:ring-0 active:scale-100 border-none shadow-none" >
-                    <p className="text-[16px] font-[500] text-[#2AA0DC] mt-2 cursor-pointer">
-                      نسيت كلمة المرور؟
-                    </p>
-                  </p>
+
+              <div
+                onClick={handelopenforgetpass}
+                // variant="ghost"
+                className="p-0 m-0 bg-transparent hover:bg-transparent focus:ring-0 active:scale-100 border-none shadow-none"
+              >
+                <p className="text-[16px] font-[500] text-[#2AA0DC] mt-2 cursor-pointer">
+                  نسيت كلمة المرور؟
+                </p>
+              </div>
             </div>
 
             {/* زر الدخول */}
@@ -86,7 +115,6 @@ setopenforgetpassmodal(true)
             >
               تسجيل الدخول
             </button>
-
             {/* تسجيل جديد */}
             <p className="text-[24px] text-center mt-4 text-[#211C4D]">
               ليس لديك حساب؟
@@ -99,8 +127,10 @@ setopenforgetpassmodal(true)
             </p>
           </form>
         </div>
-        <ForgotpasswordModal isopen={openforgetpassmodal}   onClose={() => setopenforgetpassmodal(false)}
- />
+        <ForgotpasswordModal
+          isopen={openforgetpassmodal}
+          onClose={() => setopenforgetpassmodal(false)}
+        />
         <div className="flex items-center justify-center">
           <img src={loginimage} className="scale-[0.9] md:mb-0 mb-60" alt="" />
         </div>

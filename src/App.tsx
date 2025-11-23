@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate, useParams } from "react-router-
 import { useSettings } from "@/store/settings";
 import i18n from "@/i18n";
 import Home from "@/pages/Home";
-import About from "@/pages/About";
+import About from "@/pages/about";
 import Servces from "@/pages/Servces";
 import Contact from "@/pages/Contact";
 // import NewHome from "@/pages/new/Home";
@@ -12,11 +12,11 @@ import Offers from "./pages/Offers";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import ProductDetails from "./pages/ProductDetails";
-import ReturnPolicy from "./pages/ReturnPolicy";
-import WarrantyPolicy from "./pages/WarrantyPolicy";
-import TermsAndConditions from "./pages/TermsAndConditions";
-import AboutQuara from "./pages/AboutQuara";
-import AboutMora from "./pages/AboutMora";
+import ReturnPolicy from "./pages/customerCare/ReturnPolicy";
+import WarrantyPolicy from "./pages/customerCare/WarrantyPolicy";
+import TermsAndConditions from "./pages/customerCare/TermsAndConditions";
+import AboutQuara from "./pages/customerCare/AboutQuara";
+import AboutMora from "./pages/customerCare/AboutMora";
 import Profile from "./pages/profile/Profile";
 import Myorder from "./pages/profile/Myorder";
 import Bills from "./pages/profile/Bills";
@@ -33,7 +33,8 @@ import Trademarkbestoffer from "./pages/Trademarkbestoffer";
 import ScrollToTop from "@/components/ScrollToTop";
 import Singleproduct from "./pages/Singleproduct";
 import ChatBot from "./components/layout/Chatbot";
-import Checkout from '@/pages/chekout/Checkout'
+import Checkout from '@/pages/chekout/Checkout';
+import Protectedroutse from '@/store/protectedroutse'
 function LangLayout() {
   const { lang: urlLang } = useParams();
   const { lang, setLang } = useSettings();
@@ -68,7 +69,9 @@ function LangLayout() {
       <Route path="/terms-and-conditions" element={<TermsAndConditions/>} />
       <Route path="/about-quara" element={<AboutQuara/>} />
       <Route path="/about-mora" element={<AboutMora/>} />
+      <Route element={<Protectedroutse/>} >
       <Route path="/profile" element={<Profile/>} />
+      </Route>
       <Route path="/myorder" element={<Myorder/>} />
       <Route path="/bills" element={<Bills/>} />
       <Route path="/singlebills" element={<Singlebills/>} />

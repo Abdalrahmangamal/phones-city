@@ -1,21 +1,26 @@
-import React from 'react';
 import Layout from '@/components/layout/Layout';
 import InternalBanner from '@/components/public/Internalbanner';
-
+import { useLangSync } from "@/hooks/useLangSync";
+import { usePageStore } from "@/store/customerCareStore";
+import { useEffect } from "react";
 const TermsAndConditions = () => {
+    const { page, fetchPage } = usePageStore();
+    const { lang } = useLangSync();
+     useEffect(() => {
+    fetchPage("terms-and-conditions", lang);
+  }, [fetchPage, lang]);
   return (
     <Layout>
       <div className="container mx-auto px-4 py-8" dir="rtl">
         <InternalBanner 
-          title="الشروط والاحكام" 
-          description="تعرف علينا" 
+         title={`${page?.title}`} description={`${page?.short_description}`}
         />
         
         {/* Content section with policy details - aligned with hero banner */}
         <div className="w-full max-w-[1264px] mx-auto py-8 px-4" style={{ gap: '50px' }}>
           <div className="mb-8 relative">
             <h1 className="text-right text-[#211C4D] font-roboto font-medium text-[40px] leading-[100%] relative w-full" style={{ maxWidth: '1275px' }}>
-              شروط الاستخدام
+            {page?.title}
             </h1>
             <div className="absolute" style={{ top: '-12px', right: '-49px', width: '110px', height: '85.6058px' }}>
               <img 
@@ -26,57 +31,20 @@ const TermsAndConditions = () => {
             </div>
           </div>
           
-          <div className="mb-16 w-full">
+          {/* <div className="mb-16 w-full">
             <p className="text-right text-[#211C4D] font-roboto font-medium text-[40px] leading-[100%]">
-              مرحباً بك في موقع www.مدينة الهواتف.com الإلكتروني ("الموقع").
-            </p>
-          </div>
+{page?.short_description}            </p>
+          </div> */}
           
-          <div className="mb-8">
-            <h2 className="text-right text-[#211C4D] font-roboto font-bold text-[32px] leading-[24px] mb-4">
-              شروط التسجيل
-            </h2>
-          </div>
+         
+      
           
-          <div className="mb-8 w-full">
-            <p className="text-right text-[#211C4DCC] font-roboto text-[24px] leading-[48px] mb-4" style={{ fontFamily: 'Roboto', fontWeight: 400, fontSize: '24px', lineHeight: '48px' }}>
-              1. يحق لك التسجيل كمشترٍ أو بائع والاستفادة من الخدمات إذا توفرت لديك معايير الاهلية التالية:
-            </p>
-            
-            <div className="mb-4 w-full">
-              <p className="text-right text-black text-lg leading-7 font-bold">a. للمشترين:</p>
-              <ol className="text-right text-[#211C4DCC] font-roboto text-[24px] leading-[48px] list-[lower-roman] pr-6" style={{ fontFamily: 'Roboto', fontWeight: 400, fontSize: '24px', lineHeight: '48px' }}>
-                <li className="mb-2">أن تكون بالغاً السن القانونية لتتمكن من شراء المنتجات في بلد إقامتك.</li>
-                <li className="mb-2">أن تكون قادراً على تقديم عنوان في الإمارات العربية المتحدة أو في المملكة العربية السعودية لتسليم المنتجات.</li>
-              </ol>
-            </div>
-            
-            <div className="mb-4 w-full">
-              <p className="text-right text-black text-lg leading-7 font-bold">b. للبائعين:</p>
-              <ol className="text-right text-[#211C4DCC] font-roboto text-[24px] leading-[48px] list-[lower-roman] pr-6" style={{ fontFamily: 'Roboto', fontWeight: 400, fontSize: '24px', lineHeight: '48px' }}>
-                <li className="mb-2">أن يكون لديك شركة تجارية مسجلة وفقاً لقوانين الدولة الخاصة بك.</li>
-                <li className="mb-2">أن يكون لديك ترخيص تجاري سارٍ.</li>
-                <li className="mb-2">أن يمكنك تقديم ما يثبت تفويض الأفراد الذين يقومون بالتسجيل في الموقع أو باستخدامه.</li>
-                <li className="mb-2">تقديم إثبات الهوية للشخص المفوض.</li>
-                <li className="mb-2">تقديم بيانات مصرفية داعمة.</li>
-              </ol>
-            </div>
-            
-            <p className="text-right text-[#211C4DCC] font-roboto text-[24px] leading-[48px] mb-4" style={{ fontFamily: 'Roboto', fontWeight: 400, fontSize: '24px', lineHeight: '48px' }}>
-              2. للتسجيل على الموقع، سنحتاج إلى تقديم بعض المعلومات، ولن يتم قبول تسجيلك في الموقع إذا لم يتم تقديم المعلومات اللازمة لنا. لدينا الحق في رفض أي من عمليات التسجيل دون إبداء الأسباب. كما يحق لنا أيضاً القيام بعمليات التحقق اللازمة للتأكد من هويتك ومتطلبات التسجيل.
-            </p>
-            
-            <p className="text-right text-[#211C4DCC] font-roboto text-[24px] leading-[48px]" style={{ fontFamily: 'Roboto', fontWeight: 400, fontSize: '24px', lineHeight: '48px' }}>
-              3. وبمجرد الانتهاء من التسجيل بنجاح، يستمر التسجيل الخاص بك لفترة غير محددة خاضعاً لاحتمال تعليقه أو إلغائه وفقاً للبند رقم 6 من شروط الاستخدام هذه.
-            </p>
-          </div><br/> 
-          
-          <div className="mb-8">
+          {/* <div className="mb-8">
             <h2 className="text-right text-[#211C4D] font-roboto font-bold text-[32px] leading-[24px] mb-4">
               أحكام عامة
             </h2>
-          </div>
-          
+          </div> */}
+{/*           
           <div className="mb-8 w-full">
             <ol className="text-right text-[#211C4DCC] font-roboto text-[24px] leading-[48px] list-decimal pr-6" style={{ fontFamily: 'Roboto', fontWeight: 400, fontSize: '24px', lineHeight: '48px' }}>
               <li className="mb-4">
@@ -119,8 +87,13 @@ const TermsAndConditions = () => {
                 <span className="font-bold">استمرار النفاذ:</span> جميع الأحكام التي يُنص على أنها تظل سارية أو التي تسري بطبيعتها بعد إنهاء التعاقد تظل نافذة المفعول بعد إنهاء أو تعليق عضويتك في الموقع.
               </li>
             </ol>
-          </div>
+          </div> */}
         </div>
+              <div
+              dir={`${lang === "ar" ? "rtl" : "ltr"} `}
+              className="prose max-w-full"
+              dangerouslySetInnerHTML={{ __html: page?.description || "" }}
+            ></div>
       </div>
     </Layout>
   );

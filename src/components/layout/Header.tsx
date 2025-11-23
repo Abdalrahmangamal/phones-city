@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import "../../style.css";
 import { useTranslation } from "react-i18next";
 import { useLangSync } from "@/hooks/useLangSync";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -53,10 +54,15 @@ export default function Header() {
       name: `${t("Contactus")}`,
     },
   ];
+  const token = localStorage.getItem("token");
+  const headerKey = lang; 
+
   return (
     <>
       {/* desktop  header */}
       <header
+        key={headerKey}
+
         dir="rtl"
         className="w-full border-b  items-center justify-center h-[170px] hidden md:flex border-white/10 bg-[#211a44] text-white"
       >
@@ -94,6 +100,7 @@ export default function Header() {
 
             {/* Left icons */}
             <div className="flex items-center gap-2">
+              {token?null:(
               <Link
                 to="/login"
                 className="w-[160px] h-[40px] rounded-[16px] bg-[#FFFFFF1A] flex items-center justify-center text-[19px] font-[400] 
@@ -101,6 +108,7 @@ export default function Header() {
               >
                 تسجيل الدخول
               </Link>
+              )}
               <Link to={""}>
                 <IconButton aria-label="المفضلة">
                   <Link to={`/${lang}/favourite`}>

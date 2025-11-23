@@ -3,7 +3,11 @@ interface InternalBannerProps {
   title: string;
   description?: string;
 }
+import { useLangSync } from "@/hooks/useLangSync";
+
 export default function InternalBanner({ title, description }: InternalBannerProps  ) {
+    const { lang } = useLangSync();
+
   return (
     <div className="lg:px-[90px] px-2 pt-20 md:pt-0">
 
@@ -15,7 +19,7 @@ export default function InternalBanner({ title, description }: InternalBannerPro
       />
       <h1 className="font-[700] mt-[40px] mx-[30px] text-[25px] md:text-[48px] text-white relative z-2">{title}</h1>
       <p className="z-2 relative font-[700] mx-[30px] text-[16px] text-white ">{description}</p>
-      <div className="absolute top-0 rounded-[16px] right-0 h-full w-full z-1 bg-[linear-gradient(90deg,rgba(33,28,77,0)_5.77%,rgba(33,28,77,0.600962)_56.76%,#211C4D_100%)]"></div>
+      <div className={`absolute top-0 rounded-[16px] right-0 h-full w-full z-1 ${lang==="ar"?"bg-[linear-gradient(90deg,rgba(33,28,77,0)_5.77%,rgba(33,28,77,0.600962)_56.76%,#211C4D_100%)]":"bg-[linear-gradient(270deg,rgba(33,28,77,0)_5.77%,rgba(33,28,77,0.600962)_56.76%,#211C4D_100%)]"}`}></div>
     </div>
     </div>
   );
