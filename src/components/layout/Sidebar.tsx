@@ -13,51 +13,54 @@ import {
   Menu,
   X,
 } from "lucide-react";
-import { NavLink,useNavigation } from "react-router-dom";
+import { NavLink,useNavigate  } from "react-router-dom";
 import { useLangSync } from "@/hooks/useLangSync";
+import { useTranslation } from "react-i18next";
 export default function Sidebar() {
-  const navigate = useNavigation();
+    const { t } = useTranslation();
+
+  const navigate = useNavigate ();
   const [open, setOpen] = useState(false);
   const { lang } = useLangSync();
   const menuItems = [
     {
       icon: <User className="w-5 h-5" />,
-      text: "الحساب الشخصي",
+      text:` ${t("Profile")}`,
       link: `/${lang}/profile`,
     },
     {
       icon: <ShoppingCart className="w-5 h-5" />,
-      text: "طلباتي",
+      text: `${t("MyOrders")}`,
       link: `/${lang}/myorder`,
     },
     {
       icon: <FileText className="w-5 h-5" />,
-      text: "الفواتير",
+      text: `${t("Bills")}`,
       link: `/${lang}/bills`,
     },
     {
       icon: <Heart className="w-5 h-5" />,
-      text: "المفضلة",
+      text: `${t("Favorites")}`,
       link: `/${lang}/favourite`,
     },
     {
       icon: <MapPin className="w-5 h-5" />,
-      text: "العنوان",
+      text:  `${t("Address")}`,
       link: `/${lang}/address`,
     },
     {
       icon: <Gift className="w-5 h-5" />,
-      text: "خصومات",
+      text: `${t("Discounts")}`,
       link: `/${lang}/discounts`,
     },
     {
       icon: <Wallet className="w-5 h-5" />,
-      text: "المحفظة",
+      text:  `${t("Wallet")}`,
       link: `/${lang}/wallet`,
     },
     {
       icon: <LogOut className="w-5 h-5" />,
-      text: "تسجيل الخروج",
+      text:  `${t("Logout")}`,
       link: `/`,
       action: () => {
         localStorage.removeItem("userData");
@@ -91,7 +94,7 @@ export default function Sidebar() {
         className={`fixed md:static top-0 right-0 h-full p-[34px] md:h-auto w-[250px] bg-white shadow-lg md:shadow-none rounded-none md:rounded-xl  text-right z-50 transform transition-transform duration-300
         ${open ? "translate-x-0" : "translate-x-full md:translate-x-0"}`}
       >
-        <h2 className="text-xl font-semibold mb-6 text-gray-800">مرحباً منه</h2>
+        <h2 className={`text-xl font-semibold mb-6 text-gray-800 ${lang==="ar"?"text-right":"text-left"}` }>مرحباً منه</h2>
 
         <ul className="flex flex-col gap-4 items-start">
           {menuItems.map((item, idx) => (

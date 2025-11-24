@@ -4,7 +4,11 @@ import { useState } from "react";
 import edit from "@/assets/images/aedit.png";
 import close from "@/assets/images/Close.png";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+
 export default function Address() {
+    const { t } = useTranslation();
+
   const [selectedId, setSelectedId] = useState<number | null>(1);
 
   const addresses = [
@@ -29,7 +33,7 @@ export default function Address() {
         <div className="flex flex-col md:flex-row justify-center gap-[30px] mt-[80px]">
           <Sidebar />
           <div className="md:w-[883px] w-full">
-            <p className="text-[20px] text-[#211C4D] font-[600]"> العنوان</p>
+            <p className="text-[20px] text-[#211C4D] font-[600]"> {t("Address")}</p>
             <div className="w-full   mt-10">
               {addresses.map((item) => (
                 <div
@@ -97,7 +101,7 @@ export default function Address() {
 
                 {/* النص */}
                 <Link className="mt-3 text-[#211C4D] text-[14px] font-medium hover:opacity-80" to={"/singleaddress"}>
-                  إضافة عنوان جديد
+                  {t("Addanewtitle")}
                 </Link>
               </div>
             </div>

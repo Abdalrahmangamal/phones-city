@@ -13,13 +13,19 @@ const ReturnPolicy = () => {
   }, [fetchPage, lang]);
   return (
     <Layout>
-      <div className="container mx-auto px-4 py-8" dir={`${lang === 'ar' ? 'rtl' : 'ltr'} `}>
-        <InternalBanner title={`${page?.title}`} description={`${page?.short_description}`}/>
+      <div
+        className="container mx-auto px-4 py-8"
+        dir={`${lang === "ar" ? "rtl" : "ltr"} `}
+      >
+        <InternalBanner
+          title={page?.title || ""}
+          description={page?.short_description || ""}
+        />
 
         {/* Main container with responsive width */}
         <div
           className="mt-12 w-full max-w-[1296px] mx-auto"
-          dir={`${lang === 'ar' ? 'rtl' : 'ltr'} `}
+          dir={`${lang === "ar" ? "rtl" : "ltr"} `}
           style={{ gap: "32px" }}
         >
           {/* Details container with responsive width */}
@@ -31,9 +37,13 @@ const ReturnPolicy = () => {
                   className=" text-[#211C4D] font-roboto font-bold text-[35px] md:text-[40px] leading-[36px] relative w-full"
                   style={{ maxWidth: "1275px" }}
                 >
-                 {page?.title}
+                  {page?.title}
                 </h1>
-                <div className={`${lang === "ar" ? "right-[-35px]" : "left-[-35px]"} absolute top-[-1px]  w-[80px]`}>
+                <div
+                  className={`${
+                    lang === "ar" ? "right-[-35px]" : "left-[-35px]"
+                  } absolute top-[-1px]  w-[80px]`}
+                >
                   <img
                     src="/src/assets/images/Layer_1.png"
                     alt="Layer 1"
@@ -44,16 +54,16 @@ const ReturnPolicy = () => {
 
               <div className="mb-8">
                 <p className=" text-[#211C4D] text-[28px] font-bold">
-                 {page?.short_description}
+                  {page?.short_description}
                 </p>
               </div>
-  <div>
-            <div
-              dir={`${lang === "ar" ? "rtl" : "ltr"} `}
-              className="prose max-w-full"
-              dangerouslySetInnerHTML={{ __html: page?.description || "" }}
-            ></div>
-          </div>
+              <div>
+                <div
+                  dir={`${lang === "ar" ? "rtl" : "ltr"} `}
+                  className="prose max-w-full"
+                  dangerouslySetInnerHTML={{ __html: page?.description || "" }}
+                ></div>
+              </div>
               {/* Text container with responsive width */}
               {/* <div className="mb-8 w-full">
                 <ul

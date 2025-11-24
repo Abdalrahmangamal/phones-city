@@ -17,20 +17,23 @@ const WarrantyPolicy = () => {
         className="container mx-auto px-4 py-8"
         dir={`${lang === "ar" ? "rtl" : "ltr"} `}
       >
-        <InternalBanner title={`${page?.title}`} description={`${page?.short_description}`} />
+        <InternalBanner
+          title={page?.title || ""}
+          description={page?.short_description || ""}
+        />
         {/* Content section with policy details - aligned with hero banner */}
         <div
           className="w-full max-w-[1264px] mx-auto py-8 px-4"
-          dir={`${lang === 'ar' ? 'rtl' : 'ltr'} `}
-
+          dir={`${lang === "ar" ? "rtl" : "ltr"} `}
           style={{ gap: "50px" }}
         >
-          <div className="mb-8 relative" dir={`${lang === 'ar' ? 'rtl' : 'ltr'} text-left `}
->
+          <div
+            className="mb-8 relative"
+            dir={`${lang === "ar" ? "rtl" : "ltr"} text-left `}
+          >
             <h1
               className=" text-[#211C4D] font-roboto font-bold text-[24px] md:text-[40px] leading-[36px] relative w-full"
               style={{ maxWidth: "1275px" }}
-              
             >
               {page?.title}
             </h1>

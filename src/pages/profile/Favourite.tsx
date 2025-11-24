@@ -1,12 +1,15 @@
 import Layout from "@/components/layout/Layout";
 import Sidebar from "@/components/layout/Sidebar";
 import Bestseller from "@/components/home/Bestseller";
+import { useTranslation } from "react-i18next";
 
 import product1 from "@/assets/images/product1.png";
 import product2 from "@/assets/images/product2.png";
 import type { Product } from "@/types/index";
 
 export default function Favourite() {
+      const { t } = useTranslation();
+
   const products: Product[] = [
     {
       id: 3,
@@ -148,7 +151,7 @@ export default function Favourite() {
           <Sidebar />
           <div className="md:w-[1100px]  md:px-0">
             <Bestseller
-              title={"المنتجات المفضله"}
+              title={t("Favoriteproducts")}
               btn={false}
               style="lg:!grid-cols-3 lg:!gap-[80px]"
               products={products}

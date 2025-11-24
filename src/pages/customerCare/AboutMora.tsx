@@ -12,10 +12,13 @@ const AboutMora = () => {
   }, [fetchPage, lang]);
   return (
     <Layout>
-      <div className="container mx-auto px-4 py-8" dir={`${lang === 'ar' ? 'rtl' : 'ltr'} `}>
+      <div
+        className="container mx-auto px-4 py-8"
+        dir={`${lang === "ar" ? "rtl" : "ltr"} `}
+      >
         <InternalBanner
-          title={`${page?.title}`}
-          description={`${page?.short_description}`}
+          title={page?.title || ""}
+          description={page?.short_description || ""}
         />
 
         {/* Content section with policy details - aligned with hero banner */}
@@ -31,7 +34,9 @@ const AboutMora = () => {
               {page?.title}
             </h1>
             <div
-              className={`absolute  ${lang === "ar" ? "right:-49px" : "left:-49px z-[-1]" }`}
+              className={`absolute  ${
+                lang === "ar" ? "right:-49px" : "left:-49px z-[-1]"
+              }`}
               style={{
                 top: "-12px",
                 width: "110px",

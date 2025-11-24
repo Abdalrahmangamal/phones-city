@@ -9,6 +9,8 @@ interface offerherotype {
   descriptionstyle?: string;
   link?: string;
 }
+import { useLangSync } from "@/hooks/useLangSync";
+
 export default function Offerherosection({
   title,
   description,
@@ -18,6 +20,8 @@ export default function Offerherosection({
   descriptionstyle,
   link,
 }: offerherotype) {
+    const { lang } = useLangSync();
+
   return (
     <div className={`lg:px-[90px] px-2 ${padding} md:pt-0 pt-[50px] `}>
       <div
@@ -30,9 +34,9 @@ export default function Offerherosection({
           className="w-full h-full object-cover"
         />
         {/* Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-r  mdvia-[#211c4d33] from-transparent via-[#211c4d57] to-[#211C4D]"></div>
+        <div className={`absolute inset-0 bg-gradient-to-r  mdvia-[#211c4d33] ${lang=="ar"? "from-transparent via-[#211c4d57] to-[#211C4D]":"bg-gradient-to-l from-[#211C4D] via-[#211c4d57] mdvia-[#211c4d33] to-transparent"}`}></div>
         {/* Text Content - Responsive for mobile, without align-items and with correct padding */}
-        <div className="absolute inset-0 flex flex-col justify-start text-right  p-5 md:pr-[57px]">
+        <div className="absolute inset-0 flex flex-col justify-start text-start  p-5 md:pr-[57px]">
           <h1
             className={`text-white ${textstyle} font-roboto font-bold md:max-w-[30%] text-[24px] md:text-5xl leading-[48px] md:leading-[68px] mb-2 md:mb-4`}
           >

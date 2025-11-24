@@ -1,41 +1,46 @@
+import { useTranslation } from "react-i18next";
+import { useLangSync } from "@/hooks/useLangSync";
+
 export default function Contactform() {
+  const { t } = useTranslation();
+  const { lang } = useLangSync();
   return (
     <div
-      className="w-full bg-white py-10 px-0 md:p-4 h-full md:px-16 font-sans"
-      dir="rtl"
+      className="w-full bg-white py-10  md:p-4 h-full md:px-16 font-sans lg:px-[90px] px-2 pt-20 md:pt-0"
+      dir={lang === "ar" ? "rtl" : "ltr"}
     >
       {/* العنوان */}
-      <h2 className="text-[#211C4D] mx-[30px] md:mx-0 text-[40px] font-[700] mb-8 relative w-fit">
-        إرسال ملاحظة
+      <h2 className="text-[#211C4D] my-9 mx-[30px] md:mx-0 text-[40px] font-[700] mb-8 relative w-fit">
+        {t("SendNote")}
       </h2>
 
       {/* المحتوى */}
-      <div className="flex flex-col md:flex-row gap-[80px]">
+      <div className="flex flex-col justify-between md:flex-row gap-[80px]">
         {/* نموذج التواصل */}
-        <form className="bg-white md:w-[800px] p-[40px]  h-[450px] rounded-xl shadow-[0px_1px_13px_0px_rgba(0,0,0,0.05)]">
+        <form  className="bg-white md:w-[800px] p-[40px]  h-[450px] rounded-xl shadow-[0px_1px_13px_0px_rgba(0,0,0,0.05)]">
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
             <input
               type="text"
-              placeholder="الاسم"
+              placeholder={t("Name")}
               className="border-none h-[50px] bg-[#F5F5F5] rounded-[4px] p-3 transition-all duration-300 ease-in-out focus:bg-white focus:ring-2 focus:ring-[#211C4D] hover:scale-[1.02]"
               required
             />
             <input
               type="email"
-              placeholder="الإيميل"
+              placeholder={t("Email")}
               className="border-none h-[50px] bg-[#F5F5F5] rounded-[4px] p-3 transition-all duration-300 ease-in-out focus:bg-white focus:ring-2 focus:ring-[#211C4D] hover:scale-[1.02]"
               required
             />
             <input
               type="text"
-              placeholder="رقم الهاتف"
+              placeholder={t("PhoneNumber")}
               className="border-none h-[50px] col-span-2 md:col-span-1 bg-[#F5F5F5] rounded-[4px] p-3 transition-all duration-300 ease-in-out focus:bg-white focus:ring-2 focus:ring-[#211C4D] hover:scale-[1.02]"
               required
             />
           </div>
 
           <textarea
-            placeholder="رسالتك"
+            placeholder={t("YourMessage")}
             className="border-none h-[200px] w-full bg-[#F5F5F5] rounded-[4px] p-3 transition-all duration-300 ease-in-out focus:bg-white focus:ring-2 focus:ring-[#211C4D] hover:scale-[1.01]"
           ></textarea>
 
@@ -43,13 +48,13 @@ export default function Contactform() {
             type="submit"
             className="bg-[#F3AC5D] mt-[30px] w-[136px] h-[56px] text-white px-6 py-2 rounded-[16px] transition-all duration-300 ease-in-out hover:bg-[#e29b4a] hover:scale-[1.05] focus:ring-4 focus:ring-[#F3AC5D]/50"
           >
-            إرسال
+            {t("Submit")}
           </button>
         </form>
 
         {/* بيانات التواصل */}
-        <div className="bg-white p-9 md:w-[30%] w-full rounded-xl  shadow-[0px_1px_13px_0px_rgba(0,0,0,0.05)]">
-          <div className="flex mt-[20px] items-center gap-3 mb-4">
+        <div  className="bg-white p-9 md:w-[35%] w-full rounded-xl  shadow-[0px_1px_13px_0px_rgba(0,0,0,0.05)]">
+          <div  className="flex mt-[20px] items-center gap-3 mb-4">
             <svg
               width="40"
               height="40"
@@ -68,14 +73,14 @@ export default function Contactform() {
             </svg>
 
             <h3 className="font-[500] text-[#000000]  text-[24px] ">
-              بيانات التواصل
+              {t("Contactinformation")}
             </h3>
           </div>
           <p className="text-[#000000] font-[400] mt-[30px] text-[16px] mb-2">
             نحن متاحون على مدار 24 ساعة طوال الأسبوع.
           </p>
           <p className="text-[#000000] font-[400] text-[16px] mb-4">
-            رقم الهاتف: +2222222222
+            {t("PhoneNumber")}: +2222222222
           </p>
           <hr className=" h-[1px] my-[35px] bg-black text-black" />
           <div className="flex items-center  gap-3 mb-2">
@@ -97,14 +102,16 @@ export default function Contactform() {
             </svg>
 
             <h3 className=" font-[500] text-[black] text-[24px] ">
-              ارسل إلى مدينة الهواتف
+              {t("Sendtothephonecity")}
             </h3>
           </div>
           <p className="text-black font-[400] mt-[30px] text-[16px] mb-1">
             املأ النموذج وسنتواصل معك خلال 24 ساعة.
           </p>
           <div className="flex items-center gap-2 mt-[20px]">
-            <p className="text-black font-[400] text-[16px]">البريد الإلكتروني :</p>
+            <p className="text-black font-[400] text-[16px]">
+               {t("Email")} :
+            </p>
             <p className="text-black font-[400] text-[16px]">
               PHONECITY@gmail.com
             </p>

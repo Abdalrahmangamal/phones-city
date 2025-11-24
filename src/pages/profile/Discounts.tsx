@@ -2,7 +2,11 @@ import Layout from "@/components/layout/Layout";
 import Sidebar from "@/components/layout/Sidebar";
 import { useState } from "react";
 import content_copy from "@/assets/images/content_copy.png";
+import { useTranslation } from "react-i18next";
+
 export default function Discounts() {
+      const { t } = useTranslation();
+
   const [copied, setCopied] = useState<number | null>(null);
 
   const handleCopy = (code: string, id: number) => {
@@ -25,7 +29,7 @@ export default function Discounts() {
           <div className="md:w-[883px] w-full">
             <section className="w-full flex flex-col items-start px-4 py-10">
               <h2 className="text-[#211C4D] text-[20px]  font-[600] mb-6">
-                الخصومات
+                {t("Discounts")}
               </h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2  gap-6 w-full">
                 {discounts.map((item, i) => (

@@ -1,10 +1,13 @@
-import locationpen from "../../assets/images/locationpen.png";
+import locationpen from "../../assets/images/locationpen.png"
+import { useTranslation } from "react-i18next";
+;
 export default function Location() {
+    const { t } = useTranslation();
   return (
     <div className="lg:px-[90px] px-2 pt-20 md:pt-0">
       <div className="flex items-end justify-start gap-[10px]">
         <img src={locationpen} alt="" />
-        <h1 className="text-[40px] font-[700] text-[#211C4D]">العنوان</h1>
+        <h1 className="text-[40px] font-[700] text-[#211C4D]">{t("FullAddress")}</h1>
       </div>
       <p className="mx-[60px] text-[#211C4DCC] md:text-[24px] mt-[20px] font-[400] md:max-w-[30%]">
         ابو بكر الصديق، شبرا، الطائف 26522، المملكة العربية السعودية
