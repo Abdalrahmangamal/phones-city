@@ -30,7 +30,7 @@ export default function VerifyCode({ isopen }: VerifyData) {
   };
   console.log(otp);
 
-const userdata = JSON.parse(localStorage.getItem("userData") || "{}").data.user.email;
+const userdata = JSON.parse(localStorage?.getItem("userData") || "{}")?.data?.user?.email;
  console.log(userdata)
  const VerifyCodetypes={
     email:userdata,

@@ -9,8 +9,7 @@ interface VerifyData {
   onClose: () => void;
 }
 
-
-export default function ForgotpasswordModal({ isopen ,onClose }: VerifyData) {
+export default function ForgotpasswordModal({ isopen, onClose }: VerifyData) {
   const [open, setOpen] = React.useState(false);
   const { forgotpassword } = useAuthStore();
 
@@ -21,20 +20,18 @@ export default function ForgotpasswordModal({ isopen ,onClose }: VerifyData) {
   useEffect(() => {
     setOpen(isopen);
   }, [isopen]);
-  
+
   const [otp] = React.useState("");
 
- 
   console.log(otp);
 
-const userdata = JSON.parse(localStorage.getItem("userData") || "{}")?.data?.user?.email ||"";
- console.log(userdata)
- const VerifyCodetypes={
-    email:userdata,
- }
-const handlesendemail = ()=>{
-forgotpassword(VerifyCodetypes)
-}
+  const [sendemail, setsendemail] = React.useState("");
+   const VerifyCodetypes={
+      email:sendemail,
+   }
+  const handlesendemail = () => {
+    forgotpassword(VerifyCodetypes);
+  };
   return (
     <>
       <Dialog
@@ -57,27 +54,33 @@ forgotpassword(VerifyCodetypes)
               نسيت كلمة المرور؟
             </p>
             <p className="text-[#211C4DB2] font-[400] text-center text-[16px]">
-             أدخل عنوان بريدك الإلكتروني وسنرسل لك رمز التأكيد لإعادة تعيين كلمة المرور الخاصة بك.
+              أدخل عنوان بريدك الإلكتروني وسنرسل لك رمز التأكيد لإعادة تعيين
+              كلمة المرور الخاصة بك.
             </p>
           </DialogTitle>
           <div dir="ltr" className="w-full px-15">
-              <div>
+            <div>
               <label className="block mb-2  text-[24px] font-[500] text-[#211C4DB2]">
                 البريد الإلكتروني
               </label>
               <input
                 type="email"
                 placeholder="username@gmail.com"
+                onChange={(e) => {
+                  setsendemail(e.target.value);
+                }}
                 className="w-full p-3 border rounded-lg h-[50px] outline-none focus:ring-2 focus:ring-[#0B60B0]"
               />
             </div>
           </div>
           <div>
-            <button onClick={handlesendemail} className="bg-[#2AA0DC] w-[400px] h-[52px] my-5 rounded-[32px] text-[24px] text-white">
+            <button
+              onClick={handlesendemail}
+              className="bg-[#2AA0DC] w-[400px] h-[52px] my-5 rounded-[32px] text-[24px] text-white"
+            >
               استمر
             </button>
           </div>
-        
         </div>
       </Dialog>
     </>
