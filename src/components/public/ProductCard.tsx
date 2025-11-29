@@ -5,57 +5,54 @@ import { useLangSync } from "@/hooks/useLangSync";
 import { Link } from "react-router-dom";
 import { useCart } from "@/store/cart"; // Added cart import
 
-// interface ProductCardProps {
-//   name: string;
-//   discount?: string;
-//   price: number;
-//   isNew?: boolean;
-//   favourite?:boolean;
-//   variations?: { color: string; image: string }[];
-// }
+interface ProductCardProps {
+  product: Product;
+  isNew?: boolean;
+  favourite?: boolean;
+  variations?: { color: string; image: string }[];
+}
 
-export default function ProductCard({
-  name,
-  discount,
-  price,
-  imagecard,
-  favourite = false,
-  isNew = false,
-  containerstyle,
-  variations = [],
-  id,
-  image, // Added image prop
-}: Product) {
+export default function ProductCard({ product}: ProductCardProps ) {
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const [isfav, setisfav] = useState(favourite);
-  const currentImage = variations[selectedIndex]?.image || image;
-  const [inCart, setInCart] = useState(false);
+  // const [isfav, setisfav] = useState(favourite);
+const currentImage =
+  product?.options?.[selectedIndex]?.images?.[0]?.url ||
+  product?.main_image ||
+  "";
+  // const [inCart, setInCart] = useState(false);
   const { lang } = useLangSync();
-  const { add } = useCart(); // Added cart hook
+  // const { add } = useCart(); // Added cart hook
 
   // Function to add to cart
-  const addToCart = () => {
-    add({
-      id: `${id}-${selectedIndex}`, // Unique ID for cart item
-      name,
-      price,
-      qty: 1,
-      image: currentImage,
-      productId: id
-    });
-    setInCart(true);
-  };
+  // const addToCart = () => {
+  //   add({
+  //     id: `${id}-${selectedIndex}`, // Unique ID for cart item
+  //     name,
+  //     price,
+  //     qty: 1,
+  //     image: currentImage,
+  //     productId: id
+  //   });
+  //   setInCart(true);
+  // };
+const selectedVariant = product?.options[selectedIndex];
+
+const original = Number(selectedVariant?.original_price.replace(/,/g, ""));
+const final = Number(selectedVariant?.final_price.replace(/,/g, ""));
+
+const discountPercent = ((original - final) / original) * 100;
 
   return (
     <div
-      className={`max-w-[350px] md:!w-[320px] scale-[0.9] ${containerstyle} md:scale-[1] col-span-1 bg-white w-full min-h-[350px] md:min-h-[400px] rounded-[16px] p-[15px] shadow-[0px_4px_4px_0px_#00000040] flex flex-col`}
+      key={product.id}
+      className={`max-w-[350px] md:!w-[320px] scale-[0.9]  md:scale-[1] col-span-1 bg-white w-full min-h-[350px] md:min-h-[400px] rounded-[16px] p-[15px] shadow-[0px_4px_4px_0px_#00000040] flex flex-col`}
     >
       {/* الصورة */}
       <div className="flex items-center justify-center pt-7 md:pt-0 relative">
         <Link to={`/${lang}/singleproduct`}>
           <img
             src={currentImage}
-            className={`md:!w-[220px] h-[160px] w-[160px] object-contain md:!h-[220px] ${imagecard}`}
+            className={`md:!w-[220px] h-[160px] w-[160px] object-contain md:!h-[220px] `}
             alt={name}
           />
         </Link>
@@ -69,7 +66,7 @@ export default function ProductCard({
             }}
             className="bg-[#EEF1F6] z-5 flex items-center justify-center w-[36px] h-[36px] rounded-full"
           >
-            {isfav === true ? (
+            {/* {isfav === true ? (
               <svg
                 width="21"
                 height="18"
@@ -101,17 +98,19 @@ export default function ProductCard({
                   strokeLinejoin="round"
                 />
               </svg>
-            )}
+            )} */}
           </div>
 
-          {isNew && (
+          {/* {isNew && (
             <div className="w-[41px] h-[20px] flex items-center justify-center rounded-[4px] bg-[#259ACB]">
               <p className="text-white text-[13px]">جديد</p>
             </div>
-          )}
-          {discount && (
-            <div className="w-[45px] h-[20px] flex items-center justify-center rounded-[4px] bg-[#F03D3D]">
-              <p className="text-white text-[13px]">{discount}%-</p>
+          )} */}
+          {product?.discount_amount && (
+            <div className="w-fit px-1 h-[20px] flex items-center justify-center rounded-[4px] bg-[#F03D3D]">
+              <p className="text-white text-[13px]">
+                {discountPercent.toFixed(0)}%
+              </p>
             </div>
           )}
         </div>
@@ -120,14 +119,14 @@ export default function ProductCard({
       {/* الاسم */}
       <Link to={`/${lang}/singleproduct`}>
         <h2 className="text-[15px] md:text-[24px] font-[500] text-[#211C4D] line-clamp-1 mt-[10px]">
-          {name}
+          {product?.name}
         </h2>
       </Link>
 
       {/* الألوان */}
-      {variations.length > 0 && (
+      {product?.options?.length > 0 && (
         <div className="flex items-center gap-[7px] mt-[10px] justify-start">
-          {variations.map((variant, index) => (
+          {product.options.map((variant, index) => (
             <button
               key={index}
               onClick={() => setSelectedIndex(index)}
@@ -136,8 +135,8 @@ export default function ProductCard({
                   ? "border-[#211C4D] scale-110"
                   : "border-gray-300"
               }`}
-              style={{ backgroundColor: variant.color }}
-              title={`Select color ${variant.color}`}
+              style={{ backgroundColor: variant?.value }}
+              title={`Select color ${variant?.value}`}
             ></button>
           ))}
         </div>
@@ -146,15 +145,13 @@ export default function ProductCard({
       {/* التقييم */}
       <div className="flex mt-[10px] items-center justify-start gap-0">
         <Rating defaultValue={3} className="pointer-events-none">
-  {Array.from({ length: 5 }).map((_, index) => (
-    <RatingButton
-      key={index}
-      className="text-yellow-500 [&>svg]:w-3 [&>svg]:h-3 md:[&>svg]:h-5 md:[&>svg]:w-5"
-    />
-  ))}
-</Rating>
-
-
+          {Array.from({ length: 5 }).map((_, index) => (
+            <RatingButton
+              key={index}
+              className="text-yellow-500 [&>svg]:w-3 [&>svg]:h-3 md:[&>svg]:h-5 md:[&>svg]:w-5"
+            />
+          ))}
+        </Rating>
 
         <p className="text-[#9CA3AF] text-[10px] md:!w-[15px]">(125)</p>
       </div>
@@ -163,14 +160,16 @@ export default function ProductCard({
       <div className="flex items-center justify-between mt-[10px] w-full">
         <div className="relative flex gap-3">
           <p className="text-[#211C4D] md:text-[18px] text-[11px] font-[500]">
-            {price} ر.س
+            {selectedVariant?.final_price} ر.س
           </p>
+          <div className="relative">
+
           <p className="text-[#211C4D] md:text-[18px] text-[11px] font-[500]">
-            {price} ر.س
+            {selectedVariant?.original_price} ر.س
           </p>
           <svg
             width="87"
-            className="absolute top-2 md:top-3 w-[50px] md:w-[87px] left-0 z-1"
+            className="absolute top-2 md:top-3  md:w-[87px] right-0 w-fit z-1"
             height="5"
             viewBox="0 0 87 5"
             fill="none"
@@ -181,8 +180,9 @@ export default function ProductCard({
               fill="#F03D3D"
             />
           </svg>
+          </div>
         </div>
-        <div
+        {/* <div
           onClick={addToCart} // Updated to use addToCart function
           className={`w-[40px] h-[40px] flex items-center justify-center rounded-[8px] cursor-pointer transition ${
             inCart ? "bg-[#211C4D]" : "bg-[#EEF1F6] hover:bg-[#dfe3ea]"
@@ -240,7 +240,7 @@ export default function ProductCard({
               </defs>
             </svg>
           )}
-        </div>
+        </div> */}
       </div>
     </div>
   );

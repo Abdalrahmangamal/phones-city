@@ -1,15 +1,45 @@
 export interface Product {
   id: number;
   name: string;
-  containerstyle?:string;
-  price: number;
-  favourite?: boolean;
-  imagecard?:string;
-  isNew?: boolean;
-  discount?: string;
-  variations?: { color: string; image: string }[];
-  image?: string; // Added image property
+  about?: string;
+  capacity?: string;
+
+  main_image: string | null;
+
+  original_price: string;
+  final_price: string;
+
+  stock_status: string; // "limited" | "in_stock" | "out_of_stock"
+
+  category?: {
+    id: number;
+    name: string;
+  };
+
+  applied_offer?: {
+    id: number;
+    name_en: string | null;
+    name_ar: string | null;
+    discount_amount: string;
+  } | null;
+
+  options: {
+    id: number;
+    type: string; // "color", ...
+    value: string;
+    sku?: string;
+    original_price: string;
+    final_price: string;
+    images: { id: number; url: string }[];
+  }[];
+
+  images: { id: number; url: string }[];
+
+  quantity?: number;
+  points?: number;
+  product_mark?: string;
 }
+
 // types.ts
 export type Fulfillment = "delivery" | "pickup";
 export type PaymentMethod =

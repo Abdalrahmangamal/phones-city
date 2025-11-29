@@ -173,8 +173,9 @@ export default function Header() {
 
             {/* Main Links */}
             <nav className="hidden items-center lg:gap-2 h-[53px]   text-sm md:flex" dir={lang==="ar"?"rtl":"ltr"}>
-              {navitem.map((item) => (
+              {navitem.map((item,index) => (
                 <NavLink
+                key={index}
                   to={`${item.link}`}
                   end={item.link === `/${lang}/`} // علشان الـ home مايفضلش active دايمًا
                   className={({ isActive }) =>
@@ -248,58 +249,30 @@ export default function Header() {
               </DropdownMenuTrigger>
 
               <DropdownMenuContent className="w-56" align="start">
-                <DropdownMenuGroup>
-                  <DropdownMenuItem className="flex justify-between text-start">
-                    
-                    لاب توب
-                  </DropdownMenuItem>
+    <DropdownMenuGroup>
+      <DropdownMenuItem>لاب توب</DropdownMenuItem>
 
-                  <DropdownMenuSub>
-                    <DropdownMenuSubTrigger className="flex justify-between text-right">
-                      الهواتف الذكية
-                    </DropdownMenuSubTrigger>
-                    <DropdownMenuSubContent>
-                      <DropdownMenuItem className="text-right">
-                        أجهزة أبل
-                      </DropdownMenuItem>
-                      <DropdownMenuItem className="text-right">
-                        أجهزة سامسونج
-                      </DropdownMenuItem>
-                      <DropdownMenuItem className="text-right">
-                        أجهزة هونر
-                      </DropdownMenuItem>
-                      <DropdownMenuItem className="text-right">
-                        أجهزة شاومي
-                      </DropdownMenuItem>
-                      <DropdownMenuItem className="text-right">
-                        أجهزة إنفينكس
-                      </DropdownMenuItem>
-                      <DropdownMenuItem className="text-right">
-                        أجهزة تكنو
-                      </DropdownMenuItem>
-                      <DropdownMenuItem className="text-right">
-                        أجهزة أوبو
-                      </DropdownMenuItem>
-                      <DropdownMenuItem className="text-right">
-                        أجهزة هواوي
-                      </DropdownMenuItem>
-                      <DropdownMenuItem className="text-right">
-                        أجهزة أندرويد أخرى
-                      </DropdownMenuItem>
-                    </DropdownMenuSubContent>
-                  </DropdownMenuSub>
+      <DropdownMenuSub>
+        <DropdownMenuSubTrigger>الهواتف الذكية</DropdownMenuSubTrigger>
+        <DropdownMenuSubContent>
+          <DropdownMenuItem>أجهزة أبل</DropdownMenuItem>
+          <DropdownMenuItem>أجهزة سامسونج</DropdownMenuItem>
+          <DropdownMenuItem>أجهزة هونر</DropdownMenuItem>
+          <DropdownMenuItem>أجهزة شاومي</DropdownMenuItem>
+          <DropdownMenuItem>أجهزة إنفينكس</DropdownMenuItem>
+          <DropdownMenuItem>أجهزة تكنو</DropdownMenuItem>
+          <DropdownMenuItem>أجهزة أوبو</DropdownMenuItem>
+          <DropdownMenuItem>أجهزة هواوي</DropdownMenuItem>
+          <DropdownMenuItem>أجهزة أندرويد أخرى</DropdownMenuItem>
+        </DropdownMenuSubContent>
+      </DropdownMenuSub>
 
-                  <DropdownMenuItem className="flex justify-between text-right">
-                    الأجهزة اللوحية
-                  </DropdownMenuItem>
-                  <DropdownMenuItem className="flex justify-between text-right">
-                    الكاميرات والدخان كام
-                  </DropdownMenuItem>
-                  <DropdownMenuItem className="flex justify-between text-right">
-                    الاكسسوارات
-                  </DropdownMenuItem>
-                </DropdownMenuGroup>
-              </DropdownMenuContent>
+      <DropdownMenuItem>الأجهزة اللوحية</DropdownMenuItem>
+      <DropdownMenuItem>الكاميرات والدخان كام</DropdownMenuItem>
+      <DropdownMenuItem>الاكسسوارات</DropdownMenuItem>
+    </DropdownMenuGroup>
+  </DropdownMenuContent>
+
             </DropdownMenu>
           </div>
         </div>

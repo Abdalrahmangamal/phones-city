@@ -48,7 +48,7 @@ export default function MobileNavbar({
   <div className="relative inline-block text-left">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button className="text-sm bg-transparent">
+                  <div className="text-sm bg-transparent">
                     <button className="flex items-center gap-1 text-sm opacity-90 hover:opacity-100">
                       <Globe className="h-4 w-4" />
                       عربي
@@ -68,7 +68,7 @@ export default function MobileNavbar({
                         />
                       </svg>
                     </button>
-                  </Button>
+                  </div>
                 </DropdownMenuTrigger>
 
                 <DropdownMenuContent

@@ -3,7 +3,7 @@ import Layout from "@/components/layout/Layout";
 import HeroSection from "@/components/public/HeroSection";
 import BannerSection from "@/components/public/BannerSection";
 import Parttner from "@/components/public/Parttner";
-import sceondbanner from "../assets/images/sceondbanner.png";
+import sceondbanner from "@/assets/images/sceondbanner.png";
 import orangelabtop from "@/assets/images/orangelabtop.png";
 import bluephone from "@/assets/images/bluephone.png";
 import watch from "@/assets/images/watch.png";
@@ -11,8 +11,8 @@ import airbuds from "@/assets/images/airbuds.png";
 import product1 from "@/assets/images/product1.png";
 import product2 from "@/assets/images/product2.png";
 import type {Product} from '@/types/index';
-import image from "../assets/images/hero.jpg";
-import banner from "../assets/images/banner.png";
+import image from "@/assets/images/hero.jpg";
+import banner from "@/assets/images/banner.png";
 
 export default function Trademarks() {
   

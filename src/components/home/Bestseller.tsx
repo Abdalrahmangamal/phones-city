@@ -1,7 +1,6 @@
 import ProductCard from "../public/ProductCard";
 import pattern from "../../assets/images/Layer_1.png";
 import { Link } from "react-router-dom";
-import type { Product } from "@/types/index";
 
 interface BestsellerProps {
   title: string;
@@ -66,17 +65,20 @@ export default function Bestseller({
       >
         {products.map((item) => (
           <ProductCard
-            containerstyle={"!w-[200px]"}
-            key={item.id}
-            name={item.name}
-            discount={item.discount}
-            price={item.price}
-            isNew={item.isNew}
-            favourite={item.favourite}
-            variations={item.variations}
-            id={item.id}
-            imagecard="!h-[100px] !w-[100px]"
-            containerstyle="!p-2 pb-3 !rounded-[10px] !min-h-fit"
+            // containerstyle={"!w-[200px]"}
+            // id={item.id}
+            // name={item.name}
+            // discount={item.discount}
+            // finalprice={tem.discount_amount}
+            // befordiscprice={item.final_price}
+            // isNew={item.isNew}
+            // favourite={item.favourite}
+            // variations={item.options}
+            // id={item.id}
+            // image={item.main_image}
+            product={item}
+            // imagecard="!h-[100px] !w-[100px]"
+            // containerstyle="!p-2 pb-3 !rounded-[10px] !min-h-fit"
           />
         ))}
       </div>

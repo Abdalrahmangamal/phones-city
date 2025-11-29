@@ -4,7 +4,7 @@ import Offerherosection from "@/components/public/Offerherosection";
 import Sliderbycategory from "@/components/public/Sliderbycategory";
 import BannerSection from "@/components/public/BannerSection";
 import Parttner from "@/components/public/Parttner";
-import sceondbanner from "../assets/images/sceondbanner.png";
+import sceondbanner from "@/assets/images/sceondbanner.png";
 import orangelabtop from "@/assets/images/orangelabtop.png";
 import bluephone from "@/assets/images/bluephone.png";
 import watch from "@/assets/images/watch.png";

@@ -130,7 +130,7 @@
               <div className="relative inline-block text-left">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <button className="flex items-center gap-1 px-3 py-1.5 rounded-md border border-gray-200 bg-white hover:bg-gray-50 text-gray-800 text-sm font-medium shadow-sm transition-all duration-200">
+                    <div className="flex items-center gap-1 px-3 py-1.5 rounded-md border border-gray-200 bg-white hover:bg-gray-50 text-gray-800 text-sm font-medium shadow-sm transition-all duration-200">
                       <Globe className="h-4 w-4 text-gray-600" />
                       <span className="text-gray-700">عربي</span>
                       <svg
@@ -142,7 +142,7 @@
                       >
                         <path d="M8 10L4 6h8L8 10z" fill="currentColor" />
                       </svg>
-                    </button>
+                    </div>
                   </DropdownMenuTrigger>
 
                   <DropdownMenuContent
