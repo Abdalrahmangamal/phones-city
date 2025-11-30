@@ -12,35 +12,28 @@ interface ProductCardProps {
   variations?: { color: string; image: string }[];
 }
 
-export default function ProductCard({ product}: ProductCardProps ) {
+export default function ProductCard({ product }: ProductCardProps) {
   const [selectedIndex, setSelectedIndex] = useState(0);
-  // const [isfav, setisfav] = useState(favourite);
-const currentImage =
-  product?.options?.[selectedIndex]?.images?.[0]?.url ||
-  product?.main_image ||
-  "";
-  // const [inCart, setInCart] = useState(false);
+
   const { lang } = useLangSync();
-  // const { add } = useCart(); // Added cart hook
 
-  // Function to add to cart
-  // const addToCart = () => {
-  //   add({
-  //     id: `${id}-${selectedIndex}`, // Unique ID for cart item
-  //     name,
-  //     price,
-  //     qty: 1,
-  //     image: currentImage,
-  //     productId: id
-  //   });
-  //   setInCart(true);
-  // };
-const selectedVariant = product?.options[selectedIndex];
+ 
+  const hasOptions =
+    Array.isArray(product?.options) && product.options.length > 0;
+  const selectedVariant = hasOptions ? product.options[selectedIndex] : null;
+  const currentImage = hasOptions
+    ? selectedVariant?.images?.[0]?.url || product.main_image
+    : product.main_image;
+  const original = hasOptions
+    ? Number(selectedVariant?.original_price?.replace(/,/g, "")) || 0
+    : Number(product?.original_price?.replace(/,/g, "")) || 0;
 
-const original = Number(selectedVariant?.original_price.replace(/,/g, ""));
-const final = Number(selectedVariant?.final_price.replace(/,/g, ""));
+  const final = hasOptions
+    ? Number(selectedVariant?.final_price?.replace(/,/g, "")) || 0
+    : Number(product?.final_price?.replace(/,/g, "")) || 0;
 
-const discountPercent = ((original - final) / original) * 100;
+  const discountPercent =
+    original > 0 ? ((original - final) / original) * 100 : 0;
 
   return (
     <div
@@ -62,11 +55,10 @@ const discountPercent = ((original - final) / original) * 100;
             onClick={(e) => {
               e.stopPropagation(); // يمنع ضغط الأيقونة من التأثير على باقي العناصر
               e.preventDefault();
-              setisfav(!isfav);
             }}
             className="bg-[#EEF1F6] z-5 flex items-center justify-center w-[36px] h-[36px] rounded-full"
           >
-            {/* {isfav === true ? (
+            {product.is_favorite === true ? (
               <svg
                 width="21"
                 height="18"
@@ -98,7 +90,7 @@ const discountPercent = ((original - final) / original) * 100;
                   strokeLinejoin="round"
                 />
               </svg>
-            )} */}
+            )}
           </div>
 
           {/* {isNew && (
@@ -106,11 +98,13 @@ const discountPercent = ((original - final) / original) * 100;
               <p className="text-white text-[13px]">جديد</p>
             </div>
           )} */}
-          {product?.discount_amount && (
-            <div className="w-fit px-1 h-[20px] flex items-center justify-center rounded-[4px] bg-[#F03D3D]">
-              <p className="text-white text-[13px]">
-                {discountPercent.toFixed(0)}%
-              </p>
+          {discountPercent > 0 && (
+            <div className="flex w-full items-center justify-end absolute right-0 top-0 p-1">
+              <div className="w-fit px-2 h-[22px] flex items-center justify-center rounded-[4px] bg-[#F03D3D]">
+                <p className="text-white text-[13px]">
+                  {discountPercent.toFixed(0)}%
+                </p>
+              </div>
             </div>
           )}
         </div>
@@ -124,20 +118,37 @@ const discountPercent = ((original - final) / original) * 100;
       </Link>
 
       {/* الألوان */}
-      {product?.options?.length > 0 && (
+      {hasOptions && (
         <div className="flex items-center gap-[7px] mt-[10px] justify-start">
           {product.options.map((variant, index) => (
-            <button
-              key={index}
-              onClick={() => setSelectedIndex(index)}
-              className={`w-[18px] h-[18px] rounded-full border-2 transition ${
-                index === selectedIndex
-                  ? "border-[#211C4D] scale-110"
-                  : "border-gray-300"
-              }`}
-              style={{ backgroundColor: variant?.value }}
-              title={`Select color ${variant?.value}`}
-            ></button>
+          <button
+  key={index}
+  onClick={() => setSelectedIndex(index)}
+  className={`
+    flex items-center justify-center 
+    transition border-2 text-[10px]
+    ${
+      product.options[index].type === "size"
+        ? "min-w-[40px] h-[22px] px-2 rounded-md bg-white text-[#211C4D]" // شكل البادج للـ size
+        : "w-[18px] h-[18px] rounded-full" // شكل اللون
+    }
+    ${
+      index === selectedIndex
+        ? "border-[#211C4D] scale-110"
+        : "border-gray-300"
+    }
+  `}
+  style={{
+    backgroundColor:
+      product.options[index].type === "color"
+        ? variant?.value // لو color → استعمل اللون
+        : "#fff", // لو size → خلي الخلفية بيضاء
+  }}
+  title={`Select ${variant?.value}`}
+>
+  {product.options[index].type === "size" ? variant.value : ""}
+</button>
+
           ))}
         </div>
       )}
@@ -160,35 +171,33 @@ const discountPercent = ((original - final) / original) * 100;
       <div className="flex items-center justify-between mt-[10px] w-full">
         <div className="relative flex gap-3">
           <p className="text-[#211C4D] md:text-[18px] text-[11px] font-[500]">
-            {selectedVariant?.final_price} ر.س
+            {final?.toLocaleString()} ر.س
           </p>
           <div className="relative">
-
-          <p className="text-[#211C4D] md:text-[18px] text-[11px] font-[500]">
-            {selectedVariant?.original_price} ر.س
-          </p>
-          <svg
-            width="87"
-            className="absolute top-2 md:top-3  md:w-[87px] right-0 w-fit z-1"
-            height="5"
-            viewBox="0 0 87 5"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M15 1.51396C6.40086 2.41917 2.25702 2.59053 0.748739 3.9048C-0.759546 5.21908 4.82858 2.71501 11.1019 3.83643C1.50418 7.64729 19.8998 0.595701 11.1019 3.83643C13.52 3.65675 37.5718 3.55427 43.4152 1.91822C46.3024 1.89069 47.0564 1.38262 49.7085 1.51396C52.3607 1.6453 54.6749 1.8494 56.4452 2.10758C58.2155 2.36576 61.0433 1.78554 61.5 2.10758C64.6992 1.20738 82.7675 2.99182 86.5 0.89135C81.2405 0.499791 75.344 0.22942 69.1506 0.0958978C62.9572 -0.0376246 56.5908 -0.0316571 50.418 0.113434C44.2452 0.258525 38.39 0.539867 33.189 0.941212C27.988 1.34256 21.9276 0.918209 18.5 1.51396C12.6347 1.00384 15 2.08409 15 1.51396Z"
-              fill="#F03D3D"
-            />
-          </svg>
+            <p className="text-[#211C4D] md:text-[18px] text-[11px] font-[500]">
+              {original?.toLocaleString()} ر.س
+            </p>
+            <svg
+              width="87"
+              className="absolute top-2 md:top-3  md:w-[87px] right-0 w-fit z-1"
+              height="5"
+              viewBox="0 0 87 5"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M15 1.51396C6.40086 2.41917 2.25702 2.59053 0.748739 3.9048C-0.759546 5.21908 4.82858 2.71501 11.1019 3.83643C1.50418 7.64729 19.8998 0.595701 11.1019 3.83643C13.52 3.65675 37.5718 3.55427 43.4152 1.91822C46.3024 1.89069 47.0564 1.38262 49.7085 1.51396C52.3607 1.6453 54.6749 1.8494 56.4452 2.10758C58.2155 2.36576 61.0433 1.78554 61.5 2.10758C64.6992 1.20738 82.7675 2.99182 86.5 0.89135C81.2405 0.499791 75.344 0.22942 69.1506 0.0958978C62.9572 -0.0376246 56.5908 -0.0316571 50.418 0.113434C44.2452 0.258525 38.39 0.539867 33.189 0.941212C27.988 1.34256 21.9276 0.918209 18.5 1.51396C12.6347 1.00384 15 2.08409 15 1.51396Z"
+                fill="#F03D3D"
+              />
+            </svg>
           </div>
         </div>
-        {/* <div
-          onClick={addToCart} // Updated to use addToCart function
+        <div
           className={`w-[40px] h-[40px] flex items-center justify-center rounded-[8px] cursor-pointer transition ${
-            inCart ? "bg-[#211C4D]" : "bg-[#EEF1F6] hover:bg-[#dfe3ea]"
+            product.in_cart==="true" ? "bg-[#211C4D]" : "bg-[#EEF1F6] hover:bg-[#dfe3ea]"
           }`}
         >
-          {inCart ? (
+          {product.in_cart ? (
             // شكل مختلف لما تكون في السلة
             <svg
               width="18"
@@ -240,7 +249,7 @@ const discountPercent = ((original - final) / original) * 100;
               </defs>
             </svg>
           )}
-        </div> */}
+        </div>
       </div>
     </div>
   );

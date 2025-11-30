@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import "../../style.css";
 import { useTranslation } from "react-i18next";
 import { useLangSync } from "@/hooks/useLangSync";
-
+import { useCategoriesStore } from "@/store/categories/useCategoriesStore";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,11 +18,16 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Link, NavLink } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import MobileMenu from "./MobileMenu";
 import MobileNavbar from "./MobileNavbar";
 
 export default function Header() {
+  const { categories, fetchCategories } = useCategoriesStore();
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+  console.log(categories);
   const [isSectionOpen, setIsSectionOpen] = useState(false);
 
   // language btn
@@ -54,17 +59,17 @@ export default function Header() {
     },
   ];
   const token = localStorage.getItem("token");
-  const headerKey = lang; 
+  const headerKey = lang;
 
   return (
     <>
       {/* desktop  header */}
       <header
         key={headerKey}
-
         dir="rtl"
         className="w-full border-b  items-center justify-center h-[170px] hidden md:flex border-white/10 bg-[#211a44] text-white"
       >
+        
         <div className="  flex flex-col w-full h-[170px] justify-around  lg:px-[90px] px-2 pt-20 md:pt-0">
           {/* Top row */}
           <div className="flex items-center gap-3 py-3 ">
@@ -84,48 +89,69 @@ export default function Header() {
             </Link>
             {/* Search */}
             <div className="mx-auto hidden flex-1 max-w-[500px] justify-center items-center md:flex">
-              <div className="relative w-full max-w-2xl"  dir={lang==="ar"?"rtl":"ltr"}>
+              <div
+                className="relative w-full max-w-2xl"
+                dir={lang === "ar" ? "rtl" : "ltr"}
+              >
                 <Input
                   placeholder={t("search")}
                   className="h-[48px] rounded-full px-9  bg-transparent border-white text-white placeholder:text-[#6C727F] focus-visible:ring-white/40"
                 />
-                <svg className={`absolute  top-3 ${lang==="ar"?"right-3":"left-3"}`} width="18" height="24" viewBox="0 0 18 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path fillRule="evenodd" clipRule="evenodd" d="M8.25 5.90625C5.29873 5.90625 2.90625 8.29873 2.90625 11.25C2.90625 14.2013 5.29873 16.5938 8.25 16.5938C11.2013 16.5938 13.5938 14.2013 13.5938 11.25C13.5938 8.29873 11.2013 5.90625 8.25 5.90625ZM1.59375 11.25C1.59375 7.57385 4.57385 4.59375 8.25 4.59375C11.9261 4.59375 14.9062 7.57385 14.9062 11.25C14.9062 14.9261 11.9261 17.9062 8.25 17.9062C4.57385 17.9062 1.59375 14.9261 1.59375 11.25Z" fill="white"/>
-<path fillRule="evenodd" clipRule="evenodd" d="M12.0235 15.0235C12.2797 14.7672 12.6953 14.7672 12.9515 15.0235L16.214 18.286C16.4703 18.5422 16.4703 18.9578 16.214 19.214C15.9578 19.4703 15.5422 19.4703 15.286 19.214L12.0235 15.9515C11.7672 15.6953 11.7672 15.2797 12.0235 15.0235Z" fill="white"/>
-</svg>
-
+                <svg
+                  className={`absolute  top-3 ${
+                    lang === "ar" ? "right-3" : "left-3"
+                  }`}
+                  width="18"
+                  height="24"
+                  viewBox="0 0 18 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fillRule="evenodd"
+                    clipRule="evenodd"
+                    d="M8.25 5.90625C5.29873 5.90625 2.90625 8.29873 2.90625 11.25C2.90625 14.2013 5.29873 16.5938 8.25 16.5938C11.2013 16.5938 13.5938 14.2013 13.5938 11.25C13.5938 8.29873 11.2013 5.90625 8.25 5.90625ZM1.59375 11.25C1.59375 7.57385 4.57385 4.59375 8.25 4.59375C11.9261 4.59375 14.9062 7.57385 14.9062 11.25C14.9062 14.9261 11.9261 17.9062 8.25 17.9062C4.57385 17.9062 1.59375 14.9261 1.59375 11.25Z"
+                    fill="white"
+                  />
+                  <path
+                    fillRule="evenodd"
+                    clipRule="evenodd"
+                    d="M12.0235 15.0235C12.2797 14.7672 12.6953 14.7672 12.9515 15.0235L16.214 18.286C16.4703 18.5422 16.4703 18.9578 16.214 19.214C15.9578 19.4703 15.5422 19.4703 15.286 19.214L12.0235 15.9515C11.7672 15.6953 11.7672 15.2797 12.0235 15.0235Z"
+                    fill="white"
+                  />
+                </svg>
               </div>
             </div>
 
             {/* Left icons */}
             <div className="flex items-center gap-2">
-              {token?null:(
-              <Link
-                to="/login"
-                className="w-[160px] h-[40px] rounded-[16px] bg-[#FFFFFF1A] flex items-center justify-center text-[19px] font-[400] 
+              {token ? null : (
+                <Link
+                  to="/login"
+                  className="w-[160px] h-[40px] rounded-[16px] bg-[#FFFFFF1A] flex items-center justify-center text-[19px] font-[400] 
   text-white transition-all duration-300 hover:bg-white hover:text-[#211C4D]"
-              >
-                تسجيل الدخول
-              </Link>
+                >
+                  تسجيل الدخول
+                </Link>
               )}
-                  <Link to={`/${lang}/favourite`}>
+              <Link to={`/${lang}/favourite`}>
                 <IconButton aria-label="المفضلة">
-                    <Heart className="h-5 w-5 opacity-90" />
+                  <Heart className="h-5 w-5 opacity-90" />
                 </IconButton>
-                  </Link>
+              </Link>
               <Link to={"/profile"}>
                 <IconButton aria-label="حسابي">
                   <UserRound className="h-5 w-5 opacity-90" />
                 </IconButton>
               </Link>
-                    <Link to={`/${lang}/myorder`}>
+              <Link to={`/${lang}/myorder`}>
                 <IconButton aria-label="عربة التسوق">
                   <span className="relative">
-                      <ShoppingCart className="h-5 w-5 opacity-90" />
+                    <ShoppingCart className="h-5 w-5 opacity-90" />
                     <span className="absolute -right-1 -top-1 h-2.5 w-2.5 rounded-full bg-orange-400" />
                   </span>
                 </IconButton>
-                    </Link>
+              </Link>
             </div>
           </div>
 
@@ -135,25 +161,25 @@ export default function Header() {
             <div className="relative inline-block text-left">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                    <div className="flex items-center gap-1 text-sm opacity-90 hover:opacity-100">
-                      <Globe className="h-4 w-4" />
-                      عربي
-                      <svg
-                        width="16"
-                        height="16"
-                        viewBox="0 0 16 16"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                        className={`transition-transform duration-200 ${
-                          open ? "rotate-180" : ""
-                        }`}
-                      >
-                        <path
-                          d="M8 15.5C7.5 15.5 7 15.3 6.66 14.94L2.15 10.39C1.95 10.19 1.95 9.85 2.15 9.65C2.35 9.45 2.68 9.45 2.88 9.65L7.39 14.2C7.73 14.53 8.26 14.53 8.6 14.2L13.11 9.65C13.31 9.45 13.64 9.45 13.84 9.65C14.05 9.85 14.05 10.19 13.84 10.39L9.33 14.94C8.97 15.31 8.48 15.5 8 15.5Z"
-                          fill="white"
-                        />
-                      </svg>
-                    </div>
+                  <div className="flex items-center gap-1 text-sm opacity-90 hover:opacity-100">
+                    <Globe className="h-4 w-4" />
+                    عربي
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 16 16"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      className={`transition-transform duration-200 ${
+                        open ? "rotate-180" : ""
+                      }`}
+                    >
+                      <path
+                        d="M8 15.5C7.5 15.5 7 15.3 6.66 14.94L2.15 10.39C1.95 10.19 1.95 9.85 2.15 9.65C2.35 9.45 2.68 9.45 2.88 9.65L7.39 14.2C7.73 14.53 8.26 14.53 8.6 14.2L13.11 9.65C13.31 9.45 13.64 9.45 13.84 9.65C14.05 9.85 14.05 10.19 13.84 10.39L9.33 14.94C8.97 15.31 8.48 15.5 8 15.5Z"
+                        fill="white"
+                      />
+                    </svg>
+                  </div>
                 </DropdownMenuTrigger>
 
                 <DropdownMenuContent
@@ -172,10 +198,13 @@ export default function Header() {
             </div>
 
             {/* Main Links */}
-            <nav className="hidden items-center lg:gap-2 h-[53px]   text-sm md:flex" dir={lang==="ar"?"rtl":"ltr"}>
-              {navitem.map((item,index) => (
+            <nav
+              className="hidden items-center lg:gap-2 h-[53px]   text-sm md:flex"
+              dir={lang === "ar" ? "rtl" : "ltr"}
+            >
+              {navitem.map((item, index) => (
                 <NavLink
-                key={index}
+                  key={index}
                   to={`${item.link}`}
                   end={item.link === `/${lang}/`} // علشان الـ home مايفضلش active دايمًا
                   className={({ isActive }) =>
@@ -228,7 +257,9 @@ export default function Header() {
                       />
                     </svg>
 
-                    <p className="text-[19px] text-[#E0E5EB]">{t("Sections")}</p>
+                    <p className="text-[19px] text-[#E0E5EB]">
+                      {t("Sections")}
+                    </p>
                     <svg
                       className="ml-[10px]"
                       width="13"
@@ -249,30 +280,28 @@ export default function Header() {
               </DropdownMenuTrigger>
 
               <DropdownMenuContent className="w-56" align="start">
-    <DropdownMenuGroup>
-      <DropdownMenuItem>لاب توب</DropdownMenuItem>
+                <DropdownMenuGroup>
+                  {categories.map((category) => (
+                       <DropdownMenuSub>
+                      <DropdownMenuSubTrigger>
+                        {category.name}
+                      </DropdownMenuSubTrigger>
+                      
+                      <DropdownMenuSubContent>
+                        {category.children?.map((child) => (
+                          <Link to={`categorySingle/${child.id}`}>
+                          <DropdownMenuItem key={child.id}>
+                            {child.name}
+                          </DropdownMenuItem>
 
-      <DropdownMenuSub>
-        <DropdownMenuSubTrigger>الهواتف الذكية</DropdownMenuSubTrigger>
-        <DropdownMenuSubContent>
-          <DropdownMenuItem>أجهزة أبل</DropdownMenuItem>
-          <DropdownMenuItem>أجهزة سامسونج</DropdownMenuItem>
-          <DropdownMenuItem>أجهزة هونر</DropdownMenuItem>
-          <DropdownMenuItem>أجهزة شاومي</DropdownMenuItem>
-          <DropdownMenuItem>أجهزة إنفينكس</DropdownMenuItem>
-          <DropdownMenuItem>أجهزة تكنو</DropdownMenuItem>
-          <DropdownMenuItem>أجهزة أوبو</DropdownMenuItem>
-          <DropdownMenuItem>أجهزة هواوي</DropdownMenuItem>
-          <DropdownMenuItem>أجهزة أندرويد أخرى</DropdownMenuItem>
-        </DropdownMenuSubContent>
-      </DropdownMenuSub>
-
-      <DropdownMenuItem>الأجهزة اللوحية</DropdownMenuItem>
-      <DropdownMenuItem>الكاميرات والدخان كام</DropdownMenuItem>
-      <DropdownMenuItem>الاكسسوارات</DropdownMenuItem>
-    </DropdownMenuGroup>
-  </DropdownMenuContent>
-
+                          </Link>
+                          
+                        ))}
+                      </DropdownMenuSubContent>
+                    </DropdownMenuSub>
+                  ))}
+                </DropdownMenuGroup>
+              </DropdownMenuContent>
             </DropdownMenu>
           </div>
         </div>
@@ -281,29 +310,27 @@ export default function Header() {
       {/* mobile header */}
       <div className="md:hidden">
         {/* المنيو */}
-      <MobileMenu
-  isOpen={isMenuOpen}
-  onClose={() => setIsMenuOpen(false)}
-  openSections={isSectionOpen}
-  setOpenSections={setIsSectionOpen}
-/>
+        <MobileMenu
+          isOpen={isMenuOpen}
+          onClose={() => setIsMenuOpen(false)}
+          openSections={isSectionOpen}
+          setOpenSections={setIsSectionOpen}
+        />
 
-<MobileNavbar
-  onMenuToggle={() => setIsMenuOpen(!isMenuOpen)}
-  onSectionToggle={() => {
-    // لو المنيو لسه مقفولة، افتحها ووسّع الأقسام فورًا
-    if (!isMenuOpen) {
-      setIsMenuOpen(true);
-      setIsSectionOpen(true);
-    } else {
-      // لو مفتوحة بالفعل، غيّر حالة الأقسام فقط
-      setIsSectionOpen(!isSectionOpen);
-    }
-  }}
-  isMenuOpen={isMenuOpen}
-/>
-
-
+        <MobileNavbar
+          onMenuToggle={() => setIsMenuOpen(!isMenuOpen)}
+          onSectionToggle={() => {
+            // لو المنيو لسه مقفولة، افتحها ووسّع الأقسام فورًا
+            if (!isMenuOpen) {
+              setIsMenuOpen(true);
+              setIsSectionOpen(true);
+            } else {
+              // لو مفتوحة بالفعل، غيّر حالة الأقسام فقط
+              setIsSectionOpen(!isSectionOpen);
+            }
+          }}
+          isMenuOpen={isMenuOpen}
+        />
       </div>
     </>
   );

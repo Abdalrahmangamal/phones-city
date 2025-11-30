@@ -45,5 +45,4 @@ const AboutQuara = () => {
     </Layout>
   );
 };
-
 export default AboutQuara;

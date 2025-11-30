@@ -34,7 +34,8 @@ import ScrollToTop from "@/components/ScrollToTop";
 import Singleproduct from "./pages/products/Singleproduct";
 import ChatBot from "./components/layout/Chatbot";
 import Checkout from '@/pages/chekout/Checkout';
-import Protectedroutse from '@/store/protectedroutse'
+import Protectedroutse from '@/store/protectedroutse';
+import CategorySingle from "@/pages/products/CategorySingle";
 function LangLayout() {
   const { lang: urlLang } = useParams();
   const { lang, setLang } = useSettings();
@@ -85,6 +86,7 @@ function LangLayout() {
       <Route path="/trademarkbestoffer" element={<Trademarkbestoffer/>} />
       <Route path="/singleproduct" element={<Singleproduct/>} />
       <Route path="/checkout" element={<Checkout/>} />
+      <Route path="/categorySingle/:id" element={<CategorySingle/>} />
       
       <Route path="/wallet" element={<Wallet/>} />
     </Routes>
@@ -125,6 +127,7 @@ export default function App() {
               <Route path="/trademarkscategory" element={<Navigate to={`/${lang}/trademarkscategory`} replace />} />
               <Route path="/trademarkbestoffer" element={<Navigate to={`/${lang}/trademarkbestoffer`} replace />} />
               <Route path="/singleproduct" element={<Navigate to={`/${lang}/singleproduct`} replace />} />
+              <Route path="/categorySingle/:id" element={<Navigate to={`/${lang}/categorySingle/:id`} replace />} />
               <Route path="/checkout" element={<Navigate to={`/${lang}/checkout`} replace />} />
           <Route path="/:lang/*" element={<LangLayout />} />
         </Routes>

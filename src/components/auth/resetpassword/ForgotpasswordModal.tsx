@@ -3,6 +3,7 @@ import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useEffect } from "react";
 import { useAuthStore } from "@/store/useauthstore";
+import VerifyCode from '@/components/auth/VerifyCode'
 import "@/style.css";
 interface VerifyData {
   isopen: boolean;
@@ -82,6 +83,7 @@ export default function ForgotpasswordModal({ isopen, onClose }: VerifyData) {
             </button>
           </div>
         </div>
+        
       </Dialog>
     </>
   );
