@@ -42,7 +42,7 @@ export default function ProductCard({ product }: ProductCardProps) {
     >
       {/* الصورة */}
       <div className="flex items-center justify-center pt-7 md:pt-0 relative">
-        <Link to={`/${lang}/singleproduct`}>
+        <Link to={`/${lang}/singleproduct/${product.id}`}>
           <img
             src={currentImage}
             className={`md:!w-[220px] h-[160px] w-[160px] object-contain md:!h-[220px] `}

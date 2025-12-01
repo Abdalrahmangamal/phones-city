@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import order from "@/assets/images/order.png";
 import step2 from "@/assets/images/step2.png";
@@ -9,9 +9,14 @@ import Cheackoutsummary from "@/components/chekout/Cheackoutsummary";
 import Checkoutaddress from "@/components/chekout/Checkoutaddress";
 import Checkoutpayment from "@/components/chekout/Checkoutpayment";
 import Layout from "@/components/layout/Layout";
+import {useCartStore} from '@/store/cartStore/cartStore';
 export default function CheckoutPage() {
   const [activeStep, setActiveStep] = useState(0);
-
+ const {items,fetchCart,addToCart} = useCartStore();
+ useEffect(() => {
+  fetchCart();
+ }, [items]);
+ console.log("سشيشسيشسي",items)
   const steps = [
     { title: "ملخص الطلب", number: order, componunt: <Cheackoutsummary /> },
     { title: "العنوان", number: step2, componunt: <Checkoutaddress /> },
@@ -22,6 +27,8 @@ export default function CheckoutPage() {
     <Layout>
       <div className="min-h-screen mt-[60px] bg-white" dir="rtl">
         {/* Stepper */}
+        <button onClick={() => addToCart(116,1)}>Add Test Item</button>
+
         <div className="bg-white  flex items-center justify-center   py-8">
           <div className="md:w-[600px] w-full  px-4">
             <div className="flex items-center justify-around gap-8">

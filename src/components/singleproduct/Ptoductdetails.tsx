@@ -11,7 +11,7 @@ import { TabbyModal } from "@/components/singleproduct/Modelpayment";
 import { TamaraModal } from "@/components/singleproduct/TamaraModal";
 import { Link } from "react-router-dom";
 
-export default function Ptoductdetails() {
+export default function Ptoductdetails({product}:any) {
   const [selectedColor, setSelectedColor] = useState("blue");
   const [quantity, setQuantity] = useState(1);
   const [isTabbyModalOpen, setIsTabbyModalOpen] = useState(false);
@@ -88,8 +88,7 @@ export default function Ptoductdetails() {
     <div className="space-y-4 md:space-y-6">
       <div>
         <h1 className="text-xl md:text-2xl font-bold text-foreground leading-relaxed mb-3">
-          لابتوبه 15ARP9 من أبل مع شريحة ذكاء اصطناعي، شاشة 15.6 إنش FHD IPS
-          100%، ذاكرة RAM 7.743SHS، رايزن SRGB 144Hz
+         {product?.description}
         </h1>
         <div className="flex items-center gap-2 mb-2">
           <div className="flex gap-1">

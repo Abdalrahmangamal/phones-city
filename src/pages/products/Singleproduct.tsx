@@ -5,54 +5,61 @@ import Gallery from "@/components/singleproduct/Gallery";
 import Ptoductdetails from "@/components/singleproduct/Ptoductdetails";
 import Informationproduct from "@/components/singleproduct/Informationproduct";
 import FeaturedHeroSection from "@/components/home/FeaturedHeroSection";
-import BestSellingProducts from "@/components/singleproduct/BestSellingProducts";
+// import BestSellingProducts from "@/components/singleproduct/BestSellingProducts";
 import heroImage from "@/assets/images/herooffer.png";
-import orangelabtop from "@/assets/images/orangelabtop.png";
-import bluephone from "@/assets/images/bluephone.png";
-import watch from "@/assets/images/watch.png";
-import airbuds from "@/assets/images/airbuds.png";
-import product1 from "@/assets/images/product1.png";
-import product2 from "@/assets/images/product2.png";
-import type { Product } from "@/types/index";
-
+// import orangelabtop from "@/assets/images/orangelabtop.png";
+// import bluephone from "@/assets/images/bluephone.png";
+// import watch from "@/assets/images/watch.png";
+// import airbuds from "@/assets/images/airbuds.png";
+// import product1 from "@/assets/images/product1.png";
+// import product2 from "@/assets/images/product2.png";
+// import type { Product } from "@/types/index";
+import { useParams } from "react-router";
+import {useProductsStore} from '@/store/productsStore'
+import { useEffect } from "react";
 export default function ProductPage() {
   // Mock data for best selling products
-  const bestSellingProducts: Product[] = [
-    {
-      id: 1,
-      name: "لابتوب ابل ماك بوك برو 2024",
-      price: 8999,
-      isNew: true,
-      variations: [
-        { color: "#fff", image: orangelabtop },
-        { color: "#000", image: bluephone },
-        { color: "#f68b1f", image: airbuds },
-      ],
-    },
-    {
-      id: 2,
-      name: "ايفون 15 برو",
-      discount: "16",
-      price: 7499,
-      variations: [
-        { color: "#ccc", image: bluephone },
-        { color: "#000", image: product2 },
-        { color: "#f68b1f", image: airbuds },
-      ],
-    },
-    {
-      id: 3,
-      name: "ايفون 15 برو",
-      discount: "16",
-      price: 7499,
-      variations: [
-        { color: "red", image: product1 },
-        { color: "#000", image: product2 },
-      ],
-    },
+  // const bestSellingProducts: Product[] = [
+  //   {
+  //     id: 1,
+  //     name: "لابتوب ابل ماك بوك برو 2024",
+  //     price: 8999,
+  //     isNew: true,
+  //     variations: [
+  //       { color: "#fff", image: orangelabtop },
+  //       { color: "#000", image: bluephone },
+  //       { color: "#f68b1f", image: airbuds },
+  //     ],
+  //   },
+  //   {
+  //     id: 2,
+  //     name: "ايفون 15 برو",
+  //     discount: "16",
+  //     price: 7499,
+  //     variations: [
+  //       { color: "#ccc", image: bluephone },
+  //       { color: "#000", image: product2 },
+  //       { color: "#f68b1f", image: airbuds },
+  //     ],
+  //   },
+  //   {
+  //     id: 3,
+  //     name: "ايفون 15 برو",
+  //     discount: "16",
+  //     price: 7499,
+  //     variations: [
+  //       { color: "red", image: product1 },
+  //       { color: "#000", image: product2 },
+  //     ],
+  //   },
 
-  ];
-
+  // ];
+  let {id} = useParams();
+const {fetchProductbyid,response} = useProductsStore();
+useEffect(() => {
+  fetchProductbyid(id);
+}, [id]);
+console.log(response)
   return (
     <Layout>
       <div className="min-h-screen bg-background lg:px-[90px] px-2 pt-20 md:pt-0" dir="rtl">
@@ -63,7 +70,7 @@ export default function ProductPage() {
               {/* Product Images */}
               <Gallery />
               {/* Product Details */}
-              <Ptoductdetails />
+              <Ptoductdetails product={response} />
             </div>
           </div>
           
@@ -79,12 +86,12 @@ export default function ProductPage() {
           />
           
           {/* Best Selling Products Section */}
-          <BestSellingProducts
+          {/* <BestSellingProducts
             title={"الأكثر مبيعاً"}
             btn={true}
             link="/Trademarksbestseller"
             products={bestSellingProducts}
-          />
+          /> */}
         
         </main>
       </div>

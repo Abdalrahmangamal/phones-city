@@ -84,7 +84,7 @@ function LangLayout() {
       <Route path="/trademarksbestseller" element={<Trademarksbestseller/>} />
       <Route path="/trademarkscategory" element={<Trademarkscategory/>} />
       <Route path="/trademarkbestoffer" element={<Trademarkbestoffer/>} />
-      <Route path="/singleproduct" element={<Singleproduct/>} />
+      <Route path="/singleproduct/:id" element={<Singleproduct/>} />
       <Route path="/checkout" element={<Checkout/>} />
       <Route path="/categorySingle/:id" element={<CategorySingle/>} />
       
@@ -126,7 +126,7 @@ export default function App() {
               <Route path="/trademarksbestseller" element={<Navigate to={`/${lang}/trademarksbestseller`} replace />} />
               <Route path="/trademarkscategory" element={<Navigate to={`/${lang}/trademarkscategory`} replace />} />
               <Route path="/trademarkbestoffer" element={<Navigate to={`/${lang}/trademarkbestoffer`} replace />} />
-              <Route path="/singleproduct" element={<Navigate to={`/${lang}/singleproduct`} replace />} />
+              <Route path="/singleproduct/:id" element={<Navigate to={`/${lang}/singleproduct/:id`} replace />} />
               <Route path="/categorySingle/:id" element={<Navigate to={`/${lang}/categorySingle/:id`} replace />} />
               <Route path="/checkout" element={<Navigate to={`/${lang}/checkout`} replace />} />
           <Route path="/:lang/*" element={<LangLayout />} />

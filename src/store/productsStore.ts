@@ -30,6 +30,7 @@ interface PageState {
 
   response: Product[] | null;   // الداتا الراجعة فعليًا
   fetchProducts: (params?: productsParams) => Promise<void>;
+  fetchProductbyid: (id:string,params?: productsParams) => Promise<void>;
 }
 
 const baseUrl = import.meta.env.VITE_BASE_URL;
@@ -44,6 +45,26 @@ fetchProducts: async (params: productsParams = {}) => {
     set({ loading: true, error: null });
 
     const res = await axios.get(`${baseUrl}api/v1/products`, { params });
+
+    console.log("ZUSTAND RESPONSE:", res.data.data); // <<< هنا هتشوفها 100%
+
+    set({
+      response: res.data.data,
+      loading: false,
+    });
+
+  } catch (err: any) {
+    set({
+      error: err?.response?.data?.message || "Something went wrong",
+      loading: false,
+    });
+  }
+},
+fetchProductbyid: async (id: string,params: productsParams = {}) => {
+  try {
+    set({ loading: true, error: null });
+
+    const res = await axios.get(`${baseUrl}api/v1/products/${id}`, { params });
 
     console.log("ZUSTAND RESPONSE:", res.data.data); // <<< هنا هتشوفها 100%
 
