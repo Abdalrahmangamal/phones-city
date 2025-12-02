@@ -6,25 +6,22 @@ import madfu from "@/assets/images/madfu.png";
 import mispay from "@/assets/images/mispay_installment 1.png";
 import emkn from "@/assets/images/emkann.png";
 import amwal from "@/assets/images/amwal.png";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { TabbyModal } from "@/components/singleproduct/Modelpayment";
 import { TamaraModal } from "@/components/singleproduct/TamaraModal";
 import { Link } from "react-router-dom";
 
-export default function Ptoductdetails({product}:any) {
+export default function Ptoductdetails({ product,handleindexchange }: any) {
   const [selectedColor, setSelectedColor] = useState("blue");
   const [quantity, setQuantity] = useState(1);
   const [isTabbyModalOpen, setIsTabbyModalOpen] = useState(false);
   const [isTamaraModalOpen, setIsTamaraModalOpen] = useState(false);
+  const [selectedOptionIndex, setSelectedOptionIndex] = useState(0);
+useEffect(() => {
+handleindexchange(selectedOptionIndex);}
+,[selectedOptionIndex]);
+if (!product) return <div>Loading...</div>;
 
-  const colors = [
-    { name: "black", value: "#000000" },
-    { name: "gray", value: "#9CA3AF" },
-    { name: "pink", value: "#FFC0CB" },
-    { name: "white", value: "#FFFFFF" },
-    { name: "blue", value: "#1E3A8A" },
-  ];
-  
   const paymentMethods = [
     {
       id: "tamara",
@@ -32,7 +29,7 @@ export default function Ptoductdetails({product}:any) {
       name: "تامارا",
       description:
         "او قسم فاتورتك علي 3 دفعات بقيمه 24,020 رس بدون رسوم تأخير ، متوافقه مع الشريعه الاسلاميه ",
-      modal: "tamara"
+      modal: "tamara",
     },
     {
       id: "tabby",
@@ -40,7 +37,7 @@ export default function Ptoductdetails({product}:any) {
       name: "تابي",
       description:
         "او قسم فاتورتك علي 4 دفعات بقيمه 15,920 رس بدون رسوم تأخير ، متوافقه مع الشريعه الاسلاميه ",
-      modal: "tabby"
+      modal: "tabby",
     },
     {
       id: "madfu",
@@ -48,7 +45,7 @@ export default function Ptoductdetails({product}:any) {
       name: "مدفوع",
       description:
         "4 دفعات بقيمة 15,920 رس / شهر، وبدون رسوم تأخير ! ومتوافقه مع الشريعه الاسلاميه ",
-      modal: "tabby"
+      modal: "tabby",
     },
     {
       id: "mispay",
@@ -56,7 +53,7 @@ export default function Ptoductdetails({product}:any) {
       name: "ميسباي",
       description:
         "4 دفعات بقيمة 15,920 رس /شهر، بدون رسوم تأخير ! ومتوافقه مع الشريعه الاسلاميه ",
-      modal: "tabby"
+      modal: "tabby",
     },
     {
       id: "emkn",
@@ -64,7 +61,7 @@ export default function Ptoductdetails({product}:any) {
       name: "امكن",
       description:
         "4 دفعات بقيمة 15,920 رس /شهر، بدون رسوم تأخير ! ومتوافقه مع الشريعه الاسلاميه ",
-      modal: "tabby"
+      modal: "tabby",
     },
     {
       id: "amwal",
@@ -72,7 +69,7 @@ export default function Ptoductdetails({product}:any) {
       name: "أمـوال",
       description:
         "قسّطها إلى 6 دفعات مع البنك وبدون فوائد ، متوافقه مع الشريعه الاسلاميه ",
-      modal: "tabby"
+      modal: "tabby",
     },
   ];
 
@@ -88,7 +85,7 @@ export default function Ptoductdetails({product}:any) {
     <div className="space-y-4 md:space-y-6">
       <div>
         <h1 className="text-xl md:text-2xl font-bold text-foreground leading-relaxed mb-3">
-         {product?.description}
+          {product?.description}
         </h1>
         <div className="flex items-center gap-2 mb-2">
           <div className="flex gap-1">
@@ -103,44 +100,50 @@ export default function Ptoductdetails({product}:any) {
               />
             ))}
           </div>
-          <span className="text-xs md:text-sm text-muted-foreground">(68 مراجعة)</span>
+          <span className="text-xs md:text-sm text-muted-foreground">
+            (68 مراجعة)
+          </span>
         </div>
         <p className="text-sm text-primary">أختر لونك</p>
       </div>
 
       {/* Color Selection */}
       <div className="flex gap-2 md:gap-3">
-        {colors.map((color) => (
+        {product?.options?.map((opt, index) => (
           <button
-            key={color.name}
-            onClick={() => setSelectedColor(color.name)}
+            key={opt.id}
+            onClick={() => setSelectedOptionIndex(index)}
             className={`w-8 h-8 md:w-10 md:h-10 rounded-full border-2 transition-all ${
-              selectedColor === color.name
+              selectedOptionIndex === index
                 ? "border-primary scale-110"
                 : "border-border hover:border-muted-foreground"
             }`}
             style={{
-              backgroundColor: color.value,
+              backgroundColor: opt.value,
               boxShadow:
-                color.name === "white" ? "inset 0 0 0 1px #e5e7eb" : "none",
+                opt.value === "#FFFFFF" ? "inset 0 0 0 1px #e5e7eb" : "none",
             }}
-            aria-label={color.name}
           />
         ))}
       </div>
 
       {/* Price */}
       <div className="flex items-baseline gap-2 md:gap-3">
-        <span className="text-2xl md:text-3xl font-bold text-[#C33104]">1,104 ريس</span>
+        <span className="text-2xl md:text-3xl font-bold text-[#C33104]">
+          {product.options[selectedOptionIndex].final_price}ريس
+        </span>
         <span className="text-base md:text-lg text-muted-foreground line-through">
-          1,299 ريس
+          {product.options[selectedOptionIndex].original_price}ريس
         </span>
       </div>
 
       {/* Payment Options */}
       <div className="space-y-3 pt-4 md:pt-6">
         {paymentMethods.map((item) => (
-          <div key={item.id} className="flex flex-col md:flex-row md:items-center gap-3 p-3 md:h-[72px] h-full rounded-lg border border-[#0000004D]">
+          <div
+            key={item.id}
+            className="flex flex-col md:flex-row md:items-center gap-3 p-3 md:h-[72px] h-full rounded-lg border border-[#0000004D]"
+          >
             <div className="flex-1">
               <p className="text-xs md:text-[16px] font-[600] text-[#211C4D]">
                 {item.description}
@@ -154,7 +157,11 @@ export default function Ptoductdetails({product}:any) {
               </p>
             </div>
             <div className="px-3 py-1 md:px-4 md:py-1 rounded text-sm font-bold text-card">
-              <img src={item.img} className="w-[80px] md:w-[120px]" alt={item.name} />
+              <img
+                src={item.img}
+                className="w-[80px] md:w-[120px]"
+                alt={item.name}
+              />
             </div>
           </div>
         ))}
@@ -189,16 +196,22 @@ export default function Ptoductdetails({product}:any) {
           >
             إضافة للسلة
           </Button>
-          <Link 
-            className="bg-[#2AA0DC] w-[180px] md:w-[200px] h-[50px] md:h-[64px] hover:bg-primary/90 rounded-[8px] flex items-center justify-center text-primary-foreground font-[600] text-xl md:text-[25px]" 
+          <Link
+            className="bg-[#2AA0DC] w-[180px] md:w-[200px] h-[50px] md:h-[64px] hover:bg-primary/90 rounded-[8px] flex items-center justify-center text-primary-foreground font-[600] text-xl md:text-[25px]"
             to={"/checkout"}
           >
             اشتري الآن
           </Link>
         </div>
       </div>
-      <TabbyModal isOpen={isTabbyModalOpen} onClose={() => setIsTabbyModalOpen(false)} />
-      <TamaraModal isOpen={isTamaraModalOpen} onClose={() => setIsTamaraModalOpen(false)} />
+      <TabbyModal
+        isOpen={isTabbyModalOpen}
+        onClose={() => setIsTabbyModalOpen(false)}
+      />
+      <TamaraModal
+        isOpen={isTamaraModalOpen}
+        onClose={() => setIsTamaraModalOpen(false)}
+      />
     </div>
   );
 }

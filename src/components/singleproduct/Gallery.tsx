@@ -1,21 +1,13 @@
 import { Heart } from "lucide-react";
 import { useState } from "react";
-import product1 from '@/assets/images/product1.png'
-import product2 from '@/assets/images/product2.png'
-import product3 from '@/assets/images/product3.png'
-import product4 from '@/assets/images/bluephone.png'
-import product5 from '@/assets/images/orangelabtop.png'
-export default function gallery() {
+
+export default function gallery({ images }: any) {
   const [selectedImage, setSelectedImage] = useState(0);
   const [isWishlisted, setIsWishlisted] = useState(false);
-  
-  const productImages = [
-    `${product1}`,
-    `${product2}`,
-    `${product3}`,
-    `${product4}`,
-    `${product5}`,
-  ];
+  const safeImages = Array.isArray(images) ? images : [];
+
+ 
+  console.log(images)
   return (
     <div className="md:w-full">
       <div className="space-y-4">
@@ -37,7 +29,7 @@ export default function gallery() {
             />
           </button>
           <img
-            src={productImages[selectedImage] || "/placeholder.svg"}
+            src={safeImages[selectedImage]?.url || "/placeholder.svg"}
             alt="Laptop"
             className="w-full h-full object-contain"
           />
@@ -45,7 +37,7 @@ export default function gallery() {
 
         {/* Thumbnail Images */}
         <div className="flex gap-2 md:gap-3 flex-wrap justify-center">
-          {productImages.map((img, idx) => (
+          {safeImages.map((img, idx) => (
             <button
               key={idx}
               onClick={() => setSelectedImage(idx)}
@@ -57,7 +49,7 @@ export default function gallery() {
               aria-label={`عرض الصورة ${idx + 1}`}
             >
               <img
-                src={img || "/placeholder.svg"}
+                src={img?.url || "/placeholder.svg"}
                 alt={`View ${idx + 1}`}
                 className="w-full h-full object-contain"
               />

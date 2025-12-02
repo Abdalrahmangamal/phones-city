@@ -16,7 +16,7 @@ import heroImage from "@/assets/images/herooffer.png";
 // import type { Product } from "@/types/index";
 import { useParams } from "react-router";
 import {useProductsStore} from '@/store/productsStore'
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 export default function ProductPage() {
   // Mock data for best selling products
   // const bestSellingProducts: Product[] = [
@@ -60,6 +60,10 @@ useEffect(() => {
   fetchProductbyid(id);
 }, [id]);
 console.log(response)
+const [selectedOptionIndex, setSelectedOptionIndex] = useState(0);
+const handleOptionChange = (index: number) => {
+  setSelectedOptionIndex(index);
+}
   return (
     <Layout>
       <div className="min-h-screen bg-background lg:px-[90px] px-2 pt-20 md:pt-0" dir="rtl">
@@ -68,9 +72,9 @@ console.log(response)
           <div className="bg-card rounded-lg shadow-sm p-4 md:p-8">
             <div className="grid lg:grid-cols-2 gap-6 md:gap-12">
               {/* Product Images */}
-              <Gallery />
+              <Gallery images={response?.options[selectedOptionIndex]?.images}  />
               {/* Product Details */}
-              <Ptoductdetails product={response} />
+              <Ptoductdetails product={response} handleindexchange={handleOptionChange} />
             </div>
           </div>
           
