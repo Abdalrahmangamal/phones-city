@@ -27,7 +27,6 @@ export default function Header() {
   useEffect(() => {
     fetchCategories();
   }, []);
-  console.log(categories);
   const [isSectionOpen, setIsSectionOpen] = useState(false);
 
   // language btn
@@ -144,7 +143,7 @@ export default function Header() {
                   <UserRound className="h-5 w-5 opacity-90" />
                 </IconButton>
               </Link>
-              <Link to={`/${lang}/myorder`}>
+              <Link to={`/${lang}/checkout`}>
                 <IconButton aria-label="عربة التسوق">
                   <span className="relative">
                     <ShoppingCart className="h-5 w-5 opacity-90" />

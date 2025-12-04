@@ -12,13 +12,14 @@ import Layout from "@/components/layout/Layout";
 import {useCartStore} from '@/store/cartStore/cartStore';
 export default function CheckoutPage() {
   const [activeStep, setActiveStep] = useState(0);
- const {items,fetchCart,addToCart} = useCartStore();
+ const {items,total,fetchCart,addToCart} = useCartStore();
  useEffect(() => {
   fetchCart();
- }, [items]);
+ }, []);
+
  console.log("سشيشسيشسي",items)
   const steps = [
-    { title: "ملخص الطلب", number: order, componunt: <Cheackoutsummary /> },
+    { title: "ملخص الطلب", number: order, componunt: <Cheackoutsummary products={items} total={total} /> },
     { title: "العنوان", number: step2, componunt: <Checkoutaddress /> },
     { title: "الدفع", number: step3, componunt: <Checkoutpayment /> },
   ];
@@ -79,7 +80,8 @@ export default function CheckoutPage() {
         <div className="w-full mx-auto px-4 py-8">
           <div className="bg-white  rounded-lg lg:p-8 min-h-96">
             <div className="text-center text-gray-400">
-              <p className="text-lg"> {steps[activeStep].componunt}</p>
+              <p className="text-lg"> </p>
+              {steps[activeStep].componunt}
             </div>
           </div>
         </div>

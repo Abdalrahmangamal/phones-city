@@ -59,7 +59,7 @@ const {fetchProductbyid,response} = useProductsStore();
 useEffect(() => {
   fetchProductbyid(id);
 }, [id]);
-console.log(response)
+// console.log(response)
 const [selectedOptionIndex, setSelectedOptionIndex] = useState(0);
 const handleOptionChange = (index: number) => {
   setSelectedOptionIndex(index);

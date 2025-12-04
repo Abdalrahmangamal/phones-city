@@ -11,7 +11,7 @@ export default function Offers() {
 const { fetchProducts ,response} = useProductsStore();
 useEffect(() => {
     fetchProducts();
-  }, []);
+  }, [response]);
   console.log(response)
 
   return (

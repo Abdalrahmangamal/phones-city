@@ -35,10 +35,11 @@ interface CartItem {
 interface CartState {
   loading: boolean;
   error: string | null;
-
+  total:number
   items: CartItem[];
   fetchCart: () => Promise<void>;
   addToCart: (productId: number, quantity: number) => Promise<void>;
+  deleteToCart: (productId: number) => Promise<void>;
 }
 
 const baseUrl = import.meta.env.VITE_BASE_URL;
@@ -47,7 +48,7 @@ export const useCartStore = create<CartState>((set, get) => ({
   loading: false,
   error: null,
   items: [],
-
+  total: 0,
   // ----------------- GET CART ------------------
   fetchCart: async () => {
     try {
@@ -56,14 +57,15 @@ export const useCartStore = create<CartState>((set, get) => ({
 
       const res = await axios.get(`${baseUrl}api/v1/cart`, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer 45|PFCW13eGehd2ikzNvmBIYWH3NTDGqEyEiTAe7v3X94a901d7`,
           Accept: "application/json",
           "Content-Type": "application/json",
         },
       });
 
       set({
-        items: res?.data?.data?.items || [],
+        total: res?.data?.data?.total || 0,
+        items: [...(res?.data?.data?.items || [])],
         loading: false,
       });
     } catch (err: any) {
@@ -75,38 +77,63 @@ export const useCartStore = create<CartState>((set, get) => ({
   },
 
   // ----------------- ADD TO CART ------------------
-addToCart: async (productId: number, quantity: number) => {
-  try {
-    const token = localStorage.getItem("token") || "";
-    set({ loading: true, error: null });
+  addToCart: async (productId: number, quantity: number) => {
+    try {
+      const token = localStorage.getItem("token") || "";
+      set({ loading: true, error: null });
 
-    const form = new FormData();
-    form.append("product_id", String(productId));
-    form.append("quantity", String(quantity));
+      const form = new FormData();
+      form.append("product_id", String(productId));
+      form.append("quantity", String(quantity));
 
-    // 1) ابعت الريكوست وخزّن الرد
-    const res = await axios.post(`${baseUrl}api/v1/cart`, form, {
-      headers: {
-    Token: token,            // ← ← دي المهمة
-    Accept: "application/json",
-      },
-    });
+      // 1) ابعت الريكوست وخزّن الرد
+      const res = await axios.post(`${baseUrl}api/v1/cart`, form, {
+        headers: {
+          Authorization: `Bearer 45|PFCW13eGehd2ikzNvmBIYWH3NTDGqEyEiTAe7v3X94a901d7`,
+          Accept: "application/json",
+        },
+      });
 
-    // 2) اطبع الريسبونس كامل
-    console.log("ADD TO CART RESPONSE:", res.data);
+      // 2) اطبع الريسبونس كامل
+      console.log("ADD TO CART RESPONSE:", res.data);
 
-    // 3) بعد الإضافة اعمل refresh
-    await get().fetchCart();
+      // 3) بعد الإضافة اعمل refresh
+      await get().fetchCart();
 
-    set({ loading: false });
-  } catch (err: any) {
-    console.log("ADD TO CART ERROR:", err?.response);
-    
-    set({
-      error: err?.response?.data?.message || "Failed to add to cart",
-      loading: false,
-    });
-  }
-},
+      set({ loading: false });
+    } catch (err: any) {
+      console.log("ADD TO CART ERROR:", err?.response);
 
+      set({
+        error: err?.response?.data?.message || "Failed to add to cart",
+        loading: false,
+      });
+    }
+  },
+  deleteToCart: async (productId: number) => {
+    try {
+      // const token = localStorage.getItem("token") || "";
+      set({ loading: true, error: null });
+
+      // 1) ابعت الريكوست وخزّن الرد
+      const res = await axios.delete(`${baseUrl}api/v1/cart/${productId}`, {
+        headers: {
+          Authorization: `Bearer 45|PFCW13eGehd2ikzNvmBIYWH3NTDGqEyEiTAe7v3X94a901d7`,
+          Accept: "application/json",
+        },
+      });
+
+      // 2) اطبع الريسبونس كامل
+      console.log("ADD TO CART RESPONSE:", res.data);
+
+      set({ loading: false });
+    } catch (err: any) {
+      console.log("ADD TO CART ERROR:", err?.response);
+
+      set({
+        error: err?.response?.data?.message || "Failed to add to cart",
+        loading: false,
+      });
+    }
+  },
 }));

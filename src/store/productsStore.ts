@@ -28,9 +28,9 @@ interface PageState {
   loading: boolean;
   error: string | null;
 
-  response: Product[] | null;   // الداتا الراجعة فعليًا
+  response: Product[] | null; // الداتا الراجعة فعليًا
   fetchProducts: (params?: productsParams) => Promise<void>;
-  fetchProductbyid: (id:string,params?: productsParams) => Promise<void>;
+  fetchProductbyid: (id: string, params?: productsParams) => Promise<void>;
 }
 
 const baseUrl = import.meta.env.VITE_BASE_URL;
@@ -40,45 +40,50 @@ export const useProductsStore = create<PageState>((set) => ({
   error: null,
   response: null,
 
-fetchProducts: async (params: productsParams = {}) => {
-  try {
-    set({ loading: true, error: null });
+  fetchProducts: async (params: productsParams = {}) => {
+    try {
+      set({ loading: true, error: null });
 
-    const res = await axios.get(`${baseUrl}api/v1/products`, { params });
+      const res = await axios.get(`${baseUrl}api/v1/products`, {
+        params,
+        headers: {
+          Authorization: `Bearer 45|PFCW13eGehd2ikzNvmBIYWH3NTDGqEyEiTAe7v3X94a901d7`,
+          Accept: "application/json",
+        },
+      });
 
-    console.log("ZUSTAND RESPONSE:", res.data.data); // <<< هنا هتشوفها 100%
+      console.log("ZUSTAND RESPONSE:", res.data.data); // <<< هنا هتشوفها 100%
 
-    set({
-      response: res.data.data,
-      loading: false,
-    });
+      set({
+        response: res.data.data,
+        loading: false,
+      });
+    } catch (err: any) {
+      set({
+        error: err?.response?.data?.message || "Something went wrong",
+        loading: false,
+      });
+    }
+  },
+  fetchProductbyid: async (id: string, params: productsParams = {}) => {
+    try {
+      set({ loading: true, error: null });
 
-  } catch (err: any) {
-    set({
-      error: err?.response?.data?.message || "Something went wrong",
-      loading: false,
-    });
-  }
-},
-fetchProductbyid: async (id: string,params: productsParams = {}) => {
-  try {
-    set({ loading: true, error: null });
+      const res = await axios.get(`${baseUrl}api/v1/products/${id}`, {
+        params,
+      });
 
-    const res = await axios.get(`${baseUrl}api/v1/products/${id}`, { params });
+      console.log("ZUSTAND RESPONSE:", res.data.data); // <<< هنا هتشوفها 100%
 
-    console.log("ZUSTAND RESPONSE:", res.data.data); // <<< هنا هتشوفها 100%
-
-    set({
-      response: res.data.data,
-      loading: false,
-    });
-
-  } catch (err: any) {
-    set({
-      error: err?.response?.data?.message || "Something went wrong",
-      loading: false,
-    });
-  }
-},
-
+      set({
+        response: res.data.data,
+        loading: false,
+      });
+    } catch (err: any) {
+      set({
+        error: err?.response?.data?.message || "Something went wrong",
+        loading: false,
+      });
+    }
+  },
 }));

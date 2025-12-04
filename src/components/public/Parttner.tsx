@@ -3,18 +3,25 @@ import logo1 from "../../assets/images/logo1.png";
 import logo2 from "../../assets/images/logo2.png";
 import logo3 from "../../assets/images/logo3.png";
 import logo4 from "../../assets/images/logo4.png";
+import {useCategoriesStore} from '@/store/categories/useCategoriesStore';
 import { Swiper, SwiperSlide } from "swiper/react";
 import { useLangSync } from "@/hooks/useLangSync";
 // Import Swiper styles
 // import "swiper/css";
 
 import "../../style.css";
-import { useEffect } from "react";
+import { use, useEffect } from "react";
 import { Link } from "react-router-dom";
 import useS24Ultra from "@/hooks/useS24Ultra";
 import S24Parttner from "@/components/s24-ultra/S24Parttner";
 
 export default function Parttner() {
+  const { fetchCategories,categories } = useCategoriesStore();
+  useEffect(() => {
+    fetchCategories();
+  }
+, []);
+console.log(categories)
   const isS24Ultra = useS24Ultra();
   
   // If device is S24 Ultra, render the S24 Ultra specific component

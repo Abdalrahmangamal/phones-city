@@ -3,8 +3,8 @@ import { Rating, RatingButton } from "@/components/ui/shadcn-io/rating";
 import type { Product } from "@/types/index";
 import { useLangSync } from "@/hooks/useLangSync";
 import { Link } from "react-router-dom";
-import { useCart } from "@/store/cart"; // Added cart import
-
+// import { useCart } from "@/store/cart"; // Added cart import
+import {useCartStore} from '@/store/cartStore/cartStore';
 interface ProductCardProps {
   product: Product;
   isNew?: boolean;
@@ -13,6 +13,7 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ product }: ProductCardProps) {
+  const {addToCart,deleteToCart}=useCartStore();
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   const { lang } = useLangSync();
@@ -31,10 +32,8 @@ export default function ProductCard({ product }: ProductCardProps) {
   const final = hasOptions
     ? Number(selectedVariant?.final_price?.replace(/,/g, "")) || 0
     : Number(product?.final_price?.replace(/,/g, "")) || 0;
-
   const discountPercent =
     original > 0 ? ((original - final) / original) * 100 : 0;
-
   return (
     <div
       key={product.id}
@@ -46,7 +45,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           <img
             src={currentImage}
             className={`md:!w-[220px] h-[160px] w-[160px] object-contain md:!h-[220px] `}
-            alt={name}
+            alt={product.name}
           />
         </Link>
 
@@ -193,8 +192,9 @@ export default function ProductCard({ product }: ProductCardProps) {
           </div>
         </div>
         <div
+        onClick={product.in_cart==false?()=>addToCart(product.id,1):()=>deleteToCart(product.id)}
           className={`w-[40px] h-[40px] flex items-center justify-center rounded-[8px] cursor-pointer transition ${
-            product.in_cart==="true" ? "bg-[#211C4D]" : "bg-[#EEF1F6] hover:bg-[#dfe3ea]"
+            product.in_cart===true ? "bg-[#211C4D]" : "bg-[#EEF1F6] hover:bg-[#dfe3ea]"
           }`}
         >
           {product.in_cart ? (
