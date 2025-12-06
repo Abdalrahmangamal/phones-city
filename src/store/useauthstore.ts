@@ -45,7 +45,7 @@ export const useAuthStore = create<AuthState>((set) => ({
         },
       });
       console.log(res.data);
-      localStorage.setItem("userData", JSON.stringify(res.data));
+      localStorage.setItem("userData", res.data);
     } catch (err) {
       set({ loading: false, error: err?.response?.data.data });
       console.log(err?.response?.data.data);
@@ -81,9 +81,8 @@ export const useAuthStore = create<AuthState>((set) => ({
           "Accept-Language": "en",
         },
       });
-      localStorage.setItem("userData", JSON.stringify(res.data));
-      localStorage.setItem("token", JSON.stringify(res.data.data.token));
-
+      localStorage.setItem("userData", res.data);
+      localStorage.setItem("token", res.data.data.token);
       console.log(res.data);
       return res.data;
     } catch (err) {

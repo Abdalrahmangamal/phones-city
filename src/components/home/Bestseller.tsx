@@ -18,7 +18,6 @@ export default function Bestseller({
   btn,
   products,
   style,
-  
 }: BestsellerProps) {
   return (
     <div className="mt-[20px] lg:px-[90px] px-2 pt-20 md:pt-20">
@@ -64,22 +63,7 @@ export default function Bestseller({
         className={`grid xl:grid-cols-4 ${style} sm:grid-cols-3 grid-cols-3 gap-[2px] md:gap-[20px] justify-items-center mt-[60px] `}
       >
         {products.map((item) => (
-          <ProductCard
-            // containerstyle={"!w-[200px]"}
-            // id={item.id}
-            // name={item.name}
-            // discount={item.discount}
-            // finalprice={tem.discount_amount}
-            // befordiscprice={item.final_price}
-            // isNew={item.isNew}
-            // favourite={item.favourite}
-            // variations={item.options}
-            // id={item.id}
-            // image={item.main_image}
-            product={item}
-            // imagecard="!h-[100px] !w-[100px]"
-            // containerstyle="!p-2 pb-3 !rounded-[10px] !min-h-fit"
-          />
+          <ProductCard product={item} />
         ))}
       </div>
     </div>

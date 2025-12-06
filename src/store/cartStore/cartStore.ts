@@ -57,7 +57,7 @@ export const useCartStore = create<CartState>((set, get) => ({
 
       const res = await axios.get(`${baseUrl}api/v1/cart`, {
         headers: {
-          Authorization: `Bearer 45|PFCW13eGehd2ikzNvmBIYWH3NTDGqEyEiTAe7v3X94a901d7`,
+          Authorization: `Bearer ${token}`,
           Accept: "application/json",
           "Content-Type": "application/json",
         },
@@ -79,7 +79,7 @@ export const useCartStore = create<CartState>((set, get) => ({
   // ----------------- ADD TO CART ------------------
   addToCart: async (productId: number, quantity: number) => {
     try {
-      const token = localStorage.getItem("token") || "";
+      const token = localStorage.getItem("token") ;
       set({ loading: true, error: null });
 
       const form = new FormData();
@@ -89,7 +89,7 @@ export const useCartStore = create<CartState>((set, get) => ({
       // 1) ابعت الريكوست وخزّن الرد
       const res = await axios.post(`${baseUrl}api/v1/cart`, form, {
         headers: {
-          Authorization: `Bearer 45|PFCW13eGehd2ikzNvmBIYWH3NTDGqEyEiTAe7v3X94a901d7`,
+          Authorization: `Bearer ${token}`,
           Accept: "application/json",
         },
       });
@@ -112,23 +112,25 @@ export const useCartStore = create<CartState>((set, get) => ({
   },
   deleteToCart: async (productId: number) => {
     try {
+            const token = localStorage.getItem("token") ;
+
       // const token = localStorage.getItem("token") || "";
       set({ loading: true, error: null });
 
       // 1) ابعت الريكوست وخزّن الرد
       const res = await axios.delete(`${baseUrl}api/v1/cart/${productId}`, {
         headers: {
-          Authorization: `Bearer 45|PFCW13eGehd2ikzNvmBIYWH3NTDGqEyEiTAe7v3X94a901d7`,
+          Authorization: `Bearer ${token}`,
           Accept: "application/json",
         },
       });
 
       // 2) اطبع الريسبونس كامل
-      console.log("ADD TO CART RESPONSE:", res.data);
+      console.log("remove frome card:", res.data);
 
       set({ loading: false });
     } catch (err: any) {
-      console.log("ADD TO CART ERROR:", err?.response);
+      console.log("remove frome card:", err?.response);
 
       set({
         error: err?.response?.data?.message || "Failed to add to cart",

@@ -3,147 +3,152 @@ import Sidebar from "@/components/layout/Sidebar";
 import Bestseller from "@/components/home/Bestseller";
 import { useTranslation } from "react-i18next";
 
-import product1 from "@/assets/images/product1.png";
-import product2 from "@/assets/images/product2.png";
-import type { Product } from "@/types/index";
-
+// import product1 from "@/assets/images/product1.png";
+// import product2 from "@/assets/images/product2.png";
+// import type { Product } from "@/types/index";
+import {useFavoritesStore} from '@/store/favoritesStore';
+import { useEffect } from "react";
 export default function Favourite() {
+  const { fetchFavorites, favorites } = useFavoritesStore();
+  useEffect(() => {
+    fetchFavorites();
+  }, []);
+console.log("fav",favorites.product)
       const { t } = useTranslation();
 
-  const products: Product[] = [
-    {
-      id: 3,
-      name: "لابتوب ابل ماك بوك برو 2024",
-      discount: "16",
-      price: 7499,
-      favourite:true,
-      variations: [
-        { color: "red", image: product1 },
-        { color: "#000", image: product2 },
-      ],
-    },
-    {
-      id: 3,
-      name: "لابتوب ابل ماك بوك برو 2024",
-      discount: "16",
-      price: 7499,
-      favourite:true,
-      variations: [
-        { color: "red", image: product1 },
-        { color: "#000", image: product2 },
-      ],
-    },
-    {
-      id: 3,
-      name: "لابتوب ابل ماك بوك برو 2024",
-      discount: "16",
-      price: 7499,
-      favourite:true,
-      variations: [
-        { color: "red", image: product1 },
-        { color: "#000", image: product2 },
-      ],
-    },
-    {
-      id: 3,
-      name: "لابتوب ابل ماك بوك برو 2024",
-      discount: "16",
-      price: 7499,
-      favourite:true,
-      variations: [
-        { color: "red", image: product1 },
-        { color: "#000", image: product2 },
-      ],
-    },
-    {
-      id: 3,
-      name: "لابتوب ابل ماك بوك برو 2024",
-      discount: "16",
-      price: 7499,
-      favourite:true,
-      variations: [
-        { color: "red", image: product1 },
-        { color: "#000", image: product2 },
-      ],
-    },
-    {
-      id: 3,
-      name: "لابتوب ابل ماك بوك برو 2024",
-      discount: "16",
-      price: 7499,
-      favourite:true,
-      variations: [
-        { color: "red", image: product1 },
-        { color: "#000", image: product2 },
-      ],
-    },
-    {
-      id: 3,
-      name: "لابتوب ابل ماك بوك برو 2024",
-      discount: "16",
-      price: 7499,
-      favourite:true,
-      variations: [
-        { color: "red", image: product1 },
-        { color: "#000", image: product2 },
-      ],
-    },
-    {
-      id: 3,
-      name: "لابتوب ابل ماك بوك برو 2024",
-      discount: "16",
-      price: 7499,
-      favourite:true,
-      variations: [
-        { color: "red", image: product1 },
-        { color: "#000", image: product2 },
-      ],
-    },
-    {
-      id: 3,
-      name: "لابتوب ابل ماك بوك برو 2024",
-      discount: "16",
-      price: 7499,
-      favourite:true,
-      variations: [
-        { color: "red", image: product1 },
-        { color: "#000", image: product2 },
-      ],
-    },
-    {
-      id: 3,
-      name: "لابتوب ابل ماك بوك برو 2024",
-      discount: "16",
-      price: 7499,
-      favourite:true,
-      variations: [
-        { color: "red", image: product1 },
-        { color: "#000", image: product2 },
-      ],
-    },
-    {
-      id: 3,
-      name: "لابتوب ابل ماك بوك برو 2024",
-      discount: "16",
-      price: 7499,
-      favourite:true,
-      variations: [
-        { color: "red", image: product1 },
-        { color: "#000", image: product2 },
-      ],
-    },
-    {
-      id: 3,
-      name: "لابتوب ابل ماك بوك برو 2024",
-      discount: "16",
-      price: 7499,
-      favourite:true,
-      variations: [
-        { color: "red", image: product1 },
-        { color: "#000", image: product2 },
-      ],
-    },
-  ];
+  //   {
+  //     id: 3,
+  //     name: "لابتوب ابل ماك بوك برو 2024",
+  //     discount: "16",
+  //     price: 7499,
+  //     favourite:true,
+  //     variations: [
+  //       { color: "red", image: product1 },
+  //       { color: "#000", image: product2 },
+  //     ],
+  //   },
+  //   {
+  //     id: 3,
+  //     name: "لابتوب ابل ماك بوك برو 2024",
+  //     discount: "16",
+  //     price: 7499,
+  //     favourite:true,
+  //     variations: [
+  //       { color: "red", image: product1 },
+  //       { color: "#000", image: product2 },
+  //     ],
+  //   },
+  //   {
+  //     id: 3,
+  //     name: "لابتوب ابل ماك بوك برو 2024",
+  //     discount: "16",
+  //     price: 7499,
+  //     favourite:true,
+  //     variations: [
+  //       { color: "red", image: product1 },
+  //       { color: "#000", image: product2 },
+  //     ],
+  //   },
+  //   {
+  //     id: 3,
+  //     name: "لابتوب ابل ماك بوك برو 2024",
+  //     discount: "16",
+  //     price: 7499,
+  //     favourite:true,
+  //     variations: [
+  //       { color: "red", image: product1 },
+  //       { color: "#000", image: product2 },
+  //     ],
+  //   },
+  //   {
+  //     id: 3,
+  //     name: "لابتوب ابل ماك بوك برو 2024",
+  //     discount: "16",
+  //     price: 7499,
+  //     favourite:true,
+  //     variations: [
+  //       { color: "red", image: product1 },
+  //       { color: "#000", image: product2 },
+  //     ],
+  //   },
+  //   {
+  //     id: 3,
+  //     name: "لابتوب ابل ماك بوك برو 2024",
+  //     discount: "16",
+  //     price: 7499,
+  //     favourite:true,
+  //     variations: [
+  //       { color: "red", image: product1 },
+  //       { color: "#000", image: product2 },
+  //     ],
+  //   },
+  //   {
+  //     id: 3,
+  //     name: "لابتوب ابل ماك بوك برو 2024",
+  //     discount: "16",
+  //     price: 7499,
+  //     favourite:true,
+  //     variations: [
+  //       { color: "red", image: product1 },
+  //       { color: "#000", image: product2 },
+  //     ],
+  //   },
+  //   {
+  //     id: 3,
+  //     name: "لابتوب ابل ماك بوك برو 2024",
+  //     discount: "16",
+  //     price: 7499,
+  //     favourite:true,
+  //     variations: [
+  //       { color: "red", image: product1 },
+  //       { color: "#000", image: product2 },
+  //     ],
+  //   },
+  //   {
+  //     id: 3,
+  //     name: "لابتوب ابل ماك بوك برو 2024",
+  //     discount: "16",
+  //     price: 7499,
+  //     favourite:true,
+  //     variations: [
+  //       { color: "red", image: product1 },
+  //       { color: "#000", image: product2 },
+  //     ],
+  //   },
+  //   {
+  //     id: 3,
+  //     name: "لابتوب ابل ماك بوك برو 2024",
+  //     discount: "16",
+  //     price: 7499,
+  //     favourite:true,
+  //     variations: [
+  //       { color: "red", image: product1 },
+  //       { color: "#000", image: product2 },
+  //     ],
+  //   },
+  //   {
+  //     id: 3,
+  //     name: "لابتوب ابل ماك بوك برو 2024",
+  //     discount: "16",
+  //     price: 7499,
+  //     favourite:true,
+  //     variations: [
+  //       { color: "red", image: product1 },
+  //       { color: "#000", image: product2 },
+  //     ],
+  //   },
+  //   {
+  //     id: 3,
+  //     name: "لابتوب ابل ماك بوك برو 2024",
+  //     discount: "16",
+  //     price: 7499,
+  //     favourite:true,
+  //     variations: [
+  //       { color: "red", image: product1 },
+  //       { color: "#000", image: product2 },
+  //     ],
+  //   },
+  // ];
   return (
     <div>
       <Layout>
@@ -154,7 +159,7 @@ export default function Favourite() {
               title={t("Favoriteproducts")}
               btn={false}
               style="lg:!grid-cols-3 lg:!gap-[80px]"
-              products={products}
+              products={favorites.map(f => f.product)}
                   imagecard="!h-[100px] !w-[100px]"
             containerstyle="!p-2 pb-3 !px-0 !rounded-[10px] !min-h-fit"
                          />

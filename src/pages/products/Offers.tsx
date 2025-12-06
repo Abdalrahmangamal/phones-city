@@ -7,12 +7,18 @@ import Bestseller from "@/components/home/Bestseller";
 import Parttner from "@/components/public/Parttner";
 import {useProductsStore} from '@/store/productsStore.ts';
 import { useEffect } from "react";
+import { useLangSync } from "@/hooks/useLangSync";
+import { useTranslation } from "react-i18next";
+
 export default function Offers() {
 const { fetchProducts ,response} = useProductsStore();
+  const { lang } = useLangSync();
+  const { t } = useTranslation();
+
 useEffect(() => {
-    fetchProducts();
-  }, [response]);
-  console.log(response)
+    fetchProducts({simple:false},lang);
+  }, [lang]);
+  console.log("ressss",response)
 
   return (
     <Layout>
@@ -37,7 +43,7 @@ useEffect(() => {
             ]}
           />
           <BannerSection image={banner} />
-          <Bestseller title={"عروض مدينة الهواتف"} products={response || []} />
+          <Bestseller title={`${t("CityofPhonesOffers")}`} products={response || []} />
           <div className="mb-15">
             <Parttner />
           </div>

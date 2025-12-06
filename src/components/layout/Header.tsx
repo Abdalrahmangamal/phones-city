@@ -24,14 +24,14 @@ import MobileNavbar from "./MobileNavbar";
 
 export default function Header() {
   const { categories, fetchCategories } = useCategoriesStore();
+  const { lang } = useLangSync();
   useEffect(() => {
-    fetchCategories();
-  }, []);
+    fetchCategories(lang);
+  }, [lang]);
   const [isSectionOpen, setIsSectionOpen] = useState(false);
 
   // language btn
   const { t, i18n } = useTranslation();
-  const { lang } = useLangSync();
   const [open] = useState(false);
   // ⬇⬇ state عشان نتحكم في الموبايل منيو
   const [isMenuOpen, setIsMenuOpen] = useState(false);
