@@ -80,7 +80,7 @@ function LangLayout() {
       <Route path="/singleaddress" element={<Singleaddress/>} />
       <Route path="/discounts" element={<Discounts/>} />
       <Route path="/favourite" element={<Favourite/>} />
-      <Route path="/trademarks" element={<Trademarks/>} />
+      <Route path="/trademarks/:id" element={<Trademarks/>} />
       <Route path="/trademarksbestseller" element={<Trademarksbestseller/>} />
       <Route path="/trademarkscategory" element={<Trademarkscategory/>} />
       <Route path="/trademarkbestoffer" element={<Trademarkbestoffer/>} />

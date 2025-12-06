@@ -11,11 +11,12 @@ interface Category {
 
 interface CategoriesState {
   categories: Category[];
+  treadmark: Category[];
   Categoriesbyid: Category[];
   loading: boolean;
   error: string | null;
   fetchCategoriesbyid: (id: string, productsmain?: string) => Promise<void>;
-  fetchCategories: (lang: string) => Promise<void>;
+  fetchCategories: (lang: string, istrademark?: boolean) => Promise<void>;
 }
 const baseUrl = import.meta.env.VITE_BASE_URL;
 
@@ -24,7 +25,8 @@ export const useCategoriesStore = create<CategoriesState>((set) => ({
   loading: false,
   error: null,
   Categoriesbyid: [],
-  fetchCategories: async (lang) => {
+  treadmark: [],
+  fetchCategories: async (lang, istrademark?: boolean) => {
     set({ loading: true, error: null });
 
     try {
@@ -32,7 +34,15 @@ export const useCategoriesStore = create<CategoriesState>((set) => ({
         headers: {
           "Accept-Language": `${lang}`,
         },
+
+        params: { is_trademark: istrademark },
       });
+      if (istrademark) {
+        set({ treadmark: res.data.data, loading: false });
+      } else {
+        set({ categories: res.data.data, loading: false });
+      }
+
       set({ categories: res.data.data, loading: false });
     } catch (err) {
       set({

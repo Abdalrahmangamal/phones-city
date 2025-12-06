@@ -6,7 +6,6 @@ import logo4 from "../../assets/images/logo4.png";
 import {useCategoriesStore} from '@/store/categories/useCategoriesStore';
 import { Swiper, SwiperSlide } from "swiper/react";
 import { useLangSync } from "@/hooks/useLangSync";
-
 import "../../style.css";
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
@@ -16,12 +15,12 @@ import S24Parttner from "@/components/s24-ultra/S24Parttner";
 export default function Parttner() {
     const { lang } = useLangSync();
 
-  const { fetchCategories,categories } = useCategoriesStore();
+  const { fetchCategories,treadmark } = useCategoriesStore();
   useEffect(() => {
-    fetchCategories(lang);
+    fetchCategories(lang,true);
   }
 , []);
-console.log(categories)
+console.log("tredmark",treadmark)
   const isS24Ultra = useS24Ultra();
   
   // If device is S24 Ultra, render the S24 Ultra specific component
@@ -58,14 +57,6 @@ console.log(categories)
       img: logo1,
     },
   ];
-  // const { lang } = useLangSync();
-  // useEffect(() => {
-  //   // لما اللغة تتغير، ممكن تعيد تهيئة السلايدر
-  //   // هنا ممكن تحتاج تستدعي أي دالة من Swiper لإعادة التهيئة
-  //   // مثلاً: swiperRef.ref.current?.update() لو انت مستخدم ref
-  //   // مثال بسيط لإعادة التهيئة (لو فيه ref للـ Swiper):
-  //   // swiperRef.current?.update();
-  // }, [lang]); // كل ما الـ lang تتغير، هيعمل التأثير ده
 
   return (
     <div>
@@ -89,7 +80,7 @@ console.log(categories)
         }}
         className="mySwiper !px-[20px] md:px-[0px] h-[100px] md:h-[130px] pt-[50px] mt-[60px]"
       >
-        {partnerimg.map((item) => (
+        {treadmark.map((item) => (
           <SwiperSlide
             className="
       !h-[70px]
@@ -100,9 +91,9 @@ console.log(categories)
       shadow-[0px_4px_4px_0px_#2D295C40]
     "
           >
-            <Link to={`/${lang}/trademarks`}>
+            <Link to={`/${lang}/trademarks/${item.id}`}>
               <img
-                src={item.img}
+                src={item.image}
                 className="md:!w-[153px] !w-[50px] !h-[12px] md:!h-[30px] !object-contain"
                 alt="logo"
               />
