@@ -6,19 +6,19 @@ import logo4 from "../../assets/images/logo4.png";
 import {useCategoriesStore} from '@/store/categories/useCategoriesStore';
 import { Swiper, SwiperSlide } from "swiper/react";
 import { useLangSync } from "@/hooks/useLangSync";
-// Import Swiper styles
-// import "swiper/css";
 
 import "../../style.css";
-import { use, useEffect } from "react";
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import useS24Ultra from "@/hooks/useS24Ultra";
 import S24Parttner from "@/components/s24-ultra/S24Parttner";
 
 export default function Parttner() {
+    const { lang } = useLangSync();
+
   const { fetchCategories,categories } = useCategoriesStore();
   useEffect(() => {
-    fetchCategories();
+    fetchCategories(lang);
   }
 , []);
 console.log(categories)
@@ -58,14 +58,14 @@ console.log(categories)
       img: logo1,
     },
   ];
-  const { lang } = useLangSync();
-  useEffect(() => {
-    // لما اللغة تتغير، ممكن تعيد تهيئة السلايدر
-    // هنا ممكن تحتاج تستدعي أي دالة من Swiper لإعادة التهيئة
-    // مثلاً: swiperRef.ref.current?.update() لو انت مستخدم ref
-    // مثال بسيط لإعادة التهيئة (لو فيه ref للـ Swiper):
-    // swiperRef.current?.update();
-  }, [lang]); // كل ما الـ lang تتغير، هيعمل التأثير ده
+  // const { lang } = useLangSync();
+  // useEffect(() => {
+  //   // لما اللغة تتغير، ممكن تعيد تهيئة السلايدر
+  //   // هنا ممكن تحتاج تستدعي أي دالة من Swiper لإعادة التهيئة
+  //   // مثلاً: swiperRef.ref.current?.update() لو انت مستخدم ref
+  //   // مثال بسيط لإعادة التهيئة (لو فيه ref للـ Swiper):
+  //   // swiperRef.current?.update();
+  // }, [lang]); // كل ما الـ lang تتغير، هيعمل التأثير ده
 
   return (
     <div>

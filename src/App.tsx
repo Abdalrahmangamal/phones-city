@@ -86,7 +86,7 @@ function LangLayout() {
       <Route path="/trademarkbestoffer" element={<Trademarkbestoffer/>} />
       <Route path="/singleproduct/:id" element={<Singleproduct/>} />
       <Route path="/checkout" element={<Checkout/>} />
-      <Route path="/categorySingle/:id" element={<CategorySingle/>} />
+      <Route path="categorySingle/:id/:productmain?" element={<CategorySingle/>} />
       
       <Route path="/wallet" element={<Wallet/>} />
     </Routes>

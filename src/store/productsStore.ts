@@ -40,7 +40,7 @@ export const useProductsStore = create<PageState>((set) => ({
   error: null,
   response: null,
 
-  fetchProducts: async (params: productsParams = {}, lang) => {
+  fetchProducts: async (params: productsParams = {}, lang:string) => {
     try {
       set({ loading: true, error: null });
       const token = localStorage.getItem("token");

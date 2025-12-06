@@ -35,7 +35,7 @@ interface CartItem {
 interface CartState {
   loading: boolean;
   error: string | null;
-  total:number
+  total: number;
   items: CartItem[];
   fetchCart: () => Promise<void>;
   addToCart: (productId: number, quantity: number) => Promise<void>;
@@ -79,7 +79,7 @@ export const useCartStore = create<CartState>((set, get) => ({
   // ----------------- ADD TO CART ------------------
   addToCart: async (productId: number, quantity: number) => {
     try {
-      const token = localStorage.getItem("token") ;
+      const token = localStorage.getItem("token");
       set({ loading: true, error: null });
 
       const form = new FormData();
@@ -112,13 +112,14 @@ export const useCartStore = create<CartState>((set, get) => ({
   },
   deleteToCart: async (productId: number) => {
     try {
-            const token = localStorage.getItem("token") ;
+      const token = localStorage.getItem("token");
 
       // const token = localStorage.getItem("token") || "";
       set({ loading: true, error: null });
 
       // 1) ابعت الريكوست وخزّن الرد
-      const res = await axios.delete(`${baseUrl}api/v1/cart/${productId}`, {
+      const res = await axios.delete(`${baseUrl}/api/v1/cart/product`, {
+        params: { product_id: productId },
         headers: {
           Authorization: `Bearer ${token}`,
           Accept: "application/json",

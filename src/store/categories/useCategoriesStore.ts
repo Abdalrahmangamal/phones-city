@@ -14,7 +14,7 @@ interface CategoriesState {
   Categoriesbyid: Category[];
   loading: boolean;
   error: string | null;
-  fetchCategoriesbyid: (id: string) => Promise<void>;
+  fetchCategoriesbyid: (id: string, productsmain?: string) => Promise<void>;
   fetchCategories: (lang: string) => Promise<void>;
 }
 const baseUrl = import.meta.env.VITE_BASE_URL;
@@ -41,11 +41,15 @@ export const useCategoriesStore = create<CategoriesState>((set) => ({
       });
     }
   },
-  fetchCategoriesbyid: async (id: string) => {
+  fetchCategoriesbyid: async (id: string, productsmain?: string) => {
     set({ loading: true, error: null });
 
     try {
-      const res = await axios.get(`${baseUrl}api/v1/categories/${id}`);
+      const res = await axios.get(
+        `${baseUrl}api/v1/categories/${id}${
+          productsmain ? "/" + productsmain : ""
+        }`
+      );
 
       set({
         // singleCategory: res.data.data,  // تخزن object هنا

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Rating, RatingButton } from "@/components/ui/shadcn-io/rating";
 import type { Product } from "@/types/index";
 import { useLangSync } from "@/hooks/useLangSync";
@@ -18,7 +18,6 @@ export default function ProductCard({ product }: ProductCardProps) {
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   const { lang } = useLangSync();
-
   const hasOptions =
     Array.isArray(product?.options) && product.options.length > 0;
   const selectedVariant = hasOptions ? product.options[selectedIndex] : null;
@@ -191,7 +190,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         <div
           onClick={
             product.in_cart == false
-              ? () => addToCart(product.id, 1)
+              ? () => addToCart(product.options[0].id, 1)
               : () => deleteToCart(product.id)
           }
           className={`w-[40px] h-[40px] flex items-center justify-center rounded-[8px] cursor-pointer transition ${

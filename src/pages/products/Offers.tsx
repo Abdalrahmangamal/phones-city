@@ -16,7 +16,7 @@ const { fetchProducts ,response} = useProductsStore();
   const { t } = useTranslation();
 
 useEffect(() => {
-    fetchProducts({simple:false},lang);
+    fetchProducts({simple:false,has_offer:1,},lang);
   }, [lang]);
   console.log("ressss",response)
 
