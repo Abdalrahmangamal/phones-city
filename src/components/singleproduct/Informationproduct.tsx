@@ -1,25 +1,22 @@
 import Comments from "@/components/singleproduct/Comments"
 
-export default function Informationproduct() {
-  const specifications = [
-    { label: "العلامة التجارية :", value: "HP" },
-    { label: "حجم الشاشة :", value: "أنش 15,6" },
-    { label: "اللون :", value: "ميكا سيلفر" },
-    { label: "حجم القرص الثابت :", value: "جيجابايت 512" },
-    { label: "طراز وحدة المعالجة المركزية :", value: "إنتل كور i5" },
-    { label: "حجم ذاكرة الوصول العشوائي :", value: "جيجابايت 16" },
-    { label: "أنظمة التشغيل :", value: "Windows 11 Home" },
-    { label: "ميزة خاصة :", value: "لوحة مفاتيح بإضاءة خلفية" },
-    { label: "وصف بطاقة الرسومات :", value: "مخصص" },
-  ];
+export default function Informationproduct({ product }: any) {
+  // استخدام بيانات المنتج من الـ API إذا كانت موجودة
+  const specifications = product?.details 
+    ? [
+        { label: "الوصف", value: product.details },
+        ...(product.about ? [{ label: "معلومات إضافية", value: product.about }] : []),
+      ]
+    : [
+        { label: "العلامة التجارية :", value: product?.product_mark || "غير محدد" },
+        { label: "السعة :", value: product?.capacity || "غير محدد" },
+      ];
 
-  const features = [
-    "أداء قوي: مجهز بمعالج إنتل كور i5-13420H لتعدد المهام بسلاسة وتجربة لعب سلسة.",
-    "مساحة تخزين واسعة: يوفر محرك الأقراص ذو الحالة الثابتة سعة 512 جيجابايت أوقات تشغيل سريع ومساحة واسعة وتطبيقاتك.",
-    "ذاكرة كبيرة: تتضمن ذاكرة SDRAM سودريم DDR4 سعة 16 جيجابايت لإدارة ذاكرة فعالة للمهام الصعبة.",
-    "نظام تشغيل حديث: يعمل على أحدث نظام تشغيل ويندوز 11 لتعزيز الأمان وتجربة المستخدم.",
-    "شاشة نابضة بالحياة: شاشة LED FHD IPS مقاس 15.6 أنش مع سطوع 250 ووحدة مضيئة في البكسل ومعدل تحديث 144 .",
-  ];
+  const features = product?.details 
+    ? [product.details]
+    : [
+        "اكتشف الميزات والمواصفات الكاملة للمنتج",
+      ];
 
   return (
     <div className="rounded-lg bg-white p-4 md:p-8" dir="rtl">

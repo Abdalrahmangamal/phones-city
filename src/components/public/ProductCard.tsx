@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Rating, RatingButton } from "@/components/ui/shadcn-io/rating";
 import type { Product } from "@/types/index";
 import { useLangSync } from "@/hooks/useLangSync";
 import { Link } from "react-router-dom";
 // import { useCart } from "@/store/cart"; // Added cart import
 import { useCartStore } from "@/store/cartStore/cartStore";
+import { toast } from "react-toastify";
 interface ProductCardProps {
   product: Product;
   isNew?: boolean;
@@ -16,14 +17,14 @@ export default function ProductCard({ product }: ProductCardProps) {
   const { addFavorite } = useFavoritesStore();
   const { addToCart, deleteToCart } = useCartStore();
   const [selectedIndex, setSelectedIndex] = useState(0);
+const selectedVariant = product.options[selectedIndex];
 
   const { lang } = useLangSync();
   const hasOptions =
     Array.isArray(product?.options) && product.options.length > 0;
-  const selectedVariant = hasOptions ? product.options[selectedIndex] : null;
   const currentImage = hasOptions
-    ? selectedVariant?.images?.[0]?.url || product.main_image
-    : product.main_image;
+    ? selectedVariant?.images?.[0]?.url || product.main_image || ""
+    : product.main_image || "";
   const original = hasOptions
     ? Number(selectedVariant?.original_price?.replace(/,/g, "")) || 0
     : Number(product?.original_price?.replace(/,/g, "")) || 0;
@@ -33,10 +34,13 @@ export default function ProductCard({ product }: ProductCardProps) {
     : Number(product?.final_price?.replace(/,/g, "")) || 0;
   const discountPercent =
     original > 0 ? ((original - final) / original) * 100 : 0;
+const [isInCart, setIsInCart] = useState((product as any)?.in_cart || false);
+
+
   return (
     <div
       key={product.id}
-      className={`max-w-[350px] md:!w-[320px] scale-[0.9]  md:scale-[1] col-span-1 bg-white w-full min-h-[350px] md:min-h-[400px] rounded-[16px] p-[15px] shadow-[0px_4px_4px_0px_#00000040] flex flex-col`}
+      className={`max-w-[350px] md:!w-[320px] col-span-1 bg-white w-full min-h-[350px] md:min-h-[400px] rounded-[16px] p-[15px] shadow-[0px_4px_4px_0px_#00000040] flex flex-col hover:shadow-[0px_8px_12px_0px_#00000050] transition-shadow duration-300`}
     >
       {/* الصورة */}
       <div className="flex items-center justify-center pt-7 md:pt-0 relative">
@@ -49,15 +53,15 @@ export default function ProductCard({ product }: ProductCardProps) {
         </Link>
 
         <div
-          className="flex w-full items-center justify-between absolute right-0 top-0"
+          className="flex w-full items-center justify-between absolute right-0 top-0 z-10 p-2"
           onClick={
-            product.is_favorite === false
+            !(product as any)?.is_favorite
               ? () => addFavorite(product.id)
               : () => {}
           }
         >
-          <div className="bg-[#EEF1F6] z-5 flex items-center justify-center w-[36px] h-[36px] rounded-full">
-            {product.is_favorite === true ? (
+          <div className="bg-[#EEF1F6] flex items-center justify-center w-[36px] h-[36px] rounded-full cursor-pointer hover:bg-[#e0e5f0] transition-colors">
+            {(product as any)?.is_favorite === true ? (
               <svg
                 width="21"
                 height="18"
@@ -188,18 +192,36 @@ export default function ProductCard({ product }: ProductCardProps) {
           </div>
         </div>
         <div
-          onClick={
-            product.in_cart == false
-              ? () => addToCart(product.options[0].id, 1)
-              : () => deleteToCart(product.id)
-          }
-          className={`w-[40px] h-[40px] flex items-center justify-center rounded-[8px] cursor-pointer transition ${
-            product.in_cart === true
-              ? "bg-[#211C4D]"
-              : "bg-[#EEF1F6] hover:bg-[#dfe3ea]"
+        onClick={() => {
+  const hasMultiple = product.options.length > 1;
+  const idToSend = hasMultiple ? selectedVariant.id : product.id;
+
+  if (!isInCart) {
+    addToCart(idToSend, 1, hasMultiple).then(() => {
+      setIsInCart(true);
+      toast.success(`تم إضافة ${product.name} إلى السلة`, {
+        position: "bottom-right",
+        autoClose: 2000,
+      });
+    });
+  } else {
+    deleteToCart(idToSend).then(() => {
+      setIsInCart(false);
+      toast.info(`تم حذف ${product.name} من السلة`, {
+        position: "bottom-right",
+        autoClose: 2000,
+      });
+    });
+  }
+}}
+
+          className={`w-[40px] h-[40px] flex items-center justify-center rounded-[8px] cursor-pointer transition-all duration-200 ${
+            isInCart === true
+              ? "bg-[#211C4D] shadow-[0px_4px_8px_0px_#211C4D4d] hover:shadow-[0px_6px_12px_0px_#211C4D66]"
+              : "bg-[#EEF1F6] hover:bg-[#dfe3ea] shadow-[0px_2px_4px_0px_#00000020]"
           }`}
         >
-          {product.in_cart ? (
+          {isInCart ? (
             // شكل مختلف لما تكون في السلة
             <svg
               width="18"

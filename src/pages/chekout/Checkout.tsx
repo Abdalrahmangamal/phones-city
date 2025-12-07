@@ -26,7 +26,7 @@ export default function CheckoutPage() {
     <Layout>
       <div className="min-h-screen mt-[60px] bg-white" dir="rtl">
         {/* Stepper */}
-        <button onClick={() => addToCart(116,1)}>Add Test Item</button>
+        <button onClick={() => addToCart(116, 1, false)}>Add Test Item</button>
     
         <div className="bg-white  flex items-center justify-center   py-8">
           <div className="md:w-[600px] w-full  px-4">
