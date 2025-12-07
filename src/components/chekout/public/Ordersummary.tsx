@@ -1,76 +1,110 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Input } from "@/components/ui/input"
-import tamara from '@/assets/images/tamara.png'
-import tabby from '@/assets/images/tabby 1.png'
-import emkann from '@/assets/images/emkann.png'
-import madfu from '@/assets/images/madfu.png'
-import mispay_installment from '@/assets/images/mispay_installment 1.png'
-import amwal from '@/assets/images/amwal.png'
+import { useEffect, useState } from "react";
+import { useCartStore } from "@/store/cartStore/cartStore";
+import { Input } from "@/components/ui/input";
+
+import tamara from "@/assets/images/tamara.png";
+import tabby from "@/assets/images/tabby 1.png";
+import emkann from "@/assets/images/emkann.png";
+import madfu from "@/assets/images/madfu.png";
+import mispay_installment from "@/assets/images/mispay_installment 1.png";
+import amwal from "@/assets/images/amwal.png";
+
+const paymentLogos: Record<number, any> = {
+  1: tamara,
+  2: tabby,
+  3: madfu,
+  4: mispay_installment,
+  5: emkann,
+  6: amwal,
+};
+
+const paymentMarketingTexts: Record<number, (amount: string) => string> = {
+  1: (a) => `قسم الفاتورة بـ 3 دفعات بدون فائدة ${a} ريال بعد الخصم. موافقة فورية لعملائنا الكاملين`,
+  2: (a) => `قسم الفاتورة بـ 4 دفعات بدون فائدة ${a} ريال بعد الخصم. موافقة فورية لعملائنا الكاملين`,
+  3: (a) => `4 دفعات بدون فائدة ${a} ريال بعد الخصم. وتوفير رسوم إضافية لعملائنا الكاملين`,
+  4: (a) => `4 دفعات بدون فائدة ${a} ريال بعد الخصم. وتوفير رسوم إضافية لعملائنا الكاملين`,
+  5: (a) => `4 دفعات بدون فائدة ${a} ريال بعد الخصم. وتوفير رسوم إضافية لعملائنا الكاملين`,
+  6: () => "استخدم 6 دفعات بدون فائدة وتوفير رسوم. لعملائنا الكاملين",
+};
+
 export default function OrderSummary() {
-  const [promoCode, setPromoCode] = useState("")
-  const [usePoints, setUsePoints] = useState(false)
+  const { items, total, loading, fetchCart } = useCartStore();
+  const [promoCode, setPromoCode] = useState("");
+  const [usePoints, setUsePoints] = useState(false);
+  const [selectedPaymentId, setSelectedPaymentId] = useState<number | null>(null);
 
-  const subtotal = 31200
-  const discount = usePoints ? 7730 : 0
-  const shipping = 100
-  const total = subtotal - discount + shipping
+  useEffect(() => {
+    if (items.length === 0 && !loading) fetchCart();
+  }, [items.length, loading, fetchCart]);
 
-  const paymentProviders = [
-    {
-      id: "tamara",
-      logo:tamara,
-      description: "قسم الفاتورة بـ 3 دفعات بدون فائدة 24,000 ريس بعد الخصم. موافقة فورية لعملائنا الكاملين",
-    },
-    {
-      id: "budaey",
-      logo:tabby,
-      description: "قسم الفاتورة بـ 4 دفعات بدون فائدة 15,920 ريس بعد الخصم. موافقة فورية لعملائنا الكاملين",
-    },
-    {
-      id: "emkan",
-      logo: emkann,
-      description: "4 دفعات بدون فائدة 15,920 ريس بعد الخصم. وتوفير رسوم إضافية لعملائنا الكاملين",
-    },
-    {
-      id: "madifu",
-      logo:madfu,
-      description: "4 دفعات بدون فائدة 15,920 ريس بعد الخصم. وتوفير رسوم إضافية لعملائنا الكاملين",
-    },
-    {
-      id: "mis",
-      logo:mispay_installment,
-      description: "4 دفعات بدون فائدة 15,920 ريس بعد الخصم. وتوفير رسوم إضافية لعملائنا الكاملين",
-    },
-    {
-      id: "armwal",
-      logo:amwal,
-      description: "استخدم 6 دفعات بدون فائدة وتوفير رسوم. لعملائنا الكاملين",
-    },
-  ]
+  const totalPoints = items.reduce(
+    (sum, item) => sum + (item.product.points || 0) * item.quantity,
+    0
+  );
+
+  const pointsDiscount = usePoints ? Math.floor(totalPoints / 100) * 100 : 0;
+  const shipping = 100;
+  const subtotal = total || 0;
+  let finalTotal = subtotal - pointsDiscount + shipping;
+
+  let processingFee = 0;
+  let selectedPaymentName = "";
+
+  const paymentMethods = items[0]?.product.options?.[0]?.payment_methods || [];
+
+  if (selectedPaymentId !== null) {
+    const selected = paymentMethods.find((p) => p.id === selectedPaymentId);
+    if (selected) {
+      selectedPaymentName = selected.name;
+      processingFee = parseFloat(selected.processing_fee_amount || "0");
+      finalTotal += processingFee;
+    }
+  }
+
+  const paymentProviders = paymentMethods.map((p) => {
+    const amount = parseFloat(p.total_price).toLocaleString("ar-SA");
+    const textFn = paymentMarketingTexts[p.id];
+    const description = textFn
+      ? p.id === 6
+        ? textFn()
+        : textFn(amount)
+      : `${p.name} • ${amount} ريال`;
+
+    return {
+      id: p.id,
+      name: p.name,
+      logo: paymentLogos[p.id] || madfu,
+      description,
+    };
+  });
+
+  if (loading) return <div className="p-10 text-center" dir="rtl">جاري تحميل ملخص الطلب...</div>;
+  if (items.length === 0) return <div className="p-10 text-center text-gray-500" dir="rtl">السلة فارغة</div>;
 
   return (
-    <div className="  bg-white p-6 border border-[#EBEBEB] md:px-[70px] mt-9 md:mt-0 px-[20px] rounded-[10px] " dir="rtl">
-      {/* Header */}
-      <h1 className="mb-6 text-start   text-xl font-bold text-blue-500">ملخص الطلب</h1>
+    <div
+      className="bg-white p-6 border border-[#EBEBEB] md:px-[70px] mt-9 md:mt-0 px-[20px] rounded-[10px]"
+      dir="rtl"
+    >
+      <h1 className="mb-6 text-start text-xl font-bold text-blue-500">ملخص الطلب</h1>
 
-      {/* Promo Code Section */}
-      <div className="relative mb-4 space-y-2">
+      {/* كود الخصم */}
+      <div className="relative mb-6 space-y-2">
         <label className="block text-xs font-medium text-gray-600">رمز الخصم / رمز الترويج</label>
-        <Input
-          type="text"
-          placeholder="الرمز"
-          value={promoCode}
-          onChange={(e) => setPromoCode(e.target.value)}
-          className="border h-[64px] border-gray-300 text-right text-sm"
-        />
-<button
-  className="text-[#211C4D] text-[12px] border border-[#211C4D] rounded-[6px] w-[76px] h-[32px] flex items-center justify-center absolute top-[40px] end-[20px]
-  hover:bg-[#211C4D] hover:text-white transition-all duration-300"
->
-  تقدم بطلب
-</button>
+        <div className="relative">
+          <Input
+            type="text"
+            placeholder="أدخل الرمز"
+            value={promoCode}
+            onChange={(e) => setPromoCode(e.target.value)}
+            className="h-[64px] border-gray-300 text-right pr-24"
+          />
+          <button className="absolute top-1/2 -translate-y-1/2 end-[12px] text-[#211C4D] text-xs border border-[#211C4D] rounded-[6px] w-20 h-9 hover:bg-[#211C4D] hover:text-white transition">
+            تطبيق
+          </button>
+        </div>
       </div>
 
       {/* Points Section */}
@@ -90,49 +124,74 @@ export default function OrderSummary() {
         </button>
       </div>
 
-      {/* Price Breakdown */}
-      <div className="mb-4 space-y-2 text-sm">
+      {/* تفاصيل الأسعار */}
+      <div className="mb-6 space-y-3 text-sm">
         <div className="flex justify-between">
-          <span className="text-gray-600">المجموع العربي</span>
-          <span className="font-medium">{subtotal.toLocaleString("ar-SA")} ريس</span>
+          <span className="text-gray-600">المجموع الفرعي</span>
+          <span className="font-semibold">{subtotal.toLocaleString("ar-SA")} ريال</span>
         </div>
-        {discount > 0 && (
-          <div className="flex justify-between">
-            <span className="text-orange-500">الخصم</span>
-            <span className="font-medium text-orange-500">-{discount.toLocaleString("ar-SA")} ريس</span>
+
+        {pointsDiscount > 0 && (
+          <div className="flex justify-between text-orange-600">
+            <span>خصم النقاط</span>
+            <span>-{pointsDiscount.toLocaleString("ar-SA")} ريال</span>
           </div>
         )}
+
         <div className="flex justify-between">
-          <span className="text-gray-600">الشحنة المقررة</span>
-          <span className="font-medium">{shipping.toLocaleString("ar-SA")} ريس</span>
+          <span className="text-gray-600">الشحن</span>
+          <span className="font-semibold">{shipping.toLocaleString("ar-SA")} ريال</span>
+        </div>
+
+        {processingFee > 0 && (
+          <div className="flex justify-between text-gray-700">
+            <span>رسوم {selectedPaymentName}</span>
+            <span>+{processingFee.toLocaleString("ar-SA")} ريال</span>
+          </div>
+        )}
+
+        <div className="border-t pt-3 flex justify-between text-lg font-bold">
+          <span>الإجمالي النهائي</span>
+          <span className="text-orange-600">{finalTotal.toLocaleString("ar-SA")} ريال</span>
         </div>
       </div>
 
-      {/* Total */}
-      <div className="mb-6 flex justify-between border-t border-gray-200 pt-3">
-        <span className="font-bold text-gray-900">إجمالي</span>
-        <span className="font-bold text-gray-900">{total.toLocaleString("ar-SA")} ريس</span>
-      </div>
-
-      {/* Payment Providers */}
-      <div className="mb-6 space-y-3">
+      {/* بوابات الدفع */}
+      <div className="mb-8 space-y-3">
         {paymentProviders.map((provider) => (
-          <div key={provider.id} className="flex gap-3 rounded-lg border border-gray-200 p-3">
-            <div className="flex-1">
-              <p className="text-[12px] leading-relaxed text-gray-600 ">{provider.description}</p>
+          <div
+            key={provider.id}
+            onClick={() => setSelectedPaymentId(provider.id)}
+            className={`flex items-center gap-4 rounded-lg border p-4 cursor-pointer transition-all ${
+              selectedPaymentId === provider.id
+                ? "border-blue-500 bg-blue-50"
+                : "border-gray-200 hover:border-gray-400"
+            }`}
+          >
+            <input
+              type="radio"
+              name="payment"
+              checked={selectedPaymentId === provider.id}
+              onChange={() => setSelectedPaymentId(provider.id)}
+              className="h-5 w-5 text-blue-600"
+            />
+
+            <div className="flex-1 text-right">
+              <p className="text-sm font-medium">{provider.name}</p>
+              <p className="text-xs text-gray-500 mt-1">{provider.description}</p>
             </div>
-            <div className="flex h-10 w-15 flex-shrink-0 items-center justify-center rounded  text-lg">
-              
-              <img src={provider.logo} alt="" />
-            </div>
+
+            <img src={provider.logo} alt={provider.name} className="h-10 w-auto" />
           </div>
         ))}
       </div>
 
-      {/* Complete Order Button */}
-      {/* <Button className="w-full bg-orange-500 py-3 text-base font-semibold text-white hover:bg-orange-600">
-        اتمام الطلب
-      </Button> */}
+      <button
+        disabled={!selectedPaymentId || loading}
+        className="w-full bg-orange-500 hover:bg-orange-600 disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-bold text-lg py-4 rounded-lg transition"
+      >
+        إتمام الطلب
+      </button>
     </div>
-  )
+  );
 }

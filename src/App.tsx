@@ -1,4 +1,4 @@
-// App.tsx (مثال)
+// App.tsx
 import { BrowserRouter, Routes, Route, Navigate, useParams } from "react-router-dom";
 import { useSettings } from "@/store/settings";
 import i18n from "@/i18n";
@@ -36,6 +36,11 @@ import ChatBot from "./components/layout/Chatbot";
 import Checkout from '@/pages/chekout/Checkout';
 import Protectedroutse from '@/store/protectedroutse';
 import CategorySingle from "@/pages/products/CategorySingle";
+
+// استيراد ToastContainer من react-toastify
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 function LangLayout() {
   const { lang: urlLang } = useParams();
   const { lang, setLang } = useSettings();
@@ -98,7 +103,22 @@ export default function App() {
   return (
     <div className="flex flex-col min-h-screen relative"> 
       <BrowserRouter>
-                <ScrollToTop />
+        <ScrollToTop />
+        
+        {/*  ToastContainer  */}
+        <ToastContainer 
+          position="top-center"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={lang === "ar"} 
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+        />
+        
         <Routes>
 
           <Route path="/" element={<Navigate to={`/${lang}`} replace />} />
