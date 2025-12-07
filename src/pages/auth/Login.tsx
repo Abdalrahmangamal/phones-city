@@ -9,6 +9,7 @@ import ForgotpasswordModal from "@/components/auth/resetpassword/ForgotpasswordM
 import { useForm } from "react-hook-form";
 import type { SubmitHandler } from "react-hook-form";
 import {useAuthStore} from '@/store/useauthstore'
+import Loader from "@/components/Loader";
 type loginInputs = {
   email: string;
   password: string;
@@ -22,23 +23,40 @@ export default function Login() {
     watch,
     formState: { errors },
   } = useForm<loginInputs>();
-  const onSubmit: SubmitHandler<loginInputs> = async  (data, e) => {
-    e?.preventDefault();
-    console.log("submitted", data);
-    sendLogin(data)
-      const res = await sendLogin(data);
-    if (res?.data?.token) {
-      navigate("/"); // ← شغال دلوقتي
-    }
-  };
+const onSubmit: SubmitHandler<loginInputs> = async (data, e) => {
+  e?.preventDefault();
+  console.log("submitted", data);
+
+  const res = await sendLogin(data); // نداء واحد بس
+
+  if (res?.data?.token) {
+    navigate("/");
+  }
+};
+
   // console.log(watch("example"))
   const [showPassword, setShowPassword] = useState(false);
   const [openforgetpassmodal, setopenforgetpassmodal] = useState(false);
   const handelopenforgetpass = () => {
     setopenforgetpassmodal(true);
   };
+ const [showLoader, setShowLoader] = useState(true);
  
+useEffect(() => {
+  const timer = setTimeout(() => {
+    setShowLoader(false);
+  }, 1000); // 2 ثانية
+
+  return () => clearTimeout(timer);
+}, []);
+if (showLoader) {
+  return <Loader />;
+}
+
   return (
+    <>
+ 
+
     <div>
       <div className="w-full flex relative">
         <img
@@ -137,5 +155,7 @@ export default function Login() {
         <img src={bottompattern} className="absolute bottom-0 right-0" alt="" />
       </div>
     </div>
+    
+    </>
   );
 }

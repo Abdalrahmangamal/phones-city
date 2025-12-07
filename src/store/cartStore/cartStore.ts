@@ -77,39 +77,46 @@ export const useCartStore = create<CartState>((set, get) => ({
   },
 
   // ----------------- ADD TO CART ------------------
-  addToCart: async (productId: number, quantity: number) => {
-    try {
-      const token = localStorage.getItem("token") || "";
-      set({ loading: true, error: null });
-
-      const form = new FormData();
-      form.append("product_id", String(productId));
-      form.append("quantity", String(quantity));
-
-      // 1) ابعت الريكوست وخزّن الرد
-      const res = await axios.post(`${baseUrl}api/v1/cart`, form, {
-        headers: {
-          Authorization: `Bearer 45|PFCW13eGehd2ikzNvmBIYWH3NTDGqEyEiTAe7v3X94a901d7`,
-          Accept: "application/json",
-        },
-      });
-
-      // 2) اطبع الريسبونس كامل
-      console.log("ADD TO CART RESPONSE:", res.data);
-
-      // 3) بعد الإضافة اعمل refresh
-      await get().fetchCart();
-
-      set({ loading: false });
-    } catch (err: any) {
-      console.log("ADD TO CART ERROR:", err?.response);
-
-      set({
-        error: err?.response?.data?.message || "Failed to add to cart",
-        loading: false,
-      });
+addToCart: async (productId: number, quantity: number = 1) => {
+  try {
+    const token = localStorage.getItem("token");
+    
+    if (!token) {
+      set({ error: "يجب تسجيل الدخول أولاً", loading: false });
+      return;
     }
-  },
+
+    console.log("TOKEN:", token); // تأكد إنه موجود وسليم
+
+    set({ loading: true, error: null });
+
+    const res = await axios.post(
+      `${baseUrl}api/v1/cart`,
+      {
+        product_id: productId,
+        quantity: quantity,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: "application/json",
+          "Content-Type": "application/json", // مهم جدًا
+        },
+      }
+    );
+
+    console.log("ADD TO CART SUCCESS:", res.data);
+    await get().fetchCart();
+    set({ loading: false });
+  } catch (err: any) {
+    console.error("ADD TO CART ERROR:", err.response?.data || err.message);
+    set({
+      error: err.response?.data?.message || "فشل إضافة المنتج للسلة",
+      loading: false,
+    });
+  }
+},
+
   deleteToCart: async (productId: number) => {
     try {
       // const token = localStorage.getItem("token") || "";
@@ -136,4 +143,5 @@ export const useCartStore = create<CartState>((set, get) => ({
       });
     }
   },
+
 }));

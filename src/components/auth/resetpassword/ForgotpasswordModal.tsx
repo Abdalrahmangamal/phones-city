@@ -1,90 +1,99 @@
-import * as React from "react";
+import React, { useState, useEffect } from "react";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
-import { useEffect } from "react";
 import { useAuthStore } from "@/store/useauthstore";
-import VerifyCode from '@/components/auth/VerifyCode'
-import "@/style.css";
-interface VerifyData {
+import Loader from "@/components/Loader";
+import VerifyCode from "@/components/auth/VerifyCode";
+import ResetPasswordModal from "@/components/auth/ResetPasswordModal";
+
+interface ForgotProps {
   isopen: boolean;
   onClose: () => void;
 }
 
-export default function ForgotpasswordModal({ isopen, onClose }: VerifyData) {
-  const [open, setOpen] = React.useState(false);
-  const { forgotpassword } = useAuthStore();
+export default function ForgotpasswordModal({ isopen, onClose }: ForgotProps) {
+  const [open, setOpen] = useState(false);
+  const [openVerifyModal, setOpenVerifyModal] = useState(false);
+  const [openResetModal, setOpenResetModal] = useState(false);
+
+  const [verifyEmail, setVerifyEmail] = useState("");
+  const [verifiedCode, setVerifiedCode] = useState("");
+
+  const { forgotpassword, loading } = useAuthStore();
+
+  const [email, setEmail] = useState("");
+
+  const isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+  useEffect(() => setOpen(isopen), [isopen]);
 
   const handleClose = () => {
     setOpen(false);
     onClose();
   };
-  useEffect(() => {
-    setOpen(isopen);
-  }, [isopen]);
 
-  const [otp] = React.useState("");
+  const handlesendemail = async () => {
+    if (!isValid) return;
 
-  console.log(otp);
+    const res = await forgotpassword({ email });
 
-  const [sendemail, setsendemail] = React.useState("");
-   const VerifyCodetypes={
-      email:sendemail,
-   }
-  const handlesendemail = () => {
-    forgotpassword(VerifyCodetypes);
+    if (res?.status === true) {
+      setVerifyEmail(email);
+      setOpen(false);
+      setOpenVerifyModal(true);
+    }
   };
+
   return (
     <>
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-        PaperProps={{
-          sx: {
-            width: "600px", // العرض اللي إنت عايزه
-            maxWidth: "90%", // علشان ما يطلعش برا الشاشة
-            height: "400px", // الارتفاع
-            borderRadius: "16px", // تجميل لو عايز
-          },
-        }}
-      >
-        <div className="w-full h-full flex items-center flex-col justify-around">
+      {loading && <Loader />}
+
+      <Dialog open={open} onClose={handleClose}>
+        <div className="w-full h-full flex flex-col items-center justify-around p-6">
           <DialogTitle>
-            <p className="text-[#211C4D] text-center font-[600] text-[32px]">
+            <p className="text-[32px] text-center font-bold">
               نسيت كلمة المرور؟
             </p>
-            <p className="text-[#211C4DB2] font-[400] text-center text-[16px]">
-              أدخل عنوان بريدك الإلكتروني وسنرسل لك رمز التأكيد لإعادة تعيين
-              كلمة المرور الخاصة بك.
+            <p className="text-[16px] text-center text-gray-600">
+              أدخل بريدك لنرسل رمز التحقق
             </p>
           </DialogTitle>
-          <div dir="ltr" className="w-full px-15">
-            <div>
-              <label className="block mb-2  text-[24px] font-[500] text-[#211C4DB2]">
-                البريد الإلكتروني
-              </label>
-              <input
-                type="email"
-                placeholder="username@gmail.com"
-                onChange={(e) => {
-                  setsendemail(e.target.value);
-                }}
-                className="w-full p-3 border rounded-lg h-[50px] outline-none focus:ring-2 focus:ring-[#0B60B0]"
-              />
-            </div>
-          </div>
-          <div>
-            <button
-              onClick={handlesendemail}
-              className="bg-[#2AA0DC] w-[400px] h-[52px] my-5 rounded-[32px] text-[24px] text-white"
-            >
-              استمر
-            </button>
-          </div>
+
+          <input
+            type="email"
+            placeholder="username@gmail.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="w-3/4 p-3 border rounded-lg outline-none"
+          />
+
+          <button
+            onClick={handlesendemail}
+            disabled={!isValid}
+            className="bg-[#2AA0DC] w-[400px] h-[52px] rounded-[32px] text-white disabled:opacity-40"
+          >
+            استمر
+          </button>
         </div>
-        
       </Dialog>
+
+      <VerifyCode
+        isopen={openVerifyModal}
+        email={verifyEmail}
+        onClose={() => setOpenVerifyModal(false)}
+        onSuccess={(code) => {
+          setVerifiedCode(code);
+          setOpenVerifyModal(false);
+          setOpenResetModal(true);
+        }}
+      />
+
+      <ResetPasswordModal
+        isopen={openResetModal}
+        email={verifyEmail}
+        code={verifiedCode}
+        onClose={() => setOpenResetModal(false)}
+      />
     </>
   );
 }
