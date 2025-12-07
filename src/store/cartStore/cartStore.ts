@@ -35,7 +35,7 @@ interface CartItem {
 interface CartState {
   loading: boolean;
   error: string | null;
-  total:number
+  total: number;
   items: CartItem[];
   fetchCart: () => Promise<void>;
   addToCart: (productId: number, quantity: number) => Promise<void>;
@@ -57,7 +57,7 @@ export const useCartStore = create<CartState>((set, get) => ({
 
       const res = await axios.get(`${baseUrl}api/v1/cart`, {
         headers: {
-          Authorization: `Bearer 45|PFCW13eGehd2ikzNvmBIYWH3NTDGqEyEiTAe7v3X94a901d7`,
+          Authorization: `Bearer ${token}`,
           Accept: "application/json",
           "Content-Type": "application/json",
         },
@@ -77,18 +77,10 @@ export const useCartStore = create<CartState>((set, get) => ({
   },
 
   // ----------------- ADD TO CART ------------------
-addToCart: async (productId: number, quantity: number = 1) => {
-  try {
-    const token = localStorage.getItem("token");
-    
-    if (!token) {
-      set({ error: "يجب تسجيل الدخول أولاً", loading: false });
-      return;
-    }
-
-    console.log("TOKEN:", token); // تأكد إنه موجود وسليم
-
-    set({ loading: true, error: null });
+  addToCart: async (productId: number, quantity: number) => {
+    try {
+      const token = localStorage.getItem("token");
+      set({ loading: true, error: null });
 
     const res = await axios.post(
       `${baseUrl}api/v1/cart`,
@@ -119,23 +111,26 @@ addToCart: async (productId: number, quantity: number = 1) => {
 
   deleteToCart: async (productId: number) => {
     try {
+      const token = localStorage.getItem("token");
+
       // const token = localStorage.getItem("token") || "";
       set({ loading: true, error: null });
 
       // 1) ابعت الريكوست وخزّن الرد
-      const res = await axios.delete(`${baseUrl}api/v1/cart/${productId}`, {
+      const res = await axios.delete(`${baseUrl}/api/v1/cart/product`, {
+        params: { product_id: productId },
         headers: {
-          Authorization: `Bearer 45|PFCW13eGehd2ikzNvmBIYWH3NTDGqEyEiTAe7v3X94a901d7`,
+          Authorization: `Bearer ${token}`,
           Accept: "application/json",
         },
       });
 
       // 2) اطبع الريسبونس كامل
-      console.log("ADD TO CART RESPONSE:", res.data);
+      console.log("remove frome card:", res.data);
 
       set({ loading: false });
     } catch (err: any) {
-      console.log("ADD TO CART ERROR:", err?.response);
+      console.log("remove frome card:", err?.response);
 
       set({
         error: err?.response?.data?.message || "Failed to add to cart",

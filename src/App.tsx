@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate, useParams } from "react-router-
 import { useSettings } from "@/store/settings";
 import i18n from "@/i18n";
 import Home from "@/pages/Home";
-import About from "@/pages/about";
+import About from "@/pages/About";
 import Servces from "@/pages/Servces";
 import Contact from "@/pages/Contact";
 // import NewHome from "@/pages/new/Home";
@@ -80,13 +80,13 @@ function LangLayout() {
       <Route path="/singleaddress" element={<Singleaddress/>} />
       <Route path="/discounts" element={<Discounts/>} />
       <Route path="/favourite" element={<Favourite/>} />
-      <Route path="/trademarks" element={<Trademarks/>} />
+      <Route path="/trademarks/:id" element={<Trademarks/>} />
       <Route path="/trademarksbestseller" element={<Trademarksbestseller/>} />
       <Route path="/trademarkscategory" element={<Trademarkscategory/>} />
       <Route path="/trademarkbestoffer" element={<Trademarkbestoffer/>} />
       <Route path="/singleproduct/:id" element={<Singleproduct/>} />
       <Route path="/checkout" element={<Checkout/>} />
-      <Route path="/categorySingle/:id" element={<CategorySingle/>} />
+      <Route path="categorySingle/:id/:productmain?" element={<CategorySingle/>} />
       
       <Route path="/wallet" element={<Wallet/>} />
     </Routes>

@@ -29,7 +29,7 @@ interface PageState {
   error: string | null;
 
   response: Product[] | null; // الداتا الراجعة فعليًا
-  fetchProducts: (params?: productsParams) => Promise<void>;
+  fetchProducts: (params?: productsParams, lang: string) => Promise<void>;
   fetchProductbyid: (id: string, params?: productsParams) => Promise<void>;
 }
 
@@ -40,14 +40,16 @@ export const useProductsStore = create<PageState>((set) => ({
   error: null,
   response: null,
 
-  fetchProducts: async (params: productsParams = {}) => {
+  fetchProducts: async (params: productsParams = {}, lang:string) => {
     try {
       set({ loading: true, error: null });
+      const token = localStorage.getItem("token");
 
       const res = await axios.get(`${baseUrl}api/v1/products`, {
         params,
         headers: {
-          Authorization: `Bearer 45|PFCW13eGehd2ikzNvmBIYWH3NTDGqEyEiTAe7v3X94a901d7`,
+          Authorization: `Bearer ${token}`,
+          "Accept-Language": `${lang}`,
           Accept: "application/json",
         },
       });

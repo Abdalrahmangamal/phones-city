@@ -10,12 +10,12 @@ import { useEffect } from "react";
 import { useParams } from "react-router";
 
 export default function Offers() {
-  let {id} = useParams();
+  let {id,productmain} = useParams();
 
 const { Categoriesbyid ,fetchCategoriesbyid} = useCategoriesStore();
 useEffect(() => {
   if (id) {
-    fetchCategoriesbyid(id);
+    fetchCategoriesbyid(id,productmain);
   }
 }, [id]);
 
