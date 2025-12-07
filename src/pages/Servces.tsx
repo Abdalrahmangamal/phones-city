@@ -5,6 +5,7 @@ import Ellipse5 from "@/assets/images/Ellipse 5.png";
 import {useServicesStore} from '@/store/servicesStore';
 import { useEffect } from "react";
   import { useLangSync } from "@/hooks/useLangSync";
+import Loader from "@/components/Loader";
 
 export default function Servces() {
 const { lang } = useLangSync();
@@ -16,6 +17,9 @@ const { lang } = useLangSync();
   console.log("servvvv",services);
   return (
     <Layout>
+        {
+        !services ? <Loader /> : null
+      }
       <div>
         {/* Hero Section - Responsive for mobile */}
         <Offerherosection title={"كل ما تحتاجه في مدينه الهواتف"} description={"استمتع بتجربة استثنائية معاحسن العروض بأفضل الأسعار وخدمة ما بعد البيع المميزة"} />

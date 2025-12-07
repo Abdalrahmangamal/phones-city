@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import axios from "axios";
- interface Category {
+interface Category {
   id: number;
   name: string;
   image: string | null;
@@ -8,7 +8,7 @@ import axios from "axios";
   created_at: string;
 }
 
- interface PaymentMethod {
+interface PaymentMethod {
   id: number;
   name: string;
   image: string;
@@ -17,7 +17,7 @@ import axios from "axios";
   total_price: string;
 }
 
- interface AppliedOffer {
+interface AppliedOffer {
   id: number;
   name: string | null;
   name_en: string;
@@ -32,7 +32,7 @@ import axios from "axios";
   created_at: string;
 }
 
- interface FavoriteProduct {
+interface FavoriteProduct {
   id: number;
   name: string;
   description: string;
@@ -57,13 +57,13 @@ import axios from "axios";
   created_at: string;
 }
 
- interface FavoriteItem {
+interface FavoriteItem {
   id: number;
   product: FavoriteProduct;
   created_at: string;
 }
 
- interface FavoritesResponse {
+interface FavoritesResponse {
   status: boolean;
   message: string;
   data: {
@@ -94,9 +94,16 @@ export const useFavoritesStore = create<FavoritesState>((set, get) => ({
   // GET /favorites
   fetchFavorites: async () => {
     try {
+      const token = localStorage.getItem("token");
+
       set({ loading: true });
 
-      const response = await axios.get(`${baseUrl}api/v1/favorites`);
+      const response = await axios.get(`${baseUrl}api/v1/favorites`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: "application/json",
+        },
+      });
 
       set({
         favorites: response.data.data.items,
@@ -115,11 +122,22 @@ export const useFavoritesStore = create<FavoritesState>((set, get) => ({
   // POST add to favorites
   addFavorite: async (productId: number) => {
     try {
+      const token = localStorage.getItem("token");
+
       set({ loading: true });
 
-      const response = await axios.post(`${baseUrl}api/v1/favorites`, {
-        product_id: productId,
-      });
+      const response = await axios.post(
+        `${baseUrl}api/v1/favorites`,
+        {
+          product_id: productId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            Accept: "application/json",
+          },
+        }
+      );
 
       const newItem: FavoriteItem = response.data.data;
 
@@ -139,9 +157,17 @@ export const useFavoritesStore = create<FavoritesState>((set, get) => ({
   // DELETE remove favorite
   removeFavorite: async (favoriteId: number) => {
     try {
+      const token = localStorage.getItem("token");
+
       set({ loading: true });
 
-      await axios.delete(`${baseUrl}api/v1/favorites/${favoriteId}`);
+      await axios.delete(`${baseUrl}api/v1/favorites/${favoriteId}`, {
+        headers: {
+          Authorization: `Bearer ${token} `,
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      });
 
       set({
         favorites: get().favorites.filter((f) => f.id !== favoriteId),

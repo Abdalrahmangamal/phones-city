@@ -224,3 +224,42 @@ swiper {
   padding: 0px !important;
   font-weight: 500;
 }
+
+@keyframes bounce-smooth {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+/* المدار الأول */
+@keyframes orbit-1 {
+  from {
+    transform: rotate(0deg) translateX(90px);
+  }
+  to {
+    transform: rotate(360deg) translateX(90px);
+  }
+}
+
+/* المدار الثاني */
+@keyframes orbit-2 {
+  from {
+    transform: rotate(0deg) translateX(70px);
+  }
+  to {
+    transform: rotate(-360deg) translateX(70px);
+  }
+}
+
+/* المدار الثالث */
+@keyframes orbit-3 {
+  from {
+    transform: rotate(0deg) translateX(50px);
+  }
+  to {
+    transform: rotate(360deg) translateX(50px);
+  }
+}

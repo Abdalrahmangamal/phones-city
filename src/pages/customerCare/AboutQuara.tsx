@@ -4,6 +4,7 @@ import InternalBanner from "@/components/public/Internalbanner";
 import { useLangSync } from "@/hooks/useLangSync";
 import { usePageStore } from "@/store/customerCareStore";
 import { useEffect } from "react";
+import Loader from "@/components/Loader";
 const AboutQuara = () => {
   const { page, fetchPage } = usePageStore();
   const { lang } = useLangSync();
@@ -12,6 +13,9 @@ const AboutQuara = () => {
   }, [fetchPage, lang]);
   return (
     <Layout>
+         {
+        !page ? <Loader /> : null
+      }
       <div
         className="container mx-auto px-4 py-8"
         dir={`${lang === "ar" ? "rtl" : "ltr"} `}

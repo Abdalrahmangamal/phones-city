@@ -35,7 +35,7 @@ interface CartItem {
 interface CartState {
   loading: boolean;
   error: string | null;
-  total:number
+  total: number;
   items: CartItem[];
   fetchCart: () => Promise<void>;
   addToCart: (productId: number, quantity: number) => Promise<void>;
@@ -57,7 +57,7 @@ export const useCartStore = create<CartState>((set, get) => ({
 
       const res = await axios.get(`${baseUrl}api/v1/cart`, {
         headers: {
-          Authorization: `Bearer 45|PFCW13eGehd2ikzNvmBIYWH3NTDGqEyEiTAe7v3X94a901d7`,
+          Authorization: `Bearer ${token}`,
           Accept: "application/json",
           "Content-Type": "application/json",
         },
@@ -79,56 +79,58 @@ export const useCartStore = create<CartState>((set, get) => ({
   // ----------------- ADD TO CART ------------------
   addToCart: async (productId: number, quantity: number) => {
     try {
-      const token = localStorage.getItem("token") || "";
+      const token = localStorage.getItem("token");
       set({ loading: true, error: null });
 
-      const form = new FormData();
-      form.append("product_id", String(productId));
-      form.append("quantity", String(quantity));
-
-      // 1) ابعت الريكوست وخزّن الرد
-      const res = await axios.post(`${baseUrl}api/v1/cart`, form, {
+    const res = await axios.post(
+      `${baseUrl}api/v1/cart`,
+      {
+        product_id: productId,
+        quantity: quantity,
+      },
+      {
         headers: {
-          Authorization: `Bearer 45|PFCW13eGehd2ikzNvmBIYWH3NTDGqEyEiTAe7v3X94a901d7`,
+          Authorization: `Bearer ${token}`,
           Accept: "application/json",
+          "Content-Type": "application/json", // مهم جدًا
         },
-      });
+      }
+    );
 
-      // 2) اطبع الريسبونس كامل
-      console.log("ADD TO CART RESPONSE:", res.data);
+    console.log("ADD TO CART SUCCESS:", res.data);
+    await get().fetchCart();
+    set({ loading: false });
+  } catch (err: any) {
+    console.error("ADD TO CART ERROR:", err.response?.data || err.message);
+    set({
+      error: err.response?.data?.message || "فشل إضافة المنتج للسلة",
+      loading: false,
+    });
+  }
+},
 
-      // 3) بعد الإضافة اعمل refresh
-      await get().fetchCart();
-
-      set({ loading: false });
-    } catch (err: any) {
-      console.log("ADD TO CART ERROR:", err?.response);
-
-      set({
-        error: err?.response?.data?.message || "Failed to add to cart",
-        loading: false,
-      });
-    }
-  },
   deleteToCart: async (productId: number) => {
     try {
+      const token = localStorage.getItem("token");
+
       // const token = localStorage.getItem("token") || "";
       set({ loading: true, error: null });
 
       // 1) ابعت الريكوست وخزّن الرد
-      const res = await axios.delete(`${baseUrl}api/v1/cart/${productId}`, {
+      const res = await axios.delete(`${baseUrl}/api/v1/cart/product`, {
+        params: { product_id: productId },
         headers: {
-          Authorization: `Bearer 45|PFCW13eGehd2ikzNvmBIYWH3NTDGqEyEiTAe7v3X94a901d7`,
+          Authorization: `Bearer ${token}`,
           Accept: "application/json",
         },
       });
 
       // 2) اطبع الريسبونس كامل
-      console.log("ADD TO CART RESPONSE:", res.data);
+      console.log("remove frome card:", res.data);
 
       set({ loading: false });
     } catch (err: any) {
-      console.log("ADD TO CART ERROR:", err?.response);
+      console.log("remove frome card:", err?.response);
 
       set({
         error: err?.response?.data?.message || "Failed to add to cart",
@@ -136,4 +138,5 @@ export const useCartStore = create<CartState>((set, get) => ({
       });
     }
   },
+
 }));

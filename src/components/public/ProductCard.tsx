@@ -1,24 +1,23 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Rating, RatingButton } from "@/components/ui/shadcn-io/rating";
 import type { Product } from "@/types/index";
 import { useLangSync } from "@/hooks/useLangSync";
 import { Link } from "react-router-dom";
 // import { useCart } from "@/store/cart"; // Added cart import
-import {useCartStore} from '@/store/cartStore/cartStore';
+import { useCartStore } from "@/store/cartStore/cartStore";
 interface ProductCardProps {
   product: Product;
   isNew?: boolean;
   favourite?: boolean;
   variations?: { color: string; image: string }[];
 }
-
+import { useFavoritesStore } from "@/store/favoritesStore";
 export default function ProductCard({ product }: ProductCardProps) {
-  const {addToCart,deleteToCart}=useCartStore();
+  const { addFavorite } = useFavoritesStore();
+  const { addToCart, deleteToCart } = useCartStore();
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   const { lang } = useLangSync();
-
- 
   const hasOptions =
     Array.isArray(product?.options) && product.options.length > 0;
   const selectedVariant = hasOptions ? product.options[selectedIndex] : null;
@@ -49,14 +48,15 @@ export default function ProductCard({ product }: ProductCardProps) {
           />
         </Link>
 
-        <div className="flex w-full items-center justify-between absolute right-0 top-0">
-          <div
-            onClick={(e) => {
-              e.stopPropagation(); // يمنع ضغط الأيقونة من التأثير على باقي العناصر
-              e.preventDefault();
-            }}
-            className="bg-[#EEF1F6] z-5 flex items-center justify-center w-[36px] h-[36px] rounded-full"
-          >
+        <div
+          className="flex w-full items-center justify-between absolute right-0 top-0"
+          onClick={
+            product.is_favorite === false
+              ? () => addFavorite(product.id)
+              : () => {}
+          }
+        >
+          <div className="bg-[#EEF1F6] z-5 flex items-center justify-center w-[36px] h-[36px] rounded-full">
             {product.is_favorite === true ? (
               <svg
                 width="21"
@@ -120,10 +120,10 @@ export default function ProductCard({ product }: ProductCardProps) {
       {hasOptions && (
         <div className="flex items-center gap-[7px] mt-[10px] justify-start">
           {product.options.map((variant, index) => (
-          <button
-  key={index}
-  onClick={() => setSelectedIndex(index)}
-  className={`
+            <button
+              key={index}
+              onClick={() => setSelectedIndex(index)}
+              className={`
     flex items-center justify-center 
     transition border-2 text-[10px]
     ${
@@ -132,22 +132,19 @@ export default function ProductCard({ product }: ProductCardProps) {
         : "w-[18px] h-[18px] rounded-full" // شكل اللون
     }
     ${
-      index === selectedIndex
-        ? "border-[#211C4D] scale-110"
-        : "border-gray-300"
+      index === selectedIndex ? "border-[#211C4D] scale-110" : "border-gray-300"
     }
   `}
-  style={{
-    backgroundColor:
-      product.options[index].type === "color"
-        ? variant?.value // لو color → استعمل اللون
-        : "#fff", // لو size → خلي الخلفية بيضاء
-  }}
-  title={`Select ${variant?.value}`}
->
-  {product.options[index].type === "size" ? variant.value : ""}
-</button>
-
+              style={{
+                backgroundColor:
+                  product.options[index].type === "color"
+                    ? variant?.value // لو color → استعمل اللون
+                    : "#fff", // لو size → خلي الخلفية بيضاء
+              }}
+              title={`Select ${variant?.value}`}
+            >
+              {product.options[index].type === "size" ? variant.value : ""}
+            </button>
           ))}
         </div>
       )}
@@ -177,8 +174,7 @@ export default function ProductCard({ product }: ProductCardProps) {
               {original?.toLocaleString()} ر.س
             </p>
             <svg
-              width="87"
-              className="absolute top-2 md:top-3  md:w-[87px] right-0 w-fit z-1"
+              className="absolute top-2 md:top-3 w-full right-0  z-1"
               height="5"
               viewBox="0 0 87 5"
               fill="none"
@@ -192,9 +188,15 @@ export default function ProductCard({ product }: ProductCardProps) {
           </div>
         </div>
         <div
-        onClick={product.in_cart==false?()=>addToCart(product.id,1):()=>deleteToCart(product.id)}
+          onClick={
+            product.in_cart == false
+              ? () => addToCart(product.options[0].id, 1)
+              : () => deleteToCart(product.id)
+          }
           className={`w-[40px] h-[40px] flex items-center justify-center rounded-[8px] cursor-pointer transition ${
-            product.in_cart===true ? "bg-[#211C4D]" : "bg-[#EEF1F6] hover:bg-[#dfe3ea]"
+            product.in_cart === true
+              ? "bg-[#211C4D]"
+              : "bg-[#EEF1F6] hover:bg-[#dfe3ea]"
           }`}
         >
           {product.in_cart ? (
