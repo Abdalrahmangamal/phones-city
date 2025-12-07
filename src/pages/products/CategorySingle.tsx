@@ -8,7 +8,7 @@ import Parttner from "@/components/public/Parttner";
 import {useCategoriesStore} from '@/store/categories/useCategoriesStore.ts';
 import { useEffect } from "react";
 import { useParams } from "react-router";
-
+import Loader from '@/components/Loader'
 export default function Offers() {
   let {id,productmain} = useParams();
 
@@ -23,6 +23,9 @@ useEffect(() => {
 
   return (
     <Layout>
+        {
+        !Categoriesbyid ? <Loader /> : null
+      }
       <div>
         <div>
           <NewHeroSection

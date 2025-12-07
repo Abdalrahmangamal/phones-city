@@ -11,10 +11,9 @@ import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import useS24Ultra from "@/hooks/useS24Ultra";
 import S24Parttner from "@/components/s24-ultra/S24Parttner";
-
+import Loader from '@/components/Loader'
 export default function Parttner() {
     const { lang } = useLangSync();
-
   const { fetchCategories,treadmark } = useCategoriesStore();
   useEffect(() => {
     fetchCategories(lang,true);
@@ -60,6 +59,9 @@ console.log("tredmark",treadmark)
 
   return (
     <div>
+        {
+        !treadmark ? <Loader /> : null
+      }
       <div className="relative flex items-center justify-center">
         <h1 className="md:text-[40px] text-[24px] font-[700]  text-[#211C4D]">
           العلامات التجارية

@@ -9,7 +9,7 @@ import {useProductsStore} from '@/store/productsStore.ts';
 import { useEffect } from "react";
 import { useLangSync } from "@/hooks/useLangSync";
 import { useTranslation } from "react-i18next";
-
+import Loader from '@/components/Loader'
 export default function Offers() {
 const { fetchProducts ,response} = useProductsStore();
   const { lang } = useLangSync();
@@ -22,6 +22,9 @@ useEffect(() => {
 
   return (
     <Layout>
+      {
+        !response ? <Loader /> : null
+      }
       <div>
         <div>
           <NewHeroSection

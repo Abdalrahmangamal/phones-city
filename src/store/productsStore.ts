@@ -29,7 +29,7 @@ interface PageState {
   error: string | null;
 
   response: Product[] | null; // الداتا الراجعة فعليًا
-  fetchProducts: (params?: productsParams, lang: string) => Promise<void>;
+  fetchProducts: (params?: productsParams, lang:string) => Promise<void>;
   fetchProductbyid: (id: string, params?: productsParams) => Promise<void>;
 }
 

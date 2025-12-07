@@ -11,101 +11,19 @@ import {useLangSync} from '@/hooks/useLangSync'
 import {useCategoriesStore} from '@/store/categories/useCategoriesStore';
 import { useEffect } from "react";
 import { useParams } from "react-router";
-
+import {useProductsStore} from '@/store/productsStore'
 export default function Trademarks() {
   const {lang}=useLangSync();
+  const{response,fetchProducts}=useProductsStore();
 const {fetchCategoriesbyid,Categoriesbyid}=useCategoriesStore();
 const {id}= useParams();
 useEffect(() => {
+  if (!id) return;
   fetchCategoriesbyid(id,"products");
-},[]);
-
+  fetchProducts({category_id:Number(id)},lang);
+},[id,lang]);
+console.log("caregory response",response)
 console.log("id",Categoriesbyid)
-  // const products: Product[] = [
-  //   {
-  //     id: 1,
-  //     name: "لابتوب ابل ماك بوك برو 2024",
-  //     price: 8999,
-  //     isNew: true,
-      
-  //     variations: [
-  //       { color: "#fff", image: orangelabtop },
-  //       { color: "#000", image: bluephone },
-  //       { color: "#f68b1f", image: airbuds },
-  //     ],
-  //   },
-  //   {
-  //     id: 2,
-  //     name: "ايفون 15 برو",
-  //     discount: "16",
-  //     price: 7499,
-  //     variations: [
-  //       { color: "#ccc", image: bluephone },
-  //       { color: "#000", image: product2 },
-  //     ],
-  //   },
-  //   {
-  //     id: 3,
-  //     name: "ايفون 15 برو",
-  //     discount: "16",
-  //     price: 7499,
-  //     variations: [
-  //       { color: "red", image: product1 },
-  //       { color: "#000", image: product2 },
-  //     ],
-  //   },
-  //   {
-  //     id: 4,
-  //     name: "ايفون 15 برو",
-  //     discount: "16",
-  //     price: 7499,
-  //     variations: [
-  //       { color: "#ccc", image: bluephone },
-  //       { color: "#000", image: watch },
-  //     ],
-  //   },
-  //   {
-  //     id: 1,
-  //     name: "لابتوب ابل ماك بوك برو 2024",
-  //     price: 8999,
-  //     isNew: true,
-  //     variations: [
-  //       { color: "#fff", image: orangelabtop },
-  //       { color: "#000", image: bluephone },
-  //       { color: "#f68b1f", image: airbuds },
-  //     ],
-  //   },
-  //   {
-  //     id: 2,
-  //     name: "ايفون 15 برو",
-  //     discount: "16",
-  //     price: 7499,
-  //     variations: [
-  //       { color: "#ccc", image: bluephone },
-  //       { color: "#000", image: product2 },
-  //     ],
-  //   },
-  //   {
-  //     id: 3,
-  //     name: "ايفون 15 برو",
-  //     discount: "16",
-  //     price: 7499,
-  //     variations: [
-  //       { color: "red", image: product1 },
-  //       { color: "#000", image: product2 },
-  //     ],
-  //   },
-  //   {
-  //     id: 4,
-  //     name: "ايفون 15 برو",
-  //     discount: "16",
-  //     price: 7499,
-  //     variations: [
-  //       { color: "#ccc", image: bluephone },
-  //       { color: "#000", image: watch },
-  //     ],
-  //   },
-  // ];
   return (
     <div>
       <Layout>

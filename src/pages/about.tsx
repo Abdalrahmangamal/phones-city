@@ -7,6 +7,7 @@ import { useAboutStore } from "@/store/aboutusStore";
 import { useEffect } from "react";
 import { useLangSync } from "@/hooks/useLangSync";
 import { useTranslation } from "react-i18next";
+import Loader from "@/components/Loader";
 
 export default function About() {
   const { t } = useTranslation();
@@ -19,6 +20,9 @@ export default function About() {
   console.log("dd", data);
   return (
     <Layout>
+       {
+        !data ? <Loader /> : null
+      }
       <div>
         <Internalbanner title={t("AboutCityPhones")} description={t("Gettoknowus")} />
         <Aboutcityphones description={data?.about_website} />
