@@ -50,31 +50,39 @@ export const useCartStore = create<CartState>((set, get) => ({
   items: [],
   total: 0,
   // ----------------- GET CART ------------------
-  fetchCart: async () => {
-    try {
-      const token = localStorage.getItem("token") || "";
-      set({ loading: true, error: null });
+fetchCart: async () => {
+  try {
+    const token = localStorage.getItem("token") ;
+    const res = await axios.get(`${baseUrl}api/v1/cart`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/json",
+      },
+    });
 
-      const res = await axios.get(`${baseUrl}api/v1/cart`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-      });
+    const newItems = res?.data?.data?.items || [];
+    const newTotal = res?.data?.data?.total || 0;
 
-      set({
-        total: res?.data?.data?.total || 0,
-        items: [...(res?.data?.data?.items || [])],
-        loading: false,
-      });
-    } catch (err: any) {
-      set({
-        error: err?.response?.data?.message || "Failed to fetch cart",
-        loading: false,
-      });
+    const { items, total } = get();
+
+    // امنع الـ set لو مفيش تغيير حقيقي
+    if (
+      JSON.stringify(items) === JSON.stringify(newItems) &&
+      total === newTotal
+    ) {
+      return; // مفيش تغيير → مفيش re-render → مفيش loop
     }
-  },
+
+    set({
+      items: newItems,
+      total: newTotal,
+      loading: false,
+    });
+  } catch (err) {
+    set({ error: "Failed to fetch cart", loading: false });
+  }
+},
+
 
   // ----------------- ADD TO CART ------------------
 addToCart: async (id: number, quantity: number, isOption: boolean) => {

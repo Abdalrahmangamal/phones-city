@@ -31,11 +31,13 @@ export const useCategoriesStore = create<CategoriesState>((set) => ({
   Catesubgategory: [],
   fetchCategories: async (lang, istrademark?: boolean) => {
     set({ loading: true, error: null });
+    const token = localStorage.getItem("token");
 
     try {
       const res = await axios.get(`${baseUrl}api/v1/categories`, {
         headers: {
           "Accept-Language": `${lang}`,
+          Authorization: `Bearer ${token}`,
         },
 
         params: { is_trademark: istrademark },
@@ -56,12 +58,18 @@ export const useCategoriesStore = create<CategoriesState>((set) => ({
   },
   fetchCategoriesbyid: async (id: string, productsmain?: string) => {
     set({ loading: true, error: null });
+    const token = localStorage.getItem("token");
 
     try {
       const res = await axios.get(
         `${baseUrl}api/v1/categories/${id}${
           productsmain ? "/" + productsmain : ""
-        }`
+        }`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
 
       set({
@@ -80,9 +88,7 @@ export const useCategoriesStore = create<CategoriesState>((set) => ({
     set({ loading: true, error: null });
 
     try {
-      const res = await axios.get(
-        `${baseUrl}api/v1/categories/${id}`
-      );
+      const res = await axios.get(`${baseUrl}api/v1/categories/${id}`);
 
       set({
         // singleCategory: res.data.data,  // تخزن object هنا

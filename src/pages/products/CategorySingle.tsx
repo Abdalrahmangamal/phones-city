@@ -19,7 +19,7 @@ useEffect(() => {
   }
 }, [id]);
 
-  console.log(Categoriesbyid)
+  console.log("asdasd",Categoriesbyid)
 
   return (
     <Layout>

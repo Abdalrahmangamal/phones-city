@@ -10,17 +10,20 @@ import Loader from '@/components/Loader'
 import { useParams } from "react-router";
 import {useProductsStore} from '@/store/productsStore'
 import { useEffect, useState } from "react";
+import  '@/style.css'
+import { useLangSync } from "@/hooks/useLangSync";
 
 export default function ProductPage() {
   const {id} = useParams();
   const {fetchProductbyid, response, loading} = useProductsStore();
   const [selectedOptionIndex, setSelectedOptionIndex] = useState(0);
+  const { lang } = useLangSync();
 
   useEffect(() => {
     if (id) {
-      fetchProductbyid(id);
+      fetchProductbyid(id,lang);
     }
-  }, [id, fetchProductbyid]);
+  }, [id,lang]);
 
   const handleOptionChange = (index: number) => {
     setSelectedOptionIndex(index);
@@ -29,7 +32,7 @@ export default function ProductPage() {
   // تحديث selectedOptionIndex عند تحميل المنتج
   useEffect(() => {
     setSelectedOptionIndex(0);
-  }, [response]);
+  }, []);
 
   // التحقق من البيانات بشكل صحيح - response يجب أن يكون مفرد وليس array
   const product = Array.isArray(response) ? response[0] : response;

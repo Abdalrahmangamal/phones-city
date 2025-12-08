@@ -14,7 +14,7 @@ interface ProductCardProps {
 }
 import { useFavoritesStore } from "@/store/favoritesStore";
 export default function ProductCard({ product }: ProductCardProps) {
-  const { addFavorite } = useFavoritesStore();
+  const { addFavorite,removeFavorite } = useFavoritesStore();
   const { addToCart, deleteToCart } = useCartStore();
   const [selectedIndex, setSelectedIndex] = useState(0);
 const selectedVariant = product.options[selectedIndex];
@@ -57,7 +57,7 @@ const [isInCart, setIsInCart] = useState((product as any)?.in_cart || false);
           onClick={
             !(product as any)?.is_favorite
               ? () => addFavorite(product.id)
-              : () => {}
+              : () => removeFavorite(product.id)
           }
         >
           <div className="bg-[#EEF1F6] flex items-center justify-center w-[36px] h-[36px] rounded-full cursor-pointer hover:bg-[#e0e5f0] transition-colors">

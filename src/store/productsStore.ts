@@ -20,7 +20,7 @@ interface PageState {
 
   response: Product | Product[] | null; // الداتا الراجعة فعليًا - يمكن أن تكون مفردة أو مصفوفة
   fetchProducts: (params?: productsParams, lang?: string) => Promise<void>;
-  fetchProductbyid: (id: string, params?: productsParams) => Promise<void>;
+  fetchProductbyid: (id: string,lang:string, params?: productsParams) => Promise<void>;
 }
 
 const baseUrl = import.meta.env.VITE_BASE_URL;
@@ -57,12 +57,16 @@ export const useProductsStore = create<PageState>((set) => ({
       });
     }
   },
-  fetchProductbyid: async (id: string, params: productsParams = {}) => {
+  fetchProductbyid: async (id: string,lang, params: productsParams = {}) => {
     try {
       set({ loading: true, error: null });
 
       const res = await axios.get(`${baseUrl}api/v1/products/${id}`, {
         params,
+        headers: {
+          "Accept-Language": `${lang}`,
+
+        },
       });
 
       console.log("ZUSTAND RESPONSE:", res.data.data); // <<< هنا هتشوفها 100%

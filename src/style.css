@@ -196,3 +196,11 @@
 .MuiOtpInput-TextField	{
   width: 50px;  
 }
+.features-content ul {
+  list-style: disc !important;
+  padding-right: 1.2rem !important;
+}
+
+.features-content li {
+  margin-bottom: 8px;
+}
