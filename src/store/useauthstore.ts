@@ -105,8 +105,8 @@ export const useAuthStore = create<AuthState>((set) => ({
 
       // على حسب شكل API بتاعك، افترضنا:
       // { status, message, data: { token, user } }
-      localStorage.setItem("userData", JSON.stringify(res.data));
-      localStorage.setItem("token", JSON.stringify(res.data.data.token));
+       localStorage.setItem("userData", res.data);
+      localStorage.setItem("token", res.data.data.token);
 
       return res.data; // ← ApiResponse
     } catch (err) {
@@ -114,7 +114,8 @@ export const useAuthStore = create<AuthState>((set) => ({
       console.log(err);
       return null;
     } finally {
-      set({ loading: false });
+      set({ loading: false });
+
     }
   },
 

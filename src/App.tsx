@@ -111,7 +111,7 @@ export default function App() {
           autoClose={3000}
           hideProgressBar={false}
           newestOnTop={false}
-          closeOnClick
+          closeOnClick={false} 
           rtl={lang === "ar"} 
           pauseOnFocusLoss
           draggable

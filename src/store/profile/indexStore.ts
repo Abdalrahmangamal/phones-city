@@ -1,0 +1,8 @@
+// store/profile/index.ts
+export { default as useAddressStore } from './addressStore';
+
+
+export { useProfileStore } from './profileStore';
+// يمكنك إضافة stores أخرى هنا مستقبلاً
+// export { default as useProfileStore } from './profile';
+// export { default as useOrdersStore } from './orders';
