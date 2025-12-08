@@ -11,20 +11,29 @@ import { useLangSync } from "@/hooks/useLangSync";
 import { useTranslation } from "react-i18next";
 import Loader from '@/components/Loader'
 export default function Offers() {
-const { fetchProducts ,response} = useProductsStore();
+  const { fetchProducts, response } = useProductsStore();
   const { lang } = useLangSync();
   const { t } = useTranslation();
 
-useEffect(() => {
-    fetchProducts({simple:false,has_offer:1,},lang);
+  useEffect(() => {
+    fetchProducts({ simple: false, has_offer: 1 }, lang);
   }, [lang]);
-  console.log("ressss",response)
 
+  console.log("ressss", response);
+
+  // تحويل response إلى array إذا لم يكن كذلك
+  const products = Array.isArray(response) ? response : [];
+
+  if (!response || products.length === 0) {
+    return (
+      <Layout>
+        <Loader />
+      </Layout>
+    );
+  }
   return (
     <Layout>
-      {
-        !response ? <Loader /> : null
-      }
+      
       <div>
         <div>
           <NewHeroSection
@@ -46,7 +55,7 @@ useEffect(() => {
             ]}
           />
           <BannerSection image={banner} />
-          <Bestseller title={`${t("CityofPhonesOffers")}`} products={response || []} />
+          <Bestseller title={`${t("CityofPhonesOffers")}`} products={products} />
           <div className="mb-15">
             <Parttner />
           </div>

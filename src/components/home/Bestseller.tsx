@@ -1,6 +1,7 @@
 import ProductCard from "../public/ProductCard";
 import pattern from "../../assets/images/Layer_1.png";
 import { Link } from "react-router-dom";
+import type { Product } from "@/types/index";
 
 interface BestsellerProps {
   title: string;

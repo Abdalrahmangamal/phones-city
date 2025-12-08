@@ -1,77 +1,42 @@
 import { Plus, Minus, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import tamara from "@/assets/images/tamara.png";
-import tabby from "@/assets/images/tabby 1.png";
-import madfu from "@/assets/images/madfu.png";
-import mispay from "@/assets/images/mispay_installment 1.png";
-import emkn from "@/assets/images/emkann.png";
-import amwal from "@/assets/images/amwal.png";
 import { useEffect, useState } from "react";
 import { TabbyModal } from "@/components/singleproduct/Modelpayment";
 import { TamaraModal } from "@/components/singleproduct/TamaraModal";
 import { Link } from "react-router-dom";
+import { useCartStore } from "@/store/cartStore/cartStore";
+import { toast } from "react-toastify";
+import { useLangSync } from "@/hooks/useLangSync";
+import { useTranslation } from "react-i18next";
 
-export default function Ptoductdetails({ product,handleindexchange }: any) {
-  const [selectedColor, setSelectedColor] = useState("blue");
+export default function Ptoductdetails({
+  product,
+  handleindexchange,
+  selectedOptionIndex: propSelectedOptionIndex,
+}: any) {
+  const { addToCart } = useCartStore();
   const [quantity, setQuantity] = useState(1);
   const [isTabbyModalOpen, setIsTabbyModalOpen] = useState(false);
   const [isTamaraModalOpen, setIsTamaraModalOpen] = useState(false);
-  const [selectedOptionIndex, setSelectedOptionIndex] = useState(0);
-useEffect(() => {
-handleindexchange(selectedOptionIndex);}
-,[selectedOptionIndex]);
-if (!product) return <div>Loading...</div>;
+  const [selectedOptionIndex, setSelectedOptionIndex] = useState(
+    propSelectedOptionIndex || 0
+  );
+  const [isAddingToCart, setIsAddingToCart] = useState(false);
+  const { lang } = useLangSync();
+  const { t } = useTranslation();
 
-  const paymentMethods = [
-    {
-      id: "tamara",
-      img: tamara,
-      name: "تامارا",
-      description:
-        "او قسم فاتورتك علي 3 دفعات بقيمه 24,020 رس بدون رسوم تأخير ، متوافقه مع الشريعه الاسلاميه ",
-      modal: "tamara",
-    },
-    {
-      id: "tabby",
-      img: tabby,
-      name: "تابي",
-      description:
-        "او قسم فاتورتك علي 4 دفعات بقيمه 15,920 رس بدون رسوم تأخير ، متوافقه مع الشريعه الاسلاميه ",
-      modal: "tabby",
-    },
-    {
-      id: "madfu",
-      img: madfu,
-      name: "مدفوع",
-      description:
-        "4 دفعات بقيمة 15,920 رس / شهر، وبدون رسوم تأخير ! ومتوافقه مع الشريعه الاسلاميه ",
-      modal: "tabby",
-    },
-    {
-      id: "mispay",
-      img: mispay,
-      name: "ميسباي",
-      description:
-        "4 دفعات بقيمة 15,920 رس /شهر، بدون رسوم تأخير ! ومتوافقه مع الشريعه الاسلاميه ",
-      modal: "tabby",
-    },
-    {
-      id: "emkn",
-      img: emkn,
-      name: "امكن",
-      description:
-        "4 دفعات بقيمة 15,920 رس /شهر، بدون رسوم تأخير ! ومتوافقه مع الشريعه الاسلاميه ",
-      modal: "tabby",
-    },
-    {
-      id: "amwal",
-      img: amwal,
-      name: "أمـوال",
-      description:
-        "قسّطها إلى 6 دفعات مع البنك وبدون فوائد ، متوافقه مع الشريعه الاسلاميه ",
-      modal: "tabby",
-    },
-  ];
+  useEffect(() => {
+    handleindexchange(selectedOptionIndex);
+  }, [selectedOptionIndex, handleindexchange]);
+
+  // تحديث الـ index عند تغيير الـ prop
+  useEffect(() => {
+    if (propSelectedOptionIndex !== undefined) {
+      setSelectedOptionIndex(propSelectedOptionIndex);
+    }
+  }, [propSelectedOptionIndex]);
+
+  if (!product) return <div>تحميل...</div>;
 
   const openModal = (modalType: string) => {
     if (modalType === "tamara") {
@@ -81,10 +46,41 @@ if (!product) return <div>Loading...</div>;
     }
   };
 
+  const handleAddToCart = async () => {
+    try {
+      setIsAddingToCart(true);
+      const selectedVariant = product.options[selectedOptionIndex];
+      const hasMultiple = product.options && product.options.length > 1;
+      const idToSend = hasMultiple ? selectedVariant.id : product.id;
+
+      await addToCart(idToSend, quantity, hasMultiple);
+
+      toast.success(`تم إضافة ${product.name} إلى السلة`, {
+        position: "bottom-right",
+        autoClose: 2000,
+      });
+
+      // إعادة تعيين الكمية بعد الإضافة
+      setQuantity(1);
+    } catch (error) {
+      toast.error("فشل إضافة المنتج إلى السلة", {
+        position: "bottom-right",
+        autoClose: 2000,
+      });
+    } finally {
+      setIsAddingToCart(false);
+    }
+  };
+
+  // الحصول على بوابات الدفع للـ variant المختار
+  const selectedVariant = product.options?.[selectedOptionIndex];
+  const paymentMethodsForSelectedVariant =
+    selectedVariant?.payment_methods || [];
+
   return (
-    <div className="space-y-4 md:space-y-6">
+    <div className="space-y-4 md:space-y-6" dir={lang == "ar" ? "rtl" : "ltr"}>
       <div>
-        <h1 className="text-xl md:text-2xl font-bold text-foreground leading-relaxed mb-3">
+        <h1 className="text-xl text-start md:text-2xl font-bold text-foreground leading-relaxed mb-3">
           {product?.description}
         </h1>
         <div className="flex items-center gap-2 mb-2">
@@ -104,12 +100,12 @@ if (!product) return <div>Loading...</div>;
             (68 مراجعة)
           </span>
         </div>
-        <p className="text-sm text-primary">أختر لونك</p>
+        <p className="text-sm text-start text-primary">{t("Chooseyourcolor")}</p>
       </div>
 
       {/* Color Selection */}
       <div className="flex gap-2 md:gap-3">
-        {product?.options?.map((opt, index) => (
+        {product?.options?.map((opt: any, index: number) => (
           <button
             key={opt.id}
             onClick={() => setSelectedOptionIndex(index)}
@@ -130,41 +126,62 @@ if (!product) return <div>Loading...</div>;
       {/* Price */}
       <div className="flex items-baseline gap-2 md:gap-3">
         <span className="text-2xl md:text-3xl font-bold text-[#C33104]">
-          {product.options[selectedOptionIndex].final_price}ريس
+          {typeof product.options[selectedOptionIndex]?.final_price === "string"
+            ? product.options[selectedOptionIndex].final_price
+            : Number(
+                product.options[selectedOptionIndex]?.final_price || 0
+              ).toLocaleString("ar-SA")}
+          {t("SAR")}
         </span>
         <span className="text-base md:text-lg text-muted-foreground line-through">
-          {product.options[selectedOptionIndex].original_price}ريس
+          {typeof product.options[selectedOptionIndex]?.original_price ===
+          "string"
+            ? product.options[selectedOptionIndex].original_price
+            : Number(
+                product.options[selectedOptionIndex]?.original_price || 0
+              ).toLocaleString("ar-SA")}
+          {t("SAR")}
         </span>
       </div>
 
       {/* Payment Options */}
       <div className="space-y-3 pt-4 md:pt-6">
-        {paymentMethods.map((item) => (
-          <div
-            key={item.id}
-            className="flex flex-col md:flex-row md:items-center gap-3 p-3 md:h-[72px] h-full rounded-lg border border-[#0000004D]"
-          >
-            <div className="flex-1">
-              <p className="text-xs md:text-[16px] font-[600] text-[#211C4D]">
-                {item.description}
-                <button
-                  onClick={() => openModal(item.modal)}
-                  className="underline cursor-pointer decoration-[#211C4D] underline-offset-2 border-none bg-none"
-                  aria-label={`معرفة التفاصيل عن ${item.name}`}
-                >
-                  لمعرفة التفاصيل
-                </button>
-              </p>
+        {paymentMethodsForSelectedVariant &&
+        paymentMethodsForSelectedVariant.length > 0 ? (
+          paymentMethodsForSelectedVariant.map((item: any) => (
+            <div
+              key={item.id}
+              className="flex flex-col md:flex-row md:items-center gap-3 p-3 md:h-[72px] h-full rounded-lg border border-[#0000004D]"
+            >
+              <div className="flex-1">
+                <p className="text-xs md:text-[16px] font-[600] text-start text-[#211C4D]">
+                  {item.name}
+                  <span className="ml-2 text-[#C33104] font-bold">
+                    {item.total_price}
+                  </span>
+                  {/* <button
+                    onClick={() => openModal(item.modal || "tabby")}
+                    className="ml-2 underline cursor-pointer decoration-[#211C4D] underline-offset-2 border-none bg-none"
+                    aria-label={`معرفة التفاصيل عن ${item.name}`}
+                  >
+                    لمعرفة التفاصيل
+                  </button> */}
+                </p>
+              </div>
+              <div className="px-3 py-1 md:px-4 md:py-1 rounded text-sm font-bold text-card">
+                <img
+                  src={item.image}
+                  className="w-[80px] h-[60px] object-contain"
+                  alt={item.name}
+                />
+              </div>
             </div>
-            <div className="px-3 py-1 md:px-4 md:py-1 rounded text-sm font-bold text-card">
-              <img
-                src={item.img}
-                className="w-[80px] md:w-[120px]"
-                alt={item.name}
-              />
-            </div>
+          ))
+        ) : (
+          <div className="p-4 text-center text-gray-500">
+            لا توجد طرق دفع متاحة لهذا الخيار
           </div>
-        ))}
+        )}
       </div>
 
       {/* Quantity and Add to Cart */}
@@ -190,17 +207,19 @@ if (!product) return <div>Loading...</div>;
         </div>
         <div className="flex flex-col md:flex-row gap-3 md:gap-4">
           <Button
+            onClick={handleAddToCart}
+            disabled={isAddingToCart}
             variant="outline"
             size="lg"
-            className="px-4 md:px-6 w-[180px] md:w-[200px] h-[50px] md:h-[64px] border-2 border-black bg-transparent text-xl md:text-[25px]"
+            className="px-4 md:px-6 w-[180px] md:w-[200px] h-[50px] md:h-[64px] border-2 border-black bg-transparent text-xl md:text-[25px] disabled:opacity-50"
           >
-            إضافة للسلة
+            {isAddingToCart ? "جاري الإضافة..." : t("Addtocart")}
           </Button>
           <Link
             className="bg-[#2AA0DC] w-[180px] md:w-[200px] h-[50px] md:h-[64px] hover:bg-primary/90 rounded-[8px] flex items-center justify-center text-primary-foreground font-[600] text-xl md:text-[25px]"
             to={"/checkout"}
           >
-            اشتري الآن
+            {t("Buynow")}
           </Link>
         </div>
       </div>

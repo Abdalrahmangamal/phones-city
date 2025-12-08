@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import axios from "axios";
+import type { Product } from "@/types/index";
 
 interface productsParams {
   simple?: boolean;
@@ -13,24 +14,13 @@ interface productsParams {
   sort_order?: string;
 }
 
-// شكل الداتا الراجعة من الـ API
-interface Product {
-  id: number;
-  name: string;
-  main_image: string | null;
-  original_price: string;
-  final_price: string;
-  stock_status: "in_stock" | "out_of_stock";
-  options: any[];
-}
-
 interface PageState {
   loading: boolean;
   error: string | null;
 
-  response: Product[] | null; // الداتا الراجعة فعليًا
-  fetchProducts: (params?: productsParams, lang:string) => Promise<void>;
-  fetchProductbyid: (id: string, params?: productsParams) => Promise<void>;
+  response: Product | Product[] | null; // الداتا الراجعة فعليًا - يمكن أن تكون مفردة أو مصفوفة
+  fetchProducts: (params?: productsParams, lang?: string) => Promise<void>;
+  fetchProductbyid: (id: string,lang:string, params?: productsParams) => Promise<void>;
 }
 
 const baseUrl = import.meta.env.VITE_BASE_URL;
@@ -40,7 +30,7 @@ export const useProductsStore = create<PageState>((set) => ({
   error: null,
   response: null,
 
-  fetchProducts: async (params: productsParams = {}, lang:string) => {
+  fetchProducts: async (params: productsParams = {}, lang?: string) => {
     try {
       set({ loading: true, error: null });
       const token = localStorage.getItem("token");
@@ -49,7 +39,7 @@ export const useProductsStore = create<PageState>((set) => ({
         params,
         headers: {
           Authorization: `Bearer ${token}`,
-          "Accept-Language": `${lang}`,
+          "Accept-Language": `${lang || "ar"}`,
           Accept: "application/json",
         },
       });
@@ -67,12 +57,16 @@ export const useProductsStore = create<PageState>((set) => ({
       });
     }
   },
-  fetchProductbyid: async (id: string, params: productsParams = {}) => {
+  fetchProductbyid: async (id: string,lang, params: productsParams = {}) => {
     try {
       set({ loading: true, error: null });
 
       const res = await axios.get(`${baseUrl}api/v1/products/${id}`, {
         params,
+        headers: {
+          "Accept-Language": `${lang}`,
+
+        },
       });
 
       console.log("ZUSTAND RESPONSE:", res.data.data); // <<< هنا هتشوفها 100%

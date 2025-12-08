@@ -96,7 +96,7 @@ console.log("tredmark",treadmark)
             <Link to={`/${lang}/trademarks/${item.id}`}>
               <img
                 src={item.image}
-                className="md:!w-[153px] !w-[50px] !h-[12px] md:!h-[30px] !object-contain"
+                className="w-full h-full  !object-contain"
                 alt="logo"
               />
             </Link>

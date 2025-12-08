@@ -14,15 +14,16 @@ import { useParams } from "react-router";
 import {useProductsStore} from '@/store/productsStore'
 export default function Trademarks() {
   const {lang}=useLangSync();
-  const{response,fetchProducts}=useProductsStore();
-const {fetchCategoriesbyid,Categoriesbyid}=useCategoriesStore();
+  // const{response,fetchProducts}=useProductsStore();
+const {fetchCategoriesbyid,Categoriesbyid,Catesubgategory,fetchCatesubgategory}=useCategoriesStore();
 const {id}= useParams();
 useEffect(() => {
   if (!id) return;
   fetchCategoriesbyid(id,"products");
-  fetchProducts({category_id:Number(id)},lang);
+  fetchCatesubgategory(id);
+  // fetchProducts({category_id:Number(id)},lang);
 },[id,lang]);
-console.log("caregory response",response)
+console.log("caregory response",Catesubgategory)
 console.log("id",Categoriesbyid)
   return (
     <div>
@@ -36,12 +37,12 @@ console.log("id",Categoriesbyid)
           />
           <div className="mx-[-4px] md:-mx-[45px]">
 
-          <Sliderbycategory />
+          <Sliderbycategory category={Catesubgategory} />
           </div>
           <Bestseller title={"افضل العروض"} link={`/${lang}/trademarkbestoffer`} products={Categoriesbyid} btn={true} />
           <BannerSection image={sceondbanner} />
           <Bestseller title={"الأكثر مبيعاً"} link={`/${lang}/trademarksbestseller`} btn={true} products={Categoriesbyid} />
-          <Offerbannersingle />
+          <Offerbannersingle />q2    
           <div className="my-12">
             <Parttner />
           </div>

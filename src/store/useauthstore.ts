@@ -58,7 +58,7 @@ export const useAuthStore = create<AuthState>((set) => ({
         },
       });
       console.log(res.data);
-      localStorage.setItem("userData", JSON.stringify(res.data));
+      localStorage.setItem("userData", res.data);
       return res.data;
     } catch (err: any) {
       set({ loading: false, error: err?.response?.data?.data || "Error" });

@@ -61,7 +61,7 @@ const ProductCategoriesSection: React.FC = () => {
                 <img
                   src={cat.image}
                   alt={cat.name}
-                  className="!w-[68%] !h-[68%] !object-contain"
+                  className=" !object-cover"
                 />
               </div>
               <h2 className="text-[#211C4D] text-[6px] sm:text-[14px] md:text-[16px] lg:text-[18px] font-[600] mt-2 text-center leading-tight">

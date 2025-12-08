@@ -2,34 +2,10 @@
 import "@/style.css";
 import { X, Plus, Minus } from "lucide-react";
 import { Button } from "@/components/ui/button";
-// import laptops from "@/assets/images/airbuds.png";
-// import orangelabtop from "@/assets/images/orangelabtop.png";
-// interface CartItem {
-//   id: string;
-//   name: string;
-//   price: number;
-//   quantity: number;
-//   image: string;
-// }
+
 
 export default function CartSummary({ products, total }: any) {
-  // const updateQuantity = (id: string, newQuantity: number) => {
-  //   if (newQuantity < 1) return;
-  //   setItems(
-  //     items.map((item) =>
-  //       item.id === id ? { ...item, quantity: newQuantity } : item
-  //     )
-  //   );
-  // };
 
-  // const removeItem = (id: string) => {
-  //   setItems(items.filter((item) => item.id !== id));
-  // };
-
-  // const total = items.reduce(
-  //   (sum, item) => sum + item.price * item.quantity,
-  //   0
-  // );
   console.log(products);
   return (
     <div className="w-full max-w-2xl mx-auto" dir="rtl">
@@ -42,67 +18,85 @@ export default function CartSummary({ products, total }: any) {
 
       {/* Cart Items */}
       <div className="space-y-6">
-        {products.map((item) => (
-          <div
-            key={item.id}
-            className="flex items-center justify-between gap-1 lg:p-4 border-b border-border   hover:bg-muted/50 transition-colors"
-          >
-            {/* Right side - Product image */}
-            <div className="flex-shrink-0">
-              <img
-                src={item?.product?.main_image}
-                alt={item?.product?.main_image}
-                className="lg:w-23 lg:h-23  md:w-20 w-20 md:h-20 h-20  object-contain  "
-              />
-            </div>
+        {products.map((item: any) => {
+          // استخراج البيانات من الهيكل الصحيح
+          const product = item.product || item;
+          const imageUrl = product?.images?.[0]?.url || product?.main_image || "";
+          const productName = product?.name || item?.name || "منتج";
+          const productPrice = product?.final_price || item?.price || 0;
+          const quantity = item?.quantity || 1;
+          const itemId = item?.id || product?.id || 0;
 
-            {/* Center - Quantity controls and info */}
-            <div className="flex-1 lg:pl-[40px] flex justify-between  ">
-              <div className="text-sm  text-right">
-                <p className="md:text-[16px] text-[11px]  max-w-[130px] font-[500] text-[#211C4D] ">
-                  {item.name}
-                </p>
-                <p className="text-xs mt-1">#{item.id}</p>
-              </div>
-              <div className="flex items-center   rounded-md bg-background">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-8 w-8 text-black p-0"
-                >
-                  <Plus className="w-4 h-4" />
-                </Button>
-                <input
-                  type="number"
-                  value=""
-                  placeholder={item.quantity}
-                  className="w-[40px] h-[32px] border text-black outline-1 border-[#D9D9D9] rounded-[4px] text-center"
-                  min="1"
-                />
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-8 w-8 p-0 text-black"
-                >
-                  <Minus className="w-4 h-4" />
-                </Button>
-              </div>
-              <div className="flex items-center gap-3">
-                <span className="font-bold text-[13px] md:text-lg text-foreground">
-                  {item.price.toLocaleString("ar-SA")} ريس
-                </span>
-              </div>
-            </div>
-            {/* Left side - Remove button */}
-            <Button
-              variant="ghost"
-              size="sm"
-              className="text-[#211C4D] hover:text-destructive hover:bg-destructive/10"
+          return (
+            <div
+              key={itemId}
+              className="flex items-center justify-between gap-4 lg:p-4 border-b border-border hover:bg-muted/50 transition-colors"
             >
-              <X className="!w-[24px] !h-[24px] !font-[100] " />
-            </Button>
-          </div>
-        ))}
+              {/* Right side - Product image */}
+              <div className="flex-shrink-0">
+                <img
+                  src={imageUrl}
+                  alt={productName}
+                  className="lg:w-[92px] lg:h-[92px] md:w-[80px] md:h-[80px] w-[70px] h-[70px] object-contain rounded-lg bg-gray-50"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src = "https://via.placeholder.com/70?text=No+Image";
+                  }}
+                />
+              </div>
+
+              {/* Center - Quantity controls and info */}
+              <div className="flex-1 lg:pl-[40px] flex flex-col md:flex-row justify-between gap-3">
+                <div className="text-sm text-right flex-1">
+                  <p className="md:text-[16px] text-[13px] max-w-[200px] font-[600] text-[#211C4D] line-clamp-2">
+                    {productName}
+                  </p>
+                  <p className="text-xs text-gray-500 mt-1">#{itemId}</p>
+                </div>
+
+                <div className="flex items-center gap-2 rounded-md bg-gray-100 p-1">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-8 w-8 text-black p-0 hover:bg-gray-200"
+                  >
+                    <Plus className="w-4 h-4" />
+                  </Button>
+                  <input
+                    type="number"
+                    value={quantity}
+                    readOnly
+                    className="w-[45px] h-[32px] border text-black outline-none border-[#D9D9D9] rounded-[4px] text-center bg-white font-semibold"
+                    min="1"
+                  />
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-8 w-8 p-0 text-black hover:bg-gray-200"
+                  >
+                    <Minus className="w-4 h-4" />
+                  </Button>
+                </div>
+
+                <div className="flex items-center gap-3 min-w-max">
+                  <span className="font-bold text-[14px] md:text-lg text-[#211C4D]">
+                    {typeof productPrice === "string"
+                      ? productPrice
+                      : Number(productPrice).toLocaleString("ar-SA")} ر.س
+                  </span>
+                </div>
+              </div>
+
+              {/* Left side - Remove button */}
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-[#211C4D] hover:text-destructive hover:bg-destructive/10 flex-shrink-0"
+              >
+                <X className="!w-[24px] !h-[24px]" />
+              </Button>
+            </div>
+          );
+        })}
       </div>
 
       {/* Total */}

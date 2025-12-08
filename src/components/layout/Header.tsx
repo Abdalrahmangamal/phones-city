@@ -281,6 +281,8 @@ export default function Header() {
               <DropdownMenuContent className="w-56" align="start">
                 <DropdownMenuGroup>
                   {categories.map((category) => (
+                    <Link to={`/${lang}/categorySingle/${category.id}`}>
+
                        <DropdownMenuSub>
                       <DropdownMenuSubTrigger>
                         {category.name}
@@ -288,7 +290,7 @@ export default function Header() {
                       
                       <DropdownMenuSubContent>
                         {category.children?.map((child) => (
-                          <Link to={`categorySingle/${child.id}`}>
+                          <Link to={`/${lang}/categorySingle/${child.id}`}>
                           <DropdownMenuItem key={child.id}>
                             {child.name}
                           </DropdownMenuItem>
@@ -298,6 +300,7 @@ export default function Header() {
                         ))}
                       </DropdownMenuSubContent>
                     </DropdownMenuSub>
+                    </Link>
                   ))}
                 </DropdownMenuGroup>
               </DropdownMenuContent>

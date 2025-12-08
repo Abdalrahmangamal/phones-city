@@ -3,9 +3,7 @@ import Sidebar from "@/components/layout/Sidebar";
 import Bestseller from "@/components/home/Bestseller";
 import { useTranslation } from "react-i18next";
 
-// import product1 from "@/assets/images/product1.png";
-// import product2 from "@/assets/images/product2.png";
-// import type { Product } from "@/types/index";
+
 import {useFavoritesStore} from '@/store/favoritesStore';
 import { useEffect } from "react";
 export default function Favourite() {
@@ -16,139 +14,7 @@ export default function Favourite() {
 console.log("fav",favorites.product)
       const { t } = useTranslation();
 
-  //   {
-  //     id: 3,
-  //     name: "لابتوب ابل ماك بوك برو 2024",
-  //     discount: "16",
-  //     price: 7499,
-  //     favourite:true,
-  //     variations: [
-  //       { color: "red", image: product1 },
-  //       { color: "#000", image: product2 },
-  //     ],
-  //   },
-  //   {
-  //     id: 3,
-  //     name: "لابتوب ابل ماك بوك برو 2024",
-  //     discount: "16",
-  //     price: 7499,
-  //     favourite:true,
-  //     variations: [
-  //       { color: "red", image: product1 },
-  //       { color: "#000", image: product2 },
-  //     ],
-  //   },
-  //   {
-  //     id: 3,
-  //     name: "لابتوب ابل ماك بوك برو 2024",
-  //     discount: "16",
-  //     price: 7499,
-  //     favourite:true,
-  //     variations: [
-  //       { color: "red", image: product1 },
-  //       { color: "#000", image: product2 },
-  //     ],
-  //   },
-  //   {
-  //     id: 3,
-  //     name: "لابتوب ابل ماك بوك برو 2024",
-  //     discount: "16",
-  //     price: 7499,
-  //     favourite:true,
-  //     variations: [
-  //       { color: "red", image: product1 },
-  //       { color: "#000", image: product2 },
-  //     ],
-  //   },
-  //   {
-  //     id: 3,
-  //     name: "لابتوب ابل ماك بوك برو 2024",
-  //     discount: "16",
-  //     price: 7499,
-  //     favourite:true,
-  //     variations: [
-  //       { color: "red", image: product1 },
-  //       { color: "#000", image: product2 },
-  //     ],
-  //   },
-  //   {
-  //     id: 3,
-  //     name: "لابتوب ابل ماك بوك برو 2024",
-  //     discount: "16",
-  //     price: 7499,
-  //     favourite:true,
-  //     variations: [
-  //       { color: "red", image: product1 },
-  //       { color: "#000", image: product2 },
-  //     ],
-  //   },
-  //   {
-  //     id: 3,
-  //     name: "لابتوب ابل ماك بوك برو 2024",
-  //     discount: "16",
-  //     price: 7499,
-  //     favourite:true,
-  //     variations: [
-  //       { color: "red", image: product1 },
-  //       { color: "#000", image: product2 },
-  //     ],
-  //   },
-  //   {
-  //     id: 3,
-  //     name: "لابتوب ابل ماك بوك برو 2024",
-  //     discount: "16",
-  //     price: 7499,
-  //     favourite:true,
-  //     variations: [
-  //       { color: "red", image: product1 },
-  //       { color: "#000", image: product2 },
-  //     ],
-  //   },
-  //   {
-  //     id: 3,
-  //     name: "لابتوب ابل ماك بوك برو 2024",
-  //     discount: "16",
-  //     price: 7499,
-  //     favourite:true,
-  //     variations: [
-  //       { color: "red", image: product1 },
-  //       { color: "#000", image: product2 },
-  //     ],
-  //   },
-  //   {
-  //     id: 3,
-  //     name: "لابتوب ابل ماك بوك برو 2024",
-  //     discount: "16",
-  //     price: 7499,
-  //     favourite:true,
-  //     variations: [
-  //       { color: "red", image: product1 },
-  //       { color: "#000", image: product2 },
-  //     ],
-  //   },
-  //   {
-  //     id: 3,
-  //     name: "لابتوب ابل ماك بوك برو 2024",
-  //     discount: "16",
-  //     price: 7499,
-  //     favourite:true,
-  //     variations: [
-  //       { color: "red", image: product1 },
-  //       { color: "#000", image: product2 },
-  //     ],
-  //   },
-  //   {
-  //     id: 3,
-  //     name: "لابتوب ابل ماك بوك برو 2024",
-  //     discount: "16",
-  //     price: 7499,
-  //     favourite:true,
-  //     variations: [
-  //       { color: "red", image: product1 },
-  //       { color: "#000", image: product2 },
-  //     ],
-  //   },
-  // ];
+
   return (
     <div>
       <Layout>

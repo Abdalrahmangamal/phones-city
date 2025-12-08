@@ -38,7 +38,7 @@ interface CartState {
   total: number;
   items: CartItem[];
   fetchCart: () => Promise<void>;
-  addToCart: (productId: number, quantity: number) => Promise<void>;
+  addToCart: (id: number, quantity: number, isOption: boolean) => Promise<void>;
   deleteToCart: (productId: number) => Promise<void>;
 }
 
@@ -50,74 +50,91 @@ export const useCartStore = create<CartState>((set, get) => ({
   items: [],
   total: 0,
   // ----------------- GET CART ------------------
-  fetchCart: async () => {
-    try {
-      const token = localStorage.getItem("token") || "";
-      set({ loading: true, error: null });
+fetchCart: async () => {
+  try {
+    const token = localStorage.getItem("token") ;
+    const res = await axios.get(`${baseUrl}api/v1/cart`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/json",
+      },
+    });
 
-      const res = await axios.get(`${baseUrl}api/v1/cart`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-      });
+    const newItems = res?.data?.data?.items || [];
+    const newTotal = res?.data?.data?.total || 0;
 
-      set({
-        total: res?.data?.data?.total || 0,
-        items: [...(res?.data?.data?.items || [])],
-        loading: false,
-      });
-    } catch (err: any) {
-      set({
-        error: err?.response?.data?.message || "Failed to fetch cart",
-        loading: false,
-      });
+    const { items, total } = get();
+
+    // امنع الـ set لو مفيش تغيير حقيقي
+    if (
+      JSON.stringify(items) === JSON.stringify(newItems) &&
+      total === newTotal
+    ) {
+      return; // مفيش تغيير → مفيش re-render → مفيش loop
     }
-  },
+
+    set({
+      items: newItems,
+      total: newTotal,
+      loading: false,
+    });
+  } catch (err) {
+    set({ error: "Failed to fetch cart", loading: false });
+  }
+},
+
 
   // ----------------- ADD TO CART ------------------
-  addToCart: async (productId: number, quantity: number) => {
-    try {
-      const token = localStorage.getItem("token");
-      set({ loading: true, error: null });
+addToCart: async (id: number, quantity: number, isOption: boolean) => {
+  try {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      console.warn("No token found");
+      return;
+    }
+
+    // تحديد الـ Params حسب نوع الإرسال
+    const params = isOption
+      ? { product_option_id: id, quantity }
+      : { product_id: id, quantity };
 
     const res = await axios.post(
       `${baseUrl}api/v1/cart`,
+      {}, // Body فارغ — الـ API لا يقبل body
       {
-        product_id: productId,
-        quantity: quantity,
-      },
-      {
+        params,
         headers: {
           Authorization: `Bearer ${token}`,
           Accept: "application/json",
-          "Content-Type": "application/json", // مهم جدًا
         },
       }
     );
 
-    console.log("ADD TO CART SUCCESS:", res.data);
+    console.log("CART ADDED SUCCESS:", res.data);
+
+    // تحديث الكارت بعد الإضافة
     await get().fetchCart();
-    set({ loading: false });
-  } catch (err: any) {
-    console.error("ADD TO CART ERROR:", err.response?.data || err.message);
-    set({
-      error: err.response?.data?.message || "فشل إضافة المنتج للسلة",
-      loading: false,
-    });
+
+  } catch (error: any) {
+    console.error(
+      "Add to cart error:",
+      error?.response?.data || error.message
+    );
   }
 },
+
+
+
 
   deleteToCart: async (productId: number) => {
     try {
       const token = localStorage.getItem("token");
 
-      // const token = localStorage.getItem("token") || "";
       set({ loading: true, error: null });
 
       // 1) ابعت الريكوست وخزّن الرد
-      const res = await axios.delete(`${baseUrl}/api/v1/cart/product`, {
+      const res = await axios.delete(`${baseUrl}api/v1/cart/product`, {
         params: { product_id: productId },
         headers: {
           Authorization: `Bearer ${token}`,
