@@ -161,12 +161,17 @@ export const useFavoritesStore = create<FavoritesState>((set, get) => ({
 
       set({ loading: true });
 
-      await axios.delete(`${baseUrl}api/v1/favorites/${favoriteId}`, {
+      await axios.post(`${baseUrl}api/v1/favorites/toggle`,
+           {
+          product_id:favoriteId
+        },
+        {
         headers: {
           Authorization: `Bearer ${token} `,
           Accept: "application/json",
           "Content-Type": "application/json",
         },
+     
       });
 
       set({

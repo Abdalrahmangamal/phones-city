@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Rating, RatingButton } from "@/components/ui/shadcn-io/rating";
 import type { Product } from "@/types/index";
 import { useLangSync } from "@/hooks/useLangSync";
@@ -14,10 +14,23 @@ interface ProductCardProps {
 }
 import { useFavoritesStore } from "@/store/favoritesStore";
 export default function ProductCard({ product }: ProductCardProps) {
-  const { addFavorite,removeFavorite } = useFavoritesStore();
+  const { addFavorite, removeFavorite, favorites } = useFavoritesStore();
+  const favItem = favorites.find((f: any) => f?.product?.id === product.id);
+  const initialFav = Boolean(favItem) || Boolean((product as any)?.is_favorite);
+
+  // Local optimistic state to make the heart toggle reliable
+  const [localFavorite, setLocalFavorite] = useState<boolean>(initialFav);
+
+  // Keep local state in sync with store/product changes
+  useEffect(() => {
+    const currentFav = favorites.find((f: any) => f?.product?.id === product.id);
+    setLocalFavorite(Boolean(currentFav) || Boolean((product as any)?.is_favorite));
+  }, [favorites, (product as any)?.is_favorite, product.id]);
   const { addToCart, deleteToCart } = useCartStore();
   const [selectedIndex, setSelectedIndex] = useState(0);
 const selectedVariant = product.options[selectedIndex];
+// const isFavorite = favorites.some(f => f.product.id === product.id);
+
 
   const { lang } = useLangSync();
   const hasOptions =
@@ -54,14 +67,46 @@ const [isInCart, setIsInCart] = useState((product as any)?.in_cart || false);
 
         <div
           className="flex w-full items-center justify-between absolute right-0 top-0 z-10 p-2"
-          onClick={
-            !(product as any)?.is_favorite
-              ? () => addFavorite(product.id)
-              : () => removeFavorite(product.id)
-          }
+          onClick={(e: any) => {
+            e.stopPropagation();
+            // optimistic toggle
+            const prev = localFavorite;
+            setLocalFavorite(!prev);
+
+            if (!prev) {
+              // add favorite
+              try {
+                const res: any = addFavorite(product.id);
+                if (res && typeof res.then === "function") {
+                  res.catch((err: any) => {
+                    setLocalFavorite(prev);
+                    toast.error("فشل إضافة للمفضلة. حاول مرة أخرى.");
+                  });
+                }
+              } catch (err) {
+                setLocalFavorite(prev);
+                toast.error("فشل إضافة للمفضلة. حاول مرة أخرى.");
+              }
+            } else {
+              // remove favorite
+              const favId = favItem?.id || (product as any)?.favorite_id;
+              try {
+                const res: any = removeFavorite(favId || product.id);
+                if (res && typeof res.then === "function") {
+                  res.catch((err: any) => {
+                    setLocalFavorite(prev);
+                    toast.error("فشل إزالة من المفضلة. حاول مرة أخرى.");
+                  });
+                }
+              } catch (err) {
+                setLocalFavorite(prev);
+                toast.error("فشل إزالة من المفضلة. حاول مرة أخرى.");
+              }
+            }
+          }}
         >
           <div className="bg-[#EEF1F6] flex items-center justify-center w-[36px] h-[36px] rounded-full cursor-pointer hover:bg-[#e0e5f0] transition-colors">
-            {(product as any)?.is_favorite === true ? (
+            {localFavorite  ? (
               <svg
                 width="21"
                 height="18"

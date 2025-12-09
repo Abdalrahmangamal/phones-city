@@ -1,18 +1,16 @@
 "use client";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 import { useLangSync } from "@/hooks/useLangSync";
 import { ChevronRight, ChevronLeft } from "lucide-react";
 import { useRef } from "react";
 
 // صور الفئات
 
-export default function CategorySlider({category}:any) {
+export default function CategorySlider({ category ,setSelectedSubCategory }: any) {
   const { lang } = useLangSync();
   const swiperRef = useRef<any>(null);
-
-
 
   return (
     <div className="relative w-full bg-[#E5E5F7] py-6">
@@ -46,8 +44,8 @@ export default function CategorySlider({category}:any) {
       >
         {category.map((cat, i) => (
           <SwiperSlide key={i}>
-            <Link
-              to={`/${lang}/trademarks/${cat.id}`}
+            <button
+              onClick={() => setSelectedSubCategory(cat.id)}
               className="flex flex-col items-center justify-center bg-white rounded-xl py-4 px-3 shadow-[0_4px_8px_#0000001a] hover:shadow-lg transition-all duration-200"
             >
               <img
@@ -58,7 +56,7 @@ export default function CategorySlider({category}:any) {
               <p className="mt-3 text-[#211C4D] text-[24px] font-medium">
                 {cat.name}
               </p>
-            </Link>
+            </button>
           </SwiperSlide>
         ))}
       </Swiper>
