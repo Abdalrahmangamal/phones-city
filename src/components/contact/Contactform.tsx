@@ -308,7 +308,7 @@ export default function Contactform() {
             </h3>
           </div>
           <p className="text-[#000000] font-[400] mt-[30px] text-[16px] mb-2">
-            نحن متاحون على مدار 24 ساعة طوال الأسبوع.
+           {t("Weareavailable24hoursaday7daysaweek")}
           </p>
           <p className="text-[#000000] font-[400] text-[16px] mb-4">
             {t("PhoneNumber")}: +2222222222
@@ -337,7 +337,7 @@ export default function Contactform() {
             </h3>
           </div>
           <p className="text-black font-[400] mt-[30px] text-[16px] mb-1">
-            املأ النموذج وسنتواصل معك خلال 24 ساعة.
+           {t("Fillouttheformandwewillcontactyouwithin24hours")}
           </p>
           <div className="flex items-center gap-2 mt-[20px]">
             <p className="text-black font-[400] text-[16px]">

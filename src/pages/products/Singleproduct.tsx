@@ -55,7 +55,21 @@ export default function ProductPage() {
                     hasOptions 
                       ? product.options[selectedOptionIndex]?.images 
                       : (product.images || [])
-                  }  
+                  }
+                  discountPercent={
+                    (() => {
+                      try {
+                        const opt = hasOptions ? product.options[selectedOptionIndex] : null;
+                        const ori = opt ? opt.original_price : product.original_price;
+                        const fin = opt ? opt.final_price : product.final_price;
+                        const o = ori ? Number(String(ori).replace(/,/g, "")) : 0;
+                        const f = fin ? Number(String(fin).replace(/,/g, "")) : 0;
+                        return o > 0 ? ((o - f) / o) * 100 : 0;
+                      } catch (e) {
+                        return 0;
+                      }
+                    })()
+                  }
                 />
                 {/* Product Details */}
                 <Ptoductdetails 

@@ -1,7 +1,7 @@
 import { Heart } from "lucide-react";
 import { useState } from "react";
 
-export default function gallery({ images }: any) {
+export default function gallery({ images, discountPercent = 0 }: any) {
   const [selectedImage, setSelectedImage] = useState(0);
   const [isWishlisted, setIsWishlisted] = useState(false);
   const safeImages = Array.isArray(images) ? images : [];
@@ -12,9 +12,11 @@ export default function gallery({ images }: any) {
     <div className="md:w-full">
       <div className="space-y-4">
         <div className="relative bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-4 md:p-8 aspect-[4/3] flex items-center justify-center">
-          <div className="absolute top-2 md:top-4 left-2 md:left-4 bg-destructive text-white px-2 py-0.5 md:px-3 md:py-1 rounded text-xs md:text-sm font-bold">
-            17%-
-          </div>
+          {discountPercent > 0 && (
+            <div className="absolute top-2 md:top-4 left-2 md:left-4 bg-destructive text-white px-2 py-0.5 md:px-3 md:py-1 rounded text-xs md:text-sm font-bold">
+              {Math.round(discountPercent)}%
+            </div>
+          )}
           <button
             onClick={() => setIsWishlisted(!isWishlisted)}
             className="absolute top-2 md:top-4 right-2 md:right-4 p-1 md:p-2 bg-card rounded-full hover:bg-accent transition-colors"

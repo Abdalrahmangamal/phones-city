@@ -40,6 +40,7 @@ interface CartState {
   fetchCart: () => Promise<void>;
   addToCart: (id: number, quantity: number, isOption: boolean) => Promise<void>;
   deleteToCart: (productId: number) => Promise<void>;
+  deletefromCart: (productId: number) => Promise<void>;
 }
 
 const baseUrl = import.meta.env.VITE_BASE_URL;
@@ -155,5 +156,39 @@ addToCart: async (id: number, quantity: number, isOption: boolean) => {
       });
     }
   },
+deletefromCart: async (productId: number) => {
+  try {
+    const token = localStorage.getItem("token");
+
+    set({ loading: true, error: null });
+
+    const res = await axios.delete(`${baseUrl}api/v1/cart/${productId}`, {
+      params:{
+        id:productId
+      },
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/json",
+      },
+    });
+
+    console.log("Removed from cart:", res.data);
+
+    // بعد الحذف من الباك، امسح من الواجهة
+    set((state) => ({
+      items: state.items.filter((item) => item.id !== productId),
+      loading: false,
+    }));
+
+  } catch (err: any) {
+    console.log("Remove error:", err?.response);
+
+    set({
+      error: err?.response?.data?.message || "Failed to remove from cart",
+      loading: false,
+    });
+  }
+},
+
 
 }));

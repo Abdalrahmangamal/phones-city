@@ -44,16 +44,18 @@ const filteredProducts = activeSubCategory
               }
             />
             <div className="mx-[-4px] md:-mx-[45px]">
+              {Catesubgategory.length>0 ? 
               <Sliderbycategory
                 category={Catesubgategory}
                 setSelectedSubCategory={setActiveSubCategory}
-              />
+              />:""
+              }
             </div>
             <Bestseller products={filteredProducts} />
           <Bestseller products={filteredProducts} />
 
             <Offerbannersingle />
-            q2
+       
             <div className="my-12">
               <Parttner />
             </div>

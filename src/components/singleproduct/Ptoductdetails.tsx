@@ -76,20 +76,47 @@ export default function Ptoductdetails({
   const selectedVariant = product.options?.[selectedOptionIndex];
   const paymentMethodsForSelectedVariant =
     selectedVariant?.payment_methods || [];
+  const [expanded, setExpanded] = useState(false);
+
+  const toggleExpand = () => setExpanded(!expanded);
 
   return (
     <div className="space-y-4 md:space-y-6" dir={lang == "ar" ? "rtl" : "ltr"}>
       <div>
-        <h1 className="text-xl text-start md:text-2xl font-bold text-foreground leading-relaxed mb-3">
-          {product?.description}
-        </h1>
+       {/* Product Name */}
+<h2 className="md:text-base !text-[25px] text-black font-medium mb-1 text-start">
+  {product?.name}
+</h2>
+
+{/* Product Description */}
+<div className="text-start">
+  <p
+    className={` md:text-xl font-bold text-sm  text-gray-600 leading-relaxed 
+    ${expanded ? "" : "line-clamp-3"}`}
+  >
+    {product?.description}
+  </p>
+
+  {product?.description?.length > 100 && (
+    <button
+      onClick={toggleExpand}
+      className="text-[#211C4D] font-semibold text-sm mt-1 hover:underline"
+    >
+      {expanded ? "Read Less" : "Read More"}
+    </button>
+  )}
+</div>
+
+
+
+
         <div className="flex items-center gap-2 mb-2">
           <div className="flex gap-1">
             {[1, 2, 3, 4, 5].map((star) => (
               <Star
                 key={star}
                 className={`w-[18px] h-[18px] md:w-[22px] md:h-[22px] ${
-                  star <= 4
+                  star <= product.average_rating
                     ? "fill-[#FC9231] text-[#FC9231]"
                     : "fill-none text-gray-300"
                 }`}
@@ -97,11 +124,15 @@ export default function Ptoductdetails({
             ))}
           </div>
           <span className="text-xs md:text-sm text-muted-foreground">
-            (68 مراجعة)
+            ({product.reviews_count} {t("review")})
           </span>
         </div>
-        <p className="text-sm text-start text-primary">{t("Chooseyourcolor")}</p>
       </div>
+      {
+       product.options.length>1 ?
+       <div>
+
+        <p className="text-sm text-start text-primary">{t("Chooseyourcolor")}</p>
 
       {/* Color Selection */}
       <div className="flex gap-2 md:gap-3">
@@ -122,6 +153,9 @@ export default function Ptoductdetails({
           />
         ))}
       </div>
+       </div>
+      :""
+      }
 
       {/* Price */}
       <div className="flex items-baseline gap-2 md:gap-3">
@@ -133,6 +167,9 @@ export default function Ptoductdetails({
               ).toLocaleString("ar-SA")}
           {t("SAR")}
         </span>
+        {
+product.options[selectedOptionIndex].final_price==product.options[selectedOptionIndex].original_price?
+"":
         <span className="text-base md:text-lg text-muted-foreground line-through">
           {typeof product.options[selectedOptionIndex]?.original_price ===
           "string"
@@ -142,6 +179,7 @@ export default function Ptoductdetails({
               ).toLocaleString("ar-SA")}
           {t("SAR")}
         </span>
+        }
       </div>
 
       {/* Payment Options */}

@@ -2,11 +2,14 @@
 import "@/style.css";
 import { X, Plus, Minus } from "lucide-react";
 import { Button } from "@/components/ui/button";
-
+import {useCartStore} from '@/store/cartStore/cartStore'
 
 export default function CartSummary({ products, total }: any) {
 
+const {deletefromCart,items}=useCartStore();
   console.log(products);
+    const itemId = items?.id || products?.id || 0;
+
   return (
     <div className="w-full max-w-2xl mx-auto" dir="rtl">
       {/* Header */}
@@ -63,7 +66,8 @@ export default function CartSummary({ products, total }: any) {
                   </Button>
                   <input
                     type="number"
-                    value={quantity}
+                
+                    placeholder={quantity}
                     readOnly
                     className="w-[45px] h-[32px] border text-black outline-none border-[#D9D9D9] rounded-[4px] text-center bg-white font-semibold"
                     min="1"
@@ -90,6 +94,7 @@ export default function CartSummary({ products, total }: any) {
               <Button
                 variant="ghost"
                 size="sm"
+  onClick={() => deletefromCart(itemId)}
                 className="text-[#211C4D] hover:text-destructive hover:bg-destructive/10 flex-shrink-0"
               >
                 <X className="!w-[24px] !h-[24px]" />
