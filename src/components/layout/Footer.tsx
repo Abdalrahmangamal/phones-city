@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useLangSync } from "@/hooks/useLangSync";
@@ -17,9 +17,12 @@ import Google from "../../assets/images/Google.png";
 import amwal from "../../assets/images/amwal.png";
 import emkan from "../../assets/images/emkan.png";
 import payment from "../../assets/images/payment.png";
+import {useAboutStore} from '@/store/aboutusStore'
 const Footer: React.FC = () => {
   const { t } = useTranslation();
   const { lang } = useLangSync();
+  const {fetchAbout,data}=useAboutStore()
+  useEffect(()=>{fetchAbout(lang)},[])
 
   const navigate = useNavigate();
 
@@ -157,8 +160,9 @@ const Footer: React.FC = () => {
                 className="text-[#CAD0D9] text-[15px] sm:text-[12px] lg:text-[16px] leading-[150%]"
                 style={{ fontFamily: "Roboto" }}
               >
-                لمعرفة كل جديد عنا ...... تابع حساباتنا على وسائل التواصل
-                الاجتماعي وحساباتنا على جوجل.
+<div>
+  {data?.about_us?.replace(/<\/?p>/g, "")}
+</div>
               </p>
 
               {/* Social icons */}

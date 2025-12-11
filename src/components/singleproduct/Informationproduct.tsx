@@ -33,7 +33,7 @@ export default function Informationproduct({ product }: any) {
     >
       {/* Main Title */}
       <h1 className="mb-6 md:mb-8 text-start text-2xl md:text-3xl font-bold text-gray-900">
-        {t("Productdetails  ")}
+        {t("Productdetails")}
       </h1>
 
       {/* Specifications Section */}
@@ -77,7 +77,7 @@ export default function Informationproduct({ product }: any) {
         <div className="space-y-3 md:space-y-4">
           {features.map((feature, index) => (
             <div className="features-content" key={index}>
-              <div dangerouslySetInnerHTML={{ __html: feature }} />
+              <div className="text-[#211C4DCC] text-[24px] font-[400]" dangerouslySetInnerHTML={{ __html: feature }} />
             </div>
           ))}
         </div>

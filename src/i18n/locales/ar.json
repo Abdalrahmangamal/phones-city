@@ -112,10 +112,9 @@
   "Saving...": "جاري الحفظ...",
   "Save Address": "حفظ العنوان",
   "Cancel": "إلغاء",
-  "Failed to add address": "فشل في إضافة العنوان",
-  "loading": "جاري تحميل الميزات...",
-  "error": "حدث خطأ",
-  "StoreFeatures": "مميزات المتجر",
-  "FeaturesDescription": "كل ميزة صممناها عشان نخلي تسوقك اسهل , اسرع , اضمن .",
-  "OurCertificates": "شهاداتنا واعتماداتنا"
+  "Weareavailable24hoursaday7daysaweek": "نحن متاحون على مدار 24 ساعة طوال الأسبوع.",
+  "Brands": "العلامات التجارية",
+  "review": "مراجعة",
+  "Fillouttheformandwewillcontactyouwithin24hours": "املأ النموذج وسنتواصل معك خلال 24 ساعة.",
+  "Failed to add address": "فشل في إضافة العنوان"
 }

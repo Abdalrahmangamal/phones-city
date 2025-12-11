@@ -12,11 +12,15 @@ import { Link } from "react-router-dom";
 import useS24Ultra from "@/hooks/useS24Ultra";
 import S24Parttner from "@/components/s24-ultra/S24Parttner";
 import Loader from '@/components/Loader'
+import { useTranslation } from "react-i18next";
+
 export default function Parttner() {
     const { lang } = useLangSync();
-  const { fetchCategories,treadmark } = useCategoriesStore();
+      const { t } = useTranslation();
+
+  const { fetchtradmarks,treadmark } = useCategoriesStore();
   useEffect(() => {
-    fetchCategories(lang,true);
+    fetchtradmarks();
   }
 , []);
 console.log("tredmark",treadmark)
@@ -62,9 +66,9 @@ console.log("tredmark",treadmark)
         {
         !treadmark ? <Loader /> : null
       }
-      <div className="relative flex items-center justify-center">
+      <div className="relative flex items-center justify-center mt-[40px]">
         <h1 className="md:text-[40px] text-[24px] font-[700]  text-[#211C4D]">
-          العلامات التجارية
+          {t("Brands")}
         </h1>
         <img src={pattern} className="absolute w-[80px] top-2 md:top-[20px] right-[18%] md:right-[36%]" alt="" />
       </div>

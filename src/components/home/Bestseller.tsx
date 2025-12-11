@@ -20,6 +20,7 @@ export default function Bestseller({
   products,
   style,
 }: BestsellerProps) {
+
   return (
     <div className="mt-[20px] lg:px-[90px] px-2 pt-20 md:pt-20">
       {/* العنوان */}
