@@ -111,5 +111,10 @@
   "Saving...": "Saving...",
   "Save Address": "Save Address",
   "Cancel": "Cancel",
-  "Failed to add address": "Failed to add address"
+  "Failed to add address": "Failed to add address",
+  "loading": "Loading features...",
+  "error": "Error",
+  "StoreFeatures": "Store Features",
+  "FeaturesDescription": "Every feature we designed to make your shopping easier, faster, and more secure.",
+  "OurCertificates": "Our Certificates & Accreditations"
 }
