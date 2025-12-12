@@ -10,7 +10,7 @@ const AboutQuara = () => {
   const { lang } = useLangSync();
   useEffect(() => {
     fetchPage("about-quwara", lang);
-  }, [fetchPage, lang]);
+  }, [ lang]);
   return (
     <Layout>
          {

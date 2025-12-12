@@ -6,15 +6,18 @@ import {useServicesStore} from '@/store/servicesStore';
 import { useEffect } from "react";
   import { useLangSync } from "@/hooks/useLangSync";
 import Loader from "@/components/Loader";
-
+import {usePageStore} from '@/store/customerCareStore';
 export default function Servces() {
 const { lang } = useLangSync();
-
+const {fetchPage,page}=usePageStore()
   const {services,fetchServices} = useServicesStore();
   useEffect(() => {
     fetchServices(lang);
-  }, [services]);
-  console.log("servvvv",services);
+    fetchPage("content-of-our-services",lang)
+  }, [lang]);
+
+  console.log("servvvv",page);
+
   return (
     <Layout>
         {
@@ -22,17 +25,17 @@ const { lang } = useLangSync();
       }
       <div>
         {/* Hero Section - Responsive for mobile */}
-        <Offerherosection title={"كل ما تحتاجه في مدينه الهواتف"} description={"استمتع بتجربة استثنائية معاحسن العروض بأفضل الأسعار وخدمة ما بعد البيع المميزة"} />
+        <Offerherosection title={page?.title} description={page?.short_description} />
 
         {/* Services Description Section - Separated from cards with proper spacing */}
         <div className="w-full  lg:px-[90px] px-2  md:pt-0">
           <div className="flex flex-col px-[10px]">
             <h2 className="text-[#211C4D] font-roboto font-bold text-[24px] md:text-[40px] leading-9 mb-2">
-              في مدينه الهواتف
+            {page?.title}
             </h2>
             <p className="text-[#211C4DCC] font-roboto font-normal text-[20px] md:text-2xl leading-10 text-start">
-              نوفر لك تجربة شراء وصيانة متكاملة في مكان واحد لتلبية جميع
-              احتياجاتك في عالم الهواتف و الاجهزة الذكية:
+<div dangerouslySetInnerHTML={{ __html: page?.description }} />
+
             </p>
           </div>
         </div>

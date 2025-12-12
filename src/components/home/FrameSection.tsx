@@ -24,7 +24,7 @@ const FrameSection: React.FC = () => {
   useEffect(() => {
     fetchFeatures();
   }, []);
-
+console.log("fetchFeatures",fetchFeatures)
   // مراقبة تغيير اللغة وإعادة تحميل البيانات
   useEffect(() => {
     // لا حاجة لإعادة جلب البيانات، فقط سيتم إعادة حساب langFeatures

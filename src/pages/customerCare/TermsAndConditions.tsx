@@ -9,7 +9,7 @@ const TermsAndConditions = () => {
   const { lang } = useLangSync();
   useEffect(() => {
     fetchPage("terms-and-conditions", lang);
-  }, [fetchPage, lang]);
+  }, [ lang]);
   return (
     <Layout>
         {

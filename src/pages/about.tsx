@@ -32,7 +32,7 @@ export default function About() {
           lang={lang}
           aboutus={t("AboutUs")}
         />
-        <Location location={data?.address} map={data?.maps} />
+        <Location />
       </div>
     </Layout>
   );

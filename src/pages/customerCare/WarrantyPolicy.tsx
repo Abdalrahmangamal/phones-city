@@ -11,7 +11,7 @@ const WarrantyPolicy = () => {
 
   useEffect(() => {
     fetchPage("warranty-policy", lang);
-  }, [fetchPage, lang]);
+  }, [lang]);
   return (
     <Layout>
         {

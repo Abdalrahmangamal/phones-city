@@ -31,35 +31,35 @@ console.log("tredmark",treadmark)
     return <S24Parttner />;
   }
 
-  const partnerimg = [
-    {
-      img: logo1,
-    },
-    {
-      img: logo2,
-    },
-    {
-      img: logo3,
-    },
-    {
-      img: logo4,
-    },
-    {
-      img: logo1,
-    },
-    {
-      img: logo2,
-    },
-    {
-      img: logo3,
-    },
-    {
-      img: logo4,
-    },
-    {
-      img: logo1,
-    },
-  ];
+  // const partnerimg = [
+  //   {
+  //     img: logo1,
+  //   },
+  //   {
+  //     img: logo2,
+  //   },
+  //   {
+  //     img: logo3,
+  //   },
+  //   {
+  //     img: logo4,
+  //   },
+  //   {
+  //     img: logo1,
+  //   },
+  //   {
+  //     img: logo2,
+  //   },
+  //   {
+  //     img: logo3,
+  //   },
+  //   {
+  //     img: logo4,
+  //   },
+  //   {
+  //     img: logo1,
+  //   },
+  // ];
 
   return (
     <div>
@@ -97,7 +97,7 @@ console.log("tredmark",treadmark)
       shadow-[0px_4px_4px_0px_#2D295C40]
     "
           >
-            <Link to={`/${lang}/trademarks/${item.id}`}>
+            <Link to={`/${lang}/trademarks/${item.slug}`}>
               <img
                 src={item.image}
                 className="w-full h-full  !object-contain"

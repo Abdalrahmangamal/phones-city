@@ -10,7 +10,7 @@ const AboutMora = () => {
   const { lang } = useLangSync();
   useEffect(() => {
     fetchPage("about-mowara", lang);
-  }, [fetchPage, lang]);
+  }, [ lang]);
   return (
     <Layout>
          {

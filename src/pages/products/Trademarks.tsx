@@ -8,7 +8,7 @@
   import { useCategoriesStore } from "@/store/categories/useCategoriesStore";
   import { useEffect, useState } from "react";
   import { useParams } from "react-router";
-  import { useProductsStore } from "@/store/productsStore";
+  // import { useProductsStore } from "@/store/productsStore";
   export default function Trademarks() {
     const { lang } = useLangSync();
     const [activeSubCategory, setActiveSubCategory] = useState(null);

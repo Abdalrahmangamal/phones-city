@@ -11,7 +11,7 @@ const ReturnPolicy = () => {
 
   useEffect(() => {
     fetchPage("return-policy", lang);
-  }, [fetchPage, lang]);
+  }, [ lang]);
   return (
     <Layout>
         {

@@ -14,8 +14,8 @@ const NewHeroSection = () => {
 
   useEffect(() => {
     fetchSliders(lang);
-  }, [lang, fetchSliders]);
-
+  }, [lang]);
+console.log("sadasd",sliders)
   // استخدام useMemo لتحسين الأداء
   const renderLoading = useMemo(() => (
     <div className="xl:px-[90px] px-2 pt-20 md:pt-0">

@@ -6,6 +6,7 @@ export default function Informationproduct({ product }: any) {
   const { lang } = useLangSync();
   const { t } = useTranslation();
 
+  console.log("first",product)
   // استخدام بيانات المنتج من الـ API إذا كانت موجودة
   const specifications = product?.details
     ? [

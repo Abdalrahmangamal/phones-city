@@ -22,7 +22,7 @@ const CertificationBadgesSection: React.FC = () => {
     error,
     fetchCertificates,
     fetchCertificateById,
-    clearCurrentCertificate,
+    // clearCurrentCertificate,
   } = useCertificateStore();
 
   const [openDialogId, setOpenDialogId] = useState<number | null>(null);
@@ -44,8 +44,8 @@ const CertificationBadgesSection: React.FC = () => {
 
   const handleCloseDialog = useCallback(() => {
     setOpenDialogId(null);
-    clearCurrentCertificate();
-  }, [clearCurrentCertificate]);
+    // clearCurrentCertificate();
+  }, []);
 
   const handleImageError = useCallback(
     (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
