@@ -55,7 +55,8 @@ export default function Offers() {
             ]}
           />
           <BannerSection image={banner} />
-          <Bestseller title={`${t("CityofPhonesOffers")}`} products={products} />
+          <Bestseller title={`${t("CityofPhonesOffers")}`} title="احدث العروض" btn={true} products={products} />
+          <Bestseller title={`${t("CityofPhonesOffers")}`} title="الاكثر مبيعا" btn={true} products={products} />
           <div className="mb-15">
             <Parttner />
           </div>
