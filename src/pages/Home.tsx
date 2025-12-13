@@ -11,13 +11,22 @@ import AppDownloadSection from "@/components/home/AppDownloadSection";
 import CertificationBadgesSection from "@/components/home/CertificationBadgesSection";
 import image from "../assets/images/hero.jpg";
 import banner from "../assets/images/banner.png";
+import HomePopup from "@/components/home/HomePopup";
+import { useState } from "react";
 
 const NewHome = () => {
+  const [showPopup, setShowPopup] = useState(true);
 
+  const handleClosePopup = () => {
+    setShowPopup(false);
+  };
 
   return (
     <Layout>
       <div className="min-h-screen bg-gray-50 w-full flex flex-col">
+        {/* Popup Modal */}
+        {showPopup && <HomePopup onClose={handleClosePopup} />}
+        
         <main className="w-full ">
           {/* Hero Section - Implementing Figma design */}
           <HeroSection
