@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { TabbyModal } from "@/components/singleproduct/Modelpayment";
 import { TamaraModal } from "@/components/singleproduct/TamaraModal";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useCartStore } from "@/store/cartStore/cartStore";
 import { toast } from "react-toastify";
 import { useLangSync } from "@/hooks/useLangSync";
@@ -22,8 +22,10 @@ export default function Ptoductdetails({
     propSelectedOptionIndex || 0
   );
   const [isAddingToCart, setIsAddingToCart] = useState(false);
+  const [isBuyingNow, setIsBuyingNow] = useState(false);
   const { lang } = useLangSync();
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     handleindexchange(selectedOptionIndex);
@@ -72,6 +74,33 @@ export default function Ptoductdetails({
     }
   };
 
+  const handleBuyNow = async () => {
+    try {
+      setIsBuyingNow(true);
+      const selectedVariant = product.options[selectedOptionIndex];
+      const hasMultiple = product.options && product.options.length > 1;
+      const idToSend = hasMultiple ? selectedVariant.id : product.id;
+
+      // إضافة المنتج إلى السلة
+      await addToCart(idToSend, quantity, hasMultiple);
+
+      toast.success(`تم إضافة ${product.name} إلى السلة`, {
+        position: "bottom-right",
+        autoClose: 2000,
+      });
+
+      // التوجيه إلى صفحة checkout
+      navigate("/checkout");
+    } catch (error) {
+      toast.error("فشل إضافة المنتج إلى السلة", {
+        position: "bottom-right",
+        autoClose: 2000,
+      });
+    } finally {
+      setIsBuyingNow(false);
+    }
+  };
+
   // الحصول على بوابات الدفع للـ variant المختار
   const selectedVariant = product.options?.[selectedOptionIndex];
   const paymentMethodsForSelectedVariant =
@@ -83,32 +112,29 @@ export default function Ptoductdetails({
   return (
     <div className="space-y-4 md:space-y-6" dir={lang == "ar" ? "rtl" : "ltr"}>
       <div>
-       {/* Product Name */}
-<h2 className="md:text-base !text-[25px] text-black font-medium mb-1 text-start">
-  {product?.name}
-</h2>
+        {/* Product Name */}
+        <h2 className="md:text-base !text-[25px] text-black font-medium mb-1 text-start">
+          {product?.name}
+        </h2>
 
-{/* Product Description */}
-<div className="text-start">
-  <p
-    className={` md:text-xl font-bold text-sm  text-gray-600 leading-relaxed 
-    ${expanded ? "" : "line-clamp-3"}`}
-  >
-    {product?.description}
-  </p>
+        {/* Product Description */}
+        <div className="text-start">
+          <p
+            className={` md:text-xl font-bold text-sm  text-gray-600 leading-relaxed 
+            ${expanded ? "" : "line-clamp-3"}`}
+          >
+            {product?.description}
+          </p>
 
-  {product?.description?.length > 100 && (
-    <button
-      onClick={toggleExpand}
-      className="text-[#211C4D] font-semibold text-sm mt-1 hover:underline"
-    >
-      {expanded ? "Read Less" : "Read More"}
-    </button>
-  )}
-</div>
-
-
-
+          {product?.description?.length > 100 && (
+            <button
+              onClick={toggleExpand}
+              className="text-[#211C4D] font-semibold text-sm mt-1 hover:underline"
+            >
+              {expanded ? "Read Less" : "Read More"}
+            </button>
+          )}
+        </div>
 
         <div className="flex items-center gap-2 mb-2">
           <div className="flex gap-1">
@@ -128,34 +154,35 @@ export default function Ptoductdetails({
           </span>
         </div>
       </div>
-      {
-       product.options.length>1 ?
-       <div>
+      {product.options.length > 1 ? (
+        <div>
+          <p className="text-sm text-start text-primary">{t("Chooseyourcolor")}</p>
 
-        <p className="text-sm text-start text-primary">{t("Chooseyourcolor")}</p>
-
-      {/* Color Selection */}
-      <div className="flex gap-2 md:gap-3">
-        {product?.options?.map((opt: any, index: number) => (
-          <button
-            key={opt.id}
-            onClick={() => setSelectedOptionIndex(index)}
-            className={`w-8 h-8 md:w-10 md:h-10 rounded-full border-2 transition-all ${
-              selectedOptionIndex === index
-                ? "border-primary scale-110"
-                : "border-border hover:border-muted-foreground"
-            }`}
-            style={{
-              backgroundColor: opt.value,
-              boxShadow:
-                opt.value === "#FFFFFF" ? "inset 0 0 0 1px #e5e7eb" : "none",
-            }}
-          />
-        ))}
-      </div>
-       </div>
-      :""
-      }
+          {/* Color Selection */}
+          <div className="flex gap-2 md:gap-3">
+            {product?.options?.map((opt: any, index: number) => (
+              <button
+                key={opt.id}
+                onClick={() => setSelectedOptionIndex(index)}
+                className={`w-8 h-8 md:w-10 md:h-10 rounded-full border-2 transition-all ${
+                  selectedOptionIndex === index
+                    ? "border-primary scale-110"
+                    : "border-border hover:border-muted-foreground"
+                }`}
+                style={{
+                  backgroundColor: opt.value,
+                  boxShadow:
+                    opt.value === "#FFFFFF"
+                      ? "inset 0 0 0 1px #e5e7eb"
+                      : "none",
+                }}
+              />
+            ))}
+          </div>
+        </div>
+      ) : (
+        ""
+      )}
 
       {/* Price */}
       <div className="flex items-baseline gap-2 md:gap-3">
@@ -167,19 +194,20 @@ export default function Ptoductdetails({
               ).toLocaleString("ar-SA")}
           {t("SAR")}
         </span>
-        {
-product.options[selectedOptionIndex].final_price==product.options[selectedOptionIndex].original_price?
-"":
-        <span className="text-base md:text-lg text-muted-foreground line-through">
-          {typeof product.options[selectedOptionIndex]?.original_price ===
-          "string"
-            ? product.options[selectedOptionIndex].original_price
-            : Number(
-                product.options[selectedOptionIndex]?.original_price || 0
-              ).toLocaleString("ar-SA")}
-          {t("SAR")}
-        </span>
-        }
+        {product.options[selectedOptionIndex].final_price ==
+        product.options[selectedOptionIndex].original_price ? (
+          ""
+        ) : (
+          <span className="text-base md:text-lg text-muted-foreground line-through">
+            {typeof product.options[selectedOptionIndex]?.original_price ===
+            "string"
+              ? product.options[selectedOptionIndex].original_price
+              : Number(
+                  product.options[selectedOptionIndex]?.original_price || 0
+                ).toLocaleString("ar-SA")}
+            {t("SAR")}
+          </span>
+        )}
       </div>
 
       {/* Payment Options */}
@@ -197,13 +225,6 @@ product.options[selectedOptionIndex].final_price==product.options[selectedOption
                   <span className="ml-2 text-[#C33104] font-bold">
                     {item.total_price}
                   </span>
-                  {/* <button
-                    onClick={() => openModal(item.modal || "tabby")}
-                    className="ml-2 underline cursor-pointer decoration-[#211C4D] underline-offset-2 border-none bg-none"
-                    aria-label={`معرفة التفاصيل عن ${item.name}`}
-                  >
-                    لمعرفة التفاصيل
-                  </button> */}
                 </p>
               </div>
               <div className="px-3 py-1 md:px-4 md:py-1 rounded text-sm font-bold text-card">
@@ -246,19 +267,20 @@ product.options[selectedOptionIndex].final_price==product.options[selectedOption
         <div className="flex flex-col md:flex-row gap-3 md:gap-4">
           <Button
             onClick={handleAddToCart}
-            disabled={isAddingToCart}
+            disabled={isAddingToCart || isBuyingNow}
             variant="outline"
             size="lg"
             className="px-4 md:px-6 w-[180px] md:w-[200px] h-[50px] md:h-[64px] border-2 border-black bg-transparent text-xl md:text-[25px] disabled:opacity-50"
           >
             {isAddingToCart ? "جاري الإضافة..." : t("Addtocart")}
           </Button>
-          <Link
-            className="bg-[#2AA0DC] w-[180px] md:w-[200px] h-[50px] md:h-[64px] hover:bg-primary/90 rounded-[8px] flex items-center justify-center text-primary-foreground font-[600] text-xl md:text-[25px]"
-            to={"/checkout"}
+          <Button
+            onClick={handleBuyNow}
+            disabled={isAddingToCart || isBuyingNow}
+            className="bg-[#2AA0DC] w-[180px] md:w-[200px] h-[50px] md:h-[64px] hover:bg-primary/90 rounded-[8px] flex items-center justify-center text-primary-foreground font-[600] text-xl md:text-[25px] disabled:opacity-50"
           >
-            {t("Buynow")}
-          </Link>
+            {isBuyingNow ? "جاري التوجيه..." : t("Buynow")}
+          </Button>
         </div>
       </div>
       <TabbyModal

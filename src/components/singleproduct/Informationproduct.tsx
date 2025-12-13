@@ -2,30 +2,81 @@ import Comments from "@/components/singleproduct/Comments";
 import { useLangSync } from "@/hooks/useLangSync";
 import { useTranslation } from "react-i18next";
 
+// مكون مساعد لعرض قائمة التفاصيل
+const DetailsList = ({ details }: { details: any[] }) => {
+  if (!details || !Array.isArray(details)) return null;
+
+  console.log("DetailsList rendering with details:", details);
+  
+  return (
+    <div className="space-y-3 md:space-y-4">
+      {details.map((item, index) => {
+        console.log(`Item ${index}:`, item, "Type:", typeof item);
+        
+        // إذا كان العنصر كائنًا يحتوي على key و value
+        if (item && typeof item === 'object' && item.key && item.value) {
+          return (
+            <div
+              key={index}
+              className="grid grid-cols-1 md:grid-cols-[1fr_auto] justify-between items-center gap-3 md:gap-4"
+            >
+              <div className="flex items-center gap-3 md:gap-4">
+                <div className="whitespace-nowrap text-right text-sm md:text-base text-[#211C4DCC]">
+                  {item.key}:
+                </div>
+                <div className="h-px flex-1 border-b border-dotted border-gray-300" />
+              </div>
+              <div className="text-right text-sm md:text-base text-[#211C4D] font-[500]">
+                {item.value}
+              </div>
+            </div>
+          );
+        }
+        
+        // إذا كان العنصر نصًا عاديًا
+        return (
+          <div
+            key={index}
+            className="grid grid-cols-1 md:grid-cols-[1fr_auto] justify-between items-center gap-3 md:gap-4"
+          >
+            <div className="flex items-center gap-3 md:gap-4">
+              <div className="whitespace-nowrap text-right text-sm md:text-base text-[#211C4DCC]">
+                خاصية {index + 1}:
+              </div>
+              <div className="h-px flex-1 border-b border-dotted border-gray-300" />
+            </div>
+            <div className="text-right text-sm md:text-base text-[#211C4D] font-[500]">
+              {String(item)}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
+// مكون لعرض محتوى HTML
+const HTMLContent = ({ content }: { content: string }) => {
+  if (!content) return null;
+
+  return (
+    <div 
+      className="text-[#211C4DCC] text-lg font-[400] leading-relaxed"
+      dangerouslySetInnerHTML={{ __html: content }}
+    />
+  );
+};
+
 export default function Informationproduct({ product }: any) {
   const { lang } = useLangSync();
   const { t } = useTranslation();
 
-  console.log("first",product)
-  // استخدام بيانات المنتج من الـ API إذا كانت موجودة
-  const specifications = product?.details
-    ? [
-        { label: t("Description"), value: product.details },
-        ...(product.about
-          ? [{ label: t("Additionalinformation"), value: product.about }]
-          : []),
-      ]
-    : [
-        {
-          label: "العلامة التجارية :",
-          value: product?.product_mark || "غير محدد",
-        },
-        { label: "السعة :", value: product?.capacity || "غير محدد" },
-      ];
+  console.log("product details structure:", product?.details);
+  console.log("product about:", product?.about);
 
-  const features = product?.details
-    ? [product.details]
-    : ["اكتشف الميزات والمواصفات الكاملة للمنتج"];
+  // معالجة التفاصيل إذا كانت موجودة
+  const hasDetails = product?.details && Array.isArray(product.details) && product.details.length > 0;
+  const hasAbout = product?.about && product.about.trim() !== "";
 
   return (
     <div
@@ -38,51 +89,71 @@ export default function Informationproduct({ product }: any) {
       </h1>
 
       {/* Specifications Section */}
-      <div className="mb-8 md:mb-12">
-        <h2 className="mb-4 md:mb-6 text-start text-lg md:text-xl font-semibold text-gray-900">
-          {t("Generalspecifications")}
-        </h2>
-
-        <div className="space-y-3 md:space-y-4">
-          {specifications.map((spec, index) => (
-            <div
-              key={index}
-              className="grid grid-cols-[1fr_auto] justify-between items-center gap-3 md:gap-4"
-            >
-              <div className="flex items-center gap-3 md:gap-4">
-                <div className="whitespace-nowrap text-right text-sm md:text-base text-[#211C4DCC]">
-                  <div
-                    className="spec-item-content !text-left"
-                    dangerouslySetInnerHTML={{ __html: spec.label }}
-                  />
-                </div>
-                <div className="h-px flex-1 border-b border-dotted border-gray-300" />
-              </div>
-              <div className="text-right text-sm md:text-base text-[#211C4D] font-[500]">
-                <div
-                  className="spec-item-content"
-                  dangerouslySetInnerHTML={{ __html: spec.value }}
-                />
-              </div>
-            </div>
-          ))}
+      {hasDetails && (
+        <div className="mb-8 md:mb-12">
+          <h2 className="mb-4 md:mb-6 text-start text-lg md:text-xl font-semibold text-gray-900">
+            {t("Generalspecifications")}
+          </h2>
+          <DetailsList details={product.details} />
         </div>
-      </div>
+      )}
 
       {/* About Section */}
-      <div className="mb-8 md:mb-12">
-        <h2 className="mb-4 md:mb-6 text-start text-2xl md:text-[32px] font-semibold text-[#211C4D]">
-          {t("Aboutthisproduct")}
-        </h2>
-
-        <div className="space-y-3 md:space-y-4">
-          {features.map((feature, index) => (
-            <div className="features-content" key={index}>
-              <div className="text-[#211C4DCC] text-[24px] font-[400]" dangerouslySetInnerHTML={{ __html: feature }} />
-            </div>
-          ))}
+      {hasAbout && (
+        <div className="mb-8 md:mb-12">
+          <h2 className="mb-4 md:mb-6 text-start text-2xl md:text-[32px] font-semibold text-[#211C4D]">
+            {t("Aboutthisproduct")}
+          </h2>
+          <HTMLContent content={product.about} />
         </div>
-      </div>
+      )}
+
+      {/* معلومات إضافية إذا لم يكن هناك details أو about */}
+      {!hasDetails && !hasAbout && (
+        <>
+          {/* المعلومات الأساسية */}
+          <div className="mb-8 md:mb-12">
+            <h2 className="mb-4 md:mb-6 text-start text-lg md:text-xl font-semibold text-gray-900">
+              {t("Generalspecifications")}
+            </h2>
+            <div className="space-y-3 md:space-y-4">
+              {[
+                { key: "العلامة التجارية", value: product?.product_mark || "غير محدد" },
+                { key: "السعة", value: product?.capacity || "غير محدد" },
+                { key: "السعر الأصلي", value: product?.original_price || "غير محدد" },
+                { key: "السعر النهائي", value: product?.final_price || "غير محدد" },
+              ].map((item, index) => (
+                <div
+                  key={index}
+                  className="grid grid-cols-1 md:grid-cols-[1fr_auto] justify-between items-center gap-3 md:gap-4"
+                >
+                  <div className="flex items-center gap-3 md:gap-4">
+                    <div className="whitespace-nowrap text-right text-sm md:text-base text-[#211C4DCC]">
+                      {item.key}:
+                    </div>
+                    <div className="h-px flex-1 border-b border-dotted border-gray-300" />
+                  </div>
+                  <div className="text-right text-sm md:text-base text-[#211C4D] font-[500]">
+                    {item.value}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* الوصف */}
+          {product?.description && (
+            <div className="mb-8 md:mb-12">
+              <h2 className="mb-4 md:mb-6 text-start text-2xl md:text-[32px] font-semibold text-[#211C4D]">
+                {t("Aboutthisproduct")}
+              </h2>
+              <div className="text-[#211C4DCC] text-lg font-[400] leading-relaxed">
+                {product.description}
+              </div>
+            </div>
+          )}
+        </>
+      )}
 
       {/* Comments Section */}
       <Comments />
