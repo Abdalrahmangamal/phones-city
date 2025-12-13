@@ -100,16 +100,19 @@ export default function Trademarks() {
             )}
           </div>
           
-          {/* Filter Section */}
-          <div className="flex justify-center my-6">
-            <Filter 
-              onSortChange={handleSortChange}
-              onCategoryChange={handleCategoryChange}
-              categories={Catesubgategory}
-            />
-          </div>
-          
-          <Bestseller title="المنتجات" products={filteredProducts} />
+          <Bestseller 
+            title="المنتجات" 
+            products={filteredProducts} 
+            filterComponent={
+              <div className="flex justify-center">
+                <Filter 
+                  onSortChange={handleSortChange}
+                  onCategoryChange={handleCategoryChange}
+                  categories={Catesubgategory}
+                />
+              </div>
+            }
+          />
           <Offerbannersingle />
 
           <div className="my-12">

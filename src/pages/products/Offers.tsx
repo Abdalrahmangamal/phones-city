@@ -1,4 +1,4 @@
-import Layout from "@/components/layout/Layout";
+import Layout from "@/components/layout/layout";
 import NewHeroSection from "@/components/public/HeroSection";
 import image from "@/assets/images/hero.jpg";
 import BannerSection from "@/components/public/BannerSection";
@@ -43,15 +43,15 @@ export default function Offers() {
           break;
         case "price-low-high":
           products = [...products].sort((a, b) => {
-            const priceA = parseFloat(a.price_after_discount || a.price);
-            const priceB = parseFloat(b.price_after_discount || b.price);
+            const priceA = parseFloat(a.final_price || a.original_price);
+            const priceB = parseFloat(b.final_price || b.original_price);
             return priceA - priceB;
           });
           break;
         case "price-high-low":
           products = [...products].sort((a, b) => {
-            const priceA = parseFloat(a.price_after_discount || a.price);
-            const priceB = parseFloat(b.price_after_discount || b.price);
+            const priceA = parseFloat(a.final_price || a.original_price);
+            const priceB = parseFloat(b.final_price || b.original_price);
             return priceB - priceA;
           });
           break;
@@ -85,36 +85,23 @@ export default function Offers() {
     <Layout>
       <div>
         <div>
-          <NewHeroSection
-            slides={[
-              {
-                title: "أحدث الهواتف الذكية",
-                description:
-                  "استمتع بتجربة استثنائية مع أحدث الهواتف بأفضل الأسعار وخدمة ما بعد البيع المميزة",
-                bg: `${image}`,
-                link: "/shop",
-              },
-              {
-                title: "عروض خاصة جدًا",
-                description:
-                  "خصومات حصرية على جميع الماركات العالمية لفترة محدودة",
-                bg: `${image}`,
-                link: "/offers",
-              },
-            ]}
-          />
+          <NewHeroSection />
           <BannerSection image={banner} />
           
-          {/* Filter Section */}
-          <div className="flex justify-center my-6">
-            <Filter 
-              onSortChange={handleSortChange}
-              onCategoryChange={handleCategoryChange}
-              categories={categories}
-            />
-          </div>
-          
-          <Bestseller title={`${t("CityofPhonesOffers")}`} btn={true} products={filteredProducts} />
+          <Bestseller 
+            title={`${t("CityofPhonesOffers")}`} 
+            btn={true} 
+            products={filteredProducts} 
+            filterComponent={
+              <div className="flex justify-center">
+                <Filter 
+                  onSortChange={handleSortChange}
+                  onCategoryChange={handleCategoryChange}
+                  categories={categories}
+                />
+              </div>
+            }
+          />
           <div className="mb-15">
             <Parttner />
           </div>
