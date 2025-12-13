@@ -11,10 +11,19 @@ import AppDownloadSection from "@/components/home/AppDownloadSection";
 import CertificationBadgesSection from "@/components/home/CertificationBadgesSection";
 import banner from "../assets/images/banner.png";
 import HomePopup from "@/components/home/HomePopup";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const NewHome = () => {
   const [showPopup, setShowPopup] = useState(true);
+
+  // Automatically close popup after 2 seconds
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowPopup(false);
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleClosePopup = () => {
     setShowPopup(false);

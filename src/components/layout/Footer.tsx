@@ -27,52 +27,38 @@ const Footer: React.FC = () => {
   const navigate = useNavigate();
 
   const serviceMenuItems = [
-    t("InstallmentService"),
-    t("DeviceExchange"),
-    t("DeviceSelling"),
-    t("ProgrammingAndMaintenance"),
-    t("TelecomAndInternet"),
-    t("PremiumCustomerService"),
+    { label: t("InstallmentService"), path: "/servces" },
+    { label: t("DeviceExchange"), path: "/servces" },
+    { label: t("DeviceSelling"), path: "/servces" },
+    { label: t("ProgrammingAndMaintenance"), path: "/servces" },
+    { label: t("TelecomAndInternet"), path: "/servces" },
+    { label: t("PremiumCustomerService"), path: "/servces" },
   ];
 
   const aboutMenuItems = [
-    t("WhoWeAre"),
-    t("Offers"),
-    t("OurServices"),
-    t("ContactUs"),
-    t("TermsAndConditions"),
+    { label: t("WhoWeAre"), path: "/about" },
+    { label: t("Offers"), path: "/offers" },
+    { label: t("OurServices"), path: "/servces" },
+    { label: t("ContactUs"), path: "/contact" },
+    { label: t("TermsAndConditions"), path: "/terms-and-conditions" },
   ];
 
   const customerCareMenuItems = [
-    t("WarrantyPolicy"),
-    t("ReturnPolicy"),
-    t("AfterSalesService"),
-    t("LoyaltyPointsService"),
+    { label: t("WarrantyPolicy"), path: "/warranty-policy" },
+    { label: t("ReturnPolicy"), path: "/return-policy" },
+    { label: t("TermsAndConditions"), path: "/terms-and-conditions" },
+    { label: t("AboutMora"), path: "/about-mora" },
+    { label: t("AboutCoara"), path: "/about-quara" },
   ];
 
-  const handleCustomerCareItemClick = (item: string) => {
-    switch (item) {
-      case `${t("WarrantyPolicy")}`:
-        navigate("/warranty-policy");
-        break;
-      case "سياسة  الاستبدال والارجاع":
-        navigate("/return-policy");
-        break;
-      default:
-        // Handle other menu items if needed
-        break;
+  const handleCustomerCareItemClick = (path: string) => {
+    if (path !== "#") {
+      navigate(path);
     }
   };
 
-  const handleAboutItemClick = (item: string) => {
-    switch (item) {
-      case "الشروط و الاحكام":
-        navigate("/terms-and-conditions");
-        break;
-      default:
-        // Handle other menu items if needed
-        break;
-    }
+  const handleAboutItemClick = (path: string) => {
+    navigate(path);
   };
 
   return (
@@ -105,9 +91,9 @@ const Footer: React.FC = () => {
                     key={i}
                     className="text-[#E0E5EB] hover:text-white text-[15px] sm:text-[12px] lg:text-[18px] text-start bg-transparent border-0 p-0 cursor-pointer"
                     style={{ fontFamily: "Roboto" }}
-                    onClick={() => handleCustomerCareItemClick(item)}
+                    onClick={() => handleCustomerCareItemClick(item.path)}
                   >
-                    {item}
+                    {item.label}
                   </button>
                 ))}
               </div>
@@ -124,9 +110,9 @@ const Footer: React.FC = () => {
                     key={i}
                     className="text-[#E0E5EB] hover:text-white text-[15px] sm:text-[12px] lg:text-[16px] text-start bg-transparent border-0 p-0 cursor-pointer"
                     style={{ fontFamily: "Roboto" }}
-                    onClick={() => handleAboutItemClick(item)}
+                    onClick={() => handleAboutItemClick(item.path)}
                   >
-                    {item}
+                    {item.label}
                   </button>
                 ))}
               </div>
@@ -143,8 +129,13 @@ const Footer: React.FC = () => {
                     key={i}
                     className="text-[#E0E5EB] hover:text-white text-[15px] sm:text-[12px] lg:text-[16px] text-start bg-transparent border-0 p-0 cursor-pointer"
                     style={{ fontFamily: "Roboto" }}
+                    onClick={() => {
+                      if (item.path !== "#") {
+                        navigate(item.path);
+                      }
+                    }}
                   >
-                    {item}
+                    {item.label}
                   </button>
                 ))}
               </div>
@@ -188,12 +179,12 @@ const Footer: React.FC = () => {
 
               {/* Badges */}
               <div className="flex justify-start flex-wrap gap-2 sm:gap-3 mt-4">
-                {[googleanalytic, googletagmaneger, blue, drive, Google].map(
+                {[googleanalytic, googletagmaneger, blue, drive, Google, emkan, amwal].map(
                   (img, i) => (
-                    <a key={i} href="/" className="inline-block">
+                    <a key={i} href={i >= 5 ? (i === 5 ? "/about-quara" : "/about-mora") : "#"} className="inline-block">
                       <img
                         src={img}
-                        alt="badge"
+                        alt={i >= 5 ? (i === 5 ? "Coara" : "Mora") : "badge"}
                         className="h-9 sm:h-7 lg:h-10 object-contain rounded-lg"
                         style={{ maxWidth: 130 }}
                       />

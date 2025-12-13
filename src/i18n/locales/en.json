@@ -41,6 +41,9 @@
   "ReturnPolicy": "Return & Exchange Policy",
   "AfterSalesService": "After Sales Service",
   "LoyaltyPointsService": "Loyalty Points Service",
+  "AboutMora": "About Mora",
+  "AboutCoara": "About Coara",
+  "Delete All": "Delete All",
 
   "AboutCityPhones": "About City Phones",
   "WhoWeAre": "Who We Are",
@@ -70,7 +73,7 @@
 "Generalspecifications":"General specifications",
 "Description":"Description",
 "Additionalinformation":"Additional information",
-  "YourMessage": "Your Message",
+"YourMessage": "Your Message",
 "SAR":"SAR",
 "Buynow":"Buy now",
 "Addtocart":"Add to cart",
