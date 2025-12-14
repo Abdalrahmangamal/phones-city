@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react"; // Add this import
 import Layout from "@/components/layout/layout";
 import HeroSection from "@/components/public/HeroSection";
 import BannerSection from "@/components/public/BannerSection";
@@ -26,6 +27,7 @@ import { useLangSync } from "@/hooks/useLangSync";
 
 const NewHome = () => {
   const [showPopup, setShowPopup] = useState(true);
+  const [isLoading, setIsLoading] = useState(false); // Add this state
 
   const { lang } = useLangSync();
 

@@ -1,4 +1,3 @@
-
 import ProductCard from "../public/ProductCard";
 import pattern from "../../assets/images/Layer_1.png";
 import { Link } from "react-router-dom";
@@ -13,7 +12,8 @@ interface BestsellerProps {
   id?: number;
   products: Product[];
   favourite?: boolean;
-  limit?: number; // إضافة خاصية limit
+  limit?: number;
+  filterComponent?: React.ReactNode; // أضف هذا الـ prop
 }
 
 export default function Bestseller({
@@ -22,8 +22,10 @@ export default function Bestseller({
   btn,
   products,
   style,
-  limit, // إضافة limit
+  limit,
+  filterComponent, // أضف هذا هنا
 }: BestsellerProps) {
+  const { t } = useTranslation(); // أضف هذا إذا كنت تستخدم الترجمة
 
   // تحقق مما إذا كانت المنتجات فارغة أو غير موجودة
   const hasProducts = Array.isArray(products) && products.length > 0;
@@ -37,6 +39,7 @@ export default function Bestseller({
   console.log("Bestseller - Products received:", products);
   console.log("Bestseller - Products to show:", productsToShow);
   console.log("Bestseller - Limit:", limit);
+  console.log("Bestseller - Filter component:", filterComponent);
 
   return (
     <div className="mt-[20px] lg:px-[90px] px-2 pt-20 md:pt-20">
