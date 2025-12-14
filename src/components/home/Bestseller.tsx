@@ -3,6 +3,7 @@ import ProductCard from "../public/ProductCard";
 import pattern from "../../assets/images/Layer_1.png";
 import { Link } from "react-router-dom";
 import type { Product } from "@/types/index";
+import { useTranslation } from "react-i18next";
 
 interface BestsellerProps {
   title: string;
@@ -52,28 +53,31 @@ export default function Bestseller({
           />
         </div>
 
-        {btn && (
-          <Link
-            className="text-[#211C4D] text-[24px] flex items-center gap-[10px] font-[500]"
-            to={link || "#"}
-          >
-            عرض المزيد
-            <svg
-              width="10"
-              height="18"
-              viewBox="0 0 10 18"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
+        <div className="flex items-center gap-4">
+          {filterComponent && <div>{filterComponent}</div>}
+          {btn && (
+            <Link
+              className="text-[#211C4D] text-[24px] flex items-center gap-[10px] font-[500]"
+              to={link || "#"}
             >
-              <path
-                fillRule="evenodd"
-                clipRule="evenodd"
-                d="M8.64 16.95C8.27 17.35 7.69 17.34 7.33 16.93L1.03 9.76C0.68 9.35 0.68 8.69 1.05 8.29L7.49 1.25C7.86 0.85 8.45 0.85 8.81 1.26C9.16 1.67 9.16 2.33 8.79 2.73L3.01 9.04L8.66 15.48C9.02 15.89 9.01 16.55 8.64 16.95Z"
-                fill="#211C4D"
-              />
-            </svg>
-          </Link>
-        )}
+              {t("ShowMore")}
+              <svg
+                width="10"
+                height="18"
+                viewBox="0 0 10 18"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  fillRule="evenodd"
+                  clipRule="evenodd"
+                  d="M8.64 16.95C8.27 17.35 7.69 17.34 7.33 16.93L1.03 9.76C0.68 9.35 0.68 8.69 1.05 8.29L7.49 1.25C7.86 0.85 8.45 0.85 8.81 1.26C9.16 1.67 9.16 2.33 8.79 2.73L3.01 9.04L8.66 15.48C9.02 15.89 9.01 16.55 8.64 16.95Z"
+                  fill="#211C4D"
+                />
+              </svg>
+            </Link>
+          )}
+        </div>
       </div>
 
       {/* المنتجات */}

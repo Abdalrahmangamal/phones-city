@@ -42,6 +42,9 @@
   "ReturnPolicy": "سياسة الاستبدال والارجاع",
   "AfterSalesService": "خدمة ما بعد البيع",
   "LoyaltyPointsService": "خدمة نقاط الولاء",
+  "AboutMora": "عن مورا",
+  "AboutCoara": "عن كوارا",
+  "Delete All": "مسح الكل",
 
   "AboutCityPhones": "عن مدينة الهواتف",
   "CityPhones": "مدينة الهواتف ",
@@ -66,6 +69,7 @@
   "Contactinformation": "بيانات التواصل",
   "Sendtothephonecity": "ارسل إلى مدينة الهواتف",
   "CityofPhonesOffers": "عروض مدينة الهواتف",
+  "ShowMore": "عرض المزيد",
   "Gettoknowus": "تعرف علينا",
   "AboutUs": "من نحن",
 "Productdetails":"تفاصيل المنتج",
