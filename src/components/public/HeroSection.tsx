@@ -5,56 +5,62 @@ import "swiper/css/pagination";
 import { Pagination, Autoplay } from "swiper/modules";
 import { Link } from "react-router-dom";
 import "../../style.css";
-import { useEffect, useMemo } from "react";
-import { useHeroSectionStore } from "@/store/home/herosectionStore";
+import { useMemo } from "react";
 
-const NewHeroSection = () => {
+// تعريف نوع البيانات المتوقعة من الـ slider (يمكنك تعديله حسب الـ API الفعلي)
+interface Slider {
+  bg: string;
+  title: string;
+  description: string;
+  link?: string;
+}
+
+// Props الجديدة: نستقبل sliders جاهزة من Home.tsx
+interface HeroSectionProps {
+  sliders: Slider[];
+}
+
+const NewHeroSection: React.FC<HeroSectionProps> = ({ sliders }) => {
   const { lang } = useLangSync();
-  const { sliders, loading, error, fetchSliders } = useHeroSectionStore();
 
-  useEffect(() => {
-    fetchSliders(lang);
-  }, [lang, fetchSliders]);
-
-  // استخدام useMemo لتحسين الأداء
-  const renderLoading = useMemo(() => (
-    <div className="xl:px-[90px] px-2 pt-20 md:pt-0">
-      <div className="md:h-[400px] h-[200px] rounded-[16px] mt-6 bg-gray-200 animate-pulse flex items-center justify-center">
-        <p className="text-gray-500">
-          {lang === 'ar' ? 'جارٍ تحميل الشرائح...' : 'Loading slides...'}
-        </p>
+  // حالات fallback باستخدام useMemo لتحسين الأداء
+  const renderLoading = useMemo(
+    () => (
+      <div className="xl:px-[90px] px-2 pt-20 md:pt-0">
+        <div className="md:h-[400px] h-[200px] rounded-[16px] mt-6 bg-gray-200 animate-pulse flex items-center justify-center">
+          <p className="text-gray-500">
+            {lang === "ar" ? "جارٍ تحميل الشرائح..." : "Loading slides..."}
+          </p>
+        </div>
       </div>
-    </div>
-  ), [lang]);
+    ),
+    [lang]
+  );
 
-  const renderError = useMemo(() => (
-    <div className="xl:px-[90px] px-2 pt-20 md:pt-0">
-      <div className="md:h-[400px] h-[200px] rounded-[16px] mt-6 bg-red-50 flex items-center justify-center">
-        <p className="text-red-500">
-          {lang === 'ar' ? 'حدث خطأ:' : 'Error:'} {error}
-        </p>
+  const renderEmpty = useMemo(
+    () => (
+      <div className="xl:px-[90px] px-2 pt-20 md:pt-0">
+        <div className="md:h-[400px] h-[200px] rounded-[16px] mt-6 bg-gray-100 flex items-center justify-center">
+          <p className="text-gray-500">
+            {lang === "ar" ? "لا توجد شرائح متاحة" : "No slides available"}
+          </p>
+        </div>
       </div>
-    </div>
-  ), [error, lang]);
+    ),
+    [lang]
+  );
 
-  const renderEmpty = useMemo(() => (
-    <div className="xl:px-[90px] px-2 pt-20 md:pt-0">
-      <div className="md:h-[400px] h-[200px] rounded-[16px] mt-6 bg-gray-100 flex items-center justify-center">
-        <p className="text-gray-500">
-          {lang === 'ar' ? 'لا توجد شرائح متاحة' : 'No slides available'}
-        </p>
-      </div>
-    </div>
-  ), [lang]);
-
-  if (loading) return renderLoading;
-  if (error) return renderError;
-  if (sliders.length === 0) return renderEmpty;
+  // إذا لم يكن هناك sliders (أو مصفوفة فارغة) → نعرض fallback
+  if (!sliders || sliders.length === 0) {
+    // في الوضع الجديد، إذا لم يتم تمرير sliders، نعرض loading أو empty حسب الحاجة
+    // لكن عادةً Home.tsx سيمرر مصفوفة (حتى لو فارغة بعد الـ fetch)
+    return sliders === undefined ? renderLoading : renderEmpty;
+  }
 
   return (
     <div className="xl:px-[90px] px-2 pt-20 md:pt-0">
       <Swiper
-        key={lang}
+        key={lang} // لإعادة تهيئة السلايدر عند تغيير اللغة
         speed={1000}
         dir={lang === "ar" ? "rtl" : "ltr"}
         autoplay={{
@@ -62,7 +68,7 @@ const NewHeroSection = () => {
           disableOnInteraction: false,
         }}
         loop={true}
-        pagination={{ 
+        pagination={{
           clickable: true,
           dynamicBullets: true,
         }}
@@ -79,12 +85,12 @@ const NewHeroSection = () => {
                 className="w-full h-full object-cover rounded-[16px]"
                 loading={index === 0 ? "eager" : "lazy"}
               />
-              
-              {/* Overlay فوق الصورة */}
+
+              {/* Overlay */}
               <div className="absolute inset-0 bg-gradient-to-r from-[#211C4D0A] via-[#211C4D22] to-[#211C4D6B] rounded-[16px]"></div>
             </div>
-            
-            {/* محتوى النص والأزرار */}
+
+            {/* المحتوى النصي والزر */}
             <div className="relative z-10 w-full h-full flex flex-col justify-start items-start px-[40px] pt-[40px] md:pt-[60px]">
               <h1 className="font-[700] md:text-[3rem] text-[1.5rem] text-white textshad">
                 {slide.title}
@@ -93,9 +99,9 @@ const NewHeroSection = () => {
               <p className="font-[700] md:text-[20px] text-[14px] max-w-[90%] md:max-w-[50%] text-white mt-[15px] md:mt-[20px] text-start">
                 {slide.description}
               </p>
-              
+
               <Link
-                to={slide.link || '/products'}
+                to={slide.link || "/products"}
                 className="
                   md:w-[140px] md:h-[48px]
                   w-[100px] h-[36px]
@@ -113,9 +119,9 @@ const NewHeroSection = () => {
                   hover:scale-105
                   focus:outline-none focus:ring-2 focus:ring-[#F3AC5D] focus:ring-offset-2
                 "
-                aria-label={lang === 'ar' ? 'اذهب للتسوق الآن' : 'Go to shop now'}
+                aria-label={lang === "ar" ? "اذهب للتسوق الآن" : "Go to shop now"}
               >
-                {lang === 'ar' ? 'تسوق الآن' : 'Shop Now'}
+                {lang === "ar" ? "تسوق الآن" : "Shop Now"}
                 <svg
                   width="19"
                   height="14"
@@ -123,7 +129,7 @@ const NewHeroSection = () => {
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
                   className={`transition-transform duration-300 hover:translate-x-1 ${
-                    lang === 'ar' ? 'rotate-180' : ''
+                    lang === "ar" ? "rotate-180" : ""
                   }`}
                   aria-hidden="true"
                 >

@@ -118,5 +118,19 @@
   "Failed to add address": "Failed to add address",
    "StoreFeatures": "Store Features",
   "FeaturesDescription": "Every feature we designed to make your shopping easier, faster, and safer.",
-  "OurCertificates": "Our Certificates"
+  "OurCertificates": "Our Certificates",
+  "SpecialOffers": "Special Offers",
+  "LoadingSpecialOffers": "Loading special offers...",
+  "AnErrorOccurred": "An error occurred",
+  "Reload": "Reload",
+  "ExclusiveSpecialOffers": "🎉 Exclusive Special Offers!",
+  "EnjoyBestOffersOn": "Enjoy the best offers on",
+  "AllOffers": "All Offers",
+  "NoOffersAvailable": "No offers available",
+  "NoOffersFound": "We didn't find any special offers at the moment.",
+  "ReturnToHome": "Return to Home",
+  "Back": "Back",
+  "products": "products",
+  "SpecialOffers for you": "Special Offers for you",
+  "ViewAll": "View All"
 }

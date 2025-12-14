@@ -30,33 +30,41 @@ export const useProductsStore = create<PageState>((set) => ({
   error: null,
   response: null,
 
-  fetchProducts: async (params: productsParams = {}, lang?: string) => {
-    try {
-      set({ loading: true, error: null });
-      const token = localStorage.getItem("token");
+  
+fetchProducts: async (params: productsParams = {}, lang?: string) => {
+  try {
+    set({ loading: true, error: null });
+    const token = localStorage.getItem("token");
 
-      const res = await axios.get(`${baseUrl}api/v1/products`, {
-        params,
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Accept-Language": `${lang || "ar"}`,
-          Accept: "application/json",
-        },
-      });
+    console.log("Fetching products with params:", params);
+    console.log("Full URL:", `${baseUrl}api/v1/products`);
+    
+    const res = await axios.get(`${baseUrl}api/v1/products`, {
+      params,
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Accept-Language": `${lang || "ar"}`,
+        Accept: "application/json",
+      },
+    });
 
-      console.log("ZUSTAND RESPONSE:", res.data.data); // <<< هنا هتشوفها 100%
+    console.log("Full API Response:", res.data);
+    console.log("Products data:", res.data.data);
+    console.log("Total products in response:", Array.isArray(res.data.data) ? res.data.data.length : 0);
+    console.log("Pagination info:", res.data.meta); // تحقق من معلومات الترقيم إذا كانت موجودة
 
-      set({
-        response: res.data.data,
-        loading: false,
-      });
-    } catch (err: any) {
-      set({
-        error: err?.response?.data?.message || "Something went wrong",
-        loading: false,
-      });
-    }
-  },
+    set({
+      response: res.data.data,
+      loading: false,
+    });
+  } catch (err: any) {
+    console.error("API Error:", err.response || err);
+    set({
+      error: err?.response?.data?.message || "Something went wrong",
+      loading: false,
+    });
+  }
+},
   fetchProductbyid: async (id: string,lang, params: productsParams = {}) => {
     try {
       set({ loading: true, error: null });

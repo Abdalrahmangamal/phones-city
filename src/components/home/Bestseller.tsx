@@ -1,3 +1,4 @@
+
 import ProductCard from "../public/ProductCard";
 import pattern from "../../assets/images/Layer_1.png";
 import { Link } from "react-router-dom";
@@ -11,6 +12,7 @@ interface BestsellerProps {
   id?: number;
   products: Product[];
   favourite?: boolean;
+  limit?: number; // إضافة خاصية limit
 }
 
 export default function Bestseller({
@@ -19,7 +21,21 @@ export default function Bestseller({
   btn,
   products,
   style,
+  limit, // إضافة limit
 }: BestsellerProps) {
+
+  // تحقق مما إذا كانت المنتجات فارغة أو غير موجودة
+  const hasProducts = Array.isArray(products) && products.length > 0;
+  
+  // تحديد المنتجات المعروضة (تطبيق limit إذا تم تمريره)
+  const productsToShow = limit && hasProducts 
+    ? products.slice(0, limit) 
+    : products;
+
+  // تسجيل البيانات للتحقق منها
+  console.log("Bestseller - Products received:", products);
+  console.log("Bestseller - Products to show:", productsToShow);
+  console.log("Bestseller - Limit:", limit);
 
   return (
     <div className="mt-[20px] lg:px-[90px] px-2 pt-20 md:pt-20">
@@ -64,9 +80,15 @@ export default function Bestseller({
       <div
         className={`grid xl:grid-cols-4 ${style} sm:grid-cols-3 grid-cols-3 gap-[2px] md:gap-[20px] justify-items-center mt-[60px] `}
       >
-        {products.map((item) => (
-          <ProductCard product={item} />
-        ))}
+        {hasProducts ? (
+          productsToShow.map((item) => (
+            <ProductCard key={item.id} product={item} />
+          ))
+        ) : (
+          <div className="col-span-full text-center py-10">
+            <p className="text-gray-500 text-lg">لا توجد عروض متاحة حالياً</p>
+          </div>
+        )}
       </div>
     </div>
   );
