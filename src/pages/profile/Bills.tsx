@@ -1,9 +1,41 @@
+// Bills.tsx
+import { useEffect } from "react";
 import Layout from "@/components/layout/Layout";
 import Sidebar from "@/components/layout/Sidebar";
 import "@/style.css";
 import more from "@/assets/images/More.png";
 import { Link } from "react-router-dom";
+import { useInvoicesStore } from "@/store/profile/indexStore"; 
+
 export default function Myorder() {
+  // جميع الـ Hooks يجب أن تكون في الأعلى، بدون شروط
+  const { invoices, loading, error, fetchInvoices } = useInvoicesStore();
+
+  useEffect(() => {
+    fetchInvoices();
+  }, [fetchInvoices]);
+
+  // بعد الـ Hooks، يمكنك وضع الشروط للعرض
+  if (loading) {
+    return (
+      <Layout>
+        <div className="flex justify-center items-center h-64">
+          <p>جاري تحميل الفواتير...</p>
+        </div>
+      </Layout>
+    );
+  }
+
+  if (error) {
+    return (
+      <Layout>
+        <div className="flex justify-center items-center h-64">
+          <p className="text-red-500">{error}</p>
+        </div>
+      </Layout>
+    );
+  }
+
   return (
     <Layout>
       <div className="flex flex-col md:flex-row justify-center gap-[30px] mt-[80px]">
@@ -43,7 +75,7 @@ export default function Myorder() {
                   <th className="text-center ">
                     <div className="flex items-center !justify-center">
                       <p className="bg-[#ABD1E7] text-[#211C4D] text-[13px] font-[500] pt-1 px-5  rounded-[8px] w-fit">
-                        المبلع الاجمالي
+                        المبلغ الاجمالي
                       </p>
                     </div>
                   </th>
@@ -58,130 +90,45 @@ export default function Myorder() {
               </thead>
 
               <tbody className="bg-white">
-                <tr className="h-[108px]">
-                  <td className="text-[#211C4D] border-b  font-[500] py-4">
-                    <div className="flex items-center gap-2 justify-center">
-                      <div className="w-full items-center justify-center">
-                        <p className="text-center">#7473567</p>
+                {invoices.length > 0 ? invoices.map((invoice) => (
+                  <tr key={invoice.id} className="h-[108px]">
+                    <td className="text-[#211C4D] border-b font-[500] py-4">
+                      <div className="flex items-center gap-2 justify-center">
+                        <div className="w-full items-center justify-center">
+                          <p className="text-center">{invoice.order_number}</p>
+                        </div>
                       </div>
-                    </div>
-                  </td>
-                  <td className=" border-b  py-4">
-                    <div className="flex justify-center w-full   items-center rtl gap-3">
-                      <p>#7473567</p>
-                    </div>
-                  </td>
-                  <td className="text-[#211C4D] border-b  text-center font-[500] py-4">
-                    <div className="w-full flex items-center justify-center">
-                      <p>2024/10/12</p>
-                    </div>
-                  </td>
-                  <td className="text-[#211C4D] border-b  font-[500] py-4">
-                    <div className="w-full flex items-center justify-center">
-                      <p>1,104 رس</p>
-                    </div>
-                  </td>
-                  <td className="text-[#F3AC5D] border-b text-center font-[600] py-4 w-[160px]">
-                    <div className="w-full flex items-center justify-center">
-                      <Link to={"/singlebills"}>
-                        <img src={more} alt="" />
-                      </Link>
-                    </div>
-                  </td>
-                </tr>
-                <tr className="h-[108px]">
-                  <td className="text-[#211C4D] border-b  font-[500] py-4">
-                    <div className="flex items-center gap-2 justify-center">
-                      <div className="w-full items-center justify-center">
-                        <p className="text-center">#7473567</p>
+                    </td>
+                    <td className="border-b py-4">
+                      <div className="flex justify-center w-full items-center rtl gap-3">
+                        <p>{invoice.invoice_number}</p>
                       </div>
-                    </div>
-                  </td>
-                  <td className=" border-b  py-4">
-                    <div className="flex justify-center w-full   items-center rtl gap-3">
-                      <p>#7473567</p>
-                    </div>
-                  </td>
-                  <td className="text-[#211C4D] border-b  text-center font-[500] py-4">
-                    <div className="w-full flex items-center justify-center">
-                      <p>2024/10/12</p>
-                    </div>
-                  </td>
-                  <td className="text-[#211C4D] border-b  font-[500] py-4">
-                    <div className="w-full flex items-center justify-center">
-                      <p>1,104 رس</p>
-                    </div>
-                  </td>
-                  <td className="text-[#F3AC5D] border-b text-center font-[600] py-4 w-[160px]">
-                    <div className="w-full flex items-center justify-center">
-                      <Link to={"/singlebills"}>
-                        <img src={more} alt="" />
-                      </Link>
-                    </div>
-                  </td>
-                </tr>
-                <tr className="h-[108px]">
-                  <td className="text-[#211C4D] border-b  font-[500] py-4">
-                    <div className="flex items-center gap-2 justify-center">
-                      <div className="w-full items-center justify-center">
-                        <p className="text-center">#7473567</p>
+                    </td>
+                    <td className="text-[#211C4D] border-b text-center font-[500] py-4">
+                      <div className="w-full flex items-center justify-center">
+                        <p>{invoice.invoice_date}</p>
                       </div>
-                    </div>
-                  </td>
-                  <td className=" border-b  py-4">
-                    <div className="flex justify-center w-full   items-center rtl gap-3">
-                      <p>#7473567</p>
-                    </div>
-                  </td>
-                  <td className="text-[#211C4D] border-b  text-center font-[500] py-4">
-                    <div className="w-full flex items-center justify-center">
-                      <p>2024/10/12</p>
-                    </div>
-                  </td>
-                  <td className="text-[#211C4D] border-b  font-[500] py-4">
-                    <div className="w-full flex items-center justify-center">
-                      <p>1,104 رس</p>
-                    </div>
-                  </td>
-                  <td className="text-[#F3AC5D] border-b text-center font-[600] py-4 w-[160px]">
-                    <div className="w-full flex items-center justify-center">
-                      <Link to={"/singlebills"}>
-                        <img src={more} alt="" />
-                      </Link>
-                    </div>
-                  </td>
-                </tr>
-                <tr className="h-[108px]">
-                  <td className="text-[#211C4D] border-b  font-[500] py-4">
-                    <div className="flex items-center gap-2 justify-center">
-                      <div className="w-full items-center justify-center">
-                        <p className="text-center">#7473567</p>
+                    </td>
+                    <td className="text-[#211C4D] border-b font-[500] py-4">
+                      <div className="w-full flex items-center justify-center">
+                        <p>{invoice.total_amount.toLocaleString()} رس</p>
                       </div>
-                    </div>
-                  </td>
-                  <td className=" border-b  py-4">
-                    <div className="flex justify-center w-full   items-center rtl gap-3">
-                      <p>#7473567</p>
-                    </div>
-                  </td>
-                  <td className="text-[#211C4D] border-b  text-center font-[500] py-4">
-                    <div className="w-full flex items-center justify-center">
-                      <p>2024/10/12</p>
-                    </div>
-                  </td>
-                  <td className="text-[#211C4D] border-b  font-[500] py-4">
-                    <div className="w-full flex items-center justify-center">
-                      <p>1,104 رس</p>
-                    </div>
-                  </td>
-                  <td className="text-[#F3AC5D] border-b text-center font-[600] py-4 w-[160px]">
-                    <div className="w-full flex items-center justify-center">
-                      <Link to={"/singlebills"}>
-                        <img src={more} alt="" />
-                      </Link>
-                    </div>
-                  </td>
-                </tr>
+                    </td>
+                    <td className="text-[#F3AC5D] border-b text-center font-[600] py-4 w-[160px]">
+                      <div className="w-full flex items-center justify-center">
+                        <Link to={`/singlebills/${invoice.id}`}>
+                          <img src={more} alt="تفاصيل" />
+                        </Link>
+                      </div>
+                    </td>
+                  </tr>
+                )) : (
+                  <tr>
+                    <td colSpan={5} className="text-center py-8">
+                      <p>لا توجد فواتير</p>
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>
