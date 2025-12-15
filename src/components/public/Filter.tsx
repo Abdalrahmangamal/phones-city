@@ -40,8 +40,8 @@ const Filter: React.FC<FilterProps> = ({ onSortChange, onCategoryChange, categor
         onClick={() => setIsSortOpen(!isSortOpen)}
       >
         <div className="flex items-center gap-2">
-          <Grid className="w-8 h-[30px] text-[#211C4D]" />
-          <span className="font-roboto font-medium text-[32px] leading-[24px] text-[#211C4D]">
+          <Grid className="w-8 h-[20px] text-[#211C4D]" />
+          <span className="font-roboto font-medium text-[25px] leading-[24px] text-[#211C4D]">
             فلتر
           </span>
         </div>

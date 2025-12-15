@@ -31,7 +31,7 @@ const BannerSection: React.FC<BannerSectionProps> = ({
       <div className="w-full md:my-15 xl:px-[90px] px-2 md:px-0">
         <div className="w-full h-[140px] md:h-[190.38px] rounded-[16px] overflow-hidden">
           <img
-            src={images[0]}
+            src={images}
             alt="بانر"
             className="w-full h-full object-contain rounded-[20px]"
             loading="eager"
