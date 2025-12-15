@@ -31,7 +31,7 @@ const NewHome = () => {
 
   const { lang } = useLangSync();
 
-  // Mock banner images (يمكنك استبدالها ببيانات ديناميكية إذا أردت)
+  // Mock banner images 
   const bannerImages = [
     "https://example.com/banner1.jpg",
     "https://example.com/banner2.jpg",
@@ -100,7 +100,7 @@ const NewHome = () => {
     };
 
     loadAllData();
-  }, [lang]); // Re-fetch only when language changes
+  }, [lang]); 
 
   // Helper to safely get products array
   const getProductsArray = () => {

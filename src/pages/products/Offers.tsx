@@ -1,10 +1,10 @@
+// Offers.tsx
 import Layout from "@/components/layout/layout";
 import NewHeroSection from "@/components/public/HeroSection";
-import image from "@/assets/images/hero.jpg";
 import BannerSection from "@/components/public/BannerSection";
 import banner from "@/assets/images/banner.png";
 import Bestseller from "@/components/home/Bestseller";
-import Parttner from "@/components/public/Parttner";
+import Parttner from "@/components/public/Parttner"; // الكومبوننت المعدل
 import { useProductsStore } from '@/store/productsStore.ts';
 import { useCategoriesStore } from '@/store/categories/useCategoriesStore.ts';
 import { useEffect, useState } from "react";
@@ -12,7 +12,7 @@ import { useLangSync } from "@/hooks/useLangSync";
 import { useTranslation } from "react-i18next";
 import Loader from '@/components/Loader';
 import Filter from "@/components/public/Filter";
-
+import { useHeroSectionStore } from "@/store/home/herosectionStore";
 export default function Offers() {
   const { fetchProducts, response } = useProductsStore();
   const { fetchCategories, categories } = useCategoriesStore();
@@ -21,11 +21,18 @@ export default function Offers() {
   const [filteredProducts, setFilteredProducts] = useState<any[]>([]);
   const [sortOption, setSortOption] = useState("latest");
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
+  const { sliders, fetchSliders, loading: heroLoading } = useHeroSectionStore();
+
+  // useEffect(() => {
+  //   fetchProducts({ simple: false, has_offer: 1 }, lang);
+  //   fetchCategories(lang);
+  // }, [lang]);
 
   useEffect(() => {
-    fetchProducts({ simple: false, has_offer: 1 }, lang);
-    fetchCategories(lang);
-  }, [lang]);
+  fetchProducts({ simple: false, has_offer: 1 }, lang);
+  fetchCategories(lang);
+  fetchSliders(lang);  // أضف هذا السطر
+}, [lang]);
 
   useEffect(() => {
     if (response) {
@@ -57,7 +64,7 @@ export default function Offers() {
           break;
         case "latest":
         default:
-          // Default order (no change needed)
+          // Default order
           break;
       }
       
@@ -84,27 +91,27 @@ export default function Offers() {
   return (
     <Layout>
       <div>
-        <div>
-          <NewHeroSection />
-          <BannerSection image={banner} />
-          
-          <Bestseller 
-            title={`${t("CityofPhonesOffers")}`} 
-            btn={true} 
-            products={filteredProducts} 
-            filterComponent={
-              <div className="flex justify-center">
-                <Filter 
-                  onSortChange={handleSortChange}
-                  onCategoryChange={handleCategoryChange}
-                  categories={categories}
-                />
-              </div>
-            }
-          />
-          <div className="mb-15">
-            <Parttner />
-          </div>
+        <NewHeroSection sliders={sliders} />
+        <BannerSection image={banner} />
+        
+        <Bestseller 
+          title={`${t("CityofPhonesOffers")}`} 
+          btn={true} 
+          products={filteredProducts} 
+          filterComponent={
+            <div className="flex justify-center">
+              <Filter 
+                onSortChange={handleSortChange}
+                onCategoryChange={handleCategoryChange}
+                categories={categories}
+              />
+            </div>
+          }
+        />
+        
+        {/* الكومبوننت سيتولى جلب البيانات بنفسه */}
+        <div className="mb-15">
+          <Parttner />
         </div>
       </div>
     </Layout>
