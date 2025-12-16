@@ -24,19 +24,18 @@ import { useTestimonialStore } from "@/store/home/testimonialStore";
 import { useCategoriesStore } from "@/store/categories/useCategoriesStore";
 import useFeaturesStore from "@/store/home/featuresStore";
 import { useLangSync } from "@/hooks/useLangSync";
+import {useHomePageStore} from '@/store/home/homepageStore'
 
 const NewHome = () => {
-  const [showPopup, setShowPopup] = useState(true);
+  // const [showPopup, setShowPopup] = useState(true);
   const [isLoading, setIsLoading] = useState(false); // Add this state
-
+  const{fetchHomePage,data}=useHomePageStore()
+  
   const { lang } = useLangSync();
-
-  // Mock banner images 
-  const bannerImages = [
-    "https://example.com/banner1.jpg",
-    "https://example.com/banner2.jpg",
-    "https://example.com/banner3.jpg",
-  ];
+  
+  useEffect(()=>{fetchHomePage(lang)},[])
+  console.log("asdsa",data)
+ 
 
   // All stores
   const {
@@ -46,9 +45,7 @@ const NewHome = () => {
   } = useProductsStore();
 
   const { fetchSliders, sliders } = useHeroSectionStore();
-  const { fetchDownloadData, data: downloadData } = useDownloadStore();
   const { fetchCertificates, certificates } = useCertificateStore();
-  const { fetchInstallmentData, installmentData } = useInstallmentStore();
   const { fetchOffers, offers } = useLatestOffersStore();
   const { fetchTestimonials, testimonials } = useTestimonialStore();
   const { fetchCategories, categories } = useCategoriesStore();
@@ -68,14 +65,10 @@ const NewHome = () => {
           // Hero sliders
           fetchSliders(lang),
 
-          // App download section
-          fetchDownloadData(),
 
           // Certificates
           fetchCertificates(),
 
-          // Installment section
-          fetchInstallmentData(),
 
           // Latest offers
           fetchOffers(),
@@ -125,8 +118,8 @@ const NewHome = () => {
       <div className="min-h-screen bg-gray-50 w-full flex flex-col">
         <main className="w-full">
           <HeroSection sliders={sliders} />
-          <BannerSection images={bannerImages} />
-          <InstallmentSection installmentData={installmentData} />
+          {/* <BannerSection images={data.main_images} /> */}
+          <InstallmentSection title={data?.offer_text} />
           <ProductCategoriesSection categories={categories} />
           <LatestOffers offers={offers} />
           <SpecialOffersSection title="عروض خاصة لك" products={products} />
@@ -134,7 +127,7 @@ const NewHome = () => {
           <FrameSection features={langFeatures} />
           <CertificationBadgesSection certificates={certificates} />
           <Parttner trademarks={trademarks} />
-          <AppDownloadSection downloadData={downloadData} />
+          <AppDownloadSection title={data?.app_title} description={data?.app_description} image={data?.app_main_image}  />
         </main>
       </div>
     </Layout>
