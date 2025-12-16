@@ -16,9 +16,9 @@ import SpecialOffersSection from "@/components/home/SpecialOffersSection";
 // Stores
 import { useProductsStore } from "@/store/productsStore";
 import { useHeroSectionStore } from "@/store/home/herosectionStore";
-import { useDownloadStore } from "@/store/home/downloadStore";
+// import { useDownloadStore } from "@/store/home/downloadStore";
 import { useCertificateStore } from "@/store/home/certificateStore";
-import { useInstallmentStore } from "@/store/home/installmentStore";
+// import { useInstallmentStore } from "@/store/home/installmentStore";
 import { useLatestOffersStore } from "@/store/home/latestOffersStore";
 import { useTestimonialStore } from "@/store/home/testimonialStore";
 import { useCategoriesStore } from "@/store/categories/useCategoriesStore";
@@ -118,7 +118,7 @@ const NewHome = () => {
       <div className="min-h-screen bg-gray-50 w-full flex flex-col">
         <main className="w-full">
           <HeroSection sliders={sliders} />
-          {/* <BannerSection images={data.main_images} /> */}
+          <BannerSection images={data?.main_images} />
           <InstallmentSection title={data?.offer_text} />
           <ProductCategoriesSection categories={categories} />
           <LatestOffers offers={offers} />
