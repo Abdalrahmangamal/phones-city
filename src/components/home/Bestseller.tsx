@@ -13,7 +13,7 @@ interface BestsellerProps {
   products: Product[];
   favourite?: boolean;
   limit?: number;
-  filterComponent?: React.ReactNode; // أضف هذا الـ prop
+  filterComponent?: React.ReactNode;
 }
 
 export default function Bestseller({
@@ -23,19 +23,16 @@ export default function Bestseller({
   products,
   style,
   limit,
-  filterComponent, // أضف هذا هنا
+  filterComponent,
 }: BestsellerProps) {
-  const { t } = useTranslation(); // أضف هذا إذا كنت تستخدم الترجمة
+  const { t } = useTranslation();
 
-  // تحقق مما إذا كانت المنتجات فارغة أو غير موجودة
   const hasProducts = Array.isArray(products) && products.length > 0;
   
-  // تحديد المنتجات المعروضة (تطبيق limit إذا تم تمريره)
   const productsToShow = limit && hasProducts 
     ? products.slice(0, limit) 
     : products;
 
-  // تسجيل البيانات للتحقق منها
   console.log("Bestseller - Products received:", products);
   console.log("Bestseller - Products to show:", productsToShow);
   console.log("Bestseller - Limit:", limit);
@@ -85,7 +82,7 @@ export default function Bestseller({
 
       {/* المنتجات */}
       <div
-        className={`grid xl:grid-cols-4 ${style} sm:grid-cols-3 grid-cols-3 gap-[2px] md:gap-[20px] justify-items-center mt-[60px] `}
+        className={`grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 ${style} gap-[2px] md:gap-[20px] justify-items-center mt-[60px]`}
       >
         {hasProducts ? (
           productsToShow.map((item) => (

@@ -25,7 +25,7 @@ import Singleaddress from "./pages/Singleaddress";
 import Discounts from "./pages/profile/Discounts";
 import Favourite from "./pages/profile/Favourite";
 import Trademarks from "./pages/products/Trademarks";
-import Trademarksbestseller from "./pages/Trademarksbestseller";
+import BestSellerPage from "./pages/BestSellerPage";
 import Trademarkscategory from "./pages/Trademarkscategory";
 import Trademarkbestoffer from "./pages/products/Trademarkbestoffer";
 import ScrollToTop from "@/components/ScrollToTop";
@@ -83,7 +83,7 @@ function LangLayout() {
       <Route path="/discounts" element={<Discounts/>} />
       <Route path="/favourite" element={<Favourite/>} />
       <Route path="/trademarks/:id" element={<Trademarks/>} />
-      <Route path="/trademarksbestseller" element={<Trademarksbestseller/>} />
+      <Route path="/BestSellerPage" element={<BestSellerPage/>} />
       <Route path="/trademarkscategory" element={<Trademarkscategory/>} />
       <Route path="/trademarkbestoffer" element={<Trademarkbestoffer/>} />
       <Route path="/singleproduct/:id" element={<Singleproduct/>} />

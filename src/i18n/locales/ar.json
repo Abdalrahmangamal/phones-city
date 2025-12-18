@@ -181,5 +181,31 @@
   "Completed": "مكتمل",
   "Cancelled": "ملغي",
   "Processing": "قيد المعالجة",
-  "Orders": "الطلبات"
+  "Orders": "الطلبات",
+
+   "BestSellers": "الأكثر مبيعاً",
+  "BestSellersDescription": "استمتع بأفضل المنتجات الأكثر مبيعاً بأفضل الأسعار والعروض الحصرية",
+  "AllBestSellers": "جميع المنتجات الأكثر مبيعاً",
+  "DiscoverBestProducts": "اكتشف أفضل المنتجات التي يفضلها عملاؤنا",
+  "BestSellingProducts": "المنتجات الأكثر مبيعاً",
+  "ExploreTopSellers": "استكشف منتجاتنا الأكثر مبيعاً",
+  "BestSeller": "الأفضل مبيعاً",
+  "TopSelling": "الأعلى مبيعاً",
+  "MostPopular": "الأكثر شعبية",
+  "HotProducts": "المنتجات الساخنة",
+  "CustomerFavorites": "مفضلات العملاء",
+  "TrendingNow": "الشائع الآن",
+  "LimitedStock": "كمية محدودة",
+  "BestsellerPageTitle": "المنتجات الأكثر مبيعاً",
+  "BestsellerPageDescription": "تصفح مجموعتنا من المنتجات الأكثر شعبية وبيعاً",
+  
+  "ViewAllBestSellers": "عرض جميع المنتجات الأكثر مبيعاً",
+  "SeeMoreBestSellers": "رؤية المزيد من المنتجات الأكثر مبيعاً",
+  "BrowseBestSellers": "تصفح الأكثر مبيعاً",
+  "ShopBestSellers": "تسوق الأكثر مبيعاً",
+  "BestSellerCollection": "مجموعة الأكثر مبيعاً",
+  
+  "SpecialOffersForYou": "عروض خاصة لك"
+
+  
 }

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"; // Add this import
+import { useState, useEffect } from "react";
 import Layout from "@/components/layout/layout";
 import HeroSection from "@/components/public/HeroSection";
 import BannerSection from "@/components/public/BannerSection";
@@ -12,30 +12,32 @@ import AppDownloadSection from "@/components/home/AppDownloadSection";
 import CertificationBadgesSection from "@/components/home/CertificationBadgesSection";
 import Loader from "@/components/Loader";
 import SpecialOffersSection from "@/components/home/SpecialOffersSection";
+import BestSellersSection from "@/components/home/BestSellersSection";
+
 
 // Stores
 import { useProductsStore } from "@/store/productsStore";
 import { useHeroSectionStore } from "@/store/home/herosectionStore";
-// import { useDownloadStore } from "@/store/home/downloadStore";
 import { useCertificateStore } from "@/store/home/certificateStore";
-// import { useInstallmentStore } from "@/store/home/installmentStore";
 import { useLatestOffersStore } from "@/store/home/latestOffersStore";
 import { useTestimonialStore } from "@/store/home/testimonialStore";
 import { useCategoriesStore } from "@/store/categories/useCategoriesStore";
 import useFeaturesStore from "@/store/home/featuresStore";
 import { useLangSync } from "@/hooks/useLangSync";
-import {useHomePageStore} from '@/store/home/homepageStore'
+import { useHomePageStore } from '@/store/home/homepageStore';
+import type { Product } from '@/types/index';
 
 const NewHome = () => {
-  // const [showPopup, setShowPopup] = useState(true);
-  const [isLoading, setIsLoading] = useState(false); // Add this state
-  const{fetchHomePage,data}=useHomePageStore()
+  const [isLoading, setIsLoading] = useState(false);
+  const [bestSellers, setBestSellers] = useState<Product[]>([]);
+  const [bestSellersLoading, setBestSellersLoading] = useState(false);
   
+  const { fetchHomePage, data } = useHomePageStore();
   const { lang } = useLangSync();
   
-  useEffect(()=>{fetchHomePage(lang)},[])
-  console.log("asdsa",data)
- 
+  useEffect(() => {
+    fetchHomePage(lang);
+  }, [lang]);
 
   // All stores
   const {
@@ -52,23 +54,62 @@ const NewHome = () => {
   const { fetchFeatures, getFeaturesByLanguage } = useFeaturesStore();
   const { fetchtradmarks, treadmark: trademarks } = useCategoriesStore();
 
+  // دالة لجلب المنتجات الأكثر مبيعاً
+  // في Home.tsx، تحديث دالة fetchBestSellers:
+const fetchBestSellers = async () => {
+  try {
+    setBestSellersLoading(true);
+    
+    console.log("📞 Calling fetchProducts with best_seller param...");
+    
+    
+    const response = await fetchProducts(
+      { 
+        per_page: 10, 
+        best_seller: true,
+        sort_by: 'best_seller',
+        sort_order: 'desc'
+      }, 
+      lang
+    );
+    
+    console.log("📦 Best sellers response in Home.tsx:", response);
+    
+    
+    if (Array.isArray(response)) {
+      console.log(`✅ Found ${response.length} best seller products`);
+      setBestSellers(response);
+    } else {
+      console.log("⚠️ Response is not an array:", response);
+      setBestSellers([]);
+    }
+  } catch (error) {
+    console.error("❌ Error fetching best sellers:", error);
+    setBestSellers([]);
+  } finally {
+    setBestSellersLoading(false);
+  }
+};
+
   // Fetch all data in one place
   useEffect(() => {
     const loadAllData = async () => {
       try {
         setIsLoading(true);
+        setBestSellersLoading(true);
 
         await Promise.all([
           // Special offers products
           fetchProducts({ per_page: 10, has_offer: 1 }, lang),
 
+          // Best sellers products
+          fetchBestSellers(),
+
           // Hero sliders
           fetchSliders(lang),
 
-
           // Certificates
           fetchCertificates(),
-
 
           // Latest offers
           fetchOffers(),
@@ -105,8 +146,7 @@ const NewHome = () => {
   const products = getProductsArray();
 
   // Features translated by current language
-  const langFeatures =
-    getFeaturesByLanguage(lang === "ar" ? "ar" : "en") || [];
+  const langFeatures = getFeaturesByLanguage(lang === "ar" ? "ar" : "en") || [];
 
   // Global loading state
   if (isLoading || productsLoading) {
@@ -122,12 +162,26 @@ const NewHome = () => {
           <InstallmentSection title={data?.offer_text} />
           <ProductCategoriesSection categories={categories} />
           <LatestOffers offers={offers} />
-          <SpecialOffersSection title="عروض خاصة لك" products={products} />
+          <SpecialOffersSection 
+            title="SpecialOffersForYou"    
+            products={products} 
+          />
+
+          <BestSellersSection 
+            title="BestSellers"           
+            products={bestSellers}
+            isLoading={bestSellersLoading}
+          />
+          
           <TestimonialsSection testimonials={testimonials} />
           <FrameSection features={langFeatures} />
           <CertificationBadgesSection certificates={certificates} />
           <Parttner trademarks={trademarks} />
-          <AppDownloadSection title={data?.app_title} description={data?.app_description} image={data?.app_main_image}  />
+          <AppDownloadSection 
+            title={data?.app_title} 
+            description={data?.app_description} 
+            image={data?.app_main_image}  
+          />
         </main>
       </div>
     </Layout>
