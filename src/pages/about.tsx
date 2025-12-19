@@ -17,7 +17,6 @@ export default function About() {
   useEffect(() => {
     fetchAbout(lang);
   }, [lang]);
-  console.log("dd", data);
   return (
     <Layout>
        {

@@ -19,8 +19,8 @@ import BestSellersSection from "@/components/home/BestSellersSection";
 import { useProductsStore } from "@/store/productsStore";
 import { useHeroSectionStore } from "@/store/home/herosectionStore";
 import { useCertificateStore } from "@/store/home/certificateStore";
-import { useLatestOffersStore } from "@/store/home/latestOffersStore";
-import { useTestimonialStore } from "@/store/home/testimonialStore";
+// import { useLatestOffersStore } from "@/store/home/latestOffersStore";
+// import { useTestimonialStore } from "@/store/home/testimonialStore";
 import { useCategoriesStore } from "@/store/categories/useCategoriesStore";
 import useFeaturesStore from "@/store/home/featuresStore";
 import { useLangSync } from "@/hooks/useLangSync";
@@ -44,7 +44,7 @@ const NewHome = () => {
   useEffect(() => {
     const popupTimer = setTimeout(() => {
       setShowPopup(true);
-    }, 5000); // Show popup after 5 seconds
+    }, 2000); // Show popup after 2 seconds (as per memory requirement)
 
     // Cleanup timer if component unmounts
     return () => clearTimeout(popupTimer);
@@ -59,11 +59,11 @@ const NewHome = () => {
 
   const { fetchSliders, sliders } = useHeroSectionStore();
   const { fetchCertificates, certificates } = useCertificateStore();
-  const { fetchOffers, offers } = useLatestOffersStore();
-  const { fetchTestimonials, testimonials } = useTestimonialStore();
+  // const { fetchOffers, offers } = useLatestOffersStore();
+  // const { fetchTestimonials, testimonials } = useTestimonialStore();
   const { fetchCategories, categories } = useCategoriesStore();
   const { fetchFeatures, getFeaturesByLanguage } = useFeaturesStore();
-  const { fetchtradmarks, treadmark: trademarks } = useCategoriesStore();
+  // const { fetchtradmarks, treadmark: trademarks } = useCategoriesStore();
 
   // دالة لجلب المنتجات الأكثر مبيعاً
   // في Home.tsx، تحديث دالة fetchBestSellers:
@@ -123,11 +123,11 @@ const fetchBestSellers = async () => {
           fetchCertificates(),
 
           // Latest offers
-          fetchOffers(),
+          // fetchOffers(),
 
 
           // Testimonials
-          fetchTestimonials(),
+          // fetchTestimonials(),
 
 
           // Product categories
@@ -139,7 +139,7 @@ const fetchBestSellers = async () => {
 
 
           // Trademarks / Brands (Parttner)
-          fetchtradmarks(),
+          // fetchtradmarks(),
         ]);
       } catch (error) {
         console.error("Error loading home page data:", error);
@@ -183,11 +183,9 @@ const fetchBestSellers = async () => {
       <div className="min-h-screen bg-gray-50 w-full flex flex-col">
         <main className="w-full">
           <HeroSection sliders={sliders} />
-          <BannerSection images={data?.main_images || []} />
-          <InstallmentSection title={data?.offer_text || ""} />
-          {/* ProductCategoriesSection fetches its own data internally */}
-          <ProductCategoriesSection categories={mappedCategories} />
-          {/* These components fetch their own data internally, so we don't pass props */}
+          <BannerSection images={data?.main_images} />
+          <InstallmentSection title={data?.offer_text} />
+          <ProductCategoriesSection categories={categories} />
           <LatestOffers />
           <SpecialOffersSection 
             title="SpecialOffersForYou"    
