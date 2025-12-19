@@ -5,7 +5,6 @@ import loginimage from "@/assets/images/loginimage.png";
 import smalllogo from "@/assets/images/smalllogo.png";
 import toppattern from "@/assets/images/toppatern.png";
 import bottompattern from "@/assets/images/bottompattern.png";
-import google from "@/assets/images/Google.png";
 import { useForm } from "react-hook-form";
 import type { SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -21,6 +20,7 @@ export default function Register() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [openverifymodal, setopenverifymodal] =useState(false)
+  const [verifyEmail, setVerifyEmail] = useState<string>("")
   // ✅ Zod Schema
   const signupSchema = z
     .object({
@@ -57,16 +57,27 @@ export default function Register() {
   });
   
   // Manual Validation
-  const onSubmit: SubmitHandler<ISignup> = (data) => {
+  const onSubmit: SubmitHandler<ISignup> = async (data) => {
     const result = signupSchema.safeParse(data);
-    reset();
-    console.log("VALID DATA:", result.data);
+    console.log("Register: onSubmit called", data);
     if (!result.success) {
-      console.log(result.error);
-      setopenverifymodal(true)
-      return; // ← لازم تطلع من الفانكشن
+      console.log("Register: validation failed", result.error);
+      return; // validation failed
     }
-    sendRegisterData(result.data);
+
+    // send to API and open verify modal on success
+    try {
+      console.log("Register: sending data ->", result.data);
+      const res = await sendRegisterData(result.data);
+      console.log("Register: response ->", res);
+      if (res) {
+        setVerifyEmail(result.data.email);
+        setopenverifymodal(true);
+        reset();
+      }
+    } catch (err) {
+      console.error("Register: sendRegisterData error:", err);
+    }
   };
   const signupInputs = [
     {
@@ -118,7 +129,15 @@ export default function Register() {
 
   return (
     <div>
-      <VerifyCode isopen={openverifymodal} />
+      <VerifyCode
+        isopen={openverifymodal}
+        email={verifyEmail}
+        onClose={() => setopenverifymodal(false)}
+        onSuccess={(code) => {
+          console.log("Verified code:", code);
+          setopenverifymodal(false);
+        }}
+      />
       <img
         src={smalllogo}
         className="smalllogo absolute md:right-[60px] right-2 top-5 z-10 w-auto"
@@ -276,23 +295,7 @@ export default function Register() {
 
             {/* تسجيل عبر السوشيال */}
             <div className="col-span-2 flex flex-col items-center gap-3 mt-4">
-              <div className="flex gap-4">
-                {[1, 2, 3].map((_, i) => (
-                  <button
-                    key={i}
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="w-[45px] h-[45px] rounded-full bg-white border border-gray-300 shadow"
-                  >
-                    <img
-                      src={google}
-                      alt="Google"
-                      className="w-[24px] h-[24px]"
-                    />
-                  </button>
-                ))}
-              </div>
-
+          
               <p className="text-[18px] text-[#211C4D] mt-1">
                 لدي حساب ؟{" "}
                 <Link to="/login" className="text-[#2AA0DC] hover:underline">
