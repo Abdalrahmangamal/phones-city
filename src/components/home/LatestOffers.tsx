@@ -9,17 +9,17 @@ import largbgoffers from "../../assets/images/largbgoffers.png";
 import ps5 from "../../assets/images/ps5.png";
 import { useLatestOffersStore } from "../../store/home/latestOffersStore";
 import "../../style.css";
-
+import Loader from '@/components/Loader';
 export default function LatestOffers() {
-  const { offers, loading, error, fetchOffers } = useLatestOffersStore();
-
+  const { offers, fetchOffers } = useLatestOffersStore();
+  
   useEffect(() => {
     fetchOffers();
-  }, [fetchOffers]);
-
+  }, []);
+  
   // تأكد من أن لدينا 6 عروض فقط
   const limitedOffers = offers.slice(0, 6);
-
+  
   // تقسيم العروض حسب التخطيط
   const laptopOffer = limitedOffers[0];
   const gamingOffer = limitedOffers[1];
@@ -36,42 +36,8 @@ export default function LatestOffers() {
     }
   };
 
-  if (loading) {
-    return (
-      <div className="w-full translate-y-[-50px] md:h-[60vh] xl:h-[100vh] xl:px-[90px] px-2 pt-8 md:pt-0 relative md:px-0">
-        <h1 className="text-[24px] mb-[0px] md:text-[40px] font-[700] text-[#211C4D] text-center">
-          أحدث العروض
-        </h1>
-        <div className="flex items-center justify-center h-[400px]">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#F3AC5D] mx-auto"></div>
-            <p className="mt-4 text-[#211C4D]">جاري تحميل العروض...</p>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
-  if (error) {
-    return (
-      <div className="w-full translate-y-[-50px] md:h-[60vh] xl:h-[100vh] xl:px-[90px] px-2 pt-8 md:pt-0 relative md:px-0">
-        <h1 className="text-[24px] mb-[0px] md:text-[40px] font-[700] text-[#211C4D] text-center">
-          أحدث العروض
-        </h1>
-        <div className="flex items-center justify-center h-[400px]">
-          <div className="text-center text-red-500">
-            <p>حدث خطأ: {error}</p>
-            <button
-              onClick={fetchOffers}
-              className="mt-4 px-4 py-2 bg-[#F3AC5D] text-white rounded-lg hover:bg-[#e79940]"
-            >
-              حاول مرة أخرى
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
+
 
   return (
     <div className="w-full translate-y-[-50px] md:h-[60vh] xl:h-[100vh] xl:px-[90px] px-2 pt-8 md:pt-0 relative md:px-0">
@@ -104,13 +70,13 @@ export default function LatestOffers() {
               />
               <div className="z-[2] absolute flex flex-col bottom-[-20px] justify-center items-center pb-[40px] md:pb-[50px] lg:pb-[100px] text-center">
                 <h1 className="text-white font-[700] text-[32px] md:text-[35px] lg:text-[54px]">
-                  {laptopOffer.name_ar || "لابتوب"}
+                  {laptopOffer?.name_ar || "لابتوب"}
                 </h1>
                 <p className="text-[18px] md:text-[24px] text-[#F3AC5D] font-[700] mt-1">
                   {getDiscountText(laptopOffer)}
                 </p>
                 <Link
-                  to={`/offers/${laptopOffer.id}`}
+                  to={`/offers/${laptopOffer?.id}`}
                   className="w-[110px] h-[40px] md:w-[116px] md:h-[42px] text-white mt-[20px] bg-[#F3AC5D] rounded-[8px] flex items-center justify-center gap-2 transition-all duration-300 ease-in-out hover:bg-[#e79940] hover:shadow-[0_8px_20px_rgba(243,172,93,0.5)] hover:scale-105"
                 >
                   تسوق الآن
@@ -130,13 +96,13 @@ export default function LatestOffers() {
             <>
               <div className="absolute left-9 top-2 flex flex-col bigtitle items-center md:pl-[350px] justify-center text-center">
                 <h1 className="text-[23px] md:text-[56px] font-[700] text-[#211C4D]">
-                  {laptopOffer.name_ar || "لابتوب"}
+                  {laptopOffer?.name_ar || "لابتوب"}
                 </h1>
                 <p className="text-[#211C4D] text-[15px] md:text-[20px] font-[700] mt-1">
                   {getDiscountText(laptopOffer)}
                 </p>
                 <Link
-                  to={`/offers/${laptopOffer.id}`}
+                  to={`/offers/${laptopOffer?.id}`}
                   className="w-[100px] h-[35px] md:w-[116px] md:h-[42px] text-white mt-[30px] md:mt-[20px] bg-[#F3AC5D] rounded-[8px] flex items-center justify-center gap-2 transition-all duration-300 ease-in-out hover:bg-[#e79940] hover:shadow-[0_8px_20px_rgba(243,172,93,0.5)] hover:scale-105"
                 >
                   تسوق الآن
@@ -159,12 +125,12 @@ export default function LatestOffers() {
             </div>
           )}
         </div>
-
+        
         {/* Right section (multiple boxes) */}
         <div className="flex flex-col gap-[20px] h-full justify-between w-full md:w-[60%]">
           {/* Row 1 */}
           <div className="flex flex-row gap-[20px]">
-            {accessoryOffers.length >= 2 ? (
+            {accessoryOffers?.length >= 2 ? (
               <>
                 <div className="w-full h-[120px] md:h-full lg:h-[175px] rounded-[16px] relative overflow-hidden">
                   <img src={bgsmalloffer} className="w-full h-full" alt="" />
@@ -220,7 +186,7 @@ export default function LatestOffers() {
               ))
             )}
           </div>
-
+        
           {/* Playstation / Gaming */}
           <div className="relative w-full md:h-auto h-[150px] rounded-[16px] overflow-hidden">
             {gamingOffer ? (
@@ -237,7 +203,7 @@ export default function LatestOffers() {
                 />
                 <div className="absolute inset-0 flex flex-col bigtitle items-center md:pl-[350px] pl-[150px] justify-center text-center">
                   <h1 className="text-[23px] md:text-[56px] font-[700] text-[#211C4D]">
-                    {gamingOffer.name_ar || "أجهزة الألعاب"}
+                    {gamingOffer?.name_ar || "أجهزة الألعاب"}
                   </h1>
                   <p className="text-[#211C4D] text-[15px] md:text-[20px] font-[700] mt-1">
                     {getDiscountText(gamingOffer)}
@@ -256,10 +222,10 @@ export default function LatestOffers() {
               </div>
             )}
           </div>
-
+          
           {/* Row 2 */}
           <div className="flex flex-row gap-[20px]">
-            {accessoryOffers.length >= 4 ? (
+            {accessoryOffers?.length >= 4 ? (
               <>
                 <div className="w-full h-[120px] md:h-full lg:h-[175px] rounded-[16px] relative overflow-hidden">
                   <img src={bgsmalloffer} className="w-full h-full" alt="" />
@@ -317,6 +283,7 @@ export default function LatestOffers() {
           </div>
         </div>
       </div>
+      {!offers?(<Loader/>):("")}
     </div>
   );
 }

@@ -161,7 +161,7 @@ const fetchBestSellers = async () => {
           <BannerSection images={data?.main_images} />
           <InstallmentSection title={data?.offer_text} />
           <ProductCategoriesSection categories={categories} />
-          <LatestOffers offers={offers} />
+          <LatestOffers />
           <SpecialOffersSection 
             title="SpecialOffersForYou"    
             products={products} 
