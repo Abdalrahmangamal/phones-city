@@ -3,10 +3,9 @@ import coara from '../../assets/images/coara.png'
 import mora from '../../assets/images/mora.png'
 interface installmenttype{
   title:string;
-  coaralink?:string;
-  moralink?:string;
+  
 }
-export default function InstallmentSection({title,coaralink,moralink}:installmenttype) {
+export default function InstallmentSection({title}:installmenttype) {
   return (
     <div className='xl:px-[90px] px-2 pt-0 md:pt-0'>
 
