@@ -182,5 +182,28 @@
   "Completed": "Completed",
   "Cancelled": "Cancelled",
   "Processing": "Processing",
-  "Orders": "Orders"
+  "Orders": "Orders",
+  "BestSellers": "Best Sellers",
+  "BestSellersDescription": "Enjoy the best selling products at the best prices and exclusive offers",
+  "AllBestSellers": "All Best Sellers",
+  "DiscoverBestProducts": "Discover the best products favored by our customers",
+  "BestSellingProducts": "Best Selling Products",
+  "ExploreTopSellers": "Explore our top selling products",
+  "BestSeller": "Best Seller",
+  "TopSelling": "Top Selling",
+  "MostPopular": "Most Popular",
+  "HotProducts": "Hot Products",
+  "CustomerFavorites": "Customer Favorites",
+  "TrendingNow": "Trending Now",
+  "LimitedStock": "Limited Stock",
+  "BestsellerPageTitle": "Best Selling Products",
+  "BestsellerPageDescription": "Browse our collection of the most popular and best selling products",
+  
+  "ViewAllBestSellers": "View All Best Sellers",
+  "SeeMoreBestSellers": "See More Best Sellers",
+  "BrowseBestSellers": "Browse Best Sellers",
+  "ShopBestSellers": "Shop Best Sellers",
+  "BestSellerCollection": "Best Seller Collection",
+  
+  "SpecialOffersForYou": "Special Offers for you"  
 }

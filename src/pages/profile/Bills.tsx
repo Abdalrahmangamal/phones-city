@@ -5,11 +5,13 @@ import Sidebar from "@/components/layout/Sidebar";
 import "@/style.css";
 import more from "@/assets/images/More.png";
 import { Link } from "react-router-dom";
-import { useInvoicesStore } from "@/store/profile/indexStore"; 
+import { useInvoicesStore } from "@/store/profile/indexStore";
+import { useSettings } from "@/store/settings"; 
 
 export default function Myorder() {
   // جميع الـ Hooks يجب أن تكون في الأعلى، بدون شروط
   const { invoices, loading, error, fetchInvoices } = useInvoicesStore();
+  const { lang } = useSettings();
 
   useEffect(() => {
     fetchInvoices();
@@ -116,9 +118,9 @@ export default function Myorder() {
                     </td>
                     <td className="text-[#F3AC5D] border-b text-center font-[600] py-4 w-[160px]">
                       <div className="w-full flex items-center justify-center">
-                        <Link to={`/singlebills/${invoice.id}`}>
-                          <img src={more} alt="تفاصيل" />
-                        </Link>
+                        <Link to={`/${lang}/singlebills/${invoice.id}`}>
+  <img src={more} alt="تفاصيل" />
+</Link>
                       </div>
                     </td>
                   </tr>

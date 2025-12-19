@@ -13,34 +13,38 @@ import CertificationBadgesSection from "@/components/home/CertificationBadgesSec
 import Loader from "@/components/Loader";
 import SpecialOffersSection from "@/components/home/SpecialOffersSection";
 import HomePopup from "@/components/home/HomePopup"; // Import the HomePopup component
+import BestSellersSection from "@/components/home/BestSellersSection";
 
 // Stores
 import { useProductsStore } from "@/store/productsStore";
 import { useHeroSectionStore } from "@/store/home/herosectionStore";
-// import { useDownloadStore } from "@/store/home/downloadStore";
 import { useCertificateStore } from "@/store/home/certificateStore";
-// import { useInstallmentStore } from "@/store/home/installmentStore";
 import { useLatestOffersStore } from "@/store/home/latestOffersStore";
 import { useTestimonialStore } from "@/store/home/testimonialStore";
 import { useCategoriesStore } from "@/store/categories/useCategoriesStore";
 import useFeaturesStore from "@/store/home/featuresStore";
 import { useLangSync } from "@/hooks/useLangSync";
-import {useHomePageStore} from '@/store/home/homepageStore'
+import { useHomePageStore } from '@/store/home/homepageStore';
+import type { Product } from '@/types/index';
 
 const NewHome = () => {
   const [showPopup, setShowPopup] = useState(false); // Initially set to false
   const [isLoading, setIsLoading] = useState(false);
-  const{fetchHomePage,data}=useHomePageStore()
+  const [bestSellers, setBestSellers] = useState<Product[]>([]);
+  const [bestSellersLoading, setBestSellersLoading] = useState(false);
   
+  const { fetchHomePage, data } = useHomePageStore();
   const { lang } = useLangSync();
   
-  useEffect(()=>{fetchHomePage(lang)},[])
+  useEffect(() => {
+    fetchHomePage(lang);
+  }, [lang]);
 
   // Effect to show popup after a delay
   useEffect(() => {
     const popupTimer = setTimeout(() => {
       setShowPopup(true);
-    }, 3000); // Show popup after 3 seconds
+    }, 2000); // Show popup after 2 seconds (as per memory requirement)
 
     // Cleanup timer if component unmounts
     return () => clearTimeout(popupTimer);
@@ -61,23 +65,62 @@ const NewHome = () => {
   const { fetchFeatures, getFeaturesByLanguage } = useFeaturesStore();
   const { fetchtradmarks, treadmark: trademarks } = useCategoriesStore();
 
+  // دالة لجلب المنتجات الأكثر مبيعاً
+  // في Home.tsx، تحديث دالة fetchBestSellers:
+const fetchBestSellers = async () => {
+  try {
+    setBestSellersLoading(true);
+    
+    console.log("📞 Calling fetchProducts with best_seller param...");
+    
+    
+    const response = await fetchProducts(
+      { 
+        per_page: 10, 
+        best_seller: true,
+        sort_by: 'best_seller',
+        sort_order: 'desc'
+      }, 
+      lang
+    );
+    
+    console.log("📦 Best sellers response in Home.tsx:", response);
+    
+    
+    if (Array.isArray(response)) {
+      console.log(`✅ Found ${response.length} best seller products`);
+      setBestSellers(response);
+    } else {
+      console.log("⚠️ Response is not an array:", response);
+      setBestSellers([]);
+    }
+  } catch (error) {
+    console.error("❌ Error fetching best sellers:", error);
+    setBestSellers([]);
+  } finally {
+    setBestSellersLoading(false);
+  }
+};
+
   // Fetch all data in one place
   useEffect(() => {
     const loadAllData = async () => {
       try {
         setIsLoading(true);
+        setBestSellersLoading(true);
 
         await Promise.all([
           // Special offers products
           fetchProducts({ per_page: 10, has_offer: 1 }, lang),
 
+          // Best sellers products
+          fetchBestSellers(),
+
           // Hero sliders
           fetchSliders(lang),
 
-
           // Certificates
           fetchCertificates(),
-
 
           // Latest offers
           fetchOffers(),
@@ -102,6 +145,7 @@ const NewHome = () => {
         console.error("Error loading home page data:", error);
       } finally {
         setIsLoading(false);
+        setBestSellersLoading(false);
       }
     };
 
@@ -118,8 +162,13 @@ const NewHome = () => {
   const products = getProductsArray();
 
   // Features translated by current language
-  const langFeatures =
-    getFeaturesByLanguage(lang === "ar" ? "ar" : "en") || [];
+  const langFeatures = getFeaturesByLanguage(lang === "ar" ? "ar" : "en") || [];
+
+  // Map categories to handle null images
+  const mappedCategories = categories.map(category => ({
+    ...category,
+    image: category.image || undefined
+  }));
 
   // Global loading state
   if (isLoading || productsLoading) {
@@ -137,10 +186,20 @@ const NewHome = () => {
           <BannerSection images={data?.main_images || []} />
           <InstallmentSection title={data?.offer_text || ""} />
           {/* ProductCategoriesSection fetches its own data internally */}
-          <ProductCategoriesSection />
+          <ProductCategoriesSection categories={mappedCategories} />
           {/* These components fetch their own data internally, so we don't pass props */}
           <LatestOffers />
-          <SpecialOffersSection title="عروض خاصة لك" products={products} />
+          <SpecialOffersSection 
+            title="SpecialOffersForYou"    
+            products={products} 
+          />
+
+          <BestSellersSection 
+            title="BestSellers"           
+            products={bestSellers}
+            isLoading={bestSellersLoading}
+          />
+          
           <TestimonialsSection />
           <FrameSection features={langFeatures} />
           <CertificationBadgesSection certificates={certificates || []} />
