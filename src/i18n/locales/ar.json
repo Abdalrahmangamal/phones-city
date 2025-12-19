@@ -204,8 +204,12 @@
   "BrowseBestSellers": "تصفح الأكثر مبيعاً",
   "ShopBestSellers": "تسوق الأكثر مبيعاً",
   "BestSellerCollection": "مجموعة الأكثر مبيعاً",
+  "Searchresultsfor": "نتائج البحث عن",
+  "Noresultsfound": "لا توجد نتائج",
+  "Searching...": "جاري البحث...",
   
   "SpecialOffersForYou": "عروض خاصة لك",
+  "Login": "تسجيل الدخول",
   "ShopNow": "تسوق الأن",
   "ShopNowEn": "Shop Now"
 }

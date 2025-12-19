@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
 
 export default function Favourite() {
-  const { fetchFavorites, favorites, removeAllFavorites } = useFavoritesStore();
+  const { fetchFavorites, favorites, clearFavorites } = useFavoritesStore();
   
   useEffect(() => {
     fetchFavorites();
@@ -18,7 +18,7 @@ export default function Favourite() {
 
   const handleDeleteAll = () => {
     // TODO: Implement API call to delete all favorites
-    removeAllFavorites();
+    clearFavorites();
   };
 
   return (
@@ -32,22 +32,30 @@ export default function Favourite() {
                 {t("Favoriteproducts")}
               </h1>
               {favorites.length > 0 && (
-                <Button 
-                  variant="destructive" 
-                  onClick={handleDeleteAll}
-                  className="flex items-center gap-2"
-                >
-                  <Trash2 className="w-4 h-4" />
-                  {t("Delete All")}
-                </Button>
+              <Button
+  variant="destructive"
+  onClick={handleDeleteAll}
+  className="
+    flex items-center gap-2
+    transition-all duration-200
+    hover:bg-red-700
+    hover:scale-[1.02]
+    corser:pointer
+    active:scale-[0.97]
+  "
+>
+  <Trash2 className="w-4 h-4 transition-transform group-hover:rotate-6" />
+  {t("Delete All")}
+</Button>
+
               )}
             </div>
             <Bestseller
               title=""
               btn={false}
-              style="lg:!grid-cols-3 lg:!gap-[80px]"
+              style="lg:!grid-cols-3 gap-[20px] lg:!gap-[80px]"
               products={favorites.map(f => f.product)}
-              imagecard="!h-[100px] !w-[100px]"
+              imagecard=" !object-contain !w-[100px]"
               containerstyle="!p-2 pb-3 !px-0 !rounded-[10px] !min-h-fit"
             />
           </div>

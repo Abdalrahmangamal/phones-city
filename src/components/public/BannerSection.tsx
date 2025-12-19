@@ -33,7 +33,7 @@ const BannerSection: React.FC<BannerSectionProps> = ({
           <img
             src={images}
             alt="بانر"
-            className="w-full h-full object-contain rounded-[20px]"
+            className="w-full h-full !object-contain rounded-[20px]"
             loading="eager"
           />
         </div>
@@ -65,7 +65,7 @@ const BannerSection: React.FC<BannerSectionProps> = ({
               <img
                 src={image}
                 alt={`بانر ${index + 1}`}
-                className="w-full h-full object-contain rounded-[20px]"
+                className="w-full h-full !object-contain rounded-[20px]"
                 loading={index === 0 ? "eager" : "lazy"}
               />
             </SwiperSlide>

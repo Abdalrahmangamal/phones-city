@@ -14,6 +14,8 @@ interface BestsellerProps {
   favourite?: boolean;
   limit?: number;
   filterComponent?: React.ReactNode;
+  imagecard?:string;
+  containercard?:string;
 }
 
 export default function Bestseller({
@@ -21,8 +23,10 @@ export default function Bestseller({
   link,
   btn,
   products,
+  containercard,
   style,
   limit,
+  imagecard,
   filterComponent,
 }: BestsellerProps) {
   const { t } = useTranslation();
@@ -39,7 +43,7 @@ export default function Bestseller({
   console.log("Bestseller - Filter component:", filterComponent);
 
   return (
-    <div className="mt-[20px] lg:px-[90px] px-2 pt-20 md:pt-20">
+    <div className={`mt-[20px] lg:px-[90px] px-2 pt-20 md:pt-20 ${containercard}`}>
       {/* العنوان */}
       <div className="flex items-center px-[10px] w-full justify-between relative">
         <div className="relative">
@@ -86,7 +90,7 @@ export default function Bestseller({
       >
         {hasProducts ? (
           productsToShow.map((item) => (
-            <ProductCard key={item.id} product={item} />
+            <ProductCard key={item.id} product={item} imagecard={imagecard} />
           ))
         ) : (
           <div className="col-span-full text-center py-10">
