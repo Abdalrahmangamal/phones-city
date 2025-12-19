@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"; // Add this import
+import { useState, useEffect } from "react";
 import Layout from "@/components/layout/layout";
 import HeroSection from "@/components/public/HeroSection";
 import BannerSection from "@/components/public/BannerSection";
@@ -12,6 +12,7 @@ import AppDownloadSection from "@/components/home/AppDownloadSection";
 import CertificationBadgesSection from "@/components/home/CertificationBadgesSection";
 import Loader from "@/components/Loader";
 import SpecialOffersSection from "@/components/home/SpecialOffersSection";
+import HomePopup from "@/components/home/HomePopup"; // Import the HomePopup component
 
 // Stores
 import { useProductsStore } from "@/store/productsStore";
@@ -27,15 +28,23 @@ import { useLangSync } from "@/hooks/useLangSync";
 import {useHomePageStore} from '@/store/home/homepageStore'
 
 const NewHome = () => {
-  // const [showPopup, setShowPopup] = useState(true);
-  const [isLoading, setIsLoading] = useState(false); // Add this state
+  const [showPopup, setShowPopup] = useState(false); // Initially set to false
+  const [isLoading, setIsLoading] = useState(false);
   const{fetchHomePage,data}=useHomePageStore()
   
   const { lang } = useLangSync();
   
   useEffect(()=>{fetchHomePage(lang)},[])
-  console.log("asdsa",data)
- 
+
+  // Effect to show popup after a delay
+  useEffect(() => {
+    const popupTimer = setTimeout(() => {
+      setShowPopup(true);
+    }, 3000); // Show popup after 3 seconds
+
+    // Cleanup timer if component unmounts
+    return () => clearTimeout(popupTimer);
+  }, []);
 
   // All stores
   const {
@@ -73,14 +82,18 @@ const NewHome = () => {
           // Latest offers
           fetchOffers(),
 
+
           // Testimonials
           fetchTestimonials(),
+
 
           // Product categories
           fetchCategories(lang),
 
+
           // Features (FrameSection)
           fetchFeatures(),
+
 
           // Trademarks / Brands (Parttner)
           fetchtradmarks(),
@@ -115,19 +128,28 @@ const NewHome = () => {
 
   return (
     <Layout>
+      {/* Show the popup if showPopup is true */}
+      {showPopup && <HomePopup onClose={() => setShowPopup(false)} />}
+      
       <div className="min-h-screen bg-gray-50 w-full flex flex-col">
         <main className="w-full">
           <HeroSection sliders={sliders} />
-          <BannerSection images={data?.main_images} />
-          <InstallmentSection title={data?.offer_text} />
-          <ProductCategoriesSection categories={categories} />
-          <LatestOffers offers={offers} />
+          <BannerSection images={data?.main_images || []} />
+          <InstallmentSection title={data?.offer_text || ""} />
+          {/* ProductCategoriesSection fetches its own data internally */}
+          <ProductCategoriesSection />
+          {/* These components fetch their own data internally, so we don't pass props */}
+          <LatestOffers />
           <SpecialOffersSection title="عروض خاصة لك" products={products} />
-          <TestimonialsSection testimonials={testimonials} />
+          <TestimonialsSection />
           <FrameSection features={langFeatures} />
-          <CertificationBadgesSection certificates={certificates} />
-          <Parttner trademarks={trademarks} />
-          <AppDownloadSection title={data?.app_title} description={data?.app_description} image={data?.app_main_image}  />
+          <CertificationBadgesSection certificates={certificates || []} />
+          <Parttner />
+          <AppDownloadSection 
+            title={data?.app_title || ""} 
+            description={data?.app_description || ""} 
+            image={data?.app_main_image || ""}  
+          />
         </main>
       </div>
     </Layout>

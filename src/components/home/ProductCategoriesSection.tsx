@@ -11,19 +11,19 @@ import { Link } from "react-router-dom";
 // تعريف نوع الفئة (Category) حسب الـ API المتوقع
 interface Category {
   id?: number;
-  slug: string;
+  slug?: string;
   name: string;
-  image: string;
+  image?: string;
   // أضف المزيد إذا كان هناك حقول أخرى
 }
 
 // Props الجديدة: نستقبل categories جاهزة من Home.tsx
 interface ProductCategoriesSectionProps {
-  categories: Category[];
+  categories?: Category[];
 }
 
 const ProductCategoriesSection: React.FC<ProductCategoriesSectionProps> = ({
-  categories,
+  categories = [],
 }) => {
   const { lang } = useLangSync();
   const isS24Ultra = useS24Ultra();
@@ -84,7 +84,21 @@ const ProductCategoriesSection: React.FC<ProductCategoriesSectionProps> = ({
               key={cat.id ?? index} // نستخدم id إذا كان موجودًا، وإلا index
               className="flex flex-col items-center justify-center transition-transform duration-300 hover:scale-105"
             >
-              <Link to={`categorySingle/${cat.slug}/products`}>
+              {cat.slug ? (
+                <Link to={`categorySingle/${cat.slug}/products`}>
+                  <div className="w-[70px] h-[70px] sm:w-[110px] sm:h-[110px] md:w-[120px] md:h-[120px] lg:w-[140px] lg:h-[140px] shadow-[0px_7px_29px_0px_rgba(100,100,111,0.2)] rounded-full flex items-center justify-center bg-white overflow-hidden">
+                    <img
+                      src={cat.image}
+                      alt={cat.name}
+                      className="!object-cover w-full h-full"
+                      loading="lazy"
+                    />
+                  </div>
+                  <h2 className="text-[#211C4D] text-[6px] sm:text-[14px] md:text-[16px] lg:text-[18px] font-[600] mt-2 text-center leading-tight">
+                    {cat.name}
+                  </h2>
+                </Link>
+              ) : (
                 <div className="w-[70px] h-[70px] sm:w-[110px] sm:h-[110px] md:w-[120px] md:h-[120px] lg:w-[140px] lg:h-[140px] shadow-[0px_7px_29px_0px_rgba(100,100,111,0.2)] rounded-full flex items-center justify-center bg-white overflow-hidden">
                   <img
                     src={cat.image}
@@ -93,10 +107,7 @@ const ProductCategoriesSection: React.FC<ProductCategoriesSectionProps> = ({
                     loading="lazy"
                   />
                 </div>
-                <h2 className="text-[#211C4D] text-[6px] sm:text-[14px] md:text-[16px] lg:text-[18px] font-[600] mt-2 text-center leading-tight">
-                  {cat.name}
-                </h2>
-              </Link>
+              )}
             </SwiperSlide>
           ))}
         </Swiper>
