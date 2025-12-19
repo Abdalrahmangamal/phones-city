@@ -4,7 +4,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
-import "./BestSellersSection.css"; // تأكد من أن CSS خاص
+import "./BestSellersSection.css"; 
 
 import { useLangSync } from '@/hooks/useLangSync';
 import { Link } from "react-router-dom";
@@ -76,7 +76,7 @@ const BestSellersSection: React.FC<BestSellersSectionProps> = ({
             spaceBetween={20}
             className="w-full pb-10"
             breakpoints={{
-              320: { slidesPerView: 1, spaceBetween: 10 },
+              320: { slidesPerView: 2, spaceBetween: 10 },
               480: { slidesPerView: 2, spaceBetween: 10 },
               640: { slidesPerView: 2, spaceBetween: 15 },
               768: { slidesPerView: 3, spaceBetween: 20 },
@@ -117,7 +117,7 @@ const BestSellersSection: React.FC<BestSellersSectionProps> = ({
     let currentSlidesPerView = slidesPerView;
 
     // تحديد عدد الشرائح بناءً على breakpoints
-    if (width < 480) currentSlidesPerView = 1;
+    if (width < 480) currentSlidesPerView = 2;
     else if (width < 640) currentSlidesPerView = 2;
     else if (width < 768) currentSlidesPerView = 2;
     else if (width < 1024) currentSlidesPerView = 3;
@@ -209,7 +209,7 @@ const BestSellersSection: React.FC<BestSellersSectionProps> = ({
           resistanceRatio={shouldAllowSlide ? 0.85 : 0}
           breakpoints={{
             320: {
-              slidesPerView: 1,
+              slidesPerView: 2,
               spaceBetween: 10,
               allowTouchMove: products.length > 1,
             },
