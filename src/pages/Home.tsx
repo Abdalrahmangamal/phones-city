@@ -42,7 +42,7 @@ console.log("hoooooooooooome",data)
   useEffect(() => {
     const popupTimer = setTimeout(() => {
       setShowPopup(true);
-    }, 5000); // Show popup after 2 seconds (as per memory requirement)
+    }, 2000); // Show popup after 2 seconds (as per memory requirement)
 
     // Cleanup timer if component unmounts
     return () => clearTimeout(popupTimer);
