@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { useLangSync } from "@/hooks/useLangSync";
 
 interface FeaturedHeroSectionProps {
   title: string;
@@ -16,6 +17,12 @@ const FeaturedHeroSection = ({
   buttonLink,
   backgroundImage
 }: FeaturedHeroSectionProps) => {
+  const { lang } = useLangSync();
+  
+  // Determine text alignment based on language
+  const textAlignClass = lang === "ar" ? "text-right" : "text-left";
+  const paddingClass = lang === "ar" ? "pr-[57px]" : "pl-[57px]";
+  
   return (
     <div className="lg:px-[90px] px-2 md:pt-0 pt-[50px]">
       <div className="w-full max-w-[1264px] mt-[50px] h-[230px] md:h-[351px] rounded-lg mb-16 relative overflow-hidden">
@@ -32,12 +39,15 @@ const FeaturedHeroSection = ({
         {/* Gradient Overlay */}
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#211c4d57] to-[#211C4D]"></div>
         {/* Text Content - Responsive for mobile, without align-items and with correct padding */}
-        <div className="absolute inset-0 flex flex-col justify-start text-right p-5 md:pr-[57px]">
-          <h1 className="text-white font-roboto font-bold md:max-w-[30%] text-[24px] md:text-5xl leading-[48px] md:leading-[68px] mb-2 md:mb-4">
+        <div 
+          className={`absolute inset-0 flex flex-col justify-start ${textAlignClass} p-5 md:${paddingClass}`}
+          dir={lang === "ar" ? "rtl" : "ltr"}
+        >
+          <h1 className="text-white font-roboto font-bold md:max-w-[30%] text-[32px] md:text-5xl leading-[48px] md:leading-[68px] mb-2 md:mb-4">
             {title}
           </h1>
           {description && (
-            <p className="text-white font-roboto md:max-w-[40%] text-[15px] font-bold text-base leading-6">
+            <p className="text-white font-roboto md:max-w-[40%] text-[18px] font-bold text-base leading-6">
               {description}
             </p>
           )}

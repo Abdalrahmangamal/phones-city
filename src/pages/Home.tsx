@@ -44,7 +44,7 @@ const NewHome = () => {
   useEffect(() => {
     const popupTimer = setTimeout(() => {
       setShowPopup(true);
-    }, 2000); // Show popup after 2 seconds (as per memory requirement)
+    }, 5000); // Show popup after 5 seconds
 
     // Cleanup timer if component unmounts
     return () => clearTimeout(popupTimer);
