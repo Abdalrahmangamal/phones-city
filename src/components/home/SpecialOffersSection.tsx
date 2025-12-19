@@ -1,3 +1,4 @@
+// SpecialOffersSection.tsx 
 import React, { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay } from "swiper/modules";
@@ -9,39 +10,37 @@ import { useLangSync } from '@/hooks/useLangSync';
 import { Link } from "react-router-dom";
 import ProductCard from "../public/ProductCard";
 import type { Product } from '@/types/index';
-import { useTranslation } from "react-i18next"; 
+import { useTranslation } from "react-i18next";
 
-interface SpecialOffersProps {
+interface SpecialOffersSectionProps {
   products: Product[];
   title?: string;
   style?: string;
   isLoading?: boolean;
 }
 
-const SpecialOffersSection: React.FC<SpecialOffersProps> = ({ 
+const SpecialOffersSection: React.FC<SpecialOffersSectionProps> = ({ 
   products, 
-  title = "SpecialOffers for you", 
+  title = "Special Offers", 
   style = "",
   isLoading = false
 }) => {
   const { lang } = useLangSync();
-  const { t } = useTranslation(); // استدعاء دالة الترجمة
+  const { t } = useTranslation();
   const [shouldAllowSlide, setShouldAllowSlide] = useState(true);
-  const [isMobile, setIsMobile] = useState(false);
   
-
   // حالة التحميل
   if (isLoading) {
     return (
       <div className={`special-offers-container w-full flex md:mt-[80px] flex-col xl:px-[90px] px-2 pt-0 md:pt-0 items-start md:gap-[32px] gap-[0px] ${style}`}>
-        {/* Header */}
+        {/* Header - مطابق لـ BestSellers */}
         <div className="w-full flex items-center justify-between relative mb-4">
           <div className="relative">
             <div className="absolute md:-top-2 right-[200px] md:-right-4 z-5">
               <img src="/Layer_1.svg" alt="" className="opacity-100" />
             </div>
             <h2 className="font-roboto font-semibold md:!text-[40px] text-[24px] leading-[36px] text-[#211C4D] relative z-10">
-              {t(title)} {/* استخدم t() للترجمة */}
+              {t(title)}
             </h2>
           </div>
           
@@ -77,7 +76,7 @@ const SpecialOffersSection: React.FC<SpecialOffersProps> = ({
             spaceBetween={20}
             className="w-full pb-10"
             breakpoints={{
-              320: { slidesPerView: 1, spaceBetween: 10 },
+              320: { slidesPerView: 2, spaceBetween: 10 },
               480: { slidesPerView: 2, spaceBetween: 10 },
               640: { slidesPerView: 2, spaceBetween: 15 },
               768: { slidesPerView: 3, spaceBetween: 20 },
@@ -106,7 +105,7 @@ const SpecialOffersSection: React.FC<SpecialOffersProps> = ({
     );
   }
 
-  // إذا لم توجد منتجات، لا تعرض القسم
+  
   if (!products || products.length === 0) {
     return null;
   }
@@ -117,8 +116,7 @@ const SpecialOffersSection: React.FC<SpecialOffersProps> = ({
     const width = window.innerWidth;
     let currentSlidesPerView = slidesPerView;
 
-    // تحديد عدد الشرائح بناءً على breakpoints
-    if (width < 480) currentSlidesPerView = 1;
+    if (width < 480) currentSlidesPerView = 2;
     else if (width < 640) currentSlidesPerView = 2;
     else if (width < 768) currentSlidesPerView = 2;
     else if (width < 1024) currentSlidesPerView = 3;
@@ -129,16 +127,10 @@ const SpecialOffersSection: React.FC<SpecialOffersProps> = ({
   };
 
   useEffect(() => {
-    // حساب الحالة الأولية
     setShouldAllowSlide(calculateShouldAllowSlide());
-    setIsMobile(window.innerWidth < 768);
-
-    // تحديث الحالة عند تغيير حجم النافذة
     const handleResize = () => {
       setShouldAllowSlide(calculateShouldAllowSlide());
-      setIsMobile(window.innerWidth < 768);
     };
-
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, [products.length, lang]);
@@ -158,7 +150,7 @@ const SpecialOffersSection: React.FC<SpecialOffersProps> = ({
         
         <Link 
           className="flex items-center gap-[6px] py-[10px] rounded-[4px] hover:opacity-80 transition-opacity"
-          to={`/trademarkbestoffer`}
+          to={`/${lang}/SpecialOffersPage`}
         >
           <span className="font-roboto font-medium md:text-[24px] leading-[20px] text-[#211C4D]">
             {t('ViewAll')}
@@ -182,7 +174,7 @@ const SpecialOffersSection: React.FC<SpecialOffersProps> = ({
         </Link>
       </div>
 
-      {/* Slider Container */}
+      {/* Slider Container - هيكل مطابق لـ BestSellers */}
       <div className={`w-full relative special-offers-swiper ${!shouldAllowSlide ? 'no-scroll' : ''}`}>
         <Swiper
           key={lang + products.length}
@@ -190,7 +182,7 @@ const SpecialOffersSection: React.FC<SpecialOffersProps> = ({
           navigation={{
             nextEl: '.special-offers-next',
             prevEl: '.special-offers-prev',
-            enabled: shouldAllowSlide, 
+            enabled: shouldAllowSlide,
           }}
           loop={shouldAllowSlide && products.length > slidesPerView}
           dir={lang === "ar" ? "rtl" : "ltr"}
@@ -203,15 +195,15 @@ const SpecialOffersSection: React.FC<SpecialOffersProps> = ({
           slidesPerView={slidesPerView}
           spaceBetween={20}
           className="w-full pb-10"
-          allowTouchMove={shouldAllowSlide} 
-          allowSlidePrev={shouldAllowSlide} 
-          allowSlideNext={shouldAllowSlide} 
+          allowTouchMove={shouldAllowSlide}
+          allowSlidePrev={shouldAllowSlide}
+          allowSlideNext={shouldAllowSlide}
           watchSlidesProgress={shouldAllowSlide}
           resistance={shouldAllowSlide}
           resistanceRatio={shouldAllowSlide ? 0.85 : 0}
           breakpoints={{
             320: {
-              slidesPerView: 1,
+              slidesPerView: 2,
               spaceBetween: 10,
               allowTouchMove: products.length > 1,
             },
@@ -263,7 +255,7 @@ const SpecialOffersSection: React.FC<SpecialOffersProps> = ({
           ))}
         </Swiper>
 
-        {/* أزرار التنقل المخصصة - تظهر فقط عند الحاجة */}
+        {/* أزرار التنقل - نفس موقع BestSellers */}
         {shouldAllowSlide && products.length > 1 && (
           <>
             <div className={`special-offers-prev ${!shouldAllowSlide ? 'opacity-50 cursor-not-allowed' : ''}`}>
