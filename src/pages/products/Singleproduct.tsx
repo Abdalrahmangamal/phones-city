@@ -5,24 +5,27 @@ import Gallery from "@/components/singleproduct/Gallery";
 import Ptoductdetails from "@/components/singleproduct/Ptoductdetails";
 import Informationproduct from "@/components/singleproduct/Informationproduct";
 import FeaturedHeroSection from "@/components/home/FeaturedHeroSection";
-import heroImage from "@/assets/images/herooffer.png";
 import Loader from '@/components/Loader'
 import { useParams } from "react-router";
 import {useProductsStore} from '@/store/productsStore'
 import { useEffect, useState } from "react";
 import  '@/style.css'
 import { useLangSync } from "@/hooks/useLangSync";
+import { usePageStore } from '@/store/customerCareStore';
 
 export default function ProductPage() {
   const {id} = useParams();
   const {fetchProductbyid, response, loading} = useProductsStore();
   const [selectedOptionIndex, setSelectedOptionIndex] = useState(0);
   const { lang } = useLangSync();
+  const { page, fetchPage, loading: pageLoading } = usePageStore();
 
   useEffect(() => {
     if (id) {
       fetchProductbyid(id,lang);
     }
+    // Fetch banner data from backend
+    fetchPage("singlepro", lang);
   }, [id,lang]);
 
   const handleOptionChange = (index: number) => {
@@ -83,13 +86,18 @@ export default function ProductPage() {
             <Informationproduct product={product} />
             
             {/* Featured Hero Section - Placed at the end of the page with correct sizing */}
-            <FeaturedHeroSection
-              title="اكتشافك المفضل التالي على بعد نقرة واحدة فقط!"
-              description=""
-              buttonText="تسوق الان"
-              buttonLink="/products"
-              backgroundImage={heroImage}
-            />
+            {/* Show loader while fetching banner data */}
+            {pageLoading && <Loader />}
+            {/* Display banner when data is loaded */}
+            {!pageLoading && page && (
+              <FeaturedHeroSection
+                title={page.title || ""}
+                description={page.short_description || ""}
+                buttonText="تسوق الان"
+                buttonLink="/products"
+                backgroundImage={page.banner || ""}
+              />
+            )}
           </main>
         </div>
       ) : (
