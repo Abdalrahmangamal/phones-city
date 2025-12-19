@@ -108,55 +108,20 @@ export default function Informationproduct({ product }: any) {
         </div>
       )}
 
-      {/* معلومات إضافية إذا لم يكن هناك details أو about */}
-      {!hasDetails && !hasAbout && (
-        <>
-          {/* المعلومات الأساسية */}
-          <div className="mb-8 md:mb-12">
-            <h2 className="mb-4 md:mb-6 text-start text-lg md:text-xl font-semibold text-gray-900">
-              {t("Generalspecifications")}
-            </h2>
-            <div className="space-y-3 md:space-y-4">
-              {[
-                { key: "العلامة التجارية", value: product?.product_mark || "غير محدد" },
-                { key: "السعة", value: product?.capacity || "غير محدد" },
-                { key: "السعر الأصلي", value: product?.original_price || "غير محدد" },
-                { key: "السعر النهائي", value: product?.final_price || "غير محدد" },
-              ].map((item, index) => (
-                <div
-                  key={index}
-                  className="grid grid-cols-1 md:grid-cols-[1fr_auto] justify-between items-center gap-3 md:gap-4"
-                >
-                  <div className="flex items-center gap-3 md:gap-4">
-                    <div className="whitespace-nowrap text-right text-sm md:text-base text-[#211C4DCC]">
-                      {item.key}:
-                    </div>
-                    <div className="h-px flex-1 border-b border-dotted border-gray-300" />
-                  </div>
-                  <div className="text-right text-sm md:text-base text-[#211C4D] font-[500]">
-                    {item.value}
-                  </div>
-                </div>
-              ))}
-            </div>
+      {/* Description Section - Only show if there's no about section or if about section is different from description */}
+      {!hasAbout && product?.description && (
+        <div className="mb-8 md:mb-12">
+          <h2 className="mb-4 md:mb-6 text-start text-2xl md:text-[32px] font-semibold text-[#211C4D]">
+            {t("Description")}
+          </h2>
+          <div className="text-[#211C4DCC] text-lg font-[400] leading-relaxed">
+            {product.description}
           </div>
-
-          {/* الوصف */}
-          {product?.description && (
-            <div className="mb-8 md:mb-12">
-              <h2 className="mb-4 md:mb-6 text-start text-2xl md:text-[32px] font-semibold text-[#211C4D]">
-                {t("Aboutthisproduct")}
-              </h2>
-              <div className="text-[#211C4DCC] text-lg font-[400] leading-relaxed">
-                {product.description}
-              </div>
-            </div>
-          )}
-        </>
+        </div>
       )}
 
-      {/* Comments Section */}
-      <Comments />
+      {/* Comments Section - Hidden as requested */}
+      {/* <Comments /> */}
     </div>
   );
 }
