@@ -6,7 +6,7 @@ import "swiper/css/effect-fade";
 
 // تحديث الاسم ليكون أكثر دقة (بدلاً من CategoriesSection)
 interface BannerSectionProps {
-  images: string[];
+  images: [];
   autoplayDelay?: number;
 }
 
