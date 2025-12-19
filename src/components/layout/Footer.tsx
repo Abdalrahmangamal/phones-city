@@ -159,21 +159,28 @@ const Footer: React.FC = () => {
               {/* Social icons */}
               <div className="flex justify-start mt-2">
                 <div className="flex items-center gap-2 sm:gap-3 flex-wrap justify-end">
-                  {[tiktok, snapchat, whatsapp, x, insta, facebook].map(
-                    (icon, i) => (
-                      <a
-                        key={i}
-                        href="#"
-                        className="w-8 h-8 sm:w-7 sm:h-7 lg:w-9 lg:h-9 rounded-full bg-white flex items-center justify-center transition-all hover:bg-gray-100 hover:shadow-md"
-                      >
-                        <img
-                          src={icon}
-                          alt="social"
-                          className="w-4 h-4 sm:w-5 sm:h-5 object-contain"
-                        />
-                      </a>
-                    )
-                  )}
+                  {[
+                    { icon: tiktok, url: "https://www.tiktok.com/@madinatalhawatif?_r=1&_t=ZS-92MSlSSc6D2" },
+                    { icon: snapchat, url: "https://www.snapchat.com/add/madinat6100?share_id=qzDj5oOT5kM&locale=ar-SA" },
+                    { icon: whatsapp, url: "#" },
+                    { icon: x, url: "https://x.com/AlhwatfMdy43074" },
+                    { icon: insta, url: "https://www.instagram.com/cityphone.sa?igsh=cnVoeGpncWF0Mjc5" },
+                    { icon: facebook, url: "https://www.facebook.com/share/14PAhVuoWz7/" }
+                  ].map((social, i) => (
+                    <a
+                      key={i}
+                      href={social.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-8 h-8 sm:w-7 sm:h-7 lg:w-9 lg:h-9 rounded-full bg-white flex items-center justify-center transition-all hover:bg-gray-100 hover:shadow-md"
+                    >
+                      <img
+                        src={social.icon}
+                        alt="social"
+                        className="w-4 h-4 sm:w-5 sm:h-5 object-contain"
+                      />
+                    </a>
+                  ))}
                 </div>
               </div>
 
