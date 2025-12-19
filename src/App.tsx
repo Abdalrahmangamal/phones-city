@@ -26,6 +26,7 @@ import Discounts from "./pages/profile/Discounts";
 import Favourite from "./pages/profile/Favourite";
 import Trademarks from "./pages/products/Trademarks";
 import BestSellerPage from "./pages/BestSellerPage";
+import SearchResults from "./pages/products/SearchResults";
 import Trademarkscategory from "./pages/Trademarkscategory";
 import Trademarkbestoffer from "./pages/products/Trademarkbestoffer";
 import ScrollToTop from "@/components/ScrollToTop";
@@ -64,6 +65,7 @@ function LangLayout() {
       <Route path="/servces" element={<Servces/>} />
       <Route path="/contact" element={<Contact/>} />
       <Route path="/offers" element={<Offers/>} />
+      <Route path="/search" element={<SearchResults/>} />
       <Route path="/login" element={<Login/>} />
       <Route path="/register" element={<Register/>} />
       <Route path="/product-details" element={<ProductDetails/>} />
@@ -147,6 +149,7 @@ export default function App() {
           
           <Route path="/:lang/*" element={<LangLayout />} />
         </Routes>
+        {/* add search route under lang layout */}
       </BrowserRouter>
       <ChatBot/>
     </div>

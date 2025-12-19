@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import Layout from "@/components/layout/Layout";
+import Layout from "@/components/layout/layout";
 import Sidebar from "@/components/layout/Sidebar";
 import "@/style.css";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -447,7 +447,7 @@ export default function Myorder() {
 
                               <td className="py-4 px-4">
                                 <span 
-                                  className="px-3 py-1.5 rounded-full text-xs font-semibold inline-flex items-center gap-1.5"
+                                  className="px-3 py-1.5 rounded-full text-xs font-semibold inline-flex items-center gap-1.5 whitespace-nowrap"
                                   style={{ color: getStatusText(order.status).color, backgroundColor: getStatusText(order.status).bgColor }}
                                 >
                                   <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: getStatusText(order.status).color }} />

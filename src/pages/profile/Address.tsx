@@ -36,7 +36,9 @@ console.log(addresses)
     toast(
       <div className="flex flex-col gap-3">
         <p className="font-semibold text-lg">
-          {t("Are you sure you want to delete this address?")}
+          {i18n.language === "ar" 
+            ? "هل أنت متأكد أنك تريد حذف هذا العنوان؟" 
+            : "Are you sure you want to delete this address?"}
         </p>
         <div className="flex justify-end gap-2 mt-2">
           <button
@@ -46,13 +48,13 @@ console.log(addresses)
             }}
             className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
           >
-            {t("Delete")}
+            {i18n.language === "ar" ? "حذف" : "Delete"}
           </button>
           <button
             onClick={() => toast.dismiss()}
             className="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition"
           >
-            {t("Cancel")}
+            {i18n.language === "ar" ? "إلغاء" : "Cancel"}
           </button>
         </div>
       </div>,

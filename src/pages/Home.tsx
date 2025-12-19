@@ -19,8 +19,6 @@ import BestSellersSection from "@/components/home/BestSellersSection";
 import { useProductsStore } from "@/store/productsStore";
 import { useHeroSectionStore } from "@/store/home/herosectionStore";
 import { useCertificateStore } from "@/store/home/certificateStore";
-// import { useLatestOffersStore } from "@/store/home/latestOffersStore";
-// import { useTestimonialStore } from "@/store/home/testimonialStore";
 import { useCategoriesStore } from "@/store/categories/useCategoriesStore";
 import useFeaturesStore from "@/store/home/featuresStore";
 import { useLangSync } from "@/hooks/useLangSync";
@@ -39,7 +37,7 @@ const NewHome = () => {
   useEffect(() => {
     fetchHomePage(lang);
   }, [lang]);
-
+console.log("hoooooooooooome",data)
   // Effect to show popup after a delay
   useEffect(() => {
     const popupTimer = setTimeout(() => {
@@ -59,11 +57,8 @@ const NewHome = () => {
 
   const { fetchSliders, sliders } = useHeroSectionStore();
   const { fetchCertificates, certificates } = useCertificateStore();
-  // const { fetchOffers, offers } = useLatestOffersStore();
-  // const { fetchTestimonials, testimonials } = useTestimonialStore();
   const { fetchCategories, categories } = useCategoriesStore();
   const { fetchFeatures, getFeaturesByLanguage } = useFeaturesStore();
-  // const { fetchtradmarks, treadmark: trademarks } = useCategoriesStore();
 
   // دالة لجلب المنتجات الأكثر مبيعاً
   // في Home.tsx، تحديث دالة fetchBestSellers:
@@ -122,13 +117,7 @@ const fetchBestSellers = async () => {
           // Certificates
           fetchCertificates(),
 
-          // Latest offers
-          // fetchOffers(),
-
-
-          // Testimonials
-          // fetchTestimonials(),
-
+      
 
           // Product categories
           fetchCategories(lang),

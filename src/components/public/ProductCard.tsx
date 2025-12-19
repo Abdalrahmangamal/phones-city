@@ -12,10 +12,11 @@ interface ProductCardProps {
   product: Product;
   isNew?: boolean;
   favourite?: boolean;
+  imagecard:string;
   variations?: { color: string; image: string }[];
 }
 import { useFavoritesStore } from "@/store/favoritesStore";
-export default function ProductCard({ product }: ProductCardProps) {
+export default function ProductCard({ product,imagecard }: ProductCardProps) {
   const { t } = useTranslation();
 
   const { addFavorite, removeFavorite, favorites } = useFavoritesStore();
@@ -66,7 +67,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         <Link to={`/${lang}/singleproduct/${product.slug}`}>
           <img
             src={currentImage}
-            className={`md:!w-[220px] h-[160px] w-[160px] object-contain md:!h-[220px] `}
+            className={`md:!w-[220px] h-[160px] w-[160px] object-contain ${imagecard} md:!h-[220px] `}
             alt={product.name}
           />
         </Link>

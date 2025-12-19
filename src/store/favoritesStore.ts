@@ -80,6 +80,7 @@ interface FavoritesState {
   count: number;
   loading: boolean;
   error: string | null;
+  clearFavorites: () => Promise<void>; 
 
   fetchFavorites: () => Promise<void>;
   addFavorite: (productId: number) => Promise<void>;
@@ -175,7 +176,7 @@ export const useFavoritesStore = create<FavoritesState>((set, get) => ({
   },
 
   // DELETE remove favorite
-  removeFavorite: async (favoriteIdOrProductId: number) => {
+  removeFavorite: async (favoriteId: number) => {
     try {
       const token = localStorage.getItem("token");
 
@@ -183,10 +184,10 @@ export const useFavoritesStore = create<FavoritesState>((set, get) => ({
 
       const favoritesList = get().favorites;
       // try to find by favorite id first
-      let target = favoritesList.find((f) => f.id === favoriteIdOrProductId);
+      let target = favoritesList.find((f) => f.id === favoriteId);
       // if not found, try find by product id
       if (!target) {
-        target = favoritesList.find((f) => f.product?.id === favoriteIdOrProductId);
+        target = favoritesList.find((f) => f.product?.id === favoriteId);
       }
 
       if (target) {
@@ -228,7 +229,7 @@ export const useFavoritesStore = create<FavoritesState>((set, get) => ({
         // fallback: call toggle endpoint with product_id
         await axios.post(
           `${baseUrl}api/v1/favorites/toggle`,
-          { product_id: favoriteIdOrProductId },
+          { product_id: favoriteId },
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -238,14 +239,14 @@ export const useFavoritesStore = create<FavoritesState>((set, get) => ({
         );
 
         set({
-          favorites: get().favorites.filter((f) => f.product?.id !== favoriteIdOrProductId),
+          favorites: get().favorites.filter((f) => f.product?.id !== favoriteId),
           count: Math.max(0, get().count - 1),
           loading: false,
         });
 
         // sync productsStore (product id case)
         try {
-          const productId = favoriteIdOrProductId;
+          const productId = favoriteId;
           const productsState = useProductsStore.getState();
           const resp = productsState.response;
           if (Array.isArray(resp)) {
@@ -260,7 +261,7 @@ export const useFavoritesStore = create<FavoritesState>((set, get) => ({
           console.warn("Failed to sync productsStore after removeFavorite(toggle)", e);
         }
 
-        return favoriteIdOrProductId;
+        return favoriteId;
       }
     } catch (err: any) {
       set({
@@ -270,4 +271,59 @@ export const useFavoritesStore = create<FavoritesState>((set, get) => ({
       throw err;
     }
   },
+  // DELETE clear all favorites
+clearFavorites: async () => {
+  try {
+    const token = localStorage.getItem("token");
+
+    set({ loading: true });
+
+    await axios.delete(`${baseUrl}api/v1/favorites`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/json",
+      },
+    });
+
+    // clear favorites store
+    set({
+      favorites: [],
+      count: 0,
+      loading: false,
+      error: null,
+    });
+
+    // sync productsStore (important)
+    try {
+      const productsState = useProductsStore.getState();
+      const resp = productsState.response;
+
+      if (Array.isArray(resp)) {
+        const updated = resp.map((p: any) => ({
+          ...p,
+          is_favorite: false,
+          favorite_id: undefined,
+        }));
+        useProductsStore.setState({ response: updated });
+      } else if (resp) {
+        useProductsStore.setState({
+          response: {
+            ...(resp as any),
+            is_favorite: false,
+            favorite_id: undefined,
+          },
+        });
+      }
+    } catch (e) {
+      console.warn("Failed to sync productsStore after clearFavorites", e);
+    }
+  } catch (err: any) {
+    set({
+      error: err.response?.data?.message || "Failed to clear favorites",
+      loading: false,
+    });
+    throw err;
+  }
+},
+
 }));

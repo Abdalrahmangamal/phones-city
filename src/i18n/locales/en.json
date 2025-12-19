@@ -198,13 +198,17 @@
   "LimitedStock": "Limited Stock",
   "BestsellerPageTitle": "Best Selling Products",
   "BestsellerPageDescription": "Browse our collection of the most popular and best selling products",
-  
+    "Searchresultsfor": "Search results for",
+
   "ViewAllBestSellers": "View All Best Sellers",
   "SeeMoreBestSellers": "See More Best Sellers",
   "BrowseBestSellers": "Browse Best Sellers",
   "ShopBestSellers": "Shop Best Sellers",
   "BestSellerCollection": "Best Seller Collection",
-  
+  "Noresultsfound": "No results found",
+    "Searching...": "Searching...",
+  "Login": "Login",
+
   "SpecialOffersForYou": "Special Offers for you",
   "ShopNow": "Shop Now",
   "ShopNowEn": "Shop Now"

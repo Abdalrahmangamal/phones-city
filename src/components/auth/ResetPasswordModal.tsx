@@ -43,16 +43,23 @@ export default function ResetPasswordModal({
   const handleSubmit = async () => {
     if (!passwordsMatch) return;
 
-    const res = await resetPassword({
+    const payload = {
       email,
-      code,
+      code: typeof code === "string" ? code.trim() : code,
       password,
       password_confirmation: passwordConfirm,
-    });
+    };
 
-    if (res?.status === true) {
-      handleClose();
-      // هنا لو عايز ترجع لصفحة اللوجين استخدم navigate
+    console.log("ResetPasswordModal: sending reset payload ->", payload);
+
+    try {
+      const res = await resetPassword(payload);
+      console.log("ResetPasswordModal: reset response ->", res);
+      if (res?.status === true) {
+        handleClose();
+      }
+    } catch (err) {
+      console.error("ResetPasswordModal: reset error ->", err);
     }
   };
 

@@ -1,6 +1,6 @@
 // Profile.tsx
 import { useEffect, useState } from "react";
-import Layout from "@/components/layout/Layout";
+import Layout from "@/components/layout/layout";
 import Sidebar from "@/components/layout/Sidebar";
 import { useTranslation } from "react-i18next";
 import { useProfileStore } from "@/store/profile/profileStore";
@@ -12,11 +12,16 @@ import call from "@/assets/images/call-calling.png";
 import sms from "@/assets/images/sms.png";
 import home from "@/assets/images/home-2.png";
 import key from "@/assets/images/key.png";
-import Offerherosection from "@/components/public/Offerherosection";
+import { usePageStore } from '@/store/customerCareStore';
+import FeaturedHeroSection from "@/components/home/FeaturedHeroSection";
+import Loader from '@/components/Loader'
+import { useLangSync } from "@/hooks/useLangSync";
 
 export default function Profile() {
   const { t } = useTranslation();
   const { profile, isLoading, error, fetchProfile, updateProfile } = useProfileStore();
+  const { page, fetchPage, loading: pageLoading } = usePageStore();
+  const { lang } = useLangSync();
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -40,7 +45,9 @@ export default function Profile() {
   // Fetch profile data on component mount
   useEffect(() => {
     fetchProfile();
-  }, [fetchProfile]);
+    // Fetch banner data from backend
+    fetchPage("profilepagebaner", lang);
+  }, [fetchProfile, fetchPage, lang]);
 
   // Update form data when profile is loaded
   useEffect(() => {
@@ -580,14 +587,18 @@ export default function Profile() {
             </div>
           )}
           
-          <Offerherosection 
-            title={"افضل اجهزه الكمبيوتر المحموله"} 
-            padding="!px-0" 
-            description={"استمتع بتجربة استثنائية مع أحدث الهواتف بأفضل الأسعار وخدمة ما بعد البيع المميزة"} 
-            style={"!h-[243px]"} 
-            descriptionstyle={"!max-w-[60%]"} 
-            textstyle={"!text-[32px] !max-w-[80%]"}
-          />
+          {/* Show loader while fetching banner data */}
+          {pageLoading && <Loader />}
+          {/* Display banner when data is loaded */}
+          {!pageLoading && page && (
+            <FeaturedHeroSection
+              title={page.title || ""}
+              description={page.short_description || ""}
+              buttonText="تسوق الآن"
+              buttonLink="/products"
+              backgroundImage={page.banner || ""}
+            />
+          )}
         </div>
       </div>
     </Layout>

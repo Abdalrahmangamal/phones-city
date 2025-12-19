@@ -103,7 +103,7 @@ const TestimonialsSection = () => {
           </div>
 
           {/* أزرار التحكم */}
-          <div className="flex mt-4 lg:mt-8 justify-center lg:justify-start w-full lg:w-auto lg:mr-[50px] gap-4">
+          <div className={`flex mt-4 lg:mt-8 justify-center lg:justify-start w-full lg:w-auto lg:mr-[50px] gap-4 ${lang=="en"?"flex-row-reverse":""}`}>
             <button
               className="swiper-button-prev-custom p-2 hover:bg-gray-100 rounded transition-colors"
               onClick={handlePrev}
