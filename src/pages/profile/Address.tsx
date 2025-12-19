@@ -276,6 +276,7 @@ console.log(addresses)
                             <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full animate-ping"></span>
                           )}
                         </button>
+                        {/* Edit button temporarily commented out 
                         <Link
                           to={`/edit-address/${item.id}`}
                           className="text-gray-500 hover:text-[#211C4D] text-xl transition"
@@ -283,6 +284,7 @@ console.log(addresses)
                         >
                           <img src={edit} alt={t("Edit")} />
                         </Link>
+                        */}
                       </div>
                     </div>
                   ))}
