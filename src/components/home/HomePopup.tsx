@@ -23,25 +23,25 @@ const HomePopup: React.FC<HomePopupProps> = ({ onClose }) => {
         showCloseButton={false}
       >
         {/* Header with title and close button */}
-        <div className="flex justify-between items-center p-8 pb-4">
+        <div className="flex justify-between items-center p-6 pb-4 sm:p-8 sm:pb-4">
           {/* Title */}
-          <div className="text-right font-bold text-[#211C4D] text-4xl">
+          <div className="text-right font-bold text-[#211C4D] text-3xl sm:text-4xl">
             {t("NewOffer")}
           </div>
           
           {/* Close Button - Increased size */}
           <button
             onClick={onClose}
-            className="w-12 h-12 rounded-md flex items-center justify-center bg-[#29293A12] border border-[#E2E8F0] hover:bg-[#29293A22] transition-colors"
+            className="w-10 h-10 sm:w-12 sm:h-12 rounded-md flex items-center justify-center bg-[#29293A12] border border-[#E2E8F0] hover:bg-[#29293A22] transition-colors"
             aria-label={lang === "ar" ? "إغلاق" : "Close"}
           >
-            <X className="text-gray-500 w-6 h-6" />
+            <X className="text-gray-500 w-5 h-5 sm:w-6 sm:h-6" />
           </button>
         </div>
 
         {/* Image/Content Area with spacing */}
-        <div className="px-8 pb-8">
-          <div className="h-[400px] flex items-center justify-center bg-white rounded-lg">
+        <div className="px-6 pb-6 sm:px-8 sm:pb-8">
+          <div className="h-[250px] sm:h-[400px] flex items-center justify-center bg-white rounded-lg">
             <img 
               src={offerImage} 
               alt={lang === "ar" ? "عرض جديد" : "New Offer"} 
