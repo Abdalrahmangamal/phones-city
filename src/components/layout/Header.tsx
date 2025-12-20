@@ -158,7 +158,7 @@ export default function Header() {
                             key={p.id}
                             onMouseDown={() => {
                               // navigate to product page
-                              navigate(`/${lang}/singleproduct/${p.id}`);
+                              navigate(`/${lang}/singleproduct/${p.slug}`);
                             }}
                             className="flex items-center gap-3 p-3 hover:bg-gray-100 cursor-pointer"
                           >

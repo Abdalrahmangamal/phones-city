@@ -9,7 +9,7 @@ import Filter from "@/components/public/Filter";
 import { useCategoriesStore } from "@/store/categories/useCategoriesStore";
 import type { Product } from "@/types/index";
 
-export default function Trademarkbestoffer() {
+export default function SpecialOffersPage() {
   const navigate = useNavigate();
   const { lang } = useLangSync();
   const { t } = useTranslation(); // استدعاء دالة الترجمة

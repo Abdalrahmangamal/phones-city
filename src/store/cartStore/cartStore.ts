@@ -27,9 +27,12 @@ interface CartCategory {
 }
 
 interface CartItem {
-  id: number;
+  id: number;              // هذا هو cart_item_id (مثل 125)
   product: CartProduct;
   category: CartCategory;
+  quantity: number;        // كمية هذا العنصر في السلة
+  price: string;
+  subtotal: number;
 }
 
 interface CartState {
@@ -40,7 +43,8 @@ interface CartState {
   fetchCart: () => Promise<void>;
   addToCart: (id: number, quantity: number, isOption: boolean) => Promise<void>;
   deleteToCart: (productId: number) => Promise<void>;
-  deletefromCart: (productId: number) => Promise<void>;
+  deletefromCart: (cartItemId: number) => Promise<void>;
+  updateQuantity: (cartItemId: number, newQuantity: number) => Promise<void>; // جديدة
 }
 
 const baseUrl = import.meta.env.VITE_BASE_URL;
@@ -50,91 +54,77 @@ export const useCartStore = create<CartState>((set, get) => ({
   error: null,
   items: [],
   total: 0,
+
   // ----------------- GET CART ------------------
-fetchCart: async () => {
-  try {
-    const token = localStorage.getItem("token") ;
-    const res = await axios.get(`${baseUrl}api/v1/cart`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        Accept: "application/json",
-      },
-    });
-
-    const newItems = res?.data?.data?.items || [];
-    const newTotal = res?.data?.data?.total || 0;
-
-    const { items, total } = get();
-
-    // امنع الـ set لو مفيش تغيير حقيقي
-    if (
-      JSON.stringify(items) === JSON.stringify(newItems) &&
-      total === newTotal
-    ) {
-      return; // مفيش تغيير → مفيش re-render → مفيش loop
-    }
-
-    set({
-      items: newItems,
-      total: newTotal,
-      loading: false,
-    });
-  } catch (err) {
-    set({ error: "Failed to fetch cart", loading: false });
-  }
-},
-
-
-  // ----------------- ADD TO CART ------------------
-addToCart: async (id: number, quantity: number, isOption: boolean) => {
-  try {
-    const token = localStorage.getItem("token");
-
-    if (!token) {
-      console.warn("No token found");
-      return;
-    }
-
-    // تحديد الـ Params حسب نوع الإرسال
-    const params = isOption
-      ? { product_option_id: id, quantity }
-      : { product_id: id, quantity };
-
-    const res = await axios.post(
-      `${baseUrl}api/v1/cart`,
-      {}, // Body فارغ — الـ API لا يقبل body
-      {
-        params,
+  fetchCart: async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const res = await axios.get(`${baseUrl}api/v1/cart`, {
         headers: {
           Authorization: `Bearer ${token}`,
           Accept: "application/json",
         },
+      });
+
+      const newItems = res?.data?.data?.items || [];
+      const newTotal = res?.data?.data?.total || 0;
+
+      const { items, total } = get();
+
+      if (
+        JSON.stringify(items) === JSON.stringify(newItems) &&
+        total === newTotal
+      ) {
+        return;
       }
-    );
 
-    console.log("CART ADDED SUCCESS:", res.data);
+      set({
+        items: newItems,
+        total: newTotal,
+        loading: false,
+      });
+    } catch (err) {
+      set({ error: "Failed to fetch cart", loading: false });
+    }
+  },
 
-    // تحديث الكارت بعد الإضافة
-    await get().fetchCart();
+  // ----------------- ADD TO CART ------------------
+  addToCart: async (id: number, quantity: number, isOption: boolean) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        console.warn("No token found");
+        return;
+      }
 
-  } catch (error: any) {
-    console.error(
-      "Add to cart error:",
-      error?.response?.data || error.message
-    );
-  }
-},
+      const params = isOption
+        ? { product_option_id: id, quantity }
+        : { product_id: id, quantity };
 
+      await axios.post(
+        `${baseUrl}api/v1/cart`,
+        {},
+        {
+          params,
+          headers: {
+            Authorization: `Bearer ${token}`,
+            Accept: "application/json",
+          },
+        }
+      );
 
+      await get().fetchCart();
+    } catch (error: any) {
+      console.error("Add to cart error:", error?.response?.data || error.message);
+    }
+  },
 
-
+  // ----------------- DELETE (باستخدام product_id) ------------------
   deleteToCart: async (productId: number) => {
     try {
       const token = localStorage.getItem("token");
-
       set({ loading: true, error: null });
 
-      // 1) ابعت الريكوست وخزّن الرد
       const res = await axios.delete(`${baseUrl}api/v1/cart/product`, {
         params: { product_id: productId },
         headers: {
@@ -143,52 +133,82 @@ addToCart: async (id: number, quantity: number, isOption: boolean) => {
         },
       });
 
-      // 2) اطبع الريسبونس كامل
-      console.log("remove frome card:", res.data);
-
+      console.log("remove from cart:", res.data);
+      await get().fetchCart(); // تحديث السلة بعد الحذف
       set({ loading: false });
     } catch (err: any) {
-      console.log("remove frome card:", err?.response);
-
+      console.log("remove error:", err?.response);
       set({
-        error: err?.response?.data?.message || "Failed to add to cart",
+        error: err?.response?.data?.message || "Failed to remove from cart",
         loading: false,
       });
     }
   },
-deletefromCart: async (productId: number) => {
-  try {
-    const token = localStorage.getItem("token");
 
-    set({ loading: true, error: null });
+  // ----------------- DELETE (باستخدام cart_item_id) ------------------
+  deletefromCart: async (cartItemId: number) => {
+    try {
+      const token = localStorage.getItem("token");
+      set({ loading: true, error: null });
 
-    const res = await axios.delete(`${baseUrl}api/v1/cart/${productId}`, {
-      params:{
-        id:productId
-      },
-      headers: {
-        Authorization: `Bearer ${token}`,
-        Accept: "application/json",
-      },
-    });
+      const res = await axios.delete(`${baseUrl}api/v1/cart/${cartItemId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: "application/json",
+        },
+      });
 
-    console.log("Removed from cart:", res.data);
+      console.log("Removed from cart:", res.data);
+      await get().fetchCart(); // تحديث كامل بدلاً من الفلترة المحلية
+      set({ loading: false });
+    } catch (err: any) {
+      console.log("Remove error:", err?.response);
+      set({
+        error: err?.response?.data?.message || "Failed to remove from cart",
+        loading: false,
+      });
+    }
+  },
 
-    // بعد الحذف من الباك، امسح من الواجهة
-    set((state) => ({
-      items: state.items.filter((item) => item.id !== productId),
-      loading: false,
-    }));
+  // ----------------- UPDATE QUANTITY (جديدة) ------------------
+  updateQuantity: async (cartItemId: number, newQuantity: number) => {
+    if (newQuantity < 1) {
+      await get().deletefromCart(cartItemId);
+      return;
+    }
 
-  } catch (err: any) {
-    console.log("Remove error:", err?.response);
+    try {
+      set({ loading: true, error: null });
 
-    set({
-      error: err?.response?.data?.message || "Failed to remove from cart",
-      loading: false,
-    });
-  }
-},
+      const token = localStorage.getItem("token");
+      if (!token) {
+        console.warn("No token found");
+        return;
+      }
 
+      // PUT /api/v1/cart/{id} مع body { quantity: newQuantity }
+      await axios.put(
+        `${baseUrl}api/v1/cart/${cartItemId}`,
+        { quantity: newQuantity },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
+      // تحديث السلة من السيرفر لضمان الدقة
+      await get().fetchCart();
+
+      set({ loading: false });
+    } catch (error: any) {
+      console.error("Update quantity error:", error?.response?.data || error.message);
+      set({
+        error: error?.response?.data?.message || "فشل تحديث الكمية",
+        loading: false,
+      });
+    }
+  },
 }));

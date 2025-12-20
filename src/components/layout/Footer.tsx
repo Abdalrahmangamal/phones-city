@@ -5,7 +5,7 @@ import { useLangSync } from "@/hooks/useLangSync";
 
 import tiktok from "../../assets/images/tiktok.png";
 import snapchat from "../../assets/images/snapchat.png";
-import whatsapp from "../../assets/images/whatsapp.png";
+// import whatsapp from "../../assets/images/whatsapp.png";
 import x from "../../assets/images/x.png";
 import insta from "../../assets/images/insta.png";
 import facebook from "../../assets/images/facebook.png";
@@ -162,7 +162,7 @@ const Footer: React.FC = () => {
                   {[
                     { icon: tiktok, url: "https://www.tiktok.com/@madinatalhawatif?_r=1&_t=ZS-92MSlSSc6D2" },
                     { icon: snapchat, url: "https://www.snapchat.com/add/madinat6100?share_id=qzDj5oOT5kM&locale=ar-SA" },
-                    { icon: whatsapp, url: "#" },
+                    // { icon: whatsapp, url: "#" },
                     { icon: x, url: "https://x.com/AlhwatfMdy43074" },
                     { icon: insta, url: "https://www.instagram.com/cityphone.sa?igsh=cnVoeGpncWF0Mjc5" },
                     { icon: facebook, url: "https://www.facebook.com/share/14PAhVuoWz7/" }
