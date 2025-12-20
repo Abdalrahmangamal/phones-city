@@ -6,6 +6,7 @@ import Offerherosection from "@/components/public/Offerherosection";
 import Sliderbycategory from "@/components/public/Sliderbycategory";
 import BannerSection from "@/components/public/BannerSection";
 import Parttner from "@/components/public/Parttner";
+import Filter from "@/components/public/Filter";
 import sceondbanner from "../assets/images/sceondbanner.png";
 import type { Product } from '@/types/index';
 import { useProductsStore } from "@/store/productsStore";
@@ -20,6 +21,8 @@ export default function BestSellerPage() {
   const { categories, fetchCategories } = useCategoriesStore(); 
   const [products, setProducts] = useState<Product[]>([]);
   const [selectedSubCategory, setSelectedSubCategory] = useState<number | null>(null);
+  const [sortOption, setSortOption] = useState<string>("best_seller");
+  const [priceRange, setPriceRange] = useState<[number | null, number | null]>([null, null]);
 
   useEffect(() => {
     // جلب الفئات عند تحميل الصفحة
@@ -31,7 +34,7 @@ export default function BestSellerPage() {
     try {
       const queryParams: any = {
         best_seller: true,
-        sort_by: "best_seller",
+        sort_by: sortOption,
         sort_order: "desc",
         per_page: 20,
       };
@@ -51,6 +54,14 @@ export default function BestSellerPage() {
         }
       }
 
+      // Apply price range filter
+      if (priceRange[0] !== null) {
+        queryParams.min_price = priceRange[0];
+      }
+      if (priceRange[1] !== null) {
+        queryParams.max_price = priceRange[1];
+      }
+
       
       const data = await fetchProducts(queryParams, lang);
 
@@ -67,8 +78,19 @@ export default function BestSellerPage() {
   };
 
   loadBestSellers();
-}, [lang, selectedSubCategory, categories]);
- 
+}, [lang, selectedSubCategory, categories, sortOption, priceRange]);
+
+  const handleSortChange = (option: string) => {
+    setSortOption(option);
+  };
+
+  const handleCategoryChange = (categoryId: number | null) => {
+    setSelectedSubCategory(categoryId);
+  };
+
+  const handlePriceRangeChange = (minPrice: number | null, maxPrice: number | null) => {
+    setPriceRange([minPrice, maxPrice]);
+  };
 
   return (
     <div>
@@ -95,6 +117,18 @@ export default function BestSellerPage() {
             : t("BestSellers")} 
             products={products} 
             isLoading={loading}
+            filterComponent={
+              <div className="flex justify-center">
+                <Filter 
+                  onSortChange={handleSortChange}
+                  onCategoryChange={handleCategoryChange}
+                  onPriceRangeChange={handlePriceRangeChange}
+                  categories={categories}
+                  minPrice={0}
+                  maxPrice={10000}
+                />
+              </div>
+            }
           />
           <BannerSection image={sceondbanner} />
           <div className="my-12">

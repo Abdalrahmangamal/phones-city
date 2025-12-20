@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { ChevronDown, Grid } from "lucide-react";
 
 interface FilterProps {
@@ -25,6 +25,11 @@ const Filter: React.FC<FilterProps> = ({
   const [selectedSort, setSelectedSort] = useState("created_at");
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
   const [priceRange, setPriceRange] = useState<[number, number]>([minPrice, maxPrice]);
+  const [rangeValues, setRangeValues] = useState<[number, number]>([minPrice, maxPrice]);
+  
+  const minRangeRef = useRef<HTMLInputElement>(null);
+  const maxRangeRef = useRef<HTMLInputElement>(null);
+  const priceSliderRef = useRef<HTMLDivElement>(null);
 
   const sortOptions = [
     { id: "created_at", label: "الأحدث" },
@@ -33,6 +38,20 @@ const Filter: React.FC<FilterProps> = ({
     { id: "best_seller", label: "الأكثر مبيعاً" },
     { id: "average_rating", label: "الأعلى تقييماً" },
   ];
+
+  // Update slider position when range values change
+  useEffect(() => {
+    if (priceSliderRef.current) {
+      const minVal = rangeValues[0];
+      const maxVal = rangeValues[1];
+      
+      const minPercent = (minVal / maxPrice) * 100;
+      const maxPercent = (maxVal / maxPrice) * 100;
+      
+      priceSliderRef.current.style.left = `${minPercent}%`;
+      priceSliderRef.current.style.right = `${100 - maxPercent}%`;
+    }
+  }, [rangeValues, maxPrice]);
 
   const handleSortChange = (optionId: string) => {
     setSelectedSort(optionId);
@@ -47,6 +66,38 @@ const Filter: React.FC<FilterProps> = ({
   const handlePriceRangeChange = (newMin: number, newMax: number) => {
     setPriceRange([newMin, newMax]);
     onPriceRangeChange(newMin, newMax);
+  };
+
+  const handleMinInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = parseInt(e.target.value) || 0;
+    if (value <= rangeValues[1] - 500) {
+      setRangeValues([value, rangeValues[1]]);
+      handlePriceRangeChange(value, rangeValues[1]);
+    }
+  };
+
+  const handleMaxInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = parseInt(e.target.value) || 0;
+    if (value >= rangeValues[0] + 500) {
+      setRangeValues([rangeValues[0], value]);
+      handlePriceRangeChange(rangeValues[0], value);
+    }
+  };
+
+  const handleMinRangeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = parseInt(e.target.value);
+    if (value <= rangeValues[1] - 500) {
+      setRangeValues([value, rangeValues[1]]);
+      handlePriceRangeChange(value, rangeValues[1]);
+    }
+  };
+
+  const handleMaxRangeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = parseInt(e.target.value);
+    if (value >= rangeValues[0] + 500) {
+      setRangeValues([rangeValues[0], value]);
+      handlePriceRangeChange(rangeValues[0], value);
+    }
   };
 
   return (
@@ -170,43 +221,63 @@ const Filter: React.FC<FilterProps> = ({
           
           {isPriceOpen && (
             <div className="p-4 bg-[#FDFDFD] rounded-b-lg">
-              {/* Price Range Slider Placeholder - Ready for API integration */}
-              <div className="mb-4">
-                <div className="flex justify-between text-[#211C4D] font-roboto text-[16px] leading-[150%] mb-2">
-                  <span>من: {priceRange[0].toLocaleString()} ريال</span>
-                  <span>إلى: {priceRange[1].toLocaleString()} ريال</span>
+              {/* Price Inputs */}
+              <div className="flex gap-2 mb-4">
+                <div className="flex flex-col">
+                  <span className="text-[#211C4D] font-roboto text-[14px] mb-1">الحد الأدنى</span>
+                  <input
+                    type="number"
+                    value={rangeValues[0]}
+                    onChange={handleMinInputChange}
+                    className="w-full p-2 border border-gray-300 rounded text-[#211C4D] text-[14px]"
+                  />
                 </div>
-                <div className="relative h-2 bg-gray-200 rounded-full">
-                  <div 
-                    className="absolute h-2 bg-[#211C4D] rounded-full" 
-                    style={{ 
-                      left: `${(priceRange[0] / maxPrice) * 100}%`, 
-                      right: `${100 - (priceRange[1] / maxPrice) * 100}%` 
-                    }}
-                  ></div>
-                  {/* Thumb controls would go here for actual slider implementation */}
-                </div>
-                <div className="flex justify-between text-[14px] text-gray-500 mt-1">
-                  <span>0</span>
-                  <span>{maxPrice.toLocaleString()}</span>
+                <div className="flex flex-col">
+                  <span className="text-[#211C4D] font-roboto text-[14px] mb-1">الحد الأقصى</span>
+                  <input
+                    type="number"
+                    value={rangeValues[1]}
+                    onChange={handleMaxInputChange}
+                    className="w-full p-2 border border-gray-300 rounded text-[#211C4D] text-[14px]"
+                  />
                 </div>
               </div>
               
-              <div className="flex gap-2 mt-4">
-                <input
-                  type="number"
-                  value={priceRange[0]}
-                  onChange={(e) => handlePriceRangeChange(Number(e.target.value), priceRange[1])}
-                  className="w-full p-2 border border-gray-300 rounded text-[#211C4D]"
-                  placeholder="الحد الأدنى"
-                />
-                <input
-                  type="number"
-                  value={priceRange[1]}
-                  onChange={(e) => handlePriceRangeChange(priceRange[0], Number(e.target.value))}
-                  className="w-full p-2 border border-gray-300 rounded text-[#211C4D]"
-                  placeholder="الحد الأقصى"
-                />
+              {/* Slider Container */}
+              <div className="relative h-2 bg-gray-200 rounded-full mb-6">
+                {/* Slider Track */}
+                <div 
+                  ref={priceSliderRef}
+                  className="absolute h-2 bg-[#211C4D] rounded-full top-0"
+                ></div>
+                
+                {/* Range Inputs */}
+                <div className="relative h-2">
+                  <input
+                    ref={minRangeRef}
+                    type="range"
+                    min={minPrice}
+                    max={maxPrice}
+                    value={rangeValues[0]}
+                    onChange={handleMinRangeChange}
+                    className="absolute w-full h-2 bg-transparent appearance-none pointer-events-auto top-0 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#211C4D] [&::-webkit-slider-thumb]:cursor-pointer"
+                  />
+                  <input
+                    ref={maxRangeRef}
+                    type="range"
+                    min={minPrice}
+                    max={maxPrice}
+                    value={rangeValues[1]}
+                    onChange={handleMaxRangeChange}
+                    className="absolute w-full h-2 bg-transparent appearance-none pointer-events-auto top-0 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#211C4D] [&::-webkit-slider-thumb]:cursor-pointer"
+                  />
+                </div>
+              </div>
+              
+              {/* Price Labels */}
+              <div className="flex justify-between text-[12px] text-gray-500">
+                <span>{minPrice.toLocaleString()} ريال</span>
+                <span>{maxPrice.toLocaleString()} ريال</span>
               </div>
             </div>
           )}
