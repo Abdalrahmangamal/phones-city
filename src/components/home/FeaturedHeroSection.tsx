@@ -33,15 +33,15 @@ const FeaturedHeroSection = ({
   // For both languages, use column layout (text above button)
   const contentLayoutClass = "flex-col";
   
-  // Determine text container width
-  const textContainerClass = "md:max-w-[30%]";
+  // Determine text container width - full width for profile page
+  const textContainerClass = "w-full";
   
   // Determine the button text based on language
   const translatedButtonText = lang === "ar" ? t("ShopNow") : t("ShopNowEn");
   
   return (
-    <div className="lg:px-[90px] px-2 md:pt-0 pt-[50px]">
-      <div className="w-full max-w-[1264px] mt-[50px] h-[230px] md:h-[351px] rounded-lg mb-16 relative overflow-hidden">
+    <div className="w-full">
+      <div className="w-full h-[200px] rounded-lg mb-6 relative overflow-hidden">
         {/* Background Image */}
         {backgroundImage ? (
           <img 
