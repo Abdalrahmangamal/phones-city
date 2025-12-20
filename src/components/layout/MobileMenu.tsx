@@ -64,8 +64,8 @@
         >
           {/* Header */}
           <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200">
-            <h2 className="text-black text-xl font-bold">مدينة الهواتف</h2>
-            <button onClick={onClose} className="p-2 rounded-full bg-gray-100" aria-label="Close menu">
+            <h2 className="text-black text-xl font-bold">{t("CityPhones")}</h2>
+            <button onClick={onClose} className="p-2 rounded-full bg-gray-100" aria-label={lang === "ar" ? "إغلاق القائمة" : "Close menu"}>
               <X className="w-5 h-5" />
             </button>
           </div>
@@ -76,7 +76,7 @@
               onClick={() => setOpenSections(!openSections)}
               className="flex items-center justify-between w-full px-3 py-2 font-semibold text-black hover:bg-gray-100 rounded-lg"
             >
-              <span>الأقسام</span>
+              <span>{t("Sections")}</span>
               <ChevronDown className={`w-5 h-5 transition-transform ${openSections ? "rotate-180" : ""}`} />
             </button>
 
@@ -141,7 +141,7 @@
                   <DropdownMenuTrigger asChild>
                     <div className="flex items-center gap-1 px-3 py-1.5 rounded-md border border-gray-200 bg-white hover:bg-gray-50 text-gray-800 text-sm font-medium shadow-sm transition-all duration-200">
                       <Globe className="h-4 w-4 text-gray-600" />
-                      <span className="text-gray-700">عربي</span>
+                      <span className="text-gray-700">{lang === "ar" ? "عربي" : "English"}</span>
                       <svg
                         width="16"
                         height="16"
@@ -163,13 +163,13 @@
                       onClick={() => i18n.changeLanguage("ar")}
                       className="px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
                     >
-                      العربية
+                      {t("Arabic")}
                     </DropdownMenuItem>
                     <DropdownMenuItem
                       onClick={() => i18n.changeLanguage("en")}
                       className="px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
                     >
-                      English
+                      {t("English")}
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>

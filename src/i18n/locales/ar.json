@@ -45,6 +45,8 @@
   "AboutMora": "عن مورا",
   "AboutCoara": "عن كوارا",
   "Delete All": "مسح الكل",
+  "Arabic": "العربية",
+  "English": "English",
 
   "AboutCityPhones": "عن مدينة الهواتف",
   "CityPhones": "مدينة الهواتف ",
@@ -211,5 +213,6 @@
   "SpecialOffersForYou": "عروض خاصة لك",
   "Login": "تسجيل الدخول",
   "ShopNow": "تسوق الأن",
-  "ShopNowEn": "Shop Now"
+  "ShopNowEn": "Shop Now",
+  "NewOffer": "عرض جديد"
 }

@@ -44,6 +44,8 @@
   "AboutMora": "About Mora",
   "AboutCoara": "About Coara",
   "Delete All": "Delete All",
+  "Arabic": "Arabic",
+  "English": "English",
 
   "AboutCityPhones": "About City Phones",
   "WhoWeAre": "Who We Are",
@@ -211,5 +213,6 @@
 
   "SpecialOffersForYou": "Special Offers for you",
   "ShopNow": "Shop Now",
-  "ShopNowEn": "Shop Now"
+  "ShopNowEn": "Shop Now",
+  "NewOffer": "New Offer"
 }

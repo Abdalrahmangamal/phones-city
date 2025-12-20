@@ -4,7 +4,6 @@ import { ShoppingCart,Globe, Menu } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useLangSync } from "@/hooks/useLangSync";
 import { useTranslation } from "react-i18next";
-import { t } from "i18next";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,6 +15,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "../ui/button";
+
 interface MobileNavbarProps {
   onMenuToggle: () => void;
   onSectionToggle: () => void;
@@ -27,7 +27,7 @@ export default function MobileNavbar({
   onSectionToggle,
 }: MobileNavbarProps) {
   const { lang } = useLangSync();
-  const { i18n } = useTranslation();
+  const { i18n, t } = useTranslation();
   const [showLang, setShowLang] = useState(false);
 
   return (
@@ -39,7 +39,7 @@ export default function MobileNavbar({
   className="flex items-center gap-2 text-white"
 >
   <Menu className="w-6 h-6" />
-  <span className="text-sm font-semibold">الأقسام</span>
+  <span className="text-sm font-semibold">{t("Sections")}</span>
 </button>
 
 
@@ -51,7 +51,7 @@ export default function MobileNavbar({
                   <div className="text-sm bg-transparent">
                     <button className="flex items-center gap-1 text-sm opacity-90 hover:opacity-100">
                       <Globe className="h-4 w-4" />
-                      عربي
+                      {lang === "ar" ? "عربي" : "English"}
                       <svg
                         width="16"
                         height="16"
@@ -59,7 +59,7 @@ export default function MobileNavbar({
                         fill="none"
                         xmlns="http://www.w3.org/2000/svg"
                         className={`transition-transform duration-200 ${
-                          open ? "rotate-180" : ""
+                          showLang ? "rotate-180" : ""
                         }`}
                       >
                         <path
@@ -106,7 +106,7 @@ export default function MobileNavbar({
             className="w-[90px] h-[30px] rounded-[16px] bg-[#FFFFFF1A] flex items-center justify-center text-[10px] font-[400] 
             text-white transition-all duration-300 hover:bg-white hover:text-[#211C4D]"
           >
-            تسجيل الدخول
+            {lang === "ar" ? "تسجيل الدخول" : "Login"}
           </Link>
         </div>
       </div>

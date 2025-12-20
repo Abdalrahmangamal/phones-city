@@ -5,12 +5,17 @@ import {
   DialogContent,
 } from "@/components/ui/dialog";
 import offerImage from "@/assets/images/Group 1000005945.png";
+import { useTranslation } from "react-i18next";
+import { useLangSync } from "@/hooks/useLangSync";
 
 interface HomePopupProps {
   onClose: () => void;
 }
 
 const HomePopup: React.FC<HomePopupProps> = ({ onClose }) => {
+  const { t } = useTranslation();
+  const { lang } = useLangSync();
+
   return (
     <Dialog open onOpenChange={(open) => !open && onClose()}>
       <DialogContent 
@@ -21,16 +26,16 @@ const HomePopup: React.FC<HomePopupProps> = ({ onClose }) => {
         <div className="flex justify-between items-center p-8 pb-4">
           {/* Title */}
           <div className="text-right font-bold text-[#211C4D] text-4xl">
-            عرض جديد
+            {t("NewOffer")}
           </div>
           
-          {/* Close Button */}
+          {/* Close Button - Increased size */}
           <button
             onClick={onClose}
-            className="w-9 h-9 rounded-md flex items-center justify-center bg-[#29293A12] border border-[#E2E8F0]"
-            aria-label="إغلاق"
+            className="w-12 h-12 rounded-md flex items-center justify-center bg-[#29293A12] border border-[#E2E8F0] hover:bg-[#29293A22] transition-colors"
+            aria-label={lang === "ar" ? "إغلاق" : "Close"}
           >
-            <X className="text-gray-500 w-2.5 h-2.5 border-2" />
+            <X className="text-gray-500 w-6 h-6" />
           </button>
         </div>
 
@@ -39,7 +44,7 @@ const HomePopup: React.FC<HomePopupProps> = ({ onClose }) => {
           <div className="h-[400px] flex items-center justify-center bg-white rounded-lg">
             <img 
               src={offerImage} 
-              alt="عرض جديد" 
+              alt={lang === "ar" ? "عرض جديد" : "New Offer"} 
               className="max-h-full max-w-full object-contain"
               onError={(e) => {
                 // Fallback to placeholder if image doesn't load
