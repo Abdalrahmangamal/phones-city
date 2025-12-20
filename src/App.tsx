@@ -27,12 +27,7 @@ import Favourite from "./pages/profile/Favourite";
 import Trademarks from "./pages/products/Trademarks";
 import BestSellerPage from "./pages/BestSellerPage";
 import Trademarkscategory from "./pages/Trademarkscategory";
-<<<<<<< HEAD
-import Trademarkbestoffer from "./pages/products/Trademarkbestoffer";
-=======
 import SpecialOffersPage from "./pages/products/SpecialOffersPage";
-import ScrollToTop from "@/components/ScrollToTop";
->>>>>>> 7a77f733f252806e3ab5bd991be39f607f8a5238
 import Singleproduct from "./pages/products/Singleproduct";
 import SearchResults from "./pages/products/SearchResults";
 import CategorySingle from "./pages/products/CategorySingle";
@@ -73,7 +68,7 @@ function LangWrapper() {
       </Route>
       <Route path="/myorder" element={<Myorder/>} />
       <Route path="/bills" element={<Bills/>} />
-      <Route path="/singlebills/:id" element={<Singlebills/>} /> 
+      <Route path="/singlebills/:id" element={<Singlebills/>} /> {/* ✅ أضف :id هنا */}
       <Route path="/address" element={<Address/>} />
       <Route path="/singleaddress" element={<Singleaddress/>} />
       <Route path="/discounts" element={<Discounts/>} />
@@ -81,11 +76,7 @@ function LangWrapper() {
       <Route path="/trademarks/:id" element={<Trademarks/>} />
       <Route path="/BestSellerPage" element={<BestSellerPage/>} />
       <Route path="/trademarkscategory" element={<Trademarkscategory/>} />
-<<<<<<< HEAD
-      <Route path="/SpecialOffersPage" element={<Trademarkbestoffer/>} />
-=======
       <Route path="/SpecialOffersPage" element={<SpecialOffersPage/>} />
->>>>>>> 7a77f733f252806e3ab5bd991be39f607f8a5238
       <Route path="/singleproduct/:id" element={<Singleproduct/>} />
       <Route path="/checkout" element={<Checkout/>} />
       <Route path="categorySingle/:id/:productmain?" element={<CategorySingle/>} />
