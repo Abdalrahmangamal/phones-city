@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useLangSync } from "@/hooks/useLangSync";
 import { useTranslation } from "react-i18next"; // أو أي طريقة تستخدمها للترجمة
 
-export default function Trademarkbestoffer() {
+export default function SpecialOffersPage() {
   const navigate = useNavigate();
   const { lang } = useLangSync();
   const { t } = useTranslation(); // استدعاء دالة الترجمة

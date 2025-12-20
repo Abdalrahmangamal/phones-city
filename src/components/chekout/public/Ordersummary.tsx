@@ -29,7 +29,11 @@ const paymentMarketingTexts: Record<number, (amount: string) => string> = {
   6: () => "استخدم 6 دفعات بدون فائدة وتوفير رسوم. لعملائنا الكاملين",
 };
 
-export default function OrderSummary() {
+interface OrderSummaryProps {
+  onTotalUpdate?: (total: number) => void;
+}
+
+export default function OrderSummary({ onTotalUpdate }: OrderSummaryProps) {
   const { items, total, loading, fetchCart } = useCartStore();
   const [promoCode, setPromoCode] = useState("");
   const [usePoints, setUsePoints] = useState(false);
@@ -62,6 +66,12 @@ export default function OrderSummary() {
       finalTotal += processingFee;
     }
   }
+
+  useEffect(() => {
+    if (onTotalUpdate) {
+      onTotalUpdate(finalTotal);
+    }
+  }, [finalTotal, onTotalUpdate]);
 
   const paymentProviders = paymentMethods.map((p) => {
     const amount = parseFloat(p.total_price).toLocaleString("ar-SA");

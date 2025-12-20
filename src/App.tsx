@@ -28,7 +28,7 @@ import Trademarks from "./pages/products/Trademarks";
 import BestSellerPage from "./pages/BestSellerPage";
 import SearchResults from "./pages/products/SearchResults";
 import Trademarkscategory from "./pages/Trademarkscategory";
-import Trademarkbestoffer from "./pages/products/Trademarkbestoffer";
+import SpecialOffersPage from "./pages/products/SpecialOffersPage";
 import ScrollToTop from "@/components/ScrollToTop";
 import Singleproduct from "./pages/products/Singleproduct";
 import ChatBot from "./components/layout/Chatbot";
@@ -79,7 +79,7 @@ function LangLayout() {
       </Route>
       <Route path="/myorder" element={<Myorder/>} />
       <Route path="/bills" element={<Bills/>} />
-      <Route path="/singlebills/:id" element={<Singlebills/>} /> {/* ✅ أضف :id هنا */}
+      <Route path="/singlebills/:id" element={<Singlebills/>} /> 
       <Route path="/address" element={<Address/>} />
       <Route path="/singleaddress" element={<Singleaddress/>} />
       <Route path="/discounts" element={<Discounts/>} />
@@ -87,7 +87,7 @@ function LangLayout() {
       <Route path="/trademarks/:id" element={<Trademarks/>} />
       <Route path="/BestSellerPage" element={<BestSellerPage/>} />
       <Route path="/trademarkscategory" element={<Trademarkscategory/>} />
-      <Route path="/trademarkbestoffer" element={<Trademarkbestoffer/>} />
+      <Route path="/SpecialOffersPage" element={<SpecialOffersPage/>} />
       <Route path="/singleproduct/:id" element={<Singleproduct/>} />
       <Route path="/checkout" element={<Checkout/>} />
       <Route path="categorySingle/:id/:productmain?" element={<CategorySingle/>} />

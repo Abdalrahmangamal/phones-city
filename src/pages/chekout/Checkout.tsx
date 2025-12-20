@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import order from "@/assets/images/order.png";
 import step2 from "@/assets/images/step2.png";
 import step3 from "@/assets/images/step3.png";
-import Cheackoutsummary from "@/components/chekout/Cheackoutsummary";
+import Cheackoutsummary from "@/components/chekout/Checkoutsummary";
 import Checkoutaddress from "@/components/chekout/Checkoutaddress";
 import Checkoutpayment from "@/components/chekout/Checkoutpayment";
 import Layout from "@/components/layout/Layout";
