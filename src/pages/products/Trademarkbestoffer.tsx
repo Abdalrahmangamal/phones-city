@@ -1,25 +1,102 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Bestseller from "@/components/home/Bestseller";
-import Layout from "@/components/layout/Layout";
+import Layout from "@/components/layout/layout";
 import { useProductsStore } from "@/store/productsStore";
 import { useNavigate } from "react-router-dom";
 import { useLangSync } from "@/hooks/useLangSync";
 import { useTranslation } from "react-i18next"; // أو أي طريقة تستخدمها للترجمة
+import Filter from "@/components/public/Filter";
+import { useCategoriesStore } from "@/store/categories/useCategoriesStore";
+import type { Product } from "@/types/index";
 
 export default function Trademarkbestoffer() {
   const navigate = useNavigate();
   const { lang } = useLangSync();
   const { t } = useTranslation(); // استدعاء دالة الترجمة
+  const { categories, fetchCategories } = useCategoriesStore();
 
   // استخدم الـ response مباشرة كمصفوفة منتجات
   const { response: products, loading: productsLoading, error: storeError, fetchProducts } = useProductsStore();
+  
+  const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
+  const [sortOption, setSortOption] = useState<string>("created_at");
+  const [priceRange, setPriceRange] = useState<[number | null, number | null]>([null, null]);
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
 
   useEffect(() => {
     fetchProducts({
       has_offer: 1,
       per_page: 100,
     }, lang);
+    
+    // جلب الفئات للفلتر
+    fetchCategories(lang);
   }, [lang, fetchProducts]);
+
+  // تطبيق الفلاتر على المنتجات
+  useEffect(() => {
+    let result = Array.isArray(products) ? [...products] : [];
+    
+    // تطبيق فلتر الفئة
+    if (selectedCategory !== null) {
+      result = result.filter(product => product.category?.id === selectedCategory);
+    }
+    
+    // تطبيق فلتر النطاق السعري
+    if (priceRange[0] !== null || priceRange[1] !== null) {
+      result = result.filter(product => {
+        const price = parseFloat(product.final_price || product.original_price);
+        const min = priceRange[0];
+        const max = priceRange[1];
+        
+        if (min !== null && price < min) return false;
+        if (max !== null && price > max) return false;
+        return true;
+      });
+    }
+    
+    // تطبيق الترتيب
+    switch (sortOption) {
+      case "created_at":
+        // الترتيب الافتراضي
+        break;
+      case "main_price":
+        result = [...result].sort((a, b) => {
+          const priceA = parseFloat(a.final_price || a.original_price);
+          const priceB = parseFloat(b.final_price || b.original_price);
+          return priceA - priceB;
+        });
+        break;
+      case "name_ar":
+        // Since name_ar doesn't exist in Product type, we'll use name field
+        result = [...result].sort((a, b) => 
+          (a.name || "").localeCompare(b.name || "")
+        );
+        break;
+      case "best_seller":
+        // Since sales_count doesn't exist, we'll skip this sorting option
+        break;
+      case "average_rating":
+        // Since average_rating doesn't exist, we'll skip this sorting option
+        break;
+      default:
+        break;
+    }
+    
+    setFilteredProducts(result);
+  }, [products, selectedCategory, sortOption, priceRange]);
+
+  const handleSortChange = (option: string) => {
+    setSortOption(option);
+  };
+
+  const handleCategoryChange = (categoryId: number | null) => {
+    setSelectedCategory(categoryId);
+  };
+
+  const handlePriceRangeChange = (minPrice: number | null, maxPrice: number | null) => {
+    setPriceRange([minPrice, maxPrice]);
+  };
 
   // حالة الخطأ من الـ store
   if (storeError) {
@@ -81,9 +158,21 @@ export default function Trademarkbestoffer() {
             <div className="max-w-8xl mx-auto -mt-8">
               <Bestseller 
                 title={t('AllOffers')} 
-                products={productsList}
+                products={filteredProducts.length > 0 ? filteredProducts : productsList}
                 btn={false}
                 style="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+                filterComponent={
+                  <div className="flex justify-center">
+                    <Filter 
+                      onSortChange={handleSortChange}
+                      onCategoryChange={handleCategoryChange}
+                      onPriceRangeChange={handlePriceRangeChange}
+                      categories={categories}
+                      minPrice={0}
+                      maxPrice={10000}
+                    />
+                  </div>
+                }
               />
             </div>
           ) : (

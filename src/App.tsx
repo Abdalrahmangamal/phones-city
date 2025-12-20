@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate, useParams } from "react-router-
 import { useSettings } from "@/store/settings";
 import i18n from "@/i18n";
 import Home from "@/pages/Home";
-import About from "@/pages/About";
+import About from "@/pages/about";
 import Servces from "@/pages/Servces";
 import Contact from "@/pages/Contact";
 import Offers from "./pages/products/Offers";
@@ -26,34 +26,23 @@ import Discounts from "./pages/profile/Discounts";
 import Favourite from "./pages/profile/Favourite";
 import Trademarks from "./pages/products/Trademarks";
 import BestSellerPage from "./pages/BestSellerPage";
-import SearchResults from "./pages/products/SearchResults";
 import Trademarkscategory from "./pages/Trademarkscategory";
 import Trademarkbestoffer from "./pages/products/Trademarkbestoffer";
-import ScrollToTop from "@/components/ScrollToTop";
 import Singleproduct from "./pages/products/Singleproduct";
-import ChatBot from "./components/layout/Chatbot";
-import Checkout from '@/pages/chekout/Checkout';
-import Protectedroutse from '@/store/protectedroutse';
-import CategorySingle from "@/pages/products/CategorySingle";
+import SearchResults from "./pages/products/SearchResults";
+import CategorySingle from "./pages/products/CategorySingle";
+import Checkout from "./pages/chekout/Checkout";
+import Protectedroutse from "./store/protectedroutse";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import ScrollToTop from "./components/ScrollToTop";
 
-// استيراد ToastContainer من react-toastify
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import React, { useEffect } from "react"; // تأكد من استيراد React و useEffect
-
-function LangLayout() {
-  const { lang: urlLang } = useParams();
-  const { lang, setLang } = useSettings();
-
-  // ✅ جميع Hooks في الأعلى بدون شروط
-  useEffect(() => {
-    if (urlLang && urlLang !== lang) {
-      setLang(urlLang as "ar" | "en");
-      i18n.changeLanguage(urlLang);
-    }
-  }, [urlLang, lang, setLang]);
-
-  // ✅ الآن يمكن وضع الشروط بعد Hooks
+// Language Wrapper Component
+function LangWrapper() {
+  const { lang } = useSettings();
+  const { lang: urlLang } = useParams<{ lang: string }>();
+  
+  // If URL language doesn't match app language, redirect
   if (urlLang !== "ar" && urlLang !== "en") {
     return <Navigate to={`/${lang}/`} replace />;
   }
@@ -87,7 +76,7 @@ function LangLayout() {
       <Route path="/trademarks/:id" element={<Trademarks/>} />
       <Route path="/BestSellerPage" element={<BestSellerPage/>} />
       <Route path="/trademarkscategory" element={<Trademarkscategory/>} />
-      <Route path="/trademarkbestoffer" element={<Trademarkbestoffer/>} />
+      <Route path="/SpecialOffersPage" element={<Trademarkbestoffer/>} />
       <Route path="/singleproduct/:id" element={<Singleproduct/>} />
       <Route path="/checkout" element={<Checkout/>} />
       <Route path="categorySingle/:id/:productmain?" element={<CategorySingle/>} />
@@ -132,26 +121,9 @@ export default function App() {
           <Route path="/about-quara" element={<Navigate to={`/${lang}/about-quara`} replace />} />
           <Route path="/about-mora" element={<Navigate to={`/${lang}/about-mora`} replace />} />
           <Route path="/profile" element={<Navigate to={`/${lang}/profile`} replace />} />
-          <Route path="/myorder" element={<Navigate to={`/${lang}/myorder`} replace />} />
-          <Route path="/bills" element={<Navigate to={`/${lang}/bills`} replace />} />
-          <Route path="/singlebills/:id" element={<Navigate to={`/${lang}/singlebills/:id`} replace />} /> {/* ✅ هنا أيضا */}
-          <Route path="/wallet" element={<Navigate to={`/${lang}/wallet`} replace />} />
-          <Route path="/address" element={<Navigate to={`/${lang}/address`} replace />} />
-          <Route path="/discounts" element={<Navigate to={`/${lang}/discounts`} replace />} />
-          <Route path="/singleaddress" element={<Navigate to={`/${lang}/singleaddress`} replace />} />
-          <Route path="/trademarks/:id" element={<Navigate to={`/${lang}/trademarks/:id`} replace />} />
-          <Route path="/trademarksbestseller" element={<Navigate to={`/${lang}/trademarksbestseller`} replace />} />
-          <Route path="/trademarkscategory" element={<Navigate to={`/${lang}/trademarkscategory`} replace />} />
-          <Route path="/trademarkbestoffer" element={<Navigate to={`/${lang}/trademarkbestoffer`} replace />} />
-          <Route path="/singleproduct/:id" element={<Navigate to={`/${lang}/singleproduct/:id`} replace />} />
-          <Route path="/categorySingle/:id" element={<Navigate to={`/${lang}/categorySingle/:id`} replace />} />
-          <Route path="/checkout" element={<Navigate to={`/${lang}/checkout`} replace />} />
-          
-          <Route path="/:lang/*" element={<LangLayout />} />
+          <Route path="/:lang/*" element={<LangWrapper />} />
         </Routes>
-        {/* add search route under lang layout */}
       </BrowserRouter>
-      <ChatBot/>
     </div>
   );
 }
