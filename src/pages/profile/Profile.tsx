@@ -47,7 +47,7 @@ export default function Profile() {
     fetchProfile();
     // Fetch banner data from backend
     fetchPage("profilepagebaner", lang);
-  }, [fetchProfile, fetchPage, lang]);
+  }, [ lang]);
 
   // Update form data when profile is loaded
   useEffect(() => {
@@ -63,7 +63,7 @@ export default function Profile() {
       setFormData(newData);
       setOriginalData(newData);
     }
-  }, [profile]);
+  }, []);
 
   const handleInputChange = (field: keyof typeof formData, value: string) => {
     setFormData(prev => ({
