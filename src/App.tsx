@@ -115,6 +115,7 @@ export default function App() {
           <Route path="/login" element={<Navigate to={`/${lang}/login`} replace />} />
           <Route path="/register" element={<Navigate to={`/${lang}/register`} replace />} />
           <Route path="/product-details" element={<Navigate to={`/${lang}/product-details`} replace />} />
+          <Route path="/singleaddress" element={<Navigate to={`/${lang}/singleaddress`} replace />} />
           <Route path="/return-policy" element={<Navigate to={`/${lang}/return-policy`} replace />} />
           <Route path="/warranty-policy" element={<Navigate to={`/${lang}/warranty-policy`} replace />} />
           <Route path="/terms-and-conditions" element={<Navigate to={`/${lang}/terms-and-conditions`} replace />} />

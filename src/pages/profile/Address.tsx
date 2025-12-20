@@ -303,8 +303,8 @@ console.log(addresses)
                 </div>
 
                 <Link
-                  className="mt-3 text-[#211C4D] text-[14px] font-medium hover:opacity-80"
                   to="/singleaddress"
+                  className="mt-3 text-[#211C4D] text-[14px] font-medium hover:opacity-80"
                 >
                   {t("Addanewtitle")}
                 </Link>
