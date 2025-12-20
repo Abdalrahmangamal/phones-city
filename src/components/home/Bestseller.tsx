@@ -94,7 +94,7 @@ export default function Bestseller({
           ))
         ) : (
           <div className="col-span-full text-center py-10">
-            <p className="text-gray-500 text-lg">لا توجد عروض متاحة حالياً</p>
+            <p className="text-gray-500 text-lg">{t('NoOffersAvailable')}</p>
           </div>
         )}
       </div>

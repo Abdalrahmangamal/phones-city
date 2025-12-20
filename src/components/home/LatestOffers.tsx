@@ -10,7 +10,12 @@ import ps5 from "../../assets/images/ps5.png";
 import { useLatestOffersStore } from "../../store/home/latestOffersStore";
 import "../../style.css";
 import Loader from '@/components/Loader';
+import { useTranslation } from "react-i18next"; // Import translation hook
+import { useLangSync } from "@/hooks/useLangSync"; // Import lang sync hook
+
 export default function LatestOffers() {
+  const { lang } = useLangSync(); // Get current language
+  const { t } = useTranslation(); // Use translation hook
   const { offers, fetchOffers } = useLatestOffersStore();
   
   useEffect(() => {
@@ -27,23 +32,20 @@ export default function LatestOffers() {
 
   // دالة مساعدة لعرض قيمة الخصم
   const getDiscountText = (offer: any) => {
-    if (!offer) return "خصم خاص";
+    if (!offer) return t("SpecialDiscount"); // Use translation
     
     if (offer.type === 'percentage') {
-      return `خصم ${offer.value}%`;
+      return `${t("Discount")} ${offer.value}%`; // Use translation
     } else {
-      return `خصم ${offer.value} ريال`;
+      return `${t("Discount")} ${offer.value} ${t("SAR")}`; // Use translation
     }
   };
-
-
-
 
   return (
     <div className="w-full translate-y-[-50px] md:h-[60vh] xl:h-[100vh] xl:px-[90px] px-2 pt-8 md:pt-0 relative md:px-0">
       {/* Title */}
       <h1 className="text-[24px] mb-[0px] md:text-[40px] font-[700] text-[#211C4D] text-center">
-        أحدث العروض
+        {t("LatestOffers")} {/* Use translation */}
       </h1>
 
       <img
@@ -70,7 +72,7 @@ export default function LatestOffers() {
               />
               <div className="z-[2] absolute flex flex-col bottom-[-20px] justify-center items-center pb-[40px] md:pb-[50px] lg:pb-[100px] text-center">
                 <h1 className="text-white font-[700] text-[32px] md:text-[35px] lg:text-[54px]">
-                  {laptopOffer?.name_ar || "لابتوب"}
+                  {laptopOffer?.name_ar || t("Laptop")} {/* Use translation */}
                 </h1>
                 <p className="text-[18px] md:text-[24px] text-[#F3AC5D] font-[700] mt-1">
                   {getDiscountText(laptopOffer)}
@@ -79,13 +81,13 @@ export default function LatestOffers() {
                   to={`/offers/${laptopOffer?.id}`}
                   className="w-[110px] h-[40px] md:w-[116px] md:h-[42px] text-white mt-[20px] bg-[#F3AC5D] rounded-[8px] flex items-center justify-center gap-2 transition-all duration-300 ease-in-out hover:bg-[#e79940] hover:shadow-[0_8px_20px_rgba(243,172,93,0.5)] hover:scale-105"
                 >
-                  تسوق الآن
+                  {t("ShopNow")} {/* Use translation */}
                 </Link>
               </div>
             </>
           ) : (
             <div className="w-full h-full bg-gray-100 rounded-[16px] flex items-center justify-center">
-              <p className="text-gray-500">لا توجد عروض للابتوبات حالياً</p>
+              <p className="text-gray-500">{t("NoLaptopOffers")}</p> {/* Use translation */}
             </div>
           )}
         </div>
@@ -96,7 +98,7 @@ export default function LatestOffers() {
             <>
               <div className="absolute left-9 top-2 flex flex-col bigtitle items-center md:pl-[350px] justify-center text-center">
                 <h1 className="text-[23px] md:text-[56px] font-[700] text-[#211C4D]">
-                  {laptopOffer?.name_ar || "لابتوب"}
+                  {laptopOffer?.name_ar || t("Laptop")} {/* Use translation */}
                 </h1>
                 <p className="text-[#211C4D] text-[15px] md:text-[20px] font-[700] mt-1">
                   {getDiscountText(laptopOffer)}
@@ -105,7 +107,7 @@ export default function LatestOffers() {
                   to={`/offers/${laptopOffer?.id}`}
                   className="w-[100px] h-[35px] md:w-[116px] md:h-[42px] text-white mt-[30px] md:mt-[20px] bg-[#F3AC5D] rounded-[8px] flex items-center justify-center gap-2 transition-all duration-300 ease-in-out hover:bg-[#e79940] hover:shadow-[0_8px_20px_rgba(243,172,93,0.5)] hover:scale-105"
                 >
-                  تسوق الآن
+                  {t("ShopNow")} {/* Use translation */}
                 </Link>
               </div>
               <img
@@ -121,7 +123,7 @@ export default function LatestOffers() {
             </>
           ) : (
             <div className="w-full h-full bg-gray-100 flex items-center justify-center">
-              <p className="text-gray-500">لا توجد عروض</p>
+              <p className="text-gray-500">{t("NoOffers")}</p> {/* Use translation */}
             </div>
           )}
         </div>
@@ -141,16 +143,17 @@ export default function LatestOffers() {
                   />
                   <div className="absolute inset-0 top-[0px] md:top-[0px] z-[2] mr-[20px] mt-[15px] md:mt-[10px] text-right">
                     <h1 className="text-[10px] md:text-[15px] font-[700] lg:text-[24px] text-[#211C4D] md:text-[#211C4D]">
-                      {accessoryOffers[0]?.name_ar || "إكسسوارات الألعاب"}
+                      {accessoryOffers[0]?.name_ar || t("GameAccessories")} {/* Use translation */}
                     </h1>
                     <p className="text-[#211C4D] md:text-[#211C4D] text-[8px] md:!text-[12px] lg:!text-[18px] textoffer">
                       {getDiscountText(accessoryOffers[0])}
                     </p>
                     <Link
-                      to={`/offers/${accessoryOffers[0]?.id || "#"}`}
+                      to={`/offers/${accessoryOffers[0]?.id || "#"}`
+}
                       className="text-[8px] w-[50px] md:text-[16px] h-[30px] md:w-[117px] md:h-[30px] text-[#F3AC5D] mt-[30px] bg-[#211C4D] hover:text-[#211C4D] rounded-[8px] flex items-center justify-center transition-all duration-300 ease-in-out hover:bg-[#e79940] hover:shadow-[0_8px_20px_rgba(243,172,93,0.5)] hover:scale-105 btnoffer"
                     >
-                      تسوق الآن
+                      {t("ShopNow")} {/* Use translation */}
                     </Link>
                   </div>
                 </div>
@@ -163,16 +166,17 @@ export default function LatestOffers() {
                   />
                   <div className="absolute inset-0 top-[0px] md:top-[0px] z-[2] mr-[20px] mt-[15px] md:mt-[10px] text-right">
                     <h1 className="text-[10px] md:text-[15px] font-[700] lg:text-[24px] text-[#211C4D] md:text-[#211C4D]">
-                      {accessoryOffers[1]?.name_ar || "إكسسوارات الألعاب"}
+                      {accessoryOffers[1]?.name_ar || t("GameAccessories")} {/* Use translation */}
                     </h1>
                     <p className="text-[#211C4D] md:text-[#211C4D] text-[8px] md:!text-[12px] lg:!text-[18px] textoffer">
                       {getDiscountText(accessoryOffers[1])}
                     </p>
                     <Link
-                      to={`/offers/${accessoryOffers[1]?.id || "#"}`}
+                      to={`/offers/${accessoryOffers[1]?.id || "#"}`
+}
                       className="text-[8px] w-[50px] md:text-[16px] h-[30px] md:w-[117px] md:h-[30px] text-[#F3AC5D] mt-[30px] bg-[#211C4D] hover:text-[#211C4D] rounded-[8px] flex items-center justify-center transition-all duration-300 ease-in-out hover:bg-[#e79940] hover:shadow-[0_8px_20px_rgba(243,172,93,0.5)] hover:scale-105 btnoffer"
                     >
-                      تسوق الآن
+                      {t("ShopNow")} {/* Use translation */}
                     </Link>
                   </div>
                 </div>
@@ -181,7 +185,7 @@ export default function LatestOffers() {
               // عرض عناصر افتراضية إذا لم تكن هناك عروض كافية
               [...Array(2)].map((_, index) => (
                 <div key={index} className="w-full h-[120px] md:h-full lg:h-[175px] rounded-[16px] relative overflow-hidden bg-gray-100 flex items-center justify-center">
-                  <p className="text-gray-500">عرض قريباً</p>
+                  <p className="text-gray-500">{t("ComingSoon")}</p> {/* Use translation */}
                 </div>
               ))
             )}
@@ -203,7 +207,7 @@ export default function LatestOffers() {
                 />
                 <div className="absolute inset-0 flex flex-col bigtitle items-center md:pl-[350px] pl-[150px] justify-center text-center">
                   <h1 className="text-[23px] md:text-[56px] font-[700] text-[#211C4D]">
-                    {gamingOffer?.name_ar || "أجهزة الألعاب"}
+                    {gamingOffer?.name_ar || t("GamingDevices")} {/* Use translation */}
                   </h1>
                   <p className="text-[#211C4D] text-[15px] md:text-[20px] font-[700] mt-1">
                     {getDiscountText(gamingOffer)}
@@ -212,13 +216,13 @@ export default function LatestOffers() {
                     to={`/offers/${gamingOffer.id}`}
                     className="w-[100px] h-[35px] md:w-[116px] md:h-[42px] text-white mt-[10px] md:mt-[20px] bg-[#F3AC5D] rounded-[8px] flex items-center justify-center gap-2 transition-all duration-300 ease-in-out hover:bg-[#e79940] hover:shadow-[0_8px_20px_rgba(243,172,93,0.5)] hover:scale-105"
                   >
-                    تسوق الآن
+                    {t("ShopNow")} {/* Use translation */}
                   </Link>
                 </div>
               </>
             ) : (
               <div className="w-full h-full bg-gray-100 flex items-center justify-center">
-                <p className="text-gray-500">لا توجد عروض للألعاب</p>
+                <p className="text-gray-500">{t("NoGameOffers")}</p> {/* Use translation */}
               </div>
             )}
           </div>
@@ -236,16 +240,17 @@ export default function LatestOffers() {
                   />
                   <div className="absolute inset-0 top-[0px] md:top-[0px] z-[2] mr-[20px] mt-[15px] md:mt-[10px] text-right">
                     <h1 className="text-[10px] md:text-[15px] font-[700] lg:text-[24px] text-[#211C4D] md:text-[#211C4D]">
-                      {accessoryOffers[2]?.name_ar || "إكسسوارات الألعاب"}
+                      {accessoryOffers[2]?.name_ar || t("GameAccessories")} {/* Use translation */}
                     </h1>
                     <p className="text-[#211C4D] md:text-[#211C4D] text-[8px] md:!text-[12px] lg:!text-[18px] textoffer">
                       {getDiscountText(accessoryOffers[2])}
                     </p>
                     <Link
-                      to={`/offers/${accessoryOffers[2]?.id || "#"}`}
+                      to={`/offers/${accessoryOffers[2]?.id || "#"}`
+}
                       className="text-[8px] w-[50px] md:text-[16px] h-[30px] md:w-[117px] md:h-[30px] text-[#F3AC5D] mt-[30px] bg-[#211C4D] hover:text-[#211C4D] rounded-[8px] flex items-center justify-center transition-all duration-300 ease-in-out hover:bg-[#e79940] hover:shadow-[0_8px_20px_rgba(243,172,93,0.5)] hover:scale-105 btnoffer"
                     >
-                      تسوق الآن
+                      {t("ShopNow")} {/* Use translation */}
                     </Link>
                   </div>
                 </div>
@@ -258,16 +263,17 @@ export default function LatestOffers() {
                   />
                   <div className="absolute inset-0 top-[0px] md:top-[0px] z-[2] mr-[20px] mt-[15px] md:mt-[10px] text-right">
                     <h1 className="text-[10px] md:text-[15px] font-[700] lg:text-[24px] text-[#211C4D] md:text-[#211C4D]">
-                      {accessoryOffers[3]?.name_ar || "إكسسوارات الألعاب"}
+                      {accessoryOffers[3]?.name_ar || t("GameAccessories")} {/* Use translation */}
                     </h1>
                     <p className="text-[#211C4D] md:text-[#211C4D] text-[8px] md:!text-[12px] lg:!text-[18px] textoffer">
                       {getDiscountText(accessoryOffers[3])}
                     </p>
                     <Link
-                      to={`/offers/${accessoryOffers[3]?.id || "#"}`}
+                      to={`/offers/${accessoryOffers[3]?.id || "#"}`
+}
                       className="text-[8px] w-[50px] md:text-[16px] h-[30px] md:w-[117px] md:h-[30px] text-[#F3AC5D] mt-[30px] bg-[#211C4D] hover:text-[#211C4D] rounded-[8px] flex items-center justify-center transition-all duration-300 ease-in-out hover:bg-[#e79940] hover:shadow-[0_8px_20px_rgba(243,172,93,0.5)] hover:scale-105 btnoffer"
                     >
-                      تسوق الآن
+                      {t("ShopNow")} {/* Use translation */}
                     </Link>
                   </div>
                 </div>
@@ -276,7 +282,7 @@ export default function LatestOffers() {
               // عرض عناصر افتراضية إذا لم تكن هناك عروض كافية
               [...Array(2)].map((_, index) => (
                 <div key={index + 2} className="w-full h-[120px] md:h-full lg:h-[175px] rounded-[16px] relative overflow-hidden bg-gray-100 flex items-center justify-center">
-                  <p className="text-gray-500">عرض قريباً</p>
+                  <p className="text-gray-500">{t("ComingSoon")}</p> {/* Use translation */}
                 </div>
               ))
             )}

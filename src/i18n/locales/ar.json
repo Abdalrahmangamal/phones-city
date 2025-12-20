@@ -214,5 +214,16 @@
   "Login": "تسجيل الدخول",
   "ShopNow": "تسوق الأن",
   "ShopNowEn": "Shop Now",
-  "NewOffer": "عرض جديد"
+  "NewOffer": "عرض جديد",
+  "LatestOffers": "أحدث العروض",
+  "SpecialDiscount": "خصم خاص",
+  "Discount": "خصم",
+  "SAR": "ريال",
+  "Laptop": "لابتوب",
+  "NoLaptopOffers": "لا توجد عروض للابتوبات حالياً",
+  "NoOffers": "لا توجد عروض",
+  "GameAccessories": "إكسسوارات الألعاب",
+  "GamingDevices": "أجهزة الألعاب",
+  "NoGameOffers": "لا توجد عروض للألعاب",
+  "ComingSoon": "عرض قريباً"
 }
