@@ -1,3 +1,4 @@
+// Ordersummary.tsx
 "use client";
 
 import { useEffect, useState } from "react";
@@ -11,7 +12,6 @@ import emkann from "@/assets/images/emkann.png";
 import madfu from "@/assets/images/madfu.png";
 import mispay_installment from "@/assets/images/mispay_installment 1.png";
 import amwal from "@/assets/images/amwal.png";
-import { useTranslation } from "react-i18next";
 
 const paymentLogos: Record<number, any> = {
   1: tamara,
@@ -109,7 +109,7 @@ export default function OrderSummary({ onTotalUpdate }: OrderSummaryProps) {
     setSelectedPaymentId(paymentId);
   };
 
-  const paymentProviders = paymentMethods.map((p) => {
+  const paymentProviders = paymentMethods.map((p: any) => {
     const amount = parseFloat(p.total_price).toLocaleString(isRTL ? "ar-SA" : "en-US");
     const textFn = paymentMarketingTexts[p.id];
     const description = textFn
@@ -175,12 +175,6 @@ export default function OrderSummary({ onTotalUpdate }: OrderSummaryProps) {
           <span className="text-gray-600">{t("Subtotal")}</span>
           <span className="font-semibold">{subtotal.toLocaleString(isRTL ? "ar-SA" : "en-US")} {t("SAR")}</span>
         </div>
-
-        
-        {/* <div className={`flex justify-between ${isRTL ? 'flex-row-reverse' : 'flex-row'}`}>
-          <span className="text-gray-600">{t("Shipping")}</span>
-          <span className="font-semibold">{shipping.toLocaleString(isRTL ? "ar-SA" : "en-US")} {t("SAR")}</span>
-        </div> */}
 
         {processingFee > 0 && (
           <div className={`flex justify-between text-gray-700 ${isRTL ? 'flex-row-reverse' : 'flex-row'}`}>

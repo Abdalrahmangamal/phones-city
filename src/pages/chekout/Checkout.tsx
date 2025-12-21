@@ -19,7 +19,6 @@ import { useAddressStore } from '@/store/profile/indexStore';
 import { Package, Home, ShoppingBag } from "lucide-react"; 
 
 export default function CheckoutPage() {
-  const { t } = useTranslation();
   const [activeStep, setActiveStep] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [orderCompleted, setOrderCompleted] = useState(false); 
@@ -27,6 +26,8 @@ export default function CheckoutPage() {
   const navigate = useNavigate();
 
   const { items, total, fetchCart, selectedPaymentId, clearCart } = useCartStore();
+  
+  // تم حذف التعريف المكرر لـ t وترك تعريف واحد فقط يشمل t و i18n
   const { t, i18n } = useTranslation();
   const isRTL = i18n.language === "ar";
   const currentLang = i18n.language;
@@ -198,7 +199,7 @@ export default function CheckoutPage() {
         'success',
         isRTL ? 'تم بنجاح!' : 'Order Successful!',
         isRTL 
-          ? `تم إتمام الطلب رقم بنجاح `
+          ? `تم إتمام الطلب رقم ${orderNum} بنجاح`
           : `Order #${orderNum} completed successfully - You can track your orders`
       );
 
@@ -235,11 +236,10 @@ export default function CheckoutPage() {
   };
 
   const handleGoToOrders = () => {
-    // محاولة الذهاب لطلباتي مع تحديث الصفحة يدوياً
     window.location.href = `/${currentLang}/myorder`;
   };
 
-  // إذا تم اتمام الطلب، اعرض شاشة النجاح
+  // إذا تم إتمام الطلب، اعرض شاشة النجاح
   if (orderCompleted) {
     return (
       <Layout>
@@ -265,72 +265,9 @@ export default function CheckoutPage() {
                   : `Your order #${orderNumber} has been confirmed`
                 }
               </p>
-              
-              {/* <p className="text-gray-500 mb-8">
-                {isRTL 
-                  ? 'سيصلك تأكيد عبر البريد الإلكتروني قريباً'
-                  : 'You will receive an email confirmation shortly'
-                }
-              </p> */}
-
-              {/* Order Details */}
-              {/* <div className="bg-gray-50 rounded-xl p-6 mb-8 max-w-md mx-auto">
-                <div className="space-y-4">
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-600">{isRTL ? 'رقم الطلب:' : 'Order Number:'}</span>
-                    <span className="font-bold text-[#211C4D]">#{orderNumber}</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-600">{isRTL ? 'التاريخ:' : 'Date:'}</span>
-                    <span className="font-medium">{new Date().toLocaleDateString()}</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-600">{isRTL ? 'الحالة:' : 'Status:'}</span>
-                    <span className="font-medium text-green-600">
-                      {isRTL ? 'قيد المعالجة' : 'Processing'}
-                    </span>
-                  </div>
-                </div>
-              </div> */}
-
-              {/* Instructions */}
-              {/* <div className="mb-10">
-                <h3 className="text-xl font-semibold text-gray-800 mb-4">
-                  {isRTL ? 'الخطوات القادمة' : 'Next Steps'}
-                </h3>
-                <div className="space-y-3 text-gray-600 text-left max-w-md mx-auto">
-                  <p className="flex items-start gap-2">
-                    <span className="text-green-500 mt-1">✓</span>
-                    <span>
-                      {isRTL 
-                        ? 'سيصلك تأكيد عبر البريد الإلكتروني'
-                        : 'You will receive an email confirmation'
-                      }
-                    </span>
-                  </p>
-                  <p className="flex items-start gap-2">
-                    <span className="text-green-500 mt-1">✓</span>
-                    <span>
-                      {isRTL 
-                        ? 'يمكنك تتبع حالة طلبك من صفحة "طلباتي"'
-                        : 'You can track your order status in "My Orders"'
-                      }
-                    </span>
-                  </p>
-                  <p className="flex items-start gap-2">
-                    <span className="text-green-500 mt-1">✓</span>
-                    <span>
-                      {isRTL 
-                        ? 'لأي استفسارات، يرجى التواصل مع خدمة العملاء'
-                        : 'For any inquiries, please contact customer service'
-                      }
-                    </span>
-                  </p>
-                </div>
-              </div> */}
 
               {/* Buttons */}
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <div className="flex flex-col sm:flex-row gap-4 justify-center mt-10">
                 <Button
                   onClick={handleGoHome}
                   variant="outline"
@@ -348,58 +285,14 @@ export default function CheckoutPage() {
                   {isRTL ? 'عرض طلباتي' : 'View My Orders'}
                 </Button>
               </div>
-
-              {/* Continue Shopping */}
-              {/* <div className="mt-10 pt-8 border-t border-gray-200">
-                <p className="text-gray-500 mb-4">
-                  {isRTL 
-                    ? 'هل ترغب في مواصلة التسوق؟'
-                    : 'Want to continue shopping?'
-                  }
-                </p>
-                <Button
-                  onClick={handleGoHome}
-                  variant="ghost"
-                  className="text-[#F3AC5D] hover:text-[#e69c4d] hover:bg-[#F3AC5D]/10"
-                >
-                  {isRTL ? 'تصفح المزيد من المنتجات' : 'Browse More Products'}
-                </Button>
-              </div> */}
             </div>
-
-            {/* Contact Info */}
-            {/* <div className="bg-white rounded-2xl shadow-lg p-8 mt-8">
-              <h3 className="text-xl font-semibold text-gray-800 mb-4">
-                {isRTL ? 'هل تحتاج مساعدة؟' : 'Need Help?'}
-              </h3>
-              <p className="text-gray-600 mb-4">
-                {isRTL 
-                  ? 'فريق خدمة العملاء جاهز لمساعدتك في أي استفسار حول طلبك.'
-                  : 'Our customer service team is ready to assist you with any questions about your order.'
-                }
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4">
-                <div className="flex-1 p-4 bg-gray-50 rounded-lg">
-                  <h4 className="font-medium text-gray-800 mb-2">
-                    {isRTL ? 'البريد الإلكتروني' : 'Email'}
-                  </h4>
-                  <p className="text-[#F3AC5D]">support@example.com</p>
-                </div>
-                <div className="flex-1 p-4 bg-gray-50 rounded-lg">
-                  <h4 className="font-medium text-gray-800 mb-2">
-                    {isRTL ? 'رقم الهاتف' : 'Phone'}
-                  </h4>
-                  <p className="text-[#F3AC5D]">+123 456 7890</p>
-                </div>
-              </div>
-            </div> */}
           </div>
         </div>
       </Layout>
     );
   }
 
-  //  إذا لم يتم اتمام الطلب، اعرض صفحة checkout العادية
+  // صفحة الـ Checkout العادية
   return (
     <Layout>
       <div className="min-h-screen mt-[60px] bg-white" dir={isRTL ? "rtl" : "ltr"}>
@@ -420,7 +313,7 @@ export default function CheckoutPage() {
                             : "bg-[#AEAEAE] text-gray-600"
                         }`}
                       >
-                        {activeStep > index ? "✓" : <img src={step.number} alt="" />}
+                        {activeStep > index ? "✓" : <img src={step.number} alt="" className="w-6 h-6" />}
                       </div>
                       <span
                         className={`mt-2 text-sm font-semibold ${
