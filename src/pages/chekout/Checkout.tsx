@@ -7,9 +7,11 @@ import step3 from "@/assets/images/step3.png";
 import Cheackoutsummary from "@/components/chekout/Checkoutsummary";
 import Checkoutaddress from "@/components/chekout/Checkoutaddress";
 import Checkoutpayment from "@/components/chekout/Checkoutpayment";
-import Layout from "@/components/layout/Layout";
+import Layout from "@/components/layout/layout";
 import {useCartStore} from '@/store/cartStore/cartStore';
+import { useTranslation } from "react-i18next";
 export default function CheckoutPage() {
+  const { t } = useTranslation();
   const [activeStep, setActiveStep] = useState(0);
   const {items,total,fetchCart,addToCart} = useCartStore();
   useEffect(() => {
@@ -17,9 +19,9 @@ export default function CheckoutPage() {
   }, []);
   console.log("سشيشسيشسي",items)
   const steps = [
-    { title: "ملخص الطلب", number: order, componunt: <Cheackoutsummary products={items} total={total} /> },
-    { title: "العنوان", number: step2, componunt: <Checkoutaddress /> },
-    { title: "الدفع", number: step3, componunt: <Checkoutpayment /> },
+    { title: t("OrderSummary"), number: order, componunt: <Cheackoutsummary products={items} total={total} /> },
+    { title: t("Address"), number: step2, componunt: <Checkoutaddress /> },
+    { title: t("Payment"), number: step3, componunt: <Checkoutpayment /> },
   ];
   
   return (
@@ -93,7 +95,7 @@ export default function CheckoutPage() {
               onClick={() => setActiveStep(Math.max(0, activeStep - 1))}
               disabled={activeStep === 0}
             >
-              رجوع
+              {t("Back")}
             </Button>
             <Button
               className="md:w-[400px] w-full h-[56px] bg-[#F3AC5D] !opacity-[100%] rounded-[16px] flex items-center justify-center text-[24px] text-[white]"
@@ -101,7 +103,7 @@ export default function CheckoutPage() {
                 setActiveStep(Math.min(steps.length - 1, activeStep + 1))
               }
             >
-              {activeStep === steps.length - 1 ? "إنهاء" : "التالي"}
+              {activeStep === steps.length - 1 ? t("Finish") : t("Next")}
             </Button>
           </div>
         </div>

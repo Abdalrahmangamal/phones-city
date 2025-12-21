@@ -3,8 +3,10 @@ import "@/style.css";
 import { X, Plus, Minus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCartStore } from '@/store/cartStore/cartStore';
+import { useTranslation } from "react-i18next";
 
 export default function Basketsummary({ products, total }: any) {
+  const { t } = useTranslation();
   const { deletefromCart, updateQuantity } = useCartStore();
 
   const handleIncrement = (cartItemId: number, currentQuantity: number) => {
@@ -20,7 +22,7 @@ export default function Basketsummary({ products, total }: any) {
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-[24px] font-[600] text-[#211C4D] text-right">
-          ملخص السلة
+          {t("BasketSummaryTitle")}
         </h1>
       </div>
 
@@ -95,7 +97,7 @@ export default function Basketsummary({ products, total }: any) {
                   <span className="font-bold text-[14px] md:text-lg text-[#211C4D]">
                     {typeof productPrice === "string"
                       ? productPrice
-                      : Number(productPrice).toLocaleString("ar-SA")} ر.س
+                      : Number(productPrice).toLocaleString("ar-SA")} {t("SAR")}
                   </span>
                 </div>
               </div>
@@ -132,7 +134,7 @@ export default function Basketsummary({ products, total }: any) {
       {/* السلة فارغة */}
       {products.length === 0 && (
         <div className="text-center py-12">
-          <p className="text-muted-foreground text-lg">السلة فارغة</p>
+          <p className="text-muted-foreground text-lg">{t("EmptyCart")}</p>
         </div>
       )}
     </div>

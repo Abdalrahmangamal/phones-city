@@ -232,7 +232,7 @@ export default function Profile() {
               onClick={fetchProfile}
               className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
             >
-              إعادة المحاولة
+              {t("Retry")}
             </button>
           </div>
         </div>
@@ -257,7 +257,7 @@ export default function Profile() {
                   onClick={handleCancel}
                   className="px-4 py-2 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50"
                 >
-                  إلغاء
+                  {t("Cancel")}
                 </button>
                 <button
                   onClick={handleSaveAll}
@@ -266,7 +266,7 @@ export default function Profile() {
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
                   </svg>
-                  حفظ التغييرات
+                  {t("SaveChanges")}
                 </button>
               </div>
             )}
@@ -279,7 +279,7 @@ export default function Profile() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.346 16.5c-.77.833.192 2.5 1.732 2.5z" />
               </svg>
               <p className="text-yellow-700 text-sm">
-                لديك تغييرات غير محفوظة. الرجاء حفظها أو إلغاؤها.
+                {t("UnsavedChanges")}
               </p>
             </div>
           )}
@@ -299,7 +299,7 @@ export default function Profile() {
                   value={formData.firstName}
                   onChange={(e) => handleInputChange('firstName', e.target.value)}
                   className="w-full h-[48px] px-[40px] rounded-[8px] border border-[#939393]"
-                  placeholder="الاسم الأول"
+                  placeholder={t("FirstNamePlaceholder")}
                 />
                 <img src={user} className="absolute start-3 top-3 w-5 h-5" alt="user" />
               </div>
@@ -319,7 +319,7 @@ export default function Profile() {
                   value={formData.lastName}
                   onChange={(e) => handleInputChange('lastName', e.target.value)}
                   className="w-full h-[48px] px-[40px] rounded-[8px] border border-[#939393]"
-                  placeholder="اسم العائلة"
+                  placeholder={t("LastNamePlaceholder")}
                 />
                 <img src={user} className="absolute start-3 top-3 w-5 h-5" alt="user" />
               </div>
@@ -339,7 +339,7 @@ export default function Profile() {
                   value={formData.phone}
                   onChange={(e) => handleInputChange('phone', e.target.value)}
                   className="w-full h-[48px] px-[40px] rounded-[8px] border border-[#939393]"
-                  placeholder="رقم الهاتف"
+                  placeholder={t("PhonePlaceholder")}
                 />
                 <img src={call} className="absolute start-3 top-3 w-5 h-5" alt="call" />
               </div>
@@ -359,7 +359,7 @@ export default function Profile() {
                   value={formData.email}
                   onChange={(e) => handleInputChange('email', e.target.value)}
                   className="w-full h-[48px] px-[40px] rounded-[8px] border border-[#939393]"
-                  placeholder="البريد الإلكتروني"
+                  placeholder={t("EmailPlaceholder")}
                 />
                 <img src={sms} className="absolute start-3 top-3 w-5 h-5" alt="sms" />
               </div>
@@ -380,7 +380,7 @@ export default function Profile() {
                   value={formData.address}
                   onChange={(e) => handleInputChange('address', e.target.value)}
                   className="w-full h-[48px] px-[40px] rounded-[8px] border border-[#939393]"
-                  placeholder="العنوان (اختياري)"
+                  placeholder={t("AddressPlaceholder")}
                 />
                 <img src={home} className="absolute start-3 top-3 w-5 h-5" alt="home" />
               </div>
@@ -408,14 +408,14 @@ export default function Profile() {
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
                   </svg>
-                  <span className="text-sm">تغيير كلمة المرور</span>
+                  <span className="text-sm">{t("ChangePassword")}</span>
                 </button>
               </div>
               <div className="flex items-center gap-2 mt-2 text-xs text-gray-500">
                 <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                <span>لحماية حسابك، يرجى استخدام كلمة مرور قوية وتغييرها دورياً</span>
+                <span>{t("PasswordSecurityTip")}</span>
               </div>
             </div>
           </div>
@@ -425,15 +425,15 @@ export default function Profile() {
             <div className="mt-8 p-6 bg-white border border-gray-200 rounded-lg shadow-sm">
               <div className="flex justify-between items-center">
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-800">مراجعة التغييرات</h3>
-                  <p className="text-sm text-gray-600 mt-1">الرجاء مراجعة التغييرات قبل الحفظ</p>
+                  <h3 className="text-lg font-semibold text-gray-800">{t("ReviewChanges")}</h3>
+                  <p className="text-sm text-gray-600 mt-1">{t("ReviewChangesDescription")}</p>
                 </div>
                 <div className="flex gap-4">
                   <button
                     onClick={handleCancel}
                     className="px-6 py-3 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition"
                   >
-                    إلغاء كل التغييرات
+                    {t("CancelAllChanges")}
                   </button>
                   <button
                     onClick={handleSaveAll}
@@ -442,7 +442,7 @@ export default function Profile() {
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
                     </svg>
-                    حفظ جميع التغييرات
+                    {t("SaveAllChanges")}
                   </button>
                 </div>
               </div>
@@ -456,8 +456,8 @@ export default function Profile() {
                 {/* الهيدر */}
                 <div className="p-6 border-b border-gray-200 flex justify-between items-center">
                   <div>
-                    <h2 className="text-xl font-bold text-gray-800">تغيير كلمة المرور</h2>
-                    <p className="text-gray-600 text-sm mt-1">أدخل كلمة المرور الجديدة</p>
+                    <h2 className="text-xl font-bold text-gray-800">{t("ChangePassword")}</h2>
+                    <p className="text-gray-600 text-sm mt-1">{t("EnterNewPassword")}</p>
                   </div>
                   <button
                     onClick={closePasswordForm}
@@ -499,7 +499,7 @@ export default function Profile() {
                     {/* كلمة المرور الجديدة */}
                     <div>
                       <label className="block text-gray-700 text-sm font-medium mb-2">
-                        كلمة المرور الجديدة
+                        {t("NewPassword")}
                         <span className="text-red-500 mr-1">*</span>
                       </label>
                       <div className="relative">
@@ -508,7 +508,7 @@ export default function Profile() {
                           value={passwordForm.password}
                           onChange={(e) => setPasswordForm(prev => ({...prev, password: e.target.value}))}
                           className="w-full h-[48px] px-4 pr-12 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition"
-                          placeholder="كلمة المرور الجديدة (6 أحرف على الأقل)"
+                          placeholder={t("NewPasswordPlaceholder")}
                           disabled={isChangingPassword}
                         />
                         <div className="absolute left-3 top-3.5">
@@ -522,7 +522,7 @@ export default function Profile() {
                     {/* تأكيد كلمة المرور الجديدة */}
                     <div>
                       <label className="block text-gray-700 text-sm font-medium mb-2">
-                        تأكيد كلمة المرور الجديدة
+                        {t("ConfirmNewPassword")}
                         <span className="text-red-500 mr-1">*</span>
                       </label>
                       <div className="relative">
@@ -531,7 +531,7 @@ export default function Profile() {
                           value={passwordForm.password_confirmation}
                           onChange={(e) => setPasswordForm(prev => ({...prev, password_confirmation: e.target.value}))}
                           className="w-full h-[48px] px-4 pr-12 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition"
-                          placeholder="أعد إدخال كلمة المرور الجديدة"
+                          placeholder={t("ConfirmNewPasswordPlaceholder")}
                           disabled={isChangingPassword}
                         />
                         <div className="absolute left-3 top-3.5">
@@ -544,11 +544,11 @@ export default function Profile() {
                     
                     {/* نصائح الأمان */}
                     <div className="p-3 bg-blue-50 rounded-lg border border-blue-100">
-                      <h4 className="text-sm font-medium text-blue-700 mb-2">نصائح لكلمة مرور آمنة:</h4>
+                      <h4 className="text-sm font-medium text-blue-700 mb-2">{t("PasswordTipsTitle")}</h4>
                       <ul className="text-xs text-blue-600 space-y-1">
-                        <li>• استخدم 6 أحرف على الأقل</li>
-                        <li>• اجمع بين الحروف والأرقام</li>
-                        <li>• تجنب استخدام معلومات شخصية</li>
+                        <li>{t("PasswordTip1")}</li>
+                        <li>{t("PasswordTip2")}</li>
+                        <li>{t("PasswordTip3")}</li>
                       </ul>
                     </div>
                   </div>
@@ -560,7 +560,7 @@ export default function Profile() {
                       disabled={isChangingPassword}
                       className="flex-1 px-4 py-3 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 transition"
                     >
-                      إلغاء
+                      {t("Cancel")}
                     </button>
                     <button
                       onClick={handleChangePassword}
@@ -570,14 +570,14 @@ export default function Profile() {
                       {isChangingPassword ? (
                         <>
                           <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                          جاري التحديث...
+                          {t("Updating")}...
                         </>
                       ) : (
                         <>
                           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
                           </svg>
-                          تغيير كلمة المرور
+                          {t("ChangePassword")}
                         </>
                       )}
                     </button>
