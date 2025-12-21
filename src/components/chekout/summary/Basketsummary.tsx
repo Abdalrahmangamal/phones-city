@@ -79,6 +79,7 @@ export default function Basketsummary({ products, total }: any) {
                     readOnly
                     className="w-[45px] h-[32px] border text-black outline-none border-[#D9D9D9] rounded-[4px] text-center bg-white font-semibold"
                     min="1"
+                    aria-label="Product quantity"
                   />
 
                   <Button

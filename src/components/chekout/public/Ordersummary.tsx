@@ -21,15 +21,6 @@ const paymentLogos: Record<number, any> = {
   6: amwal,
 };
 
-const paymentMarketingTexts: Record<number, (amount: string) => string> = {
-  1: (a) => t("DivideBillInto3Payments", { amount: a }),
-  2: (a) => t("DivideBillInto4Payments", { amount: a }),
-  3: (a) => t("4InterestFreePayments", { amount: a }),
-  4: (a) => t("4InterestFreePayments", { amount: a }),
-  5: (a) => t("4InterestFreePayments", { amount: a }),
-  6: () => t("6InterestFreePayments"),
-};
-
 interface OrderSummaryProps {
   onTotalUpdate?: (total: number) => void;
 }
@@ -75,6 +66,16 @@ export default function OrderSummary({ onTotalUpdate }: OrderSummaryProps) {
     }
   }, [finalTotal, onTotalUpdate]);
 
+  // Move paymentMarketingTexts inside the component to access t
+  const paymentMarketingTexts: Record<number, (amount: string) => string> = {
+    1: (a) => t("DivideBillInto3Payments", { amount: a }),
+    2: (a) => t("DivideBillInto4Payments", { amount: a }),
+    3: (a) => t("4InterestFreePayments", { amount: a }),
+    4: (a) => t("4InterestFreePayments", { amount: a }),
+    5: (a) => t("4InterestFreePayments", { amount: a }),
+    6: () => t("6InterestFreePayments"),
+  };
+
   const paymentProviders = paymentMethods.map((p: any) => {
     const amount = parseFloat(p.total_price).toLocaleString("ar-SA");
     const textFn = paymentMarketingTexts[p.id];
@@ -82,7 +83,7 @@ export default function OrderSummary({ onTotalUpdate }: OrderSummaryProps) {
       ? p.id === 6
         ? textFn('0')
         : textFn(amount)
-      : `${p.name} • ${amount} ريال`;
+      : `${p.name} • ${amount} ${t("SAR")}`;
 
     return {
       id: p.id,
@@ -112,6 +113,7 @@ export default function OrderSummary({ onTotalUpdate }: OrderSummaryProps) {
             value={promoCode}
             onChange={(e) => setPromoCode(e.target.value)}
             className="h-[64px] border-gray-300 text-right pr-24"
+            aria-label={t("PromoCodeLabel")}
           />
           <button className="absolute top-1/2 -translate-y-1/2 end-[12px] text-[#211C4D] text-xs border border-[#211C4D] rounded-[6px] w-20 h-9 hover:bg-[#211C4D] hover:text-white transition">
             {t("ApplyCode")}
@@ -140,31 +142,31 @@ export default function OrderSummary({ onTotalUpdate }: OrderSummaryProps) {
       <div className="mb-6 space-y-3 text-sm">
         <div className="flex justify-between">
           <span className="text-gray-600">{t("Subtotal")}</span>
-          <span className="font-semibold">{subtotal.toLocaleString("ar-SA")} ريال</span>
+          <span className="font-semibold">{subtotal.toLocaleString("ar-SA")} {t("SAR")}</span>
         </div>
 
         {pointsDiscount > 0 && (
           <div className="flex justify-between text-orange-600">
             <span>{t("PointsDiscount")}</span>
-            <span>-{pointsDiscount.toLocaleString("ar-SA")} ريال</span>
+            <span>-{pointsDiscount.toLocaleString("ar-SA")} {t("SAR")}</span>
           </div>
         )}
 
         <div className="flex justify-between">
           <span className="text-gray-600">{t("Shipping")}</span>
-          <span className="font-semibold">{shipping.toLocaleString("ar-SA")} ريال</span>
+          <span className="font-semibold">{shipping.toLocaleString("ar-SA")} {t("SAR")}</span>
         </div>
 
         {processingFee > 0 && (
           <div className="flex justify-between text-gray-700">
             <span>{t("ProcessingFee", { paymentMethod: selectedPaymentName })}</span>
-            <span>+{processingFee.toLocaleString("ar-SA")} ريال</span>
+            <span>+{processingFee.toLocaleString("ar-SA")} {t("SAR")}</span>
           </div>
         )}
 
         <div className="border-t pt-3 flex justify-between text-lg font-bold">
           <span>{t("FinalTotal")}</span>
-          <span className="text-orange-600">{finalTotal.toLocaleString("ar-SA")} ريال</span>
+          <span className="text-orange-600">{finalTotal.toLocaleString("ar-SA")} {t("SAR")}</span>
         </div>
       </div>
 
