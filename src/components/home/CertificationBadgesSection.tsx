@@ -78,9 +78,9 @@ const CertificationBadgesSection: React.FC<CertificationBadgesSectionProps> = ({
         {t("OurCertificates")}
       </h2>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6 lg:gap-8 justify-items-center">
+      <div className="flex flex-wrap justify-center gap-6 lg:gap-8">
         {certificates.map((cert) => (
-          <div key={cert.id} className="flex flex-col items-center justify-center w-full">
+          <div key={cert.id} className="flex flex-col items-center justify-start w-[120px] md:w-[150px] lg:w-[180px]">
             <Dialog
               open={openDialogId === cert.id}
               onOpenChange={(open) => {
@@ -89,7 +89,7 @@ const CertificationBadgesSection: React.FC<CertificationBadgesSectionProps> = ({
             >
               <DialogTrigger asChild>
                 <div
-                  className="w-[120px] h-[120px] md:w-[150px] md:h-[150px] lg:w-[180px] lg:h-[180px] rounded-full overflow-hidden bg-white shadow-[0px_7px_29px_0px_rgba(100,100,111,0.2)] flex items-center justify-center cursor-pointer hover:shadow-xl transition-shadow"
+                  className="w-[120px] h-[120px] md:w-[150px] md:h-[150px] lg:w-[180px] lg:h-[180px] rounded-full overflow-hidden bg-white shadow-[0px_7px_29px_0px_rgba(100,100,111,0.2)] flex items-center justify-center cursor-pointer hover:shadow-xl transition-shadow mx-auto"
                   onClick={() => handleOpen(cert.id)}
                 >
                   <img

@@ -6,12 +6,12 @@ import "swiper/css/effect-fade";
 
 // تحديث الاسم ليكون أكثر دقة (بدلاً من CategoriesSection)
 interface BannerSectionProps {
-  images: [];
+  images: string[]; // Fixed type to be string array
   autoplayDelay?: number;
 }
 
 const BannerSection: React.FC<BannerSectionProps> = ({
-  images,
+  images = [], // Added default value
   autoplayDelay = 4000,
 }) => {
   // 🟡 لا توجد صور
@@ -31,7 +31,7 @@ const BannerSection: React.FC<BannerSectionProps> = ({
       <div className="w-full md:my-15 xl:px-[90px] px-2 md:px-0">
         <div className="w-full h-[140px] md:h-[190.38px] rounded-[16px] overflow-hidden">
           <img
-            src={images}
+            src={images[0]} // Fixed to use first image
             alt="بانر"
             className="w-full h-full !object-contain rounded-[20px]"
             loading="eager"
