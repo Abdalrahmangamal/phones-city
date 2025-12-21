@@ -15,6 +15,7 @@ import SpecialOffersSection from "@/components/home/SpecialOffersSection";
 import HomePopup from "@/components/home/HomePopup"; // Import the HomePopup component
 import BestSellersSection from "@/components/home/BestSellersSection";
 
+
 // Stores
 import { useProductsStore } from "@/store/productsStore";
 import { useHeroSectionStore } from "@/store/home/herosectionStore";

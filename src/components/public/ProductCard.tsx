@@ -12,11 +12,12 @@ interface ProductCardProps {
   product: Product;
   isNew?: boolean;
   favourite?: boolean;
+  containerstyle?:string;
   imagecard:string;
   variations?: { color: string; image: string }[];
 }
 import { useFavoritesStore } from "@/store/favoritesStore";
-export default function ProductCard({ product,imagecard }: ProductCardProps) {
+export default function ProductCard({ product,imagecard,containerstyle }: ProductCardProps) {
   const { t } = useTranslation();
 
   const { addFavorite, removeFavorite, favorites } = useFavoritesStore();
@@ -60,7 +61,7 @@ export default function ProductCard({ product,imagecard }: ProductCardProps) {
   return (
     <div
       key={product.id}
-      className={`max-w-[350px] md:!w-[320px] col-span-1 bg-white w-full min-h-[350px] md:min-h-[400px] rounded-[16px] p-[15px] shadow-[0px_4px_4px_0px_#00000040] flex flex-col hover:shadow-[0px_8px_12px_0px_#00000050] transition-shadow duration-300`}
+      className={`${containerstyle} max-w-[350px] md:!w-[320px] col-span-1 bg-white w-full min-h-[350px] md:min-h-[400px] rounded-[16px] p-[15px] shadow-[0px_4px_4px_0px_#00000040] flex flex-col hover:shadow-[0px_8px_12px_0px_#00000050] transition-shadow duration-300`}
     >
       {/* الصورة */}
       <div className="flex items-center justify-center pt-7 md:pt-0 relative">
