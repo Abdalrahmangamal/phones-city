@@ -4,7 +4,8 @@ import {
   Dialog,
   DialogContent,
 } from "@/components/ui/dialog";
-import offerImage from "@/assets/images/Group 1000005945.png";
+import arabicOfferImage from "@/assets/images/Group 1000005945.png";
+import englishOfferImage from "@/assets/images/Gemini_Generated_Image_lp4ibvlp4ibvlp4i.png";
 import { useTranslation } from "react-i18next";
 import { useLangSync } from "@/hooks/useLangSync";
 
@@ -43,8 +44,8 @@ const HomePopup: React.FC<HomePopupProps> = ({ onClose }) => {
         <div className="px-6 pb-6 sm:px-8 sm:pb-8">
           <div className="h-[250px] sm:h-[400px] flex items-center justify-center bg-white rounded-lg">
             <img 
-              src={offerImage} 
-              alt={lang === "ar" ? "عرض جديد" : "New Offer"} 
+              src={lang === "ar" ? arabicOfferImage : englishOfferImage} 
+              alt={lang === "ar" ? t("NewOffer") : t("NewOfferEn")} 
               className="max-h-full max-w-full object-contain"
               onError={(e) => {
                 // Fallback to placeholder if image doesn't load

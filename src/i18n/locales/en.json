@@ -209,12 +209,14 @@
   "BestSellerCollection": "Best Seller Collection",
   "Noresultsfound": "No results found",
     "Searching...": "Searching...",
+  "Loading...": "Loading...",
   "Login": "Login",
 
   "SpecialOffersForYou": "Special Offers for you",
   "ShopNow": "Shop Now",
   "ShopNowEn": "Shop Now",
   "NewOffer": "New Offer",
+  "NewOfferEn": "New Offer",
   "LatestOffers": "Latest Offers",
   "SpecialDiscount": "Special Discount",
   "Discount": "Discount",
@@ -225,5 +227,7 @@
   "GameAccessories": "Game Accessories",
   "GamingDevices": "Gaming Devices",
   "NoGameOffers": "No game offers",
-  "ComingSoon": "Coming Soon"
+  "ComingSoon": "Coming Soon",
+  "BestAppleDevices": "Best Apple Devices",
+  "AppleDevicesDescription": "Enjoy an exceptional experience with the latest devices at the best prices and distinguished after-sales service"
 }

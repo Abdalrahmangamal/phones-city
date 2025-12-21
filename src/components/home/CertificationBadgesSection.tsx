@@ -62,10 +62,10 @@ const CertificationBadgesSection: React.FC<CertificationBadgesSectionProps> = ({
         <h2 className="font-semibold text-[22px] md:text-[32px] text-[#211C4D] text-center mb-8">
           {t("OurCertificates") || "شهاداتنا واعتماداتنا"}
         </h2>
-        <div className="flex flex-col items-center justify-center h-40 gap-4 py-20">
-          <div className="animate-spin rounded-full h-12 w-12 border-4 border-blue-600 border-t-transparent"></div>
+        <div className="flex flex-col items-center justify-center h-40 gap-4 py-20 text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-4 border-blue-600 border-t-transparent mx-auto"></div>
           <span className="text-gray-600">
-            {isArabic ? "جارِ تحميل الشهادات..." : "Loading certificates..."}
+            {isArabic ? t("LoadingCertificates") : t("LoadingCertificatesEn")}
           </span>
         </div>
       </section>
@@ -78,9 +78,9 @@ const CertificationBadgesSection: React.FC<CertificationBadgesSectionProps> = ({
         {t("OurCertificates") || "شهاداتنا واعتماداتنا"}
       </h2>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6 lg:gap-8">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6 lg:gap-8 justify-items-center">
         {certificates.map((cert) => (
-          <div key={cert.id} className="flex flex-col items-center">
+          <div key={cert.id} className="flex flex-col items-center justify-center w-full">
             <Dialog
               open={openDialogId === cert.id}
               onOpenChange={(open) => {
@@ -153,7 +153,7 @@ const CertificationBadgesSection: React.FC<CertificationBadgesSectionProps> = ({
               </DialogContent>
             </Dialog>
 
-            <p className="mt-4 text-sm md:text-base text-[#211C4D] font-semibold max-w-[180px] mx-auto line-clamp-2 leading-tight">
+            <p className="mt-4 text-sm md:text-base text-[#211C4D] font-semibold max-w-[180px] mx-auto text-center line-clamp-2 leading-tight">
               {isArabic ? cert.name_ar : cert.name_en}
             </p>
           </div>

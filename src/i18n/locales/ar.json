@@ -209,12 +209,14 @@
   "Searchresultsfor": "نتائج البحث عن",
   "Noresultsfound": "لا توجد نتائج",
   "Searching...": "جاري البحث...",
+  "Loading...": "جارِ التحميل...",
   
   "SpecialOffersForYou": "عروض خاصة لك",
   "Login": "تسجيل الدخول",
   "ShopNow": "تسوق الأن",
   "ShopNowEn": "Shop Now",
   "NewOffer": "عرض جديد",
+  "NewOfferEn": "New Offer",
   "LatestOffers": "أحدث العروض",
   "SpecialDiscount": "خصم خاص",
   "Discount": "خصم",
@@ -225,5 +227,7 @@
   "GameAccessories": "إكسسوارات الألعاب",
   "GamingDevices": "أجهزة الألعاب",
   "NoGameOffers": "لا توجد عروض للألعاب",
-  "ComingSoon": "عرض قريباً"
+  "ComingSoon": "عرض قريباً",
+  "BestAppleDevices": "افضل اجهزه ابل",
+  "AppleDevicesDescription": "استمتع بتجربة استثنائية مع أحدث الاجهزه بأفضل الأسعار وخدمة ما بعد البيع المميزة"
 }

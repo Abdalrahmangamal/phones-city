@@ -90,7 +90,7 @@
                     >
                       <div className="flex items-center gap-2">
                         {getCategoryIcon(cat.name)}
-                        <span>{cat.name}</span>
+                        <span>{t(cat.name)}</span>
                       </div>
                       {cat.children && cat.children.length > 0 && (
                         <ChevronDown
@@ -110,7 +110,7 @@
                               className="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg"
                               onClick={onClose}
                             >
-                              {sub.name}
+                              {t(sub.name)}
                             </Link>
                           </li>
                         ))}

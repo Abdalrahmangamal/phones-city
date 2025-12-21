@@ -1,16 +1,18 @@
   import Bestseller from "@/components/home/Bestseller";
-  import Layout from "@/components/layout/Layout";
+  import Layout from "@/components/layout/layout";
   import Offerherosection from "@/components/public/Offerherosection";
   import Sliderbycategory from "@/components/public/Sliderbycategory";
   import Parttner from "@/components/public/Parttner";
   import Offerbannersingle from "@/components/public/Offerbannersingle";
   import { useLangSync } from "@/hooks/useLangSync";
+  import { useTranslation } from "react-i18next";
   import { useCategoriesStore } from "@/store/categories/useCategoriesStore";
   import { useEffect, useState } from "react";
   import { useParams } from "react-router";
   // import { useProductsStore } from "@/store/productsStore";
   export default function Trademarks() {
     const { lang } = useLangSync();
+    const { t } = useTranslation();
     const [activeSubCategory, setActiveSubCategory] = useState(null);
 
     // const{response,fetchProducts}=useProductsStore();
@@ -38,10 +40,8 @@ const filteredProducts = activeSubCategory
         <Layout>
           <div className=" lg:px-[45px]  pt-20 md:pt-0 flex-grow">
             <Offerherosection
-              title={"افضل اجهزه ابل "}
-              description={
-                "استمتع بتجربة استثنائية مع أحدث الاجهزه بأفضل الأسعار وخدمة ما بعد البيع المميزة"
-              }
+              title={t("BestAppleDevices")}
+              description={t("AppleDevicesDescription")}
             />
             <div className="mx-[-4px] md:-mx-[45px]">
               {Catesubgategory.length>0 ? 

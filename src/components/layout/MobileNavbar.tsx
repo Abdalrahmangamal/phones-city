@@ -51,7 +51,7 @@ export default function MobileNavbar({
                   <div className="text-sm bg-transparent">
                     <button className="flex items-center gap-1 text-sm opacity-90 hover:opacity-100">
                       <Globe className="h-4 w-4" />
-                      {lang === "ar" ? "عربي" : "English"}
+                      {lang === "ar" ? t("Arabic") : t("English")}
                       <svg
                         width="16"
                         height="16"
@@ -106,7 +106,7 @@ export default function MobileNavbar({
             className="w-[90px] h-[30px] rounded-[16px] bg-[#FFFFFF1A] flex items-center justify-center text-[10px] font-[400] 
             text-white transition-all duration-300 hover:bg-white hover:text-[#211C4D]"
           >
-            {lang === "ar" ? "تسجيل الدخول" : "Login"}
+            {t("Login")}
           </Link>
         </div>
       </div>

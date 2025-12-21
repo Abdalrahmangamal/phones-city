@@ -87,13 +87,13 @@ export default function Header() {
             <Link to={""} className="flex items-center gap-2">
               <img
                 src={logo}
-                alt="مدينة الهواتف"
+                alt={t("CityPhones")}
                 width={127}
                 height={20}
                 className="h-[70px] w-[70px] object-contain"
               />
               <h1 className="flex items-center text-[20px] font-[700] ">
-                مدينة الهواتف
+                {t("CityPhones")}
               </h1>
             </Link>
             {/* Search */}
@@ -249,7 +249,7 @@ export default function Header() {
                 <DropdownMenuTrigger asChild>
                   <div className="flex items-center gap-1 text-sm opacity-90 hover:opacity-100">
                     <Globe className="h-4 w-4" />
-                    عربي
+                    {lang === "ar" ? t("Arabic") : t("English")}
                     <svg
                       width="16"
                       height="16"

@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
-import logo from "../assets/images/logo.png"
+import logo from "../assets/images/logo.png";
+import { useTranslation } from "react-i18next";
 const Loader: React.FC = () => {
+  const { t } = useTranslation();
   const [rand, setRand] = useState(1);
 
   useEffect(() => {
@@ -54,7 +56,7 @@ const Loader: React.FC = () => {
         </div>
 
         <p className="text-white text-lg mt-4 tracking-[0.3em] animate-pulse">
-          جارِ التحميل...
+          {t("Loading...")}
         </p>
       </div>
     </div>
