@@ -23,29 +23,38 @@ import { useCategoriesStore } from "@/store/categories/useCategoriesStore";
 import useFeaturesStore from "@/store/home/featuresStore";
 import { useLangSync } from "@/hooks/useLangSync";
 import { useHomePageStore } from '@/store/home/homepageStore';
+import { usePopupStore } from '@/store/popupStore'; // Added popup store
 import type { Product } from '@/types/index';
 
 const NewHome = () => {
-  const [showPopup, setShowPopup] = useState(false); // Initially set to false
   const [isLoading, setIsLoading] = useState(false);
   const [bestSellers, setBestSellers] = useState<Product[]>([]);
   const [bestSellersLoading, setBestSellersLoading] = useState(false);
   
   const { fetchHomePage, data } = useHomePageStore();
   const { lang } = useLangSync();
+  const { isShowing, showPopup, hidePopup } = usePopupStore(); // Use popup store
   
   useEffect(() => {
     fetchHomePage(lang);
   }, [lang]);
-console.log("hoooooooooooome",data)
-  // Effect to show popup after a delay
+
+  // Effect to show popup after a delay only if it hasn't been shown yet
   useEffect(() => {
+    // Reset popup state when component mounts (homepage is visited)
+    usePopupStore.getState().resetPopup();
+    
     const popupTimer = setTimeout(() => {
-      setShowPopup(true);
-    }, 2000); // Show popup after 2 seconds (as per memory requirement)
+      // Check if popup has already been shown
+      if (!usePopupStore.getState().hasShown) {
+        showPopup();
+      }
+    }, 10000); // Show popup after 10 seconds (as per user request)
 
     // Cleanup timer if component unmounts
-    return () => clearTimeout(popupTimer);
+    return () => {
+      clearTimeout(popupTimer);
+    };
   }, []);
 
   // All stores
@@ -117,15 +126,11 @@ const fetchBestSellers = async () => {
           // Certificates
           fetchCertificates(),
 
-      
-
           // Product categories
           fetchCategories(lang),
 
-
           // Features (FrameSection)
           fetchFeatures(),
-
 
           // Trademarks / Brands (Parttner)
           // fetchtradmarks(),
@@ -167,14 +172,14 @@ const fetchBestSellers = async () => {
   return (
     <Layout>
       {/* Show the popup if showPopup is true */}
-      {showPopup && <HomePopup onClose={() => setShowPopup(false)} />}
+      {isShowing && <HomePopup onClose={() => hidePopup()} />}
       
       <div className="min-h-screen bg-gray-50 w-full flex flex-col">
         <main className="w-full">
           <HeroSection sliders={sliders} />
-          <BannerSection images={data?.main_images} />
+          <BannerSection images={data?.main_images || []} />
           <InstallmentSection title={data?.offer_text} />
-          <ProductCategoriesSection categories={categories} />
+          <ProductCategoriesSection />
           <LatestOffers />
           <SpecialOffersSection 
             title="SpecialOffersForYou"    

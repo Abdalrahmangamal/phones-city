@@ -8,15 +8,12 @@ import { useTranslation } from "react-i18next"; // أو أي طريقة تستخ
 import Filter from "@/components/public/Filter";
 import { useCategoriesStore } from "@/store/categories/useCategoriesStore";
 import type { Product } from "@/types/index";
-import InstallmentSection from "@/components/home/InstallmentSection"; // Import the InstallmentSection component
-import { useHomePageStore } from '@/store/home/homepageStore'; // Import the home page store
 
-export default function SpecialOffersPage() {
+export default function Trademarkbestoffer() {
   const navigate = useNavigate();
   const { lang } = useLangSync();
-  const { t } = useTranslation();
+  const { t } = useTranslation(); // استدعاء دالة الترجمة
   const { categories, fetchCategories } = useCategoriesStore();
-  const { data: homeData, fetchHomePage } = useHomePageStore(); // Get home page data
 
   // استخدم الـ response مباشرة كمصفوفة منتجات
   const { response: products, loading: productsLoading, error: storeError, fetchProducts } = useProductsStore();
@@ -34,10 +31,7 @@ export default function SpecialOffersPage() {
     
     // جلب الفئات للفلتر
     fetchCategories(lang);
-    
-    // جلب بيانات الصفحة الرئيسية للحصول على نص العرض
-    fetchHomePage(lang);
-  }, [lang, fetchProducts, fetchHomePage]);
+  }, [lang, fetchProducts]);
 
   // تطبيق الفلاتر على المنتجات
   useEffect(() => {
@@ -153,9 +147,13 @@ export default function SpecialOffersPage() {
         </button> */}
 
         <div className="pt-6 pb-12 px-4 md:px-8">
-          {/* Replace the banner with InstallmentSection */}
-          <InstallmentSection title={homeData?.offer_text} />
-          
+          <div className="max-w-7xl mx-auto text-center">
+            <div className="mb-8 bg-gradient-to-r from-blue-500 to-purple-600 text-white p-6 rounded-xl shadow-lg">
+              <h2 className="text-2xl font-bold mb-2">{t('ExclusiveSpecialOffers')}</h2>
+              <p className="opacity-90">{t('EnjoyBestOffersOn')} {productsList.length} {t('products')}</p>
+            </div>
+          </div>
+
           {productsList.length > 0 ? (
             <div className="max-w-8xl mx-auto -mt-8">
               <Bestseller 

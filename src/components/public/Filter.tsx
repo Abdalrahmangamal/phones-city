@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { ChevronDown, Grid } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 interface FilterProps {
   onSortChange: (sortOption: string) => void;
@@ -18,6 +19,7 @@ const Filter: React.FC<FilterProps> = ({
   minPrice = 0,
   maxPrice = 10000
 }) => {
+  const { t, i18n } = useTranslation();
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isSortOpen, setIsSortOpen] = useState(true);
   const [isCategoryOpen, setIsCategoryOpen] = useState(true);
@@ -32,11 +34,11 @@ const Filter: React.FC<FilterProps> = ({
   const priceSliderRef = useRef<HTMLDivElement>(null);
 
   const sortOptions = [
-    { id: "created_at", label: "الأحدث" },
-    { id: "main_price", label: "السعر" },
-    { id: "name_ar", label: "الاسم" },
-    { id: "best_seller", label: "الأكثر مبيعاً" },
-    { id: "average_rating", label: "الأعلى تقييماً" },
+    { id: "created_at", label: t("Newest") },
+    { id: "main_price", label: t("Price") },
+    { id: "name_ar", label: t("Name") },
+    { id: "best_seller", label: t("BestSelling") },
+    { id: "average_rating", label: t("HighestRated") },
   ];
 
   // Update slider position when range values change
@@ -110,7 +112,7 @@ const Filter: React.FC<FilterProps> = ({
         <div className="flex items-center gap-2">
           <Grid className="w-[26.33px] h-[24.69px] text-[#211C4D]" />
           <span className="font-roboto font-medium text-[18px] leading-[25px] text-[#211C4D]">
-            فلتر
+            {t("Filter")}
           </span>
         </div>
         <ChevronDown className={`w-4 h-4 text-[#211C4D] transition-transform ${isFilterOpen ? 'rotate-180' : ''}`} />
@@ -123,7 +125,7 @@ const Filter: React.FC<FilterProps> = ({
         >
           {/* Sort Filter Section */}
           <div className="w-full h-[40px] flex justify-between items-center px-2 bg-[#FDFDFD] border-b border-gray-100">
-            <span className="text-[#211C4D] font-roboto text-[18px] leading-[25px]">ترتيب حسب</span>
+            <span className="text-[#211C4D] font-roboto text-[18px] leading-[25px]">{t("SortBy")}</span>
             <ChevronDown 
               className={`w-4 h-4 text-[#211C4D] transition-transform cursor-pointer ${isSortOpen ? 'rotate-180' : ''}`} 
               onClick={(e) => {
@@ -158,7 +160,7 @@ const Filter: React.FC<FilterProps> = ({
 
           {/* Category Filter Section */}
           <div className="w-full h-[40px] flex justify-between items-center px-2 bg-[#FDFDFD] border-b border-gray-100">
-            <span className="text-[#211C4D] font-roboto text-[18px] leading-[25px]">تصنيف</span>
+            <span className="text-[#211C4D] font-roboto text-[18px] leading-[25px]">{t("Category")}</span>
             <ChevronDown 
               className={`w-4 h-4 text-[#211C4D] transition-transform cursor-pointer ${isCategoryOpen ? 'rotate-180' : ''}`} 
               onClick={(e) => {
@@ -182,7 +184,7 @@ const Filter: React.FC<FilterProps> = ({
                   )}
                 </div>
                 <span className="font-roboto text-[16px] leading-[150%] text-[#211C4D]">
-                  الجميع
+                  {t("All")}
                 </span>
               </div>
               
@@ -209,7 +211,7 @@ const Filter: React.FC<FilterProps> = ({
 
           {/* Price Range Filter Section */}
           <div className="w-full h-[40px] flex justify-between items-center px-2 bg-[#FDFDFD] border-b border-gray-100">
-            <span className="text-[#211C4D] font-roboto text-[18px] leading-[25px]">السعر</span>
+            <span className="text-[#211C4D] font-roboto text-[18px] leading-[25px]">{t("Price")}</span>
             <ChevronDown 
               className={`w-4 h-4 text-[#211C4D] transition-transform cursor-pointer ${isPriceOpen ? 'rotate-180' : ''}`} 
               onClick={(e) => {
@@ -224,7 +226,7 @@ const Filter: React.FC<FilterProps> = ({
               {/* Price Inputs */}
               <div className="flex gap-2 mb-4">
                 <div className="flex flex-col">
-                  <span className="text-[#211C4D] font-roboto text-[14px] mb-1">الحد الأدنى</span>
+                  <span className="text-[#211C4D] font-roboto text-[14px] mb-1">{t("Minimum")}</span>
                   <input
                     type="number"
                     value={rangeValues[0]}
@@ -233,7 +235,7 @@ const Filter: React.FC<FilterProps> = ({
                   />
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-[#211C4D] font-roboto text-[14px] mb-1">الحد الأقصى</span>
+                  <span className="text-[#211C4D] font-roboto text-[14px] mb-1">{t("Maximum")}</span>
                   <input
                     type="number"
                     value={rangeValues[1]}
@@ -276,8 +278,8 @@ const Filter: React.FC<FilterProps> = ({
               
               {/* Price Labels */}
               <div className="flex justify-between text-[12px] text-gray-500">
-                <span>{minPrice.toLocaleString()} ريال</span>
-                <span>{maxPrice.toLocaleString()} ريال</span>
+                <span>{minPrice.toLocaleString()} {t("SAR")}</span>
+                <span>{maxPrice.toLocaleString()} {t("SAR")}</span>
               </div>
             </div>
           )}

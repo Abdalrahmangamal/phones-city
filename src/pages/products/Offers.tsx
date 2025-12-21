@@ -37,6 +37,7 @@ export default function Offers() {
         <Bestseller
           title={`${t("CityofPhonesOffers")}`}
           btn={true}
+          link={`/${lang}/SpecialOffersPage`}
           products={response}
         />
 

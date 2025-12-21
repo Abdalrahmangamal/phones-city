@@ -60,12 +60,12 @@ const CertificationBadgesSection: React.FC<CertificationBadgesSectionProps> = ({
     return (
       <section className="w-full my-[30px] md:!my-20 max-w-[1280px] mx-auto px-4">
         <h2 className="font-semibold text-[22px] md:text-[32px] text-[#211C4D] text-center mb-8">
-          {t("OurCertificates") || "شهاداتنا واعتماداتنا"}
+          {t("OurCertificates")}
         </h2>
-        <div className="flex flex-col items-center justify-center h-40 gap-4 py-20">
-          <div className="animate-spin rounded-full h-12 w-12 border-4 border-blue-600 border-t-transparent"></div>
+        <div className="flex flex-col items-center justify-center h-40 gap-4 py-20 text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-4 border-blue-600 border-t-transparent mx-auto"></div>
           <span className="text-gray-600">
-            {isArabic ? "جارِ تحميل الشهادات..." : "Loading certificates..."}
+            {isArabic ? t("LoadingCertificates") : t("LoadingCertificatesEn")}
           </span>
         </div>
       </section>
@@ -75,12 +75,12 @@ const CertificationBadgesSection: React.FC<CertificationBadgesSectionProps> = ({
   return (
     <section className="w-full my-[30px] md:!my-20 max-w-[1280px] mx-auto px-4">
       <h2 className="font-semibold text-[22px] md:text-[32px] text-[#211C4D] text-center mb-8">
-        {t("OurCertificates") || "شهاداتنا واعتماداتنا"}
+        {t("OurCertificates")}
       </h2>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6 lg:gap-8">
+      <div className="flex flex-wrap justify-center gap-6 lg:gap-8">
         {certificates.map((cert) => (
-          <div key={cert.id} className="flex flex-col items-center">
+          <div key={cert.id} className="flex flex-col items-center justify-start w-[120px] md:w-[150px] lg:w-[180px]">
             <Dialog
               open={openDialogId === cert.id}
               onOpenChange={(open) => {
@@ -89,7 +89,7 @@ const CertificationBadgesSection: React.FC<CertificationBadgesSectionProps> = ({
             >
               <DialogTrigger asChild>
                 <div
-                  className="w-[120px] h-[120px] md:w-[150px] md:h-[150px] lg:w-[180px] lg:h-[180px] rounded-full overflow-hidden bg-white shadow-[0px_7px_29px_0px_rgba(100,100,111,0.2)] flex items-center justify-center cursor-pointer hover:shadow-xl transition-shadow"
+                  className="w-[120px] h-[120px] md:w-[150px] md:h-[150px] lg:w-[180px] lg:h-[180px] rounded-full overflow-hidden bg-white shadow-[0px_7px_29px_0px_rgba(100,100,111,0.2)] flex items-center justify-center cursor-pointer hover:shadow-xl transition-shadow mx-auto"
                   onClick={() => handleOpen(cert.id)}
                 >
                   <img
@@ -106,7 +106,7 @@ const CertificationBadgesSection: React.FC<CertificationBadgesSectionProps> = ({
                   <div className="flex flex-col items-center justify-center h-[400px] gap-4">
                     <div className="animate-spin rounded-full h-12 w-12 border-4 border-blue-600 border-t-transparent"></div>
                     <span className="text-gray-600">
-                      {isArabic ? "جارِ تحميل التفاصيل..." : "Loading details..."}
+                      {isArabic ? t("LoadingDetails") : t("LoadingDetailsEn")}
                     </span>
                   </div>
                 ) : currentCertificate ? (
@@ -134,26 +134,26 @@ const CertificationBadgesSection: React.FC<CertificationBadgesSectionProps> = ({
                           onClick={handleCloseDialog}
                           className="px-10 py-4 bg-blue-600 text-white text-lg font-medium rounded-xl hover:bg-blue-700 transition-colors focus:outline-none focus:ring-4 focus:ring-blue-300"
                         >
-                          {isArabic ? "إغلاق" : "Close"}
+                          {t("Close")}
                         </button>
                       </div>
                     </div>
                   </>
                 ) : (
                   <div className="text-center py-16">
-                    <p className="text-red-500 text-xl mb-4">Warning: فشل تحميل التفاصيل</p>
+                    <p className="text-red-500 text-xl mb-4">{isArabic ? "Warning: فشل تحميل التفاصيل" : "Warning: Failed to load details"}</p>
                     <button
                       onClick={handleCloseDialog}
                       className="px-8 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700"
                     >
-                      {isArabic ? "عودة" : "Back"}
+                      {t("Back")}
                     </button>
                   </div>
                 )}
               </DialogContent>
             </Dialog>
 
-            <p className="mt-4 text-sm md:text-base text-[#211C4D] font-semibold max-w-[180px] mx-auto line-clamp-2 leading-tight">
+            <p className="mt-4 text-sm md:text-base text-[#211C4D] font-semibold max-w-[180px] mx-auto text-center line-clamp-2 leading-tight">
               {isArabic ? cert.name_ar : cert.name_en}
             </p>
           </div>

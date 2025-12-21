@@ -11,6 +11,7 @@ import emkann from "@/assets/images/emkann.png";
 import madfu from "@/assets/images/madfu.png";
 import mispay_installment from "@/assets/images/mispay_installment 1.png";
 import amwal from "@/assets/images/amwal.png";
+import { useTranslation } from "react-i18next";
 
 const paymentLogos: Record<number, any> = {
   1: tamara,
@@ -76,10 +77,10 @@ export default function OrderSummary({ onTotalUpdate }: OrderSummaryProps) {
   let processingFee = 0;
   let selectedPaymentName = "";
 
-  const paymentMethods = items[0]?.product.options?.[0]?.payment_methods || [];
+  const paymentMethods = (items[0]?.product as any)?.options?.[0]?.payment_methods || [];
 
   if (selectedPaymentId !== null) {
-    const selected = paymentMethods.find((p) => p.id === selectedPaymentId);
+    const selected = paymentMethods.find((p: any) => p.id === selectedPaymentId);
     if (selected) {
       selectedPaymentName = selected.name;
       processingFee = parseFloat(selected.processing_fee_amount || "0");
@@ -196,7 +197,8 @@ export default function OrderSummary({ onTotalUpdate }: OrderSummaryProps) {
 
       {/* بوابات الدفع */}
       <div className="mb-8 space-y-3">
-        {paymentProviders.map((provider) => (
+        <h2 className="text-lg font-semibold mb-3">{t("PaymentMethods")}</h2>
+        {paymentProviders.map((provider: any) => (
           <div
             key={provider.id}
             onClick={() => handlePaymentSelect(provider.id)}
@@ -213,6 +215,7 @@ export default function OrderSummary({ onTotalUpdate }: OrderSummaryProps) {
               checked={selectedPaymentId === provider.id}
               onChange={() => handlePaymentSelect(provider.id)}
               className="h-5 w-5 text-blue-600"
+              aria-label={provider.name}
             />
 
             <div className="flex-1">

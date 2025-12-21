@@ -178,7 +178,9 @@ const SpecialOffersSection: React.FC<SpecialOffersSectionProps> = ({
       <div className={`w-full relative special-offers-swiper ${!shouldAllowSlide ? 'no-scroll' : ''}`}>
         <Swiper
           key={lang + products.length}
-          modules={[Navigation, Autoplay]}
+          modules={[Navigation, 
+            // Autoplay
+          ]}
           navigation={{
             nextEl: '.special-offers-next',
             prevEl: '.special-offers-prev',
@@ -186,12 +188,12 @@ const SpecialOffersSection: React.FC<SpecialOffersSectionProps> = ({
           }}
           loop={shouldAllowSlide && products.length > slidesPerView}
           dir={lang === "ar" ? "rtl" : "ltr"}
-          autoplay={
-            shouldAllowSlide ? {
-              delay: 4000,
-              disableOnInteraction: false,
-            } : false
-          }
+          // autoplay={
+          //   shouldAllowSlide ? {
+          //     delay: 4000,
+          //     disableOnInteraction: false,
+          //   } : false
+          // }
           slidesPerView={slidesPerView}
           spaceBetween={20}
           className="w-full pb-10"
@@ -248,7 +250,7 @@ const SpecialOffersSection: React.FC<SpecialOffersSectionProps> = ({
                   variations={item.variations || []}
                   id={item.id}
                   imagecard="!h-[100px] !w-[100px]"
-                  containerstyle="!p-2 pb-3 !rounded-[10px] !min-h-fit h-full"
+                  containerstyle="!p-2 pb-3 !rounded-[10px]  !w-[150px]  !min-h-fit h-full"
                 />
               </div>
             </SwiperSlide>

@@ -8,11 +8,12 @@ import { Link } from "react-router-dom";
 import Loader from '@/components/Loader';
 import { useCategoriesStore } from "@/store/categories/useCategoriesStore";
 import { useEffect } from "react";
-
+import { useTranslation } from "react-i18next"; // Import translation hook
 
 export default function ProductCategoriesSection() {
 
   const { lang } = useLangSync();
+  const { t } = useTranslation(); // Use translation hook
   const { fetchCategories, categories } = useCategoriesStore();
   useEffect(() => {
     fetchCategories(lang);
@@ -20,12 +21,11 @@ export default function ProductCategoriesSection() {
   console.log(categories);
 
 
-
   return (
     <div className="xl:px-[90px] px-2 pt-2 md:pt-0">
       <div className="relative my-6">
         <h1 className="text-center text-[#211C4D] text-[22px] sm:text-[26px] md:text-[32px] lg:text-[40px] font-[700]">
-          الأقسام
+          {t("Sections")} {/* Use translation */}
         </h1>
 
         <Swiper

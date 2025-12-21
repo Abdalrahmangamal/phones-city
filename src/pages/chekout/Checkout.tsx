@@ -19,6 +19,7 @@ import { useAddressStore } from '@/store/profile/indexStore';
 import { Package, Home, ShoppingBag } from "lucide-react"; 
 
 export default function CheckoutPage() {
+  const { t } = useTranslation();
   const [activeStep, setActiveStep] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [orderCompleted, setOrderCompleted] = useState(false); 

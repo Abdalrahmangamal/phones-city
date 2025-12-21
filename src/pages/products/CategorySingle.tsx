@@ -1,56 +1,44 @@
 import Layout from "@/components/layout/Layout";
-import NewHeroSection from "@/components/public/HeroSection";
-import image from "@/assets/images/hero.jpg";
 import BannerSection from "@/components/public/BannerSection";
-import banner from "@/assets/images/banner.png";
 import Bestseller from "@/components/home/Bestseller";
 import Parttner from "@/components/public/Parttner";
-import {useCategoriesStore} from '@/store/categories/useCategoriesStore.ts';
+import { useCategoriesStore } from "@/store/categories/useCategoriesStore.ts";
 import { useEffect } from "react";
 import { useParams } from "react-router";
-import Loader from '@/components/Loader'
+import Loader from "@/components/Loader";
+import { useHeroSectionStore } from "@/store/home/herosectionStore";
+import { useLangSync } from "@/hooks/useLangSync";
+import HeroSection from "@/components/public/HeroSection";
+import { useHomePageStore } from "@/store/home/homepageStore";
+
 export default function Offers() {
-  let {id,productmain} = useParams();
+  const { id, productmain } = useParams();
+  const { fetchSliders, sliders } = useHeroSectionStore();
+  const { lang } = useLangSync();
+  const { data } = useHomePageStore();
 
-const { Categoriesbyid ,fetchCategoriesbyid} = useCategoriesStore();
-useEffect(() => {
-  if (id) {
-    fetchCategoriesbyid(id,productmain);
-  }
-}, [id]);
+  useEffect(() => {
+    fetchSliders(lang);
+  }, []);
+  const { Categoriesbyid, fetchCategoriesbyid } = useCategoriesStore();
+  useEffect(() => {
+    if (id) {
+      fetchCategoriesbyid(id, productmain);
+    }
+  }, [id]);
 
-  console.log("asdasd",Categoriesbyid)
+  console.log("asdasd", Categoriesbyid);
 
   return (
     <Layout>
-        {
-        !Categoriesbyid ? <Loader /> : null
-      }
+      {!Categoriesbyid ? <Loader /> : null}
       <div>
         <div>
-          <NewHeroSection
-            slides={[
-              {
-                title: "أحدث الهواتف الذكية",
-                description:
-                  "استمتع بتجربة استثنائية مع أحدث الهواتف بأفضل الأسعار وخدمة ما بعد البيع المميزة",
-                bg: `${image}`,
-                link: "/shop",
-              },
-              {
-                title: "عروض خاصة جدًا",
-                description:
-                  "خصومات حصرية على جميع الماركات العالمية لفترة محدودة",
-                bg: `${image}`,
-                link: "/offers",
-              },
-            ]}
-          />
-          <BannerSection image={banner} />
+          <HeroSection sliders={sliders} />
+
+          <BannerSection images={data?.main_images} />
           {/* <Bestseller title={"عروض مدينة الهواتف"}  /> */}
-{Categoriesbyid && (
-  <Bestseller title="" products={Categoriesbyid} />
-)}
+          {Categoriesbyid && <Bestseller title="" products={Categoriesbyid} />}
           <div className="mb-15">
             <Parttner />
           </div>
