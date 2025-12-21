@@ -1,11 +1,32 @@
 "use client";
 import "@/style.css";
-import { X, Plus, Minus } from "lucide-react";
+import { X, Plus, Minus, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCartStore } from '@/store/cartStore/cartStore';
+import { useTranslation } from "react-i18next";
+import { useState } from "react";
 
 export default function Basketsummary({ products, total }: any) {
-  const { deletefromCart, updateQuantity } = useCartStore();
+  const { deletefromCart, updateQuantity, items, clearCart, loading } = useCartStore();
+  const { t, i18n } = useTranslation();
+  const isRTL = i18n.language === "ar";
+  const [isDeletingAll, setIsDeletingAll] = useState(false);
+
+  const handleDeleteAll = async () => {
+    if (items.length === 0 || isDeletingAll || loading) return;
+    
+    if (window.confirm(t("AreYouSureDeleteAll"))) {
+      setIsDeletingAll(true);
+      try {
+        await clearCart(); // سيحذف جميع المنتجات مرة واحدة
+      } catch (error) {
+        console.error("Failed to delete all items:", error);
+        alert(t("DeleteAllFailed"));
+      } finally {
+        setIsDeletingAll(false);
+      }
+    }
+  };
 
   const handleIncrement = (cartItemId: number, currentQuantity: number) => {
     updateQuantity(cartItemId, currentQuantity + 1);
@@ -16,28 +37,51 @@ export default function Basketsummary({ products, total }: any) {
   };
 
   return (
-    <div className="w-full max-w-2xl mx-auto" dir="rtl">
-      {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-[24px] font-[600] text-[#211C4D] text-right">
-          ملخص السلة
+    <div className="w-full max-w-2xl mx-auto" dir={isRTL ? "rtl" : "ltr"}>
+      {/* Header مع زر حذف الكل */}
+      <div className="mb-8 flex justify-between items-center">
+        <h1 className={`text-[24px] font-[600] text-[#211C4D] ${isRTL ? "text-right" : "text-left"}`}>
+          {t("CartSummary")}
         </h1>
+        
+        {products.length > 0 && (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleDeleteAll}
+            disabled={loading || isDeletingAll}
+            className="flex items-center gap-2 text-red-600 border-red-300 hover:bg-red-50 hover:text-red-700 hover:border-red-400 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+          >
+            {isDeletingAll ? (
+              <>
+                <div className="w-4 h-4 border-2 border-red-600 border-t-transparent rounded-full animate-spin"></div>
+                {t("Deleting")}
+              </>
+            ) : (
+              <>
+                <Trash2 className="w-4 h-4" />
+                {t("DeleteAll")}
+              </>
+            )}
+          </Button>
+        )}
       </div>
 
-      {/* Cart Items */}
+      {/* قائمة المنتجات */}
       <div className="space-y-6">
         {products.map((item: any) => {
           const product = item.product || item;
           const imageUrl = product?.images?.[0]?.url || product?.main_image || "";
-          const productName = product?.name || item?.name || "منتج";
+          const productName = product?.name || item?.name || t("Product");
           const productPrice = product?.final_price || item?.price || 0;
           const quantity = item?.quantity || 1;
-          const cartItemId = item?.id || 0; // مهم جداً: هذا cart_item_id (مثل 125)
+          const cartItemId = item?.id || 0;
 
           return (
             <div
               key={cartItemId}
               className="flex items-center justify-between gap-4 lg:p-4 border-b border-border hover:bg-muted/50 transition-colors"
+              dir={isRTL ? "rtl" : "ltr"}
             >
               {/* الصورة */}
               <div className="flex-shrink-0">
@@ -51,22 +95,24 @@ export default function Basketsummary({ products, total }: any) {
                 />
               </div>
 
-              {/* المعلومات والكمية والسعر */}
-              <div className="flex-1 lg:pl-[40px] flex flex-col md:flex-row justify-between gap-3">
-                <div className="text-sm text-right flex-1">
+              {/* المحتوى الرئيسي */}
+              <div className={`flex-1 flex flex-col md:flex-row justify-between gap-3 ${isRTL ? "lg:pl-[40px]" : "lg:pr-[40px]"}`}>
+                <div className={`text-sm flex-1 ${isRTL ? "text-right" : "text-left"}`}>
                   <p className="md:text-[16px] text-[13px] max-w-[200px] font-[600] text-[#211C4D] line-clamp-2">
                     {productName}
                   </p>
                   <p className="text-xs text-gray-500 mt-1">#{cartItemId}</p>
                 </div>
 
-                {/* أزرار الكمية */}
+                {/* عداد الكمية */}
                 <div className="flex items-center gap-2 rounded-md bg-gray-100 p-1">
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="h-8 w-8 text-black p-0 hover:bg-gray-200"
+                    className="h-8 w-8 text-black p-0 hover:bg-gray-200 disabled:opacity-50"
                     onClick={() => handleIncrement(cartItemId, quantity)}
+                    disabled={loading}
+                    aria-label={t("Increase")}
                   >
                     <Plus className="w-4 h-4" />
                   </Button>
@@ -82,20 +128,21 @@ export default function Basketsummary({ products, total }: any) {
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="h-8 w-8 p-0 text-black hover:bg-gray-200"
+                    className="h-8 w-8 p-0 text-black hover:bg-gray-200 disabled:opacity-50"
                     onClick={() => handleDecrement(cartItemId, quantity)}
-                    disabled={quantity <= 1}
+                    disabled={quantity <= 1 || loading}
+                    aria-label={t("Decrease")}
                   >
                     <Minus className="w-4 h-4" />
                   </Button>
                 </div>
 
-                {/* السعر الإجمالي للمنتج (سعر الوحدة × الكمية) - اختياري */}
+                {/* السعر */}
                 <div className="flex items-center gap-3 min-w-max">
                   <span className="font-bold text-[14px] md:text-lg text-[#211C4D]">
                     {typeof productPrice === "string"
                       ? productPrice
-                      : Number(productPrice).toLocaleString("ar-SA")} ر.س
+                      : Number(productPrice).toLocaleString(isRTL ? "ar-SA" : "en-US")} {t("SAR")}
                   </span>
                 </div>
               </div>
@@ -105,7 +152,9 @@ export default function Basketsummary({ products, total }: any) {
                 variant="ghost"
                 size="sm"
                 onClick={() => deletefromCart(cartItemId)}
-                className="text-[#211C4D] hover:text-destructive hover:bg-destructive/10 flex-shrink-0"
+                disabled={loading}
+                className="text-[#211C4D] hover:text-destructive hover:bg-destructive/10 flex-shrink-0 disabled:opacity-50"
+                aria-label={t("Remove")}
               >
                 <X className="!w-[24px] !h-[24px]" />
               </Button>
@@ -114,25 +163,16 @@ export default function Basketsummary({ products, total }: any) {
         })}
       </div>
 
-      {/* الإجمالي */}
-      {/* {products.length > 0 && (
-        <div className="mt-8 p-4 bg-muted rounded-lg border border-border">
-          <div className="flex justify-between items-center">
-            <span className="text-lg font-bold text-foreground">الإجمالي:</span>
-            <span className="text-muted-foreground text-start font-semibold" dir="ltr">
-              {Number(total).toLocaleString("ar-SA", {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-              })} ر.س
-            </span>
-          </div>
-        </div>
-      )} */}
-
-      {/* السلة فارغة */}
       {products.length === 0 && (
         <div className="text-center py-12">
-          <p className="text-muted-foreground text-lg">السلة فارغة</p>
+          <p className="text-muted-foreground text-lg">{t("EmptyCart")}</p>
+          <Button 
+            variant="outline" 
+            className="mt-4"
+            onClick={() => window.location.href = '/'}
+          >
+            {t("ContinueShopping")}
+          </Button>
         </div>
       )}
     </div>

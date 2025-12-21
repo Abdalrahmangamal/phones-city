@@ -40,11 +40,15 @@ interface CartState {
   error: string | null;
   total: number;
   items: CartItem[];
+  finalTotal: number;
+  selectedPaymentId: number | null;
   fetchCart: () => Promise<void>;
   addToCart: (id: number, quantity: number, isOption: boolean) => Promise<void>;
   deleteToCart: (productId: number) => Promise<void>;
   deletefromCart: (cartItemId: number) => Promise<void>;
-  updateQuantity: (cartItemId: number, newQuantity: number) => Promise<void>; // جديدة
+  updateQuantity: (cartItemId: number, newQuantity: number) => Promise<void>;
+  updateFinalTotal: (finalTotal: number, selectedPaymentId: number | null) => void;
+  clearCart: () => Promise<void>;
 }
 
 const baseUrl = import.meta.env.VITE_BASE_URL;
@@ -54,6 +58,8 @@ export const useCartStore = create<CartState>((set, get) => ({
   error: null,
   items: [],
   total: 0,
+  finalTotal: 0,
+  selectedPaymentId: null,
 
   // ----------------- GET CART ------------------
   fetchCart: async () => {
@@ -170,7 +176,7 @@ export const useCartStore = create<CartState>((set, get) => ({
     }
   },
 
-  // ----------------- UPDATE QUANTITY (جديدة) ------------------
+  // ----------------- UPDATE QUANTITY ------------------
   updateQuantity: async (cartItemId: number, newQuantity: number) => {
     if (newQuantity < 1) {
       await get().deletefromCart(cartItemId);
@@ -186,7 +192,6 @@ export const useCartStore = create<CartState>((set, get) => ({
         return;
       }
 
-      // PUT /api/v1/cart/{id} مع body { quantity: newQuantity }
       await axios.put(
         `${baseUrl}api/v1/cart/${cartItemId}`,
         { quantity: newQuantity },
@@ -199,9 +204,7 @@ export const useCartStore = create<CartState>((set, get) => ({
         }
       );
 
-      // تحديث السلة من السيرفر لضمان الدقة
       await get().fetchCart();
-
       set({ loading: false });
     } catch (error: any) {
       console.error("Update quantity error:", error?.response?.data || error.message);
@@ -211,4 +214,47 @@ export const useCartStore = create<CartState>((set, get) => ({
       });
     }
   },
+
+  // ----------------- UPDATE FINAL TOTAL ------------------
+  updateFinalTotal: (finalTotal: number, selectedPaymentId: number | null) => {
+    set({ finalTotal, selectedPaymentId });
+  },
+
+  // ----------------- CLEAR CART (اختياري) ------------------
+
+clearCart: async () => {
+  try {
+    set({ loading: true, error: null });
+    const token = localStorage.getItem("token");
+    
+    if (!token) {
+      set({ error: "No authentication token found", loading: false });
+      return;
+    }
+
+    // استخدام الـ endpoint الخاص بحذف الكل
+    await axios.delete(`${baseUrl}api/v1/cart`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/json",
+      },
+    });
+    
+    // تحديث الحالة المحلية مباشرة
+    set({ 
+      items: [], 
+      total: 0, 
+      finalTotal: 0, 
+      selectedPaymentId: null,
+      loading: false 
+    });
+    
+  } catch (error: any) {
+    console.error("Clear cart error:", error?.response?.data || error.message);
+    set({
+      error: error?.response?.data?.message || "فشل حذف السلة",
+      loading: false,
+    });
+  }
+},
 }));

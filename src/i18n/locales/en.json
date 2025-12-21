@@ -211,5 +211,69 @@
 
   "SpecialOffersForYou": "Special Offers for you",
   "ShopNow": "Shop Now",
-  "ShopNowEn": "Shop Now"
+  "ShopNowEn": "Shop Now",
+  
+  "PromoCode": "Promo Code / Coupon Code",
+  "EnterCode": "Enter code",
+  "Apply": "Apply",
+  "UsePoints": "Use 60 points and get 15% discount",
+
+  "PointsDiscount": "Points Discount",
+
+  "PaymentFees": "{{paymentName}} Fees",
+  "CartSummary": "Cart Summary",
+  "DeleteAll": "Delete All",
+  "AreYouSureDeleteAll": "Are you sure you want to delete all products from cart?",
+  "EmptyCart": "Cart is empty",
+  "Increase": "Increase",
+  "Decrease": "Decrease",
+  "Remove": "Remove",
+  "LoadingOrderSummary": "Loading order summary...",
+  "NoItemsInCart": "No items in cart",
+  "chooseAddress": {
+    "title": "How do you want to receive your order?",
+    "homeDelivery": "Home Delivery",
+    "pickupFromShowroom": "Pickup from Showroom",
+    "selectAddress": "Select Address",
+    "noAddresses": "No addresses added",
+    "addNewAddress": "Add new address",
+    "loading": "Loading addresses...",
+    "error": "Error loading addresses:",
+    "retry": "Retry",
+    "add": "Add new address",
+    "street": "Street",
+    "area": "Area",
+    "phone": "Phone"
+  },
+  "common": {
+    "SAR": "SAR"
+  },
+  "checkoutSummary": {
+    "title": "Summary",
+    "selectedProducts": "Selected Products",
+    "product": "Product",
+    "image": "Image",
+    "address": "Address",
+    "usePoints": "Use 60 points and get 15% discount",
+    "disablePoints": "Disable points usage",
+    "enablePoints": "Enable points usage",
+    "subtotal": "Subtotal",
+    "discount": "Discount",
+    "estimatedTax": "Estimated Tax",
+    "shippingCost": "Shipping Cost",
+    "total": "Total"
+  },
+  "checkout": {
+    "steps": {
+      "orderSummary": "Order Summary",
+      "address": "Address",
+      "payment": "Payment"
+    },
+    "buttons": {
+      "back": "Back",
+      "next": "Next",
+      "completeOrder": "Complete Order",
+      "processing": "Processing..."
+    }
+  }
 }

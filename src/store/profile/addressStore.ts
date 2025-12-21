@@ -15,12 +15,21 @@ export interface City {
   updated_at: string;
 }
 
+// في addressStore.ts، عدل interface Address:
 export interface Address {
   id: number;
   first_name: string;
   last_name: string;
   country: string;
-  city: string;
+  city_id: number; // تغير من city إلى city_id
+  city: { // كائن city الكامل
+    id: number;
+    slug: string;
+    name: string;
+    name_en: string;
+    name_ar: string;
+    shipping_fee: string;
+  };
   street_address: string;
   phone: string;
   email: string;
@@ -31,6 +40,7 @@ export interface Address {
 interface AddressState {
   addresses: Address[];
   selectedAddressId: number | null;
+  deliveryMethod: "delivery" | "pickup" | null;
   loading: boolean;
   error: string | null;
   cities: City[];
@@ -39,6 +49,7 @@ interface AddressState {
   // Actions
   setAddresses: (addresses: Address[]) => void;
   setSelectedAddressId: (id: number | null) => void;
+  setDeliveryMethod: (method: "delivery" | "pickup" | null) => void;
   setLoading: (loading: boolean) => void;
   setError: (error: string | null) => void;
 
@@ -63,6 +74,7 @@ const useAddressStore = create<AddressState>()(
     (set, get) => ({
       addresses: [],
       selectedAddressId: null,
+      deliveryMethod: "delivery",
       loading: false,
       error: null,
       cities: [],
@@ -70,6 +82,7 @@ const useAddressStore = create<AddressState>()(
       citiesError: null,
       setAddresses: (addresses) => set({ addresses }),
       setSelectedAddressId: (selectedAddressId) => set({ selectedAddressId }),
+      setDeliveryMethod: (deliveryMethod) => set({ deliveryMethod }),
       setLoading: (loading) => set({ loading }),
       setError: (error) => set({ error }),
 
@@ -220,6 +233,7 @@ const useAddressStore = create<AddressState>()(
       partialize: (state) => ({
         addresses: state.addresses,
         selectedAddressId: state.selectedAddressId,
+        deliveryMethod: state.deliveryMethod,
       }),
     }
   )

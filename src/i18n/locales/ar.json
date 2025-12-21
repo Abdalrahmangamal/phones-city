@@ -211,5 +211,67 @@
   "SpecialOffersForYou": "عروض خاصة لك",
   "Login": "تسجيل الدخول",
   "ShopNow": "تسوق الأن",
-  "ShopNowEn": "Shop Now"
+  "ShopNowEn": "Shop Now",
+  
+"PromoCode": "رمز الخصم / رمز الترويج",
+"EnterCode": "أدخل الرمز",
+"Apply": "تطبيق",
+"UsePoints": "استخدم 60 نقطة واستبدلها بخصم 15%",
+"PointsDiscount": "خصم النقاط",
+"PaymentFees": "رسوم {{paymentName}}",
+"CartSummary": "ملخص السلة",
+"DeleteAll": "مسح الكل",
+"AreYouSureDeleteAll": "هل أنت متأكد من حذف جميع المنتجات من السلة؟",
+"EmptyCart": "السلة فارغة",
+"Increase": "زيادة",
+"Decrease": "تقليل",
+"Remove": "حذف",
+"LoadingOrderSummary": "جاري تحميل ملخص الطلب...",
+"NoItemsInCart": "لا توجد عناصر في السلة",
+"chooseAddress": {
+    "title": "كيف تريد استلام طلبك؟",
+    "homeDelivery": "توصيل منزلي",
+    "pickupFromShowroom": "الاستلام من المعرض",
+    "selectAddress": "اختر العنوان",
+    "noAddresses": "لا توجد عناوين مضافة",
+    "addNewAddress": "إضافة عنوان جديد",
+    "loading": "جاري تحميل العناوين...",
+    "error": "خطأ في تحميل العناوين:",
+    "retry": "إعادة المحاولة",
+    "add": "اضافة عنوان جديد",
+    "street": "الشارع",
+    "area": "المنطقة",
+    "phone": "الهاتف"
+  },
+  "common": {
+    "SAR": "ر.س"
+  },
+  "checkoutSummary": {
+    "title": "الملخص",
+    "selectedProducts": "المنتجات المختارة",
+    "product": "منتج",
+    "image": "صورة",
+    "address": "العنوان",
+    "usePoints": "استخدم 60 نقطة واستمتع بخصم 15 %",
+    "disablePoints": "إيقاف استخدام النقاط",
+    "enablePoints": "استخدام النقاط",
+    "subtotal": "المجموع الفرعي",
+    "discount": "الخصم",
+    "estimatedTax": "الضريبة المقدرة",
+    "shippingCost": "تكلفة الشحن",
+    "total": "إجمالي"
+  },
+  "checkout": {
+    "steps": {
+      "orderSummary": "ملخص الطلب",
+      "address": "العنوان",
+      "payment": "الدفع"
+    },
+    "buttons": {
+      "back": "رجوع",
+      "next": "التالي",
+      "completeOrder": "إتمام الطلب",
+      "processing": "جاري المعالجة..."
+    }
+  }
 }
