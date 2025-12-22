@@ -362,5 +362,9 @@
       "completeOrder": "Complete Order",
       "processing": "Processing..."
     }
-  }
+  },
+  "optional": "optional",
+  "refresh": "Refresh",
+  "copy": "Copy",
+  "edited": "Edited"
 }

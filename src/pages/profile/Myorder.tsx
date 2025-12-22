@@ -8,11 +8,12 @@ import { useOrdersStore } from "@/store/profile/indexStore";
 import { Package, Calendar, Eye, ChevronDown, ChevronUp, Phone, MapPin, CreditCard, X } from "lucide-react";
 import React from "react";
 import { useTranslation } from "react-i18next";
+import { useLangSync } from "@/hooks/useLangSync";
 
 // وظيفة مساعدة لتنسيق التاريخ
-const formatDate = (dateString: string) => {
+const formatDate = (dateString: string, locale: string) => {
   const date = new Date(dateString);
-  return date.toLocaleDateString('ar-SA', {
+  return date.toLocaleDateString(locale === 'ar' ? 'ar-SA' : 'en-US', {
     year: 'numeric',
     month: 'short',
     day: 'numeric'
@@ -21,6 +22,7 @@ const formatDate = (dateString: string) => {
 
 export default function Myorder() {
   const { t } = useTranslation();
+  const { lang } = useLangSync();
   const { orders, loading, error, fetchOrders, getOrdersByStatus, cancelOrder } = useOrdersStore();
   const [activeTab, setActiveTab] = useState("total");
   const [expandedOrderId, setExpandedOrderId] = useState<number | null>(null);
@@ -437,7 +439,7 @@ export default function Myorder() {
                               <td className="py-4 px-4">
                                 <div className="flex items-center gap-2">
                                   <Calendar className="w-4 h-4 text-gray-400" />
-                                  <span className="text-[#211C4D] font-medium text-[12px]">{formatDate(order.created_at)}</span>
+                                  <span className="text-[#211C4D] font-medium text-[12px]">{formatDate(order.created_at, lang)}</span>
                                 </div>
                               </td>
 

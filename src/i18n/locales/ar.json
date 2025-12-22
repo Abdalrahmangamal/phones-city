@@ -361,5 +361,9 @@
       "completeOrder": "إتمام الطلب",
       "processing": "جاري المعالجة..."
     }
-  }
+  },
+  "optional": "اختياري",
+  "refresh": "تحديث",
+  "copy": "نسخ",
+  "edited": "تم التعديل"
 }
