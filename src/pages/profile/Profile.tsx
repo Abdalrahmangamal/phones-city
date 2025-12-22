@@ -290,7 +290,7 @@ export default function Profile() {
               <label className="text-[#211C4DCC] text-[14px] font-[500] block mb-2">
                 {t("FirstName")}
                 {formData.firstName !== originalData.firstName && (
-                  <span className="mr-2 text-xs text-blue-600">✏️ تم التعديل</span>
+                  <span className="mr-2 text-xs text-blue-600">✏️ {t("edited")}</span>
                 )}
               </label>
               <div className="relative">
@@ -310,7 +310,7 @@ export default function Profile() {
               <label className="text-[#211C4DCC] text-[14px] font-[500] block mb-2">
                 {t("LastName")}
                 {formData.lastName !== originalData.lastName && (
-                  <span className="mr-2 text-xs text-blue-600">✏️ تم التعديل</span>
+                  <span className="mr-2 text-xs text-blue-600">✏️ {t("edited")}</span>
                 )}
               </label>
               <div className="relative">
@@ -330,7 +330,7 @@ export default function Profile() {
               <label className="text-[#211C4DCC] text-[14px] font-[500]">
                 {t("PhoneNumber")}
                 {formData.phone !== originalData.phone && (
-                  <span className="mr-2 text-xs text-blue-600">✏️ تم التعديل</span>
+                  <span className="mr-2 text-xs text-blue-600">✏️ {t("edited")}</span>
                 )}
               </label>
               <div className="relative">
@@ -350,7 +350,7 @@ export default function Profile() {
               <label className="text-[#211C4DCC] text-[14px] font-[500]">
                 {t("EmailAddress")}
                 {formData.email !== originalData.email && (
-                  <span className="mr-2 text-xs text-blue-600">✏️ تم التعديل</span>
+                  <span className="mr-2 text-xs text-blue-600">✏️ {t("edited")}</span>
                 )}
               </label>
               <div className="relative">
@@ -369,9 +369,9 @@ export default function Profile() {
             <div>
               <label className="text-[#211C4DCC] text-[14px] font-[500]">
                 {t("FullAddress")}
-                <span className="text-xs text-gray-500 mr-2">(اختياري)</span>
+                <span className="text-xs text-gray-500 mr-2">({t("optional")})</span>
                 {formData.address !== originalData.address && (
-                  <span className="mr-2 text-xs text-blue-600">✏️ تم التعديل</span>
+                  <span className="mr-2 text-xs text-blue-600">✏️ {t("edited")}</span>
                 )}
               </label>
               <div className="relative">

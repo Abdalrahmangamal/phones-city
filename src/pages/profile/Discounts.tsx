@@ -4,9 +4,11 @@ import { useEffect } from "react";
 import content_copy from "@/assets/images/content_copy.png";
 import { useTranslation } from "react-i18next";
 import { useDiscountStore } from "@/store/profile/discountsStore";
+import { useLangSync } from "@/hooks/useLangSync";
 
 export default function Discounts() {
   const { t } = useTranslation();
+  const { lang } = useLangSync();
   
   // Get state and actions from the store
   const {
@@ -63,7 +65,7 @@ export default function Discounts() {
                 {t("Discounts")}
               </h2>
               <div className="flex justify-center items-center h-64">
-                <div className="text-gray-500">جاري تحميل الخصومات...</div>
+                <div className="text-gray-500">{lang === 'ar' ? "جاري تحميل الخصومات..." : "Loading discounts..."}</div>
               </div>
             </section>
           </div>
@@ -90,7 +92,7 @@ export default function Discounts() {
                     className="px-4 py-2 text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-md transition-colors"
                     disabled={loading}
                   >
-                    {loading ? "جاري التحديث..." : "تحديث"}
+                    {loading ? (lang === 'ar' ? "جاري التحديث..." : "Updating...") : t("refresh")}
                   </button>
                 )}
               </div>
@@ -112,12 +114,12 @@ export default function Discounts() {
 
               {discounts.length === 0 && !loading ? (
                 <div className="w-full text-center py-10">
-                  <p className="text-gray-500">لا توجد خصومات متاحة حالياً</p>
+                  <p className="text-gray-500">{lang === 'ar' ? "لا توجد خصومات متاحة حالياً" : "No discounts available at the moment"}</p>
                   <button
                     onClick={handleRefresh}
                     className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
                   >
-                    تحديث
+                    {t("refresh")}
                   </button>
                 </div>
               ) : (
@@ -132,14 +134,14 @@ export default function Discounts() {
                         <div className="flex flex-col justify-between h-full">
                           <div>
                             <h3 className="text-[#211C4D] text-[28px] font-[700] ">
-                              {item.discount_value || item.discount || "خصم"} خصم
+                              {item.discount_value || item.discount || (lang === 'ar' ? "خصم" : "Discount")} {lang === 'ar' ? "خصم" : "off"}
                             </h3>
                             <p className="text-[#211C4D] text-[16px] font-[600] mt-1">
-                              {item.title || item.description || "خصم خاص"}
+                              {item.title || item.description || (lang === 'ar' ? "خصم خاص" : "Special Discount")}
                             </p>
                             <div className="flex items-center justify-between gap-2 mt-10">
                               <span className="text-[#F3AC5D] font-medium text-sm">
-                                كود: {item.code}
+                                {lang === 'ar' ? `كود: ${item.code}` : `Code: ${item.code}`}
                               </span>
                               <button
                                 onClick={() => handleCopy(item.code, item.id)}
@@ -147,27 +149,27 @@ export default function Discounts() {
                                 disabled={copiedId === item.id}
                               >
                                 <span className="text-[12px] font-[600] text-[#001246]">
-                                  {copiedId === item.id ? "تم النسخ!" : "نسخ"}
+                                  {copiedId === item.id ? (lang === 'ar' ? "تم النسخ!" : "Copied!") : t("copy")}
                                 </span>
-                                <img src={content_copy} alt="نسخ" />
+                                <img src={content_copy} alt={lang === 'ar' ? "نسخ" : "copy"} />
                               </button>
                             </div>
                           </div>
 
                           <div className="mt-4 text-[13px] text-[#7B7B93] leading-6 space-y-1">
-                            <p>تاريخ الصلاحية.</p>
+                            <p>{lang === 'ar' ? "تاريخ الصلاحية." : "Expiration date."}</p>
                             <ul className="list-disc mb-6 pr-4 space-y-1">
                               <li>
                                 {item.valid_from && item.valid_to
-                                  ? `${new Date(item.valid_from).toLocaleDateString('ar-SA')} – ${new Date(item.valid_to).toLocaleDateString('ar-SA')}`
-                                  : "04:00 05/08/2021 – 12:00 09/08/2021"}
+                                  ? `${new Date(item.valid_from).toLocaleDateString(lang === 'ar' ? 'ar-SA' : 'en-US')} – ${new Date(item.valid_to).toLocaleDateString(lang === 'ar' ? 'ar-SA' : 'en-US')}`
+                                  : (lang === 'ar' ? "04:00 05/08/2021 – 12:00 09/08/2021" : "04:00 08/05/2021 – 12:00 08/09/2021")}
                               </li>
                               <li>
-                                {item.applicable_products || "لكل المنتجات."}
+                                {item.applicable_products || (lang === 'ar' ? "لكل المنتجات." : "For all products.")}
                               </li>
                               <li>
                                 {item.conditions ||
-                                  "التركيبات: احصل على خصم 20% عند إنفاق أكثر من 169.00 رس، أو احصل على خصم 15% عند إنفاق أكثر من 89.00 رس."}
+                                  (lang === 'ar' ? "التركيبات: احصل على خصم 20% عند إنفاق أكثر من 169.00 رس، أو احصل على خصم 15% عند إنفاق أكثر من 89.00 رس." : "Installments: Get a 20% discount when spending more than 169.00 SAR, or get a 15% discount when spending more than 89.00 SAR.")}
                               </li>
                             </ul>
                           </div>
@@ -184,11 +186,11 @@ export default function Discounts() {
                         disabled={pagination.current_page === 1 || loading}
                         className="px-4 py-2 bg-gray-100 hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed rounded-md"
                       >
-                        السابق
+                        {lang === 'ar' ? "السابق" : "Previous"}
                       </button>
                       
                       <span className="text-gray-600">
-                        الصفحة {pagination.current_page} من {pagination.last_page}
+                        {lang === 'ar' ? `الصفحة ${pagination.current_page} من ${pagination.last_page}` : `Page ${pagination.current_page} of ${pagination.last_page}`}
                       </span>
                       
                       <button
@@ -196,7 +198,7 @@ export default function Discounts() {
                         disabled={pagination.current_page === pagination.last_page || loading}
                         className="px-4 py-2 bg-gray-100 hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed rounded-md"
                       >
-                        التالي
+                        {lang === 'ar' ? "التالي" : "Next"}
                       </button>
                     </div>
                   )}

@@ -1,5 +1,9 @@
 import aboutusimage from "@/assets/images/aboutusimage.jpg";
+import { useTranslation } from "react-i18next";
+
 export default function Offerbannersingle() {
+  const { t } = useTranslation();
+  
   return (
     <div className="relative w-full h-[350px] rounded-[16px] my-18 overflow-hidden flex items-center justify-end">
       {/* الخلفية */}
@@ -26,16 +30,16 @@ export default function Offerbannersingle() {
       {/* المحتوى */}
       <div className="relative z-10 text-white p-10">
         <h2 className="text-[45px] md:max-w-[80%] leading-[70px] font-[700] mb-3 text-[white] [text-shadow:-1px_11px_2px_rgba(0,0,0,0.25)]">
-  استمتع بأفضل العروض معنا
-</h2>
+          {t("EnjoyBestOffersWithUs")}
+        </h2>
 
         <p className="text-[20px] mb-6 max-w-[400px]">
-          استمتع بتجربة استثنائية وخدمة مميزة بأفضل الأسعار.
+          {t("EnjoyExceptionalExperience")}
         </p>
         <div className="w-full flex items-center justify-start">
 
         <button className="bg-[#F3AC5D] hover:bg-[#d9944d] text-[white] font-[600] px-6 py-3 rounded-[8px] transition">
-          تسوق الآن →
+          {t("ShopNow")} →
         </button>
         </div>
       </div>
