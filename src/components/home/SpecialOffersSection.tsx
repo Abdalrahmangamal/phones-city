@@ -248,7 +248,7 @@ const SpecialOffersSection: React.FC<SpecialOffersSectionProps> = ({
                   isNew={item.is_new || item.isNew || false}
                   favourite={item.is_favorite || item.favourite || false}
                   variations={item.variations || []}
-                  id={item.id}
+                  id={item.slug}
                   imagecard="!h-[100px] !w-[100px]"
                   containerstyle="!p-2 pb-3 !rounded-[10px]  !w-[150px]  !min-h-fit h-full"
                 />

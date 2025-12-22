@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import Bestseller from "@/components/home/Bestseller";
 import Layout from "@/components/layout/layout";
-import { useProductsStore } from "@/store/productsStore";
 import { useNavigate } from "react-router-dom";
 import { useLangSync } from "@/hooks/useLangSync";
 import { useTranslation } from "react-i18next"; // أو أي طريقة تستخدمها للترجمة
@@ -9,58 +8,63 @@ import Filter from "@/components/public/Filter";
 import { useCategoriesStore } from "@/store/categories/useCategoriesStore";
 import type { Product } from "@/types/index";
 import InstallmentSection from "@/components/home/InstallmentSection"; // Import the InstallmentSection component
-import { useHomePageStore } from '@/store/home/homepageStore'; // Import the home page store
+import { useProductsStore } from "@/store/productsStore"; // Import the home page store
 
 export default function SpecialOffersPage() {
   const navigate = useNavigate();
   const { lang } = useLangSync();
   const { t } = useTranslation();
-  const { categories, fetchCategories } = useCategoriesStore();
-  const { data: homeData, fetchHomePage } = useHomePageStore(); // Get home page data
+  const { offersProducts, fetchOffers } = useProductsStore();
+  const { fetchCategories, categories } = useCategoriesStore();
 
   // استخدم الـ response مباشرة كمصفوفة منتجات
-  const { response: products, loading: productsLoading, error: storeError, fetchProducts } = useProductsStore();
-  
+  const {
+    response: products,
+    loading: productsLoading,
+    error: storeError,
+    fetchProducts,
+  } = useProductsStore();
+
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
   const [sortOption, setSortOption] = useState<string>("created_at");
-  const [priceRange, setPriceRange] = useState<[number | null, number | null]>([null, null]);
+  const [priceRange, setPriceRange] = useState<[number | null, number | null]>([
+    null,
+    null,
+  ]);
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
 
   useEffect(() => {
-    fetchProducts({
-      has_offer: 1,
-      per_page: 100,
-    }, lang);
-    
+    fetchOffers(lang);
+
     // جلب الفئات للفلتر
     fetchCategories(lang);
-    
-    // جلب بيانات الصفحة الرئيسية للحصول على نص العرض
-    fetchHomePage(lang);
-  }, [lang, fetchProducts, fetchHomePage]);
 
-  // تطبيق الفلاتر على المنتجات
+  }, [lang]);
+
+  // تطبيق الفلاتر على المنتجات (باستخدام العروض)
   useEffect(() => {
-    let result = Array.isArray(products) ? [...products] : [];
-    
+    let result = Array.isArray(offersProducts) ? [...offersProducts] : [];
+
     // تطبيق فلتر الفئة
     if (selectedCategory !== null) {
-      result = result.filter(product => product.category?.id === selectedCategory);
+      result = result.filter(
+        (product) => product.category?.id === selectedCategory
+      );
     }
-    
+
     // تطبيق فلتر النطاق السعري
     if (priceRange[0] !== null || priceRange[1] !== null) {
-      result = result.filter(product => {
+      result = result.filter((product) => {
         const price = parseFloat(product.final_price || product.original_price);
         const min = priceRange[0];
         const max = priceRange[1];
-        
+
         if (min !== null && price < min) return false;
         if (max !== null && price > max) return false;
         return true;
       });
     }
-    
+
     // تطبيق الترتيب
     switch (sortOption) {
       case "created_at":
@@ -75,7 +79,7 @@ export default function SpecialOffersPage() {
         break;
       case "name_ar":
         // Since name_ar doesn't exist in Product type, we'll use name field
-        result = [...result].sort((a, b) => 
+        result = [...result].sort((a, b) =>
           (a.name || "").localeCompare(b.name || "")
         );
         break;
@@ -88,9 +92,9 @@ export default function SpecialOffersPage() {
       default:
         break;
     }
-    
+
     setFilteredProducts(result);
-  }, [products, selectedCategory, sortOption, priceRange]);
+  }, [offersProducts, selectedCategory, sortOption, priceRange]);
 
   const handleSortChange = (option: string) => {
     setSortOption(option);
@@ -100,7 +104,10 @@ export default function SpecialOffersPage() {
     setSelectedCategory(categoryId);
   };
 
-  const handlePriceRangeChange = (minPrice: number | null, maxPrice: number | null) => {
+  const handlePriceRangeChange = (
+    minPrice: number | null,
+    maxPrice: number | null
+  ) => {
     setPriceRange([minPrice, maxPrice]);
   };
 
@@ -111,10 +118,15 @@ export default function SpecialOffersPage() {
         <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
           <div className="bg-white p-8 rounded-lg shadow-lg max-w-md text-center">
             <div className="text-red-500 text-5xl mb-4">❌</div>
-            <h2 className="text-2xl font-bold text-gray-800 mb-4">{t('AnErrorOccurred')}</h2>
+            <h2 className="text-2xl font-bold text-gray-800 mb-4">
+              {t("AnErrorOccurred")}
+            </h2>
             <p className="text-gray-600 mb-6">{storeError}</p>
-            <button onClick={() => window.location.reload()} className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-              {t('Reload')}
+            <button
+              onClick={() => window.location.reload()}
+              className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+            >
+              {t("Reload")}
             </button>
           </div>
         </div>
@@ -129,15 +141,15 @@ export default function SpecialOffersPage() {
         <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
           <div className="text-center">
             <div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-            <p className="text-lg text-gray-700">{t('LoadingSpecialOffers')}</p>
+            <p className="text-lg text-gray-700">{t("LoadingSpecialOffers")}</p>
           </div>
         </div>
       </Layout>
     );
   }
 
-  // تأكد أن products مصفوفة (للأمان)
-  const productsList = Array.isArray(products) ? products : [];
+  // تأكد أن offersProducts مصفوفة (للأمان)
+  const offersList = Array.isArray(offersProducts) ? offersProducts : [];
 
   return (
     <Layout>
@@ -154,22 +166,22 @@ export default function SpecialOffersPage() {
 
         <div className="pt-6 pb-12 px-4 md:px-8">
           {/* Replace the banner with InstallmentSection */}
-          <InstallmentSection title={homeData?.offer_text} />
-          
-          {productsList.length > 0 ? (
+          {/* <InstallmentSection title={homeData?.offer_text} /> */}
+
+          {filteredProducts.length > 0 ? (
             <div className="max-w-8xl mx-auto -mt-8">
-              <Bestseller 
-                title={t('AllOffers')} 
-                products={filteredProducts.length > 0 ? filteredProducts : productsList}
+              <Bestseller
+                title={t("AllOffers")}
+                products={filteredProducts}
                 btn={false}
                 style="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
                 filterComponent={
                   <div className="flex justify-center">
-                    <Filter 
+                    <Filter
                       onSortChange={handleSortChange}
                       onCategoryChange={handleCategoryChange}
                       onPriceRangeChange={handlePriceRangeChange}
-                      categories={categories}
+                      categories={categories || []}
                       minPrice={0}
                       maxPrice={10000}
                     />
@@ -179,10 +191,15 @@ export default function SpecialOffersPage() {
             </div>
           ) : (
             <div className="max-w-4xl mx-auto text-center py-16 bg-white rounded-2xl shadow-sm">
-              <h3 className="text-2xl font-semibold text-gray-700 mb-3">{t('NoOffersAvailable')}</h3>
-              <p className="text-gray-500 mb-8">{t('NoOffersFound')}</p>
-              <button onClick={() => navigate('/')} className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-                {t('ReturnToHome')}
+              <h3 className="text-2xl font-semibold text-gray-700 mb-3">
+                {t("NoOffersAvailable")}
+              </h3>
+              <p className="text-gray-500 mb-8">{t("NoOffersFound")}</p>
+              <button
+                onClick={() => navigate("/")}
+                className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+              >
+                {t("ReturnToHome")}
               </button>
             </div>
           )}
