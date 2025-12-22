@@ -89,7 +89,7 @@ export const useProductsStore = create<PageState>((set) => ({
       set({ loading: true });
 
       const res = await axios.get(`${baseUrl}api/v1/products`, {
-        params: { has_offer: 1, per_page: 10 },
+        params: { has_offer: 1 },
         headers: { "Accept-Language": lang },
       });
 
