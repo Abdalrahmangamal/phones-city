@@ -367,5 +367,7 @@
   "optional": "optional",
   "refresh": "Refresh",
   "copy": "Copy",
-  "edited": "Edited"
+  "edited": "Edited",
+  "NewOffer": "New Offer",
+  "NewOfferEn": "New Offer"
 }

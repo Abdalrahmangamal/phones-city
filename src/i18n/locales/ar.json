@@ -367,5 +367,7 @@
   "optional": "اختياري",
   "refresh": "تحديث",
   "copy": "نسخ",
-  "edited": "تم التعديل"
+  "edited": "تم التعديل",
+  "NewOffer": "عرض جديد",
+  "NewOfferEn": "New Offer"
 }
