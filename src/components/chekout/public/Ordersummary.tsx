@@ -64,8 +64,8 @@ export default function OrderSummary({ onTotalUpdate }: OrderSummaryProps) {
   const isRTL = currentLang === 'ar';
   
   const [promoCode, setPromoCode] = useState("");
-  const [selectedPaymentId, setSelectedPaymentId] = useState<number | null>(storeSelectedPaymentId);
-  const [localFinalTotal, setLocalFinalTotal] = useState(storeFinalTotal);
+  const { selectedPaymentId } = useCartStore();
+  
 
   useEffect(() => {
     if (items.length === 0 && !loading) fetchCart();
@@ -88,9 +88,7 @@ export default function OrderSummary({ onTotalUpdate }: OrderSummaryProps) {
     }
   }
 
-  useEffect(() => {
-    setLocalFinalTotal(calculatedFinalTotal);
-  }, [calculatedFinalTotal]);
+  
 
   useEffect(() => {
     updateFinalTotal(calculatedFinalTotal, selectedPaymentId);
@@ -106,8 +104,18 @@ export default function OrderSummary({ onTotalUpdate }: OrderSummaryProps) {
   }, [storeSelectedPaymentId]);
 
   const handlePaymentSelect = (paymentId: number) => {
-    setSelectedPaymentId(paymentId);
-  };
+  const selected = paymentMethods.find((p: any) => p.id === paymentId);
+  if (selected) {
+    const processingFee = parseFloat(selected.processing_fee_amount || "0");
+    const newFinalTotal = subtotal + processingFee;
+
+    // تحديث الـ store مرة واحدة فقط
+    updateFinalTotal(newFinalTotal, paymentId);
+  } else {
+    // لو المستخدم اختار "إلغاء" أو بدون رسوم
+    updateFinalTotal(subtotal, null);
+  }
+};
 
   const paymentProviders = paymentMethods.map((p: any) => {
     const amount = parseFloat(p.total_price).toLocaleString(isRTL ? "ar-SA" : "en-US");
@@ -183,10 +191,10 @@ export default function OrderSummary({ onTotalUpdate }: OrderSummaryProps) {
           </div>
         )}
 
-        <div className={`border-t pt-3 flex justify-between text-lg font-bold ${isRTL ? 'flex-row-reverse' : 'flex-row'}`}>
+        {/* <div className={`border-t pt-3 flex justify-between text-lg font-bold ${isRTL ? 'flex-row-reverse' : 'flex-row'}`}>
           <span>{t("FinalTotal")}</span>
           <span className="text-orange-600">{calculatedFinalTotal.toLocaleString(isRTL ? "ar-SA" : "en-US")} {t("SAR")}</span>
-        </div>
+        </div> */}
       </div>
 
       {/* بوابات الدفع */}

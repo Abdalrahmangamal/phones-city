@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import order from "@/assets/images/order.png";
 import step2 from "@/assets/images/step2.png";
 import step3 from "@/assets/images/step3.png";
-import Cheackoutsummary from "@/components/chekout/Checkoutsummary";
+import Checkoutsummary from "@/components/chekout/Checkoutsummary";
 import Checkoutaddress from "@/components/chekout/Checkoutaddress";
 import Checkoutpayment from "@/components/chekout/Checkoutpayment";
 import Layout from "@/components/layout/Layout";
@@ -19,6 +19,7 @@ import { useAddressStore } from '@/store/profile/indexStore';
 import { Package, Home, ShoppingBag } from "lucide-react"; 
 
 export default function CheckoutPage() {
+  
   const [activeStep, setActiveStep] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [orderCompleted, setOrderCompleted] = useState(false); 
@@ -27,11 +28,12 @@ export default function CheckoutPage() {
 
   const { items, total, fetchCart, selectedPaymentId, clearCart } = useCartStore();
   
-  // تم حذف التعريف المكرر لـ t وترك تعريف واحد فقط يشمل t و i18n
+  
+
   const { t, i18n } = useTranslation();
   const isRTL = i18n.language === "ar";
   const currentLang = i18n.language;
-
+  const [usePoints, setUsePoints] = useState(false);
   const {
     selectedAddressId,
     getSelectedAddress,
@@ -41,25 +43,39 @@ export default function CheckoutPage() {
 
   useEffect(() => {
     fetchCart();
-  }, [fetchCart]);
+    console.log('usePoints state in Checkout:', usePoints);
+  }, [fetchCart, usePoints]);
 
-  const steps = [
-    {
-      title: t("checkout.steps.orderSummary"),
-      number: order,
-      componunt: <Cheackoutsummary products={items} total={total} />,
-    },
-    {
-      title: t("checkout.steps.address"),
-      number: step2,
-      componunt: <Checkoutaddress />,
-    },
-    {
-      title: t("checkout.steps.payment"),
-      number: step3,
-      componunt: <Checkoutpayment />,
-    },
-  ];
+
+const steps = [
+  {
+    title: t("checkout.steps.orderSummary"),
+    number: order,
+    componunt: (
+      <Checkoutsummary
+        products={items}
+        total={total}
+        usePoints={usePoints}
+        onUsePointsChange={setUsePoints}  
+      />
+    ),
+  },
+  {
+    title: t("checkout.steps.address"),
+    number: step2,
+    componunt: <Checkoutaddress />,
+  },
+  {
+    title: t("checkout.steps.payment"),
+    number: step3,
+    componunt: (
+      <Checkoutpayment 
+        usePoints={usePoints}
+        onUsePointsChange={setUsePoints}  
+      />
+    ),
+  },
+];
 
   const showCustomToast = (type: 'success' | 'error' | 'info', title: string, message?: string, duration: number = 8000) => {
     const ToastContent = () => (
@@ -168,13 +184,17 @@ export default function CheckoutPage() {
         }
       );
 
+      // بناء بيانات الطلب مع إضافة use_points
       const orderData = {
         ...(currentDeliveryMethod === "delivery" && { location_id: selectedAddressId }),
         payment_method_id: parseInt(selectedPaymentId),
         note: "",
         discount_code: localStorage.getItem('discount_code') || null,
         delivery_method: currentDeliveryMethod === "pickup" ? "store_pickup" : "home_delivery",
+        use_points: usePoints, 
       };
+
+      console.log('Sending order data:', orderData); // Debugging
 
       // إرسال الطلب
       const response = await axiosClient.post('/api/v1/orders', orderData);
@@ -194,13 +214,22 @@ export default function CheckoutPage() {
 
       localStorage.removeItem('discount_code');
 
-      // عرض toast النجاح
+      // عرض toast النجاح مع معلومات النقاط
+      let successMessage = isRTL 
+        ? `تم إتمام الطلب رقم ${orderNum} بنجاح`
+        : `Order #${orderNum} completed successfully - You can track your orders`;
+      
+      if (usePoints && response.data.data?.points_discount) {
+        const pointsDiscount = response.data.data.points_discount;
+        successMessage += isRTL
+          ? `\nتم خصم ${pointsDiscount} ريال باستخدام النقاط`
+          : `\n${pointsDiscount} SAR deducted using points`;
+      }
+
       showCustomToast(
         'success',
         isRTL ? 'تم بنجاح!' : 'Order Successful!',
-        isRTL 
-          ? `تم إتمام الطلب رقم ${orderNum} بنجاح`
-          : `Order #${orderNum} completed successfully - You can track your orders`
+        successMessage
       );
 
     } catch (error: any) {
@@ -231,6 +260,15 @@ export default function CheckoutPage() {
     }
   };
 
+
+
+const handleUsePointsChange = (value: boolean) => {
+  console.log('setUsePoints called with:', value);
+  console.log('Previous value was:', usePoints);
+  setUsePoints(value);
+};
+
+// ثم استخدم handleUsePointsChange بدلاً من setUsePoints في steps
   const handleGoHome = () => {
     navigate(`/${currentLang}`);
   };
@@ -265,6 +303,14 @@ export default function CheckoutPage() {
                   : `Your order #${orderNumber} has been confirmed`
                 }
               </p>
+
+              {usePoints && (
+                <div className="mt-4 p-3 bg-blue-50 rounded-lg border border-blue-200 inline-block">
+                  <p className="text-blue-700 font-medium">
+                    {isRTL ? '✅ تم استخدام النقاط في هذا الطلب' : '✅ Points were used in this order'}
+                  </p>
+                </div>
+              )}
 
               {/* Buttons */}
               <div className="flex flex-col sm:flex-row gap-4 justify-center mt-10">

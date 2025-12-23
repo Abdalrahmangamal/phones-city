@@ -27,10 +27,10 @@ interface CartCategory {
 }
 
 interface CartItem {
-  id: number;              // هذا هو cart_item_id (مثل 125)
+  id: number;              
   product: CartProduct;
   category: CartCategory;
-  quantity: number;        // كمية هذا العنصر في السلة
+  quantity: number;       
   price: string;
   subtotal: number;
 }
