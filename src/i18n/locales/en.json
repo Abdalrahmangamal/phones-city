@@ -94,7 +94,7 @@
 "Aboutthisproduct":"About this product",
 "Chooseyourcolor":"Choose your color",
   "Submit": "Submit",
-
+"NewOffer":"New Offer",
   "Address Details": "Address Details",
   "First Name": "First Name",
   "First name is required": "First name is required",
@@ -334,23 +334,34 @@
     "phone": "Phone"
   },
   "common": {
-    "SAR": "SAR"
+    "SAR": "SAR",
+    "close": "Close",
+    "cancel": "Cancel",
+    "sending": "Sending...",
+    "send": "Send"
   },
   "checkoutSummary": {
-    "title": "Summary",
-    "selectedProducts": "Selected Products",
-    "product": "Product",
-    "image": "Image",
-    "address": "Address",
-    "usePoints": "Use 60 points and get 15% discount",
-    "disablePoints": "Disable points usage",
-    "enablePoints": "Enable points usage",
-    "subtotal": "Subtotal",
-    "discount": "Discount",
-    "estimatedTax": "Estimated Tax",
-    "shippingCost": "Shipping Cost",
-    "total": "Total"
-  },
+  "title": "Summary",
+  "selectedProducts": "Selected Products",
+  "product": "Product",
+  "image": "Image",
+  "address": "Address",
+  "pickupLocation": "Pickup Location",
+  "paymentMethod": "Selected Payment Method",
+  "noPaymentSelected": "No payment method selected yet",
+  "noAddressSelected": "No address selected",
+  "pleaseSelectAddress": "Please select a delivery address",
+  "useAllPoints": "Use All Your Points",
+  "disablePoints": "Disable points usage",
+  "enablePoints": "Enable points usage",
+  "availablePoints": "Available points: {{points}} points (worth {{value}} SAR)",
+  "pointsDiscount": "Points Discount",
+  "paymentFees": "{{paymentName}} Fees",
+  "subtotal": "Subtotal",
+  "estimatedTax": "Estimated Tax",
+  "shippingCost": "Shipping Cost",
+  "total": "Total"
+},
   "checkout": {
     "steps": {
       "orderSummary": "Order Summary",
@@ -367,7 +378,5 @@
   "optional": "optional",
   "refresh": "Refresh",
   "copy": "Copy",
-  "edited": "Edited",
-  "NewOffer": "New Offer",
-  "NewOfferEn": "New Offer"
+  "edited": "Edited"
 }

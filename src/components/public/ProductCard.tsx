@@ -167,7 +167,7 @@ export default function ProductCard({ product,imagecard,containerstyle }: Produc
       </div>
 
       {/* الاسم */}
-      <Link to={`/${lang}/singleproduct`}>
+      <Link to={`/${lang}/singleproduct/${product.slug}`}>
         <h2 className="text-[15px] md:text-[24px] font-[500] text-[#211C4D] line-clamp-1 mt-[10px]">
           {product?.name}
         </h2>

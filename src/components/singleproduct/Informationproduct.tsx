@@ -120,8 +120,8 @@ export default function Informationproduct({ product }: any) {
         </div>
       )}
 
-      {/* Comments Section - Hidden as requested */}
-      {/* <Comments /> */}
+      {/* Comments Section - مع تمرير productId */}
+      <Comments productId={product?.id} />
     </div>
   );
 }

@@ -11,19 +11,19 @@ import { useTranslation } from "react-i18next";
 import Loader from "@/components/Loader";
 import { useHeroSectionStore } from "@/store/home/herosectionStore";
 export default function Offers() {
-  const { fetchOffers, offersProducts } = useProductsStore();
+  const { fetchProducts, response } = useProductsStore();
   const { fetchCategories, categories } = useCategoriesStore();
   const { lang } = useLangSync();
   const { t } = useTranslation();
   const { sliders, fetchSliders } = useHeroSectionStore();
 
   // useEffect(() => {
-  //   fetchOffers({ simple: false, has_offer: 1 }, lang);
+  //   fetchProducts({ simple: false, has_offer: 1 }, lang);
   //   fetchCategories(lang);
   // }, [lang]);
 
   useEffect(() => {
-    fetchOffers({ simple: false, has_offer: 1 }, lang);
+    fetchProducts({ simple: false, has_offer: 1 }, lang);
     fetchCategories(lang);
     fetchSliders(lang); // أضف هذا السطر
   }, [lang]);
@@ -38,7 +38,7 @@ export default function Offers() {
           title={`${t("CityofPhonesOffers")}`}
           btn={true}
           link={`/${lang}/SpecialOffersPage`}
-          products={offersProducts}
+          products={response}
         />
 
         {/* الكومبوننت سيتولى جلب البيانات بنفسه */}
@@ -46,7 +46,7 @@ export default function Offers() {
           <Parttner />
         </div>
       </div>
-      {!offersProducts?(<Loader/>):("")}
+      {!response?(<Loader/>):("")}
     </Layout>
   );
 }
