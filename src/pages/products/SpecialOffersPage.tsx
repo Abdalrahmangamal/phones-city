@@ -14,8 +14,10 @@ export default function SpecialOffersPage() {
   const navigate = useNavigate();
   const { lang } = useLangSync();
   const { t } = useTranslation();
-  const { offersProducts, fetchOffers } = useProductsStore();
+  const { offersProducts, fetchOffers, offersMeta } = useProductsStore();
   const { fetchCategories, categories } = useCategoriesStore();
+
+  const [currentPage, setCurrentPage] = useState<number>(1);
 
   // استخدم الـ response مباشرة كمصفوفة منتجات
   const {
@@ -34,12 +36,14 @@ export default function SpecialOffersPage() {
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
 
   useEffect(() => {
-    fetchOffers(lang);
+    fetchOffers(lang, currentPage).then(() => {
+      console.log('Offers loaded', { offersMeta, offersCount: Array.isArray(offersProducts) ? offersProducts.length : 0, currentPage });
+    }).catch((err) => console.error('Failed to fetch offers', err));
 
     // جلب الفئات للفلتر
     fetchCategories(lang);
 
-  }, [lang]);
+  }, [lang, currentPage]);
 
   // تطبيق الفلاتر على المنتجات (باستخدام العروض)
   useEffect(() => {
@@ -189,6 +193,39 @@ export default function SpecialOffersPage() {
                   </div>
                 }
               />
+              {/* Pagination controls for offers */}
+              {offersMeta && offersMeta.last_page > 1 && (
+                <div className="flex items-center justify-center gap-2 mt-6">
+                  <button
+                    onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+                    disabled={currentPage === 1}
+                    className="px-3 py-1 rounded border disabled:opacity-50"
+                  >
+                    {t("Prev") || "Prev"}
+                  </button>
+
+                  {Array.from({ length: offersMeta.last_page }).map((_, i) => {
+                    const pageNum = i + 1;
+                    return (
+                      <button
+                        key={pageNum}
+                        onClick={() => setCurrentPage(pageNum)}
+                        className={`px-3 py-1 rounded ${pageNum === currentPage ? 'bg-blue-600 text-white' : 'border'}`}
+                      >
+                        {pageNum}
+                      </button>
+                    );
+                  })}
+
+                  <button
+                    onClick={() => setCurrentPage((p) => Math.min(p + 1, offersMeta.last_page))}
+                    disabled={currentPage === offersMeta.last_page}
+                    className="px-3 py-1 rounded border disabled:opacity-50"
+                  >
+                    {t("Next") || "Next"}
+                  </button>
+                </div>
+              )}
             </div>
           ) : (
             <div className="max-w-4xl mx-auto text-center py-16 bg-white rounded-2xl shadow-sm">
