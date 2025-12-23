@@ -116,7 +116,8 @@
   "Makkah": "Makkah",
   "Dammam": "Dammam",
   "Khobar": "Khobar",
-  
+  "LatestOffers": "Latest Offers",
+  "ComingSoon": "Coming Soon",
   "Phone number is required": "Phone number is required",
   "Please enter a valid phone number": "Please enter a valid phone number",
   
@@ -369,5 +370,9 @@
       "completeOrder": "Complete Order",
       "processing": "Processing..."
     }
-  }
+  },
+  "optional": "optional",
+  "refresh": "Refresh",
+  "copy": "Copy",
+  "edited": "Edited"
 }

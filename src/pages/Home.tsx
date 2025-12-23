@@ -24,12 +24,10 @@ import useFeaturesStore from "@/store/home/featuresStore";
 import { useLangSync } from "@/hooks/useLangSync";
 import { useHomePageStore } from '@/store/home/homepageStore';
 import { usePopupStore } from '@/store/popupStore'; // Added popup store
-import type { Product } from '@/types/index';
+// import type { Product } from '@/types/index';
 
 const NewHome = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [bestSellers, setBestSellers] = useState<Product[]>([]);
-  const [bestSellersLoading, setBestSellersLoading] = useState(false);
   
   const { fetchHomePage, data } = useHomePageStore();
   const { lang } = useLangSync();
@@ -37,6 +35,7 @@ const NewHome = () => {
   
   useEffect(() => {
     fetchHomePage(lang);
+    console.log(lang)
   }, [lang]);
 
   // Effect to show popup after a delay only if it hasn't been shown yet
@@ -59,7 +58,10 @@ const NewHome = () => {
 
   // All stores
   const {
-    fetchProducts,
+    fetchOffers,  
+    fetchBestSellers,
+    offersProducts,
+    bestSellerProducts,
     response: productsResponse,
     loading: productsLoading,
   } = useProductsStore();
@@ -69,56 +71,19 @@ const NewHome = () => {
   const { fetchCategories, categories } = useCategoriesStore();
   const { fetchFeatures, getFeaturesByLanguage } = useFeaturesStore();
 
-  // دالة لجلب المنتجات الأكثر مبيعاً
-  // في Home.tsx، تحديث دالة fetchBestSellers:
-const fetchBestSellers = async () => {
-  try {
-    setBestSellersLoading(true);
-    
-    console.log("📞 Calling fetchProducts with best_seller param...");
-    
-    
-    const response = await fetchProducts(
-      { 
-        per_page: 10, 
-        best_seller: true,
-        sort_by: 'best_seller',
-        sort_order: 'desc'
-      }, 
-      lang
-    );
-    
-    console.log("📦 Best sellers response in Home.tsx:", response);
-    
-    
-    if (Array.isArray(response)) {
-      console.log(`✅ Found ${response.length} best seller products`);
-      setBestSellers(response);
-    } else {
-      console.log("⚠️ Response is not an array:", response);
-      setBestSellers([]);
-    }
-  } catch (error) {
-    console.error("❌ Error fetching best sellers:", error);
-    setBestSellers([]);
-  } finally {
-    setBestSellersLoading(false);
-  }
-};
-
+ 
   // Fetch all data in one place
   useEffect(() => {
     const loadAllData = async () => {
       try {
         setIsLoading(true);
-        setBestSellersLoading(true);
 
         await Promise.all([
           // Special offers products
-          fetchProducts({ per_page: 10, has_offer: 1 }, lang),
+          fetchOffers(lang),
 
           // Best sellers products
-          fetchBestSellers(),
+          fetchBestSellers(lang),
 
           // Hero sliders
           fetchSliders(lang),
@@ -139,7 +104,6 @@ const fetchBestSellers = async () => {
         console.error("Error loading home page data:", error);
       } finally {
         setIsLoading(false);
-        setBestSellersLoading(false);
       }
     };
 
@@ -183,23 +147,23 @@ const fetchBestSellers = async () => {
           <LatestOffers />
           <SpecialOffersSection 
             title="SpecialOffersForYou"    
-            products={products} 
+            products={offersProducts} 
+          />
+          <SpecialOffersSection 
+            title="BestSellers"    
+            products={bestSellerProducts} 
           />
 
-          <BestSellersSection 
-            title="BestSellers"           
-            products={bestSellers}
-            isLoading={bestSellersLoading}
-          />
-          
+         
           <TestimonialsSection />
           <FrameSection features={langFeatures} />
           <CertificationBadgesSection certificates={certificates || []} />
           <Parttner />
           <AppDownloadSection 
-            title={data?.app_title || ""} 
-            description={data?.app_description || ""} 
-            image={data?.app_main_image || ""}  
+          key={lang}
+            title={data?.app_title } 
+            description={data?.app_description } 
+            image={data?.app_main_image }  
           />
         </main>
       </div>

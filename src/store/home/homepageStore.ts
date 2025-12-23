@@ -55,10 +55,7 @@ export const useHomePageStore = create<HomePageStore>((set, get) => ({
   error: null,
 
   fetchHomePage: async (lang:string) => {
-    const { data, loading } = get();
 
-    // 🔒 منع ضرب API أكتر من مرة
-    if (data || loading) return;
 
     try {
       set({ loading: true, error: null });

@@ -22,6 +22,10 @@ interface PageState {
   loading: boolean;
   error: string | null;
   response: Product | Product[] | null;
+  bestSellerProducts?: Product[];
+  offersProducts?: Product[];
+  fetchBestSellers: (lang: string) => Promise<void>;
+  fetchOffers: (lang: string) => Promise<void>;
   fetchProducts: (params?: productsParams, lang?: string) => Promise<void>;
   fetchProductbyid: (id: string, lang: string, params?: productsParams) => Promise<void>;
 }
@@ -78,6 +82,47 @@ export const useProductsStore = create<PageState>((set) => ({
         loading: false,
       });
       throw err;
+    }
+  },
+  fetchOffers: async (lang : string) => {
+    try {
+      set({ loading: true });
+
+      const res = await axios.get(`${baseUrl}api/v1/products`, {
+        params: { has_offer: 1 },
+        headers: { "Accept-Language": lang },
+      });
+
+      set({
+        offersProducts: res.data.data,
+        loading: false,
+      });
+    } catch (err: any) {
+      set({
+        error: err?.response?.data?.message,
+        loading: false,
+      });
+    }
+  },
+
+  fetchBestSellers: async (lang :string ) => {
+    try {
+      set({ loading: true });
+
+      const res = await axios.get(`${baseUrl}api/v1/products`, {
+        params: { best_seller: true, per_page: 10 },
+        headers: { "Accept-Language": lang },
+      });
+
+      set({
+        bestSellerProducts: res.data.data,
+        loading: false,
+      });
+    } catch (err: any) {
+      set({
+        error: err?.response?.data?.message,
+        loading: false,
+      });
     }
   },
 
