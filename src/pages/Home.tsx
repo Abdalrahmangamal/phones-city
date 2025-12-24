@@ -12,8 +12,10 @@ import AppDownloadSection from "@/components/home/AppDownloadSection";
 import CertificationBadgesSection from "@/components/home/CertificationBadgesSection";
 import Loader from "@/components/Loader";
 import SpecialOffersSection from "@/components/home/SpecialOffersSection";
-import HomePopup from "@/components/home/HomePopup"; // Import the HomePopup component
+import HomePopup from "@/components/home/HomePopup"; 
 import BestSellersSection from "@/components/home/BestSellersSection";
+
+
 
 // Stores
 import { useProductsStore } from "@/store/productsStore";
@@ -136,7 +138,7 @@ const NewHome = () => {
   return (
     <Layout>
       {/* Show the popup if showPopup is true */}
-      {isShowing && <HomePopup onClose={() => hidePopup()} />}
+      {isShowing && <HomePopup onClose={() => hidePopup()} sliders={sliders} />}
       
       <div className="min-h-screen bg-gray-50 w-full flex flex-col">
         <main className="w-full">

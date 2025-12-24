@@ -55,7 +55,7 @@ export default function ProductCategoriesSection() {
               className="flex flex-col items-center justify-center transition-transform duration-300 hover:scale-105"
             >
               {cat.slug ? (
-                <Link to={`categorySingle/${cat.slug}/products`}>
+                <Link to={`categorySingle/${cat.slug}/products`} className="flex justify-center flex-col items-center">
                   <div className="w-[70px] h-[70px] sm:w-[110px] sm:h-[110px] md:w-[120px] md:h-[120px] lg:w-[140px] lg:h-[140px] shadow-[0px_7px_29px_0px_rgba(100,100,111,0.2)] rounded-full flex items-center justify-center bg-white overflow-hidden">
                     <img
                       src={cat.image}
