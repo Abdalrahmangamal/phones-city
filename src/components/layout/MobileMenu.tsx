@@ -106,7 +106,7 @@
                         {cat.children.map((sub: any) => (
                           <li key={sub.id}>
                             <Link 
-                              to={`/${lang}/categorySingle/${sub.slug}`} 
+                              to={`/${lang}/categorySingle/${sub.slug}/products`} 
                               className="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg"
                               onClick={onClose}
                             >
