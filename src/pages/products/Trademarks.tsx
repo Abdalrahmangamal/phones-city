@@ -5,7 +5,6 @@ import Sliderbycategory from "@/components/public/Sliderbycategory";
 import Parttner from "@/components/public/Parttner";
 import Offerbannersingle from "@/components/public/Offerbannersingle";
 import { useLangSync } from "@/hooks/useLangSync";
-import { useTranslation } from "react-i18next";
 import { useCategoriesStore } from "@/store/categories/useCategoriesStore";
 import { useEffect, useState } from "react";
 import { usePageStore } from "@/store/customerCareStore";
@@ -13,7 +12,6 @@ import { useParams } from "react-router";
 // import { useProductsStore } from "@/store/productsStore";
 export default function Trademarks() {
   const { lang } = useLangSync();
-  const { t } = useTranslation();
   const [activeSubCategory, setActiveSubCategory] = useState(null);
   const { page, fetchPage } = usePageStore();
 
