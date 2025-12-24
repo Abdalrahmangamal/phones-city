@@ -380,25 +380,5 @@
   "optional": "اختياري",
   "refresh": "تحديث",
   "copy": "نسخ",
-  "edited": "تم التعديل",
-  "review": {
-    "reviews": "المراجعات",
-    "no_reviews": "لا توجد مراجعات لهذا المنتج بعد.",
-    "be_first": "كن أول من يقيّم",
-    "write_review": "اكتب مراجعة",
-    "please_select_rating": "الرجاء اختيار تقييم",
-    "please_write_review": "الرجاء كتابة مراجعة",
-    "min_length": "المراجعة يجب أن تحتوي على 10 أحرف على الأقل",
-    "submit_review": "ارسال مراجعتك",
-    "rate_order": "قيم الطلب",
-    "select_stars": "اختر النجوم للتقييم",
-    "poor": "سيء",
-    "average": "متوسط",
-    "excellent": "ممتاز",
-    "your_review": "مراجعتك",
-    "write_review_placeholder": "اكتب مراجعتك هنا...",
-    "characters": "حرف"
-  }
-  
-  
+  "edited": "تم التعديل"
 }

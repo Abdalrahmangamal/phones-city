@@ -378,23 +378,5 @@
   "optional": "optional",
   "refresh": "Refresh",
   "copy": "Copy",
-  "edited": "Edited",
-  "review": {
-    "reviews": "Reviews",
-    "no_reviews": "No reviews for this product yet.",
-    "be_first": "Be the first to review",
-    "write_review": "Write a review",
-    "please_select_rating": "Please select a rating",
-    "please_write_review": "Please write a review",
-    "min_length": "Review must be at least 10 characters",
-    "submit_review": "Submit Your Review",
-    "rate_order": "Rate the order",
-    "select_stars": "Select stars to rate",
-    "poor": "Poor",
-    "average": "Average",
-    "excellent": "Excellent",
-    "your_review": "Your Review",
-    "write_review_placeholder": "Write your review here...",
-    "characters": "characters"
-  }
+  "edited": "Edited"
 }
