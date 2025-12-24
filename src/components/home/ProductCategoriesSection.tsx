@@ -18,7 +18,7 @@ export default function ProductCategoriesSection() {
   useEffect(() => {
     fetchCategories(lang);
   }, []);
-  console.log(categories);
+  console.log("home",categories);
 
 
   return (

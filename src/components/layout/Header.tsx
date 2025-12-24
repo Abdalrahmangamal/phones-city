@@ -32,6 +32,7 @@ export default function Header() {
   useEffect(() => {
     fetchCategories(lang);
   }, [lang]);
+  console.log("header",categories)
   const [isSectionOpen, setIsSectionOpen] = useState(false);
 
   // language btn
