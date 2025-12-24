@@ -40,6 +40,35 @@ export default function Ptoductdetails({
 
   if (!product) return <div>تحميل...</div>;
 
+  // تحديد نوع الخيارات المتاحة
+  const hasOptions = product?.options && Array.isArray(product.options) && product.options.length > 0;
+  const hasMultipleOptions = hasOptions && product.options.length > 1;
+  
+  // التحقق من نوع الخيارات بناءً على قيمة الخيار الأول
+  const firstOption = hasOptions ? product.options[0] : null;
+  const isColorOption = firstOption?.value && (
+    firstOption.value.startsWith('#') || 
+    ['أحمر', 'أزرق', 'أخضر', 'أسود', 'أبيض', 'رمادي'].some(color => 
+      firstOption.name?.includes(color) || firstOption.value?.includes(color)
+    )
+  );
+  const isCapacityOption = firstOption?.value && (
+    firstOption.value.includes('GB') || 
+    firstOption.value.includes('TB') ||
+    firstOption.value.includes('جيجا') ||
+    firstOption.value.includes('تيرا') ||
+    ['64GB', '128GB', '256GB', '512GB', '1TB'].some(capacity => 
+      firstOption.name?.includes(capacity) || firstOption.value?.includes(capacity)
+    )
+  );
+
+  // تحديد نص التسمية بناءً على نوع الخيار
+  const getOptionLabel = () => {
+    if (isColorOption) return t("Chooseyourcolor") || "اختر لونك";
+    if (isCapacityOption) return t("Chooseyourcapacity") || "اختر سعتك";
+    return t("Chooseyouroption") || "اختر خيارك";
+  };
+
   const openModal = (modalType: string) => {
     if (modalType === "tamara") {
       setIsTamaraModalOpen(true);
@@ -154,57 +183,78 @@ export default function Ptoductdetails({
           </span>
         </div>
       </div>
-      {product.options.length > 1 ? (
+      
+      {/* عرض خيارات المنتج (الألوان أو السعات) */}
+      {hasMultipleOptions && (
         <div>
-          <p className="text-sm text-start text-primary">{t("Chooseyourcolor")}</p>
+          <p className="text-sm text-start text-primary">{getOptionLabel()}</p>
 
-          {/* Color Selection */}
-          <div className="flex gap-2 md:gap-3">
+          {/* عرض الخيارات بناءً على نوعها */}
+          <div className="flex gap-2 md:gap-3 flex-wrap">
             {product?.options?.map((opt: any, index: number) => (
               <button
                 key={opt.id}
                 onClick={() => setSelectedOptionIndex(index)}
-                className={`w-8 h-8 md:w-10 md:h-10 rounded-full border-2 transition-all ${
+                className={`flex items-center justify-center rounded-full border-2 transition-all ${
                   selectedOptionIndex === index
                     ? "border-primary scale-110"
                     : "border-border hover:border-muted-foreground"
                 }`}
-                style={{
-                  backgroundColor: opt.value,
-                  boxShadow:
-                    opt.value === "#FFFFFF"
-                      ? "inset 0 0 0 1px #e5e7eb"
-                      : "none",
-                }}
-              />
+                style={
+                  isColorOption
+                    ? {
+                        width: "2rem",
+                        height: "2rem",
+                        backgroundColor: opt.value,
+                        boxShadow:
+                          opt.value === "#FFFFFF"
+                            ? "inset 0 0 0 1px #e5e7eb"
+                            : "none",
+                      }
+                    : {
+                        minWidth: "4rem",
+                        height: "2.5rem",
+                        padding: "0 0.75rem",
+                        backgroundColor: selectedOptionIndex === index ? "#2AA0DC" : "#f3f4f6",
+                        color: selectedOptionIndex === index ? "white" : "#374151",
+                      }
+                }
+              >
+                {isColorOption ? (
+                  // عرض دائرة للون
+                  <span className="sr-only">{opt.name || `اللون ${index + 1}`}</span>
+                ) : (
+                  // عرض نص للسعة أو أي خيار آخر
+                  <span className="text-sm font-medium">
+                    {opt.name || opt.value || `الخيار ${index + 1}`}
+                  </span>
+                )}
+              </button>
             ))}
           </div>
         </div>
-      ) : (
-        ""
       )}
 
       {/* Price */}
       <div className="flex items-baseline gap-2 md:gap-3">
         <span className="text-2xl md:text-3xl font-bold text-[#C33104]">
-          {typeof product.options[selectedOptionIndex]?.final_price === "string"
-            ? product.options[selectedOptionIndex].final_price
-            : Number(
-                product.options[selectedOptionIndex]?.final_price || 0
-              ).toLocaleString("ar-SA")}
+          {selectedVariant?.final_price 
+            ? (typeof selectedVariant.final_price === "string"
+                ? selectedVariant.final_price
+                : Number(selectedVariant.final_price || 0).toLocaleString("ar-SA"))
+            : (product.final_price 
+                ? (typeof product.final_price === "string"
+                    ? product.final_price
+                    : Number(product.final_price || 0).toLocaleString("ar-SA"))
+                : "0")}
           {t("SAR")}
         </span>
-        {product.options[selectedOptionIndex].final_price ==
-        product.options[selectedOptionIndex].original_price ? (
-          ""
-        ) : (
+        {selectedVariant?.original_price && 
+         selectedVariant.final_price !== selectedVariant.original_price && (
           <span className="text-base md:text-lg text-muted-foreground line-through">
-            {typeof product.options[selectedOptionIndex]?.original_price ===
-            "string"
-              ? product.options[selectedOptionIndex].original_price
-              : Number(
-                  product.options[selectedOptionIndex]?.original_price || 0
-                ).toLocaleString("ar-SA")}
+            {typeof selectedVariant.original_price === "string"
+              ? selectedVariant.original_price
+              : Number(selectedVariant.original_price || 0).toLocaleString("ar-SA")}
             {t("SAR")}
           </span>
         )}
