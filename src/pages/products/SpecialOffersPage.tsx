@@ -124,8 +124,6 @@ export default function SpecialOffersPage() {
             <h2 className="text-2xl font-bold text-gray-800 mb-4">
               {t("AnErrorOccurred")}
             </h2>
-            asddddddddddddddddddddddd
-
             <p className="text-gray-600 mb-6">{storeError}</p>
             <button
               onClick={() => window.location.reload()}

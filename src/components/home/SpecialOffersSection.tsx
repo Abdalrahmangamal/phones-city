@@ -16,6 +16,7 @@ interface SpecialOffersSectionProps {
   products: Product[];
   title?: string;
   style?: string;
+  link?: string;
   isLoading?: boolean;
 }
 
@@ -23,6 +24,7 @@ const SpecialOffersSection: React.FC<SpecialOffersSectionProps> = ({
   products, 
   title = "Special Offers", 
   style = "",
+  link="",
   isLoading = false
 }) => {
   const { lang } = useLangSync();
@@ -150,7 +152,7 @@ const SpecialOffersSection: React.FC<SpecialOffersSectionProps> = ({
         
         <Link 
           className="flex items-center gap-[6px] py-[10px] rounded-[4px] hover:opacity-80 transition-opacity"
-          to={`/${lang}/SpecialOffersPage`}
+          to={`/${lang}/${link}`}
         >
           <span className="font-roboto font-medium md:text-[24px] leading-[20px] text-[#211C4D]">
             {t('ViewAll')}

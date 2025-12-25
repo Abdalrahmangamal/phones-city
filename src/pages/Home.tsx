@@ -150,10 +150,12 @@ const NewHome = () => {
           <SpecialOffersSection 
             title="SpecialOffersForYou"    
             products={offersProducts} 
+            link="SpecialOffersPage"
           />
           <SpecialOffersSection 
             title="BestSellers"    
             products={bestSellerProducts} 
+            link="BestSellerPage"
           />
 
          
