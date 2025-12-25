@@ -5,36 +5,37 @@ import Gallery from "@/components/singleproduct/Gallery";
 import Ptoductdetails from "@/components/singleproduct/Ptoductdetails";
 import Informationproduct from "@/components/singleproduct/Informationproduct";
 import FeaturedHeroSection from "@/components/home/FeaturedHeroSection";
-import Loader from '@/components/Loader';
+import Loader from '@/components/Loader'
 import { useParams } from "react-router";
-import { useProductsStore } from '@/store/productsStore';
+import {useProductsStore} from '@/store/productsStore'
 import { useEffect, useState } from "react";
-import '@/style.css';
+import  '@/style.css'
 import { useLangSync } from "@/hooks/useLangSync";
 import { usePageStore } from '@/store/customerCareStore';
 
 export default function ProductPage() {
-  const { id } = useParams();
-  const { fetchProductbyid, response, loading } = useProductsStore();
+  const {id} = useParams();
+  const {fetchProductbyid, response, loading} = useProductsStore();
   const [selectedOptionIndex, setSelectedOptionIndex] = useState(0);
   const { lang } = useLangSync();
   const { page, fetchPage, loading: pageLoading } = usePageStore();
 
   useEffect(() => {
     if (id) {
-      fetchProductbyid(id, lang);
+      fetchProductbyid(id,lang);
     }
+    // Fetch banner data from backend
     fetchPage("singlepro", lang);
-  }, [id, lang]);
+  }, [id,lang]);
 
   const handleOptionChange = (index: number) => {
     setSelectedOptionIndex(index);
-  };
+  }
 
-  // إعادة تعيين الخيار إلى 0 عند تغيير المنتج (مهم جدًا)
+  // تحديث selectedOptionIndex عند تحميل المنتج
   useEffect(() => {
     setSelectedOptionIndex(0);
-  }, [id, response]);
+  }, []);
 
   if (loading) {
     return (
@@ -44,52 +45,9 @@ export default function ProductPage() {
     );
   }
 
+  // التحقق من البيانات بشكل صحيح - response يجب أن يكون مفرد وليس array
   const product = Array.isArray(response) ? response[0] : response;
   const hasOptions = product?.options && Array.isArray(product.options) && product.options.length > 0;
-
-  // جمع كل مصادر الصور المحتملة مع الأولوية الصحيحة
-  const getGalleryImages = () => {
-    const imagesSources: any[] = [];
-
-    if (hasOptions) {
-      const selectedOption = product.options[selectedOptionIndex];
-      // صور الـ option المختار أولاً (إن وجدت)
-      if (selectedOption?.images) {
-        imagesSources.push(selectedOption.images);
-      }
-    }
-
-    // صور المنتج الرئيسية (images أو image أو thumbnail إلخ)
-    if (product?.images) imagesSources.push(product.images);
-    if (product?.image) imagesSources.push(product.image);
-    if (product?.thumbnail) imagesSources.push(product.thumbnail);
-    if (product?.main_image) imagesSources.push(product.main_image);
-    if (product?.photo) imagesSources.push(product.photo);
-
-    // دمج كل المصادر في مصفوفة واحدة
-    const merged = imagesSources.flat();
-
-    // إزالة القيم الفارغة أو undefined
-    return merged.filter(Boolean);
-  };
-
-  const galleryImages = getGalleryImages();
-
-  // حساب الخصم بناءً على الخيار أو المنتج الرئيسي
-  const discountPercent = (() => {
-    try {
-      const opt = hasOptions ? product.options[selectedOptionIndex] : null;
-      const ori = opt ? opt.original_price : product.original_price;
-      const fin = opt ? opt.final_price : product.final_price;
-
-      const o = ori ? Number(String(ori).replace(/,/g, "")) : 0;
-      const f = fin ? Number(String(fin).replace(/,/g, "")) : 0;
-
-      return o > 0 ? Math.round(((o - f) / o) * 100) : 0;
-    } catch (e) {
-      return 0;
-    }
-  })();
 
   return (
     <Layout>
@@ -99,10 +57,27 @@ export default function ProductPage() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
               {/* Product Gallery */}
               <Gallery 
-                images={galleryImages}
-                discountPercent={discountPercent}
+                images={
+                  hasOptions 
+                    ? product.options[selectedOptionIndex]?.images 
+                    : (product.images || [])
+                }
+                discountPercent={
+                  (() => {
+                    try {
+                      const opt = hasOptions ? product.options[selectedOptionIndex] : null;
+                      const ori = opt ? opt.original_price : product.original_price;
+                      const fin = opt ? opt.final_price : product.final_price;
+                      const o = ori ? Number(String(ori).replace(/,/g, "")) : 0;
+                      const f = fin ? Number(String(fin).replace(/,/g, "")) : 0;
+                      return o > 0 ? ((o - f) / o) * 100 : 0;
+                    } catch (e) {
+                      return 0;
+                    }
+                  })()
+                }
               />
-
+              
               {/* Product Details */}
               <Ptoductdetails 
                 product={product} 
@@ -110,16 +85,18 @@ export default function ProductPage() {
                 selectedOptionIndex={selectedOptionIndex}
               />
             </div>
-
+            
             <Informationproduct product={product} />
-
-            {/* Banner Section */}
+            
+            {/* Featured Hero Section - Placed at the end of the page with correct sizing */}
+            {/* Show loader while fetching banner data */}
             {pageLoading && <Loader />}
+            {/* Display banner when data is loaded */}
             {!pageLoading && page && (
               <FeaturedHeroSection
                 title={page.title || ""}
                 description={page.short_description || ""}
-                buttonText=""
+                buttonText="" // Not used anymore since we're using translation
                 buttonLink="/products"
                 backgroundImage={page.banner || ""}
               />
