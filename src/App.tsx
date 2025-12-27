@@ -7,7 +7,7 @@ import About from "@/pages/about";
 import Servces from "@/pages/Servces";
 import Contact from "@/pages/Contact";
 import SpecialOffersPage from "./pages/products/SpecialOffersPage"; // الصفحة الفعلية لقائمة العروض
-import OfferDetails from "./pages/products/OfferDetails"; // الصفحة الجديدة لتفاصيل العرض
+
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import ProductDetails from "./pages/ProductDetails";
@@ -58,7 +58,7 @@ function LangWrapper() {
       <Route path="/offers" element={<SpecialOffersPage />} />
       
       {/* صفحة تفاصيل عرض فردي - الجديدة */}
-      <Route path="offer/:slugOrId" element={<OfferDetails />} />
+      {/* <Route path="offer/:slugOrId" element={<OfferDetails />} /> */}
       
       <Route path="/search" element={<SearchResults />} />
       <Route path="/login" element={<Login />} />

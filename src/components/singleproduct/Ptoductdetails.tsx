@@ -119,7 +119,7 @@ export default function Ptoductdetails({
       });
 
       // التوجيه إلى صفحة checkout
-      navigate("/checkout");
+      navigate(`/${lang}/checkout`);
     } catch (error) {
       toast.error("فشل إضافة المنتج إلى السلة", {
         position: "bottom-right",
