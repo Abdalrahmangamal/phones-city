@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/dialog";
 import { useTranslation } from "react-i18next";
 import { useLangSync } from "@/hooks/useLangSync";
+import { useNavigate } from "react-router-dom"; // ← جديد
 
 // تعريف نوع Slider (نفس النوع في HeroSection)
 interface Slider {
@@ -24,9 +25,15 @@ interface HomePopupProps {
 const HomePopup: React.FC<HomePopupProps> = ({ onClose, sliders }) => {
   const { t } = useTranslation();
   const { lang } = useLangSync();
+  const navigate = useNavigate(); // ← جديد
 
   // الحصول على أول slide إذا كان موجوداً
   const firstSlide = sliders && sliders.length > 0 ? sliders[0] : null;
+
+  const handleShopNow = () => {
+    navigate(`/${lang}/BestSellerPage`); // توجيه إلى صفحة الأكثر مبيعًا حسب اللغة
+    onClose(); // إغلاق البوب أب
+  };
 
   return (
     <Dialog open onOpenChange={(open) => !open && onClose()}>
@@ -53,7 +60,7 @@ const HomePopup: React.FC<HomePopupProps> = ({ onClose, sliders }) => {
 
         {/* Image/Content Area with spacing */}
         <div className="px-6 pb-6 sm:px-8 sm:pb-8">
-          <div className="h-[250px] sm:h-[400px] flex flex-col items-center justify-center bg-white rounded-lg overflow-hidden">
+          <div className="h-[250px] sm:h-[400px] flex flex-col items-center justify-center bg-white rounded-lg overflow-hidden relative">
             {firstSlide ? (
               <>
                 {/* عرض صورة أول slide */}
@@ -71,19 +78,19 @@ const HomePopup: React.FC<HomePopupProps> = ({ onClose, sliders }) => {
                   <div className="absolute inset-0 bg-gradient-to-r from-[#211C4D0A] via-[#211C4D22] to-[#211C4D6B]"></div>
                 </div>
                 
-                {/* عرض وصف أول slide */}
+                {/* عرض الوصف + زر تسوق الآن (ثابت الآن) */}
                 <div className="absolute bottom-10 right-10 left-6 text-white z-10">
                   <p className="font-semibold text-lg sm:text-xl text-start">
                     {firstSlide.description}
                   </p>
-                  {firstSlide.link && (
-                    <a 
-                      href={firstSlide.link}
-                      className="mt-4 inline-block bg-[#F3AC5D] text-white px-6 py-2 rounded-lg hover:bg-[#e79940] transition-colors text-sm"
-                    >
-                      {lang === "ar" ? "تسوق الآن" : "Shop Now"}
-                    </a>
-                  )}
+                  
+                  {/* الزر الجديد - يظهر دائمًا ويوجه إلى BestSellerPage */}
+                  <button
+                    onClick={handleShopNow}
+                    className="mt-4 inline-block bg-[#F3AC5D] text-white px-6 py-2 rounded-lg hover:bg-[#e79940] transition-colors text-sm font-medium"
+                  >
+                    {lang === "ar" ? "تسوق الآن" : "Shop Now"}
+                  </button>
                 </div>
               </>
             ) : (
