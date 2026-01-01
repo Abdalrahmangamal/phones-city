@@ -378,5 +378,11 @@
   "optional": "optional",
   "refresh": "Refresh",
   "copy": "Copy",
-  "edited": "Edited"
+  "edited": "Edited",
+   "Previous": "Previous",
+  "Next": "Next", 
+  "Showing": "Showing",
+  "of": "of",
+  "results": "results",
+  "No results": "No results"
 }

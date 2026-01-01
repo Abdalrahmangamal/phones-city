@@ -380,5 +380,12 @@
   "optional": "اختياري",
   "refresh": "تحديث",
   "copy": "نسخ",
-  "edited": "تم التعديل"
+  "edited": "تم التعديل",
+  "Previous": "السابق",
+  
+  "Showing": "عرض",
+  "of": "من",
+  "results": "نتيجة",
+  "No results": "لا توجد نتائج"
+
 }
