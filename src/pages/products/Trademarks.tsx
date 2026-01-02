@@ -57,7 +57,7 @@ export default function Trademarks() {
             )}
           </div>
           <Bestseller products={filteredProducts} />
-          <Bestseller products={filteredProducts} />
+          {/* <Bestseller products={filteredProducts} /> */}
 
           <Offerbannersingle />
 

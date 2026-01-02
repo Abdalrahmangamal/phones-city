@@ -590,15 +590,22 @@ export default function Profile() {
           {/* Show loader while fetching banner data */}
           {pageLoading && <Loader />}
           {/* Display banner when data is loaded */}
-          {!pageLoading && page && (
-            <FeaturedHeroSection
-              title={page.title || ""}
-              description={page.short_description || ""}
-              buttonText="تسوق الآن"
-              buttonLink="/products"
-              backgroundImage={page.banner || ""}
-            />
-          )}
+
+
+          <div className="mt-6 mb-4">
+
+              {!pageLoading && page && (
+              <FeaturedHeroSection
+                title={page.title || ""}
+                description={page.short_description || ""}
+                buttonText="تسوق الآن"
+                buttonLink="/offers"
+                backgroundImage={page.banner || ""}
+              />
+            )}
+                    
+          </div>
+          
         </div>
       </div>
     </Layout>

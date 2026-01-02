@@ -55,8 +55,8 @@ export default function Gallery({ images = [], discountPercent = 0 }: { images?:
 
   return (
     <div className="md:w-full">
-      <div className="space-y-4">
-        <div className="relative bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-4 md:p-8 aspect-[4/3] flex items-center justify-center">
+      <div className="space-y-6 md:space-y-8">
+        <div className="relative border border-border rounded-lg shadow-xl p-2 md:p-2 aspect-[4/3] flex items-center justify-center">
           {discountPercent > 0 && (
             <div className="absolute top-2 md:top-4 left-2 md:left-4 bg-destructive text-white px-2 py-0.5 md:px-3 md:py-1 rounded text-xs md:text-sm font-bold">
               {Math.round(discountPercent)}%
@@ -89,7 +89,7 @@ export default function Gallery({ images = [], discountPercent = 0 }: { images?:
               <button
                 key={idx}
                 onClick={() => setSelectedImage(idx)}
-                className={`w-16 h-16 md:w-20 md:h-20 rounded-lg overflow-hidden border-2 transition-all ${
+                className={`w-16 h-16 md:w-20 md:h-20 rounded-md overflow-hidden border-2 shadow-md transition-all ${
                   selectedImage === idx
                     ? "border-primary"
                     : "border-border hover:border-muted-foreground"
