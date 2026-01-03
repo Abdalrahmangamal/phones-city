@@ -433,6 +433,11 @@
     "thanks_for_review": "شكراً لتقييمك!",
     "login_to_review": "يرجى تسجيل الدخول لإضافة مراجعة",
     "purchase_to_review": "يجب شراء المنتج أولاً لتتمكن من تقييمه"
-  }
-
+  },
+  "Blog": "المدونة",
+  "ReadOurLatestArticles": "اقرأ أحدث مقالاتنا",
+  "NoBlogPostsAvailable": "لا توجد مقالات متاحة",
+  "ReadMore": "اقرأ المزيد",
+  "BlogPostNotFound": "المقال غير موجود",
+  "BackToBlog": "العودة إلى المدونة"
 }

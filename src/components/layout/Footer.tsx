@@ -40,6 +40,7 @@ const Footer: React.FC = () => {
     { label: t("Offers"), path: "/offers" },
     { label: t("OurServices"), path: "/servces" },
     { label: t("ContactUs"), path: "/contact" },
+    { label: t("Blog") || "المدونة", path: "/blog" },
     { label: t("TermsAndConditions"), path: "/terms-and-conditions" },
   ];
 

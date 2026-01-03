@@ -431,5 +431,11 @@
     "thanks_for_review": "Thanks for your review!",
     "login_to_review": "Please login to add a review",
     "purchase_to_review": "You must purchase the product first to review it"
-  }
+  },
+  "Blog": "Blog",
+  "ReadOurLatestArticles": "Read our latest articles",
+  "NoBlogPostsAvailable": "No blog posts available",
+  "ReadMore": "Read More",
+  "BlogPostNotFound": "Blog post not found",
+  "BackToBlog": "Back to Blog"
 }
