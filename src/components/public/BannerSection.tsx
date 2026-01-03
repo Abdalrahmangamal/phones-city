@@ -1,17 +1,79 @@
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay, EffectFade } from "swiper/modules";
 
-interface bannertybe {
-  image:string
+import "swiper/css";
+import "swiper/css/effect-fade";
+
+// تحديث الاسم ليكون أكثر دقة (بدلاً من CategoriesSection)
+interface BannerSectionProps {
+  images: string[]; // Fixed type to be string array
+  autoplayDelay?: number;
 }
-const CategoriesSection = ({image}:bannertybe) => {
+
+const BannerSection: React.FC<BannerSectionProps> = ({
+  images = [], // Added default value
+  autoplayDelay = 4000,
+}) => {
+  // 🟡 لا توجد صور
+  if (!images || images.length === 0) {
+    return (
+      <div className="w-full md:my-15 xl:px-[90px] px-2 md:px-0">
+        <div className="w-full h-[140px] md:h-[190.38px] rounded-[16px] overflow-hidden bg-gray-100 flex items-center justify-center">
+          <p className="text-gray-500">لا توجد صور متاحة</p>
+        </div>
+      </div>
+    );
+  }
+
+  // 🟢 صورة واحدة فقط
+  if (images.length === 1) {
+    return (
+      <div className="w-full md:my-15 xl:px-[90px] px-2 md:px-0">
+        <div className="w-full h-[140px] md:h-[190.38px] rounded-[16px] overflow-hidden">
+          <img
+            src={images[0]} // Fixed to use first image
+            alt="بانر"
+            className="w-full h-full !object-contain rounded-[20px]"
+            loading="eager"
+          />
+        </div>
+      </div>
+    );
+  }
+
+  // 🔵 عدة صور → استخدام Swiper مع تأثير Fade
   return (
-    <div className="w-full md:my-15 xl:px-[90px] px-2 pt-0 md:pt-0  md:h-[190.38px] h-[140px] md:px-[0px]  rounded-[15px] md:rounded-[16px] overflow-hidden">
-      <img 
-        src={image}
-        alt="Categories" 
-        className="w-full h-full rounded-[20px]  object-contain"
-      />
+    <div className="w-full md:my-15 xl:px-[90px] px-2 md:px-0">
+      <div className="w-full h-[140px] md:h-[190.38px] rounded-[16px] overflow-hidden">
+        <Swiper
+          effect="fade"
+          fadeEffect={{ crossFade: true }}
+          speed={800}
+          autoplay={{
+            delay: autoplayDelay,
+            disableOnInteraction: false,
+            pauseOnMouseEnter: true,
+          }}
+          loop={true}
+          slidesPerView={1}
+          spaceBetween={0}
+          modules={[Autoplay, EffectFade]}
+          className="w-full h-full"
+        >
+          {images.map((image, index) => (
+            <SwiperSlide key={`banner-${index}`} className="w-full h-full">
+              <img
+                src={image}
+                alt={`بانر ${index + 1}`}
+                className="w-full h-full !object-contain rounded-[20px]"
+                loading={index === 0 ? "eager" : "lazy"}
+              />
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      </div>
     </div>
   );
 };
 
-export default CategoriesSection;
+export default BannerSection;

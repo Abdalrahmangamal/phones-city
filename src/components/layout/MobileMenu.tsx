@@ -6,21 +6,7 @@
   import { useLangSync } from "@/hooks/useLangSync";
   import { Button } from "../ui/button";
   import React from "react";
-
-  type SubCategory = { name: string };
-  type Category = { id: string; name: string; icon: React.ReactNode; subCategories?: SubCategory[] };
-
-  const categories: Category[] = [
-    { id: "laptops", name: "لابتوب", icon: <Monitor className="w-5 h-5 text-gray-700" /> },
-    {
-      id: "phones",
-      name: "الهواتف الذكيه",
-      icon: <Smartphone className="w-5 h-5 text-gray-700" />,
-      subCategories: [{ name: "أجهزة أبل" }, { name: "أجهزة سامسونج" }, { name: "أجهزة هونر" }, { name: "أجهزة شاومي" }],
-    },
-    { id: "tablets", name: "الأجهزة اللوحية", icon: <Tablet className="w-5 h-5 text-gray-700" /> },
-    { id: "electronics", name: "الأجهزة الإلكترونية الصغيرة", icon: <Camera className="w-5 h-5 text-gray-700" /> },
-  ];
+  import { useCategoriesStore } from "@/store/categories/useCategoriesStore";
 
   export default function MobileMenu({
     isOpen,
@@ -37,6 +23,7 @@
     const { lang } = useLangSync();
     const { i18n, t } = useTranslation();
     const [open] = React.useState(false);
+    const { categories } = useCategoriesStore();
 
     const navitem = [
       { link: `/${lang}/`, name: `${t("Home")}` },
@@ -47,6 +34,19 @@
       { link: `/${lang}/profile`, name: `${t("Profile")}` },
       { link: `/${lang}/favourite`, name: `${t("favourite")}` },
     ];
+
+    // Map category icons based on category names
+    const getCategoryIcon = (categoryName: string) => {
+      if (categoryName.includes("لابتوب") || categoryName.includes("Laptop")) {
+        return <Monitor className="w-5 h-5 text-gray-700" />;
+      } else if (categoryName.includes("الهواتف") || categoryName.includes("Phone")) {
+        return <Smartphone className="w-5 h-5 text-gray-700" />;
+      } else if (categoryName.includes("لوحية") || categoryName.includes("Tablet")) {
+        return <Tablet className="w-5 h-5 text-gray-700" />;
+      } else {
+        return <Camera className="w-5 h-5 text-gray-700" />;
+      }
+    };
 
     return (
       <div className={`fixed inset-0 z-50 transition ${isOpen ? "pointer-events-auto" : "pointer-events-none"}`}>
@@ -64,8 +64,8 @@
         >
           {/* Header */}
           <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200">
-            <h2 className="text-black text-xl font-bold">مدينة الهواتف</h2>
-            <button onClick={onClose} className="p-2 rounded-full bg-gray-100">
+            <h2 className="text-black text-xl font-bold">{t("CityPhones")}</h2>
+            <button onClick={onClose} className="p-2 rounded-full bg-gray-100" aria-label={lang === "ar" ? "إغلاق القائمة" : "Close menu"}>
               <X className="w-5 h-5" />
             </button>
           </div>
@@ -76,7 +76,7 @@
               onClick={() => setOpenSections(!openSections)}
               className="flex items-center justify-between w-full px-3 py-2 font-semibold text-black hover:bg-gray-100 rounded-lg"
             >
-              <span>الأقسام</span>
+              <span>{t("Sections")}</span>
               <ChevronDown className={`w-5 h-5 transition-transform ${openSections ? "rotate-180" : ""}`} />
             </button>
 
@@ -85,29 +85,33 @@
                 {categories.map((cat) => (
                   <div key={cat.id}>
                     <button
-                      onClick={() => setOpenCategory(openCategory === cat.id ? null : cat.id)}
+                      onClick={() => setOpenCategory(openCategory === cat.id.toString() ? null : cat.id.toString())}
                       className="flex items-center justify-between w-full px-3 py-2 text-gray-800 hover:bg-gray-50 rounded-lg"
                     >
                       <div className="flex items-center gap-2">
-                        {cat.icon}
-                        <span>{cat.name}</span>
+                        {getCategoryIcon(cat.name)}
+                        <span>{t(cat.name)}</span>
                       </div>
-                      {cat.subCategories && (
+                      {cat.children && cat.children.length > 0 && (
                         <ChevronDown
                           className={`w-4 h-4 transition-transform ${
-                            openCategory === cat.id ? "rotate-180" : ""
+                            openCategory === cat.id.toString() ? "rotate-180" : ""
                           }`}
                         />
                       )}
                     </button>
 
-                    {openCategory === cat.id && cat.subCategories && (
+                    {openCategory === cat.id.toString() && cat.children && cat.children.length > 0 && (
                       <ul className="mr-6 mt-1 border-r-2 border-[#F3AC5D] pr-2 space-y-1">
-                        {cat.subCategories.map((sub, i) => (
-                          <li key={i}>
-                            <a href="#" className="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg">
-                              {sub.name}
-                            </a>
+                        {cat.children.map((sub: any) => (
+                          <li key={sub.id}>
+                            <Link 
+                              to={`/${lang}/categorySingle/${sub.slug}/products`} 
+                              className="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg"
+                              onClick={onClose}
+                            >
+                              {t(sub.name)}
+                            </Link>
                           </li>
                         ))}
                       </ul>
@@ -122,7 +126,12 @@
           <div className="px-4 py-3">
             <nav className="space-y-2">
               {navitem.map((link) => (
-                <Link key={link.link} to={link.link} className="block px-4 py-2 text-black hover:bg-gray-100 rounded-lg">
+                <Link 
+                  key={link.link} 
+                  to={link.link} 
+                  className="block px-4 py-2 text-black hover:bg-gray-100 rounded-lg"
+                  onClick={onClose}
+                >
                   {link.name}
                 </Link>
               ))}
@@ -132,7 +141,7 @@
                   <DropdownMenuTrigger asChild>
                     <div className="flex items-center gap-1 px-3 py-1.5 rounded-md border border-gray-200 bg-white hover:bg-gray-50 text-gray-800 text-sm font-medium shadow-sm transition-all duration-200">
                       <Globe className="h-4 w-4 text-gray-600" />
-                      <span className="text-gray-700">عربي</span>
+                      <span className="text-gray-700">{lang === "ar" ? "عربي" : "English"}</span>
                       <svg
                         width="16"
                         height="16"
@@ -148,20 +157,19 @@
                   <DropdownMenuContent
                     align="end"
                     sideOffset={6}
-                    dir={lang === "ar" ? "rtl" : "ltr"}
                     className="z-[9999] rounded-lg border border-gray-200 bg-white shadow-lg min-w-[120px] overflow-hidden"
                   >
                     <DropdownMenuItem
                       onClick={() => i18n.changeLanguage("ar")}
                       className="px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
                     >
-                      العربية
+                      {t("Arabic")}
                     </DropdownMenuItem>
                     <DropdownMenuItem
                       onClick={() => i18n.changeLanguage("en")}
                       className="px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
                     >
-                      English
+                      {t("English")}
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>

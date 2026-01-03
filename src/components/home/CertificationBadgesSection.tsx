@@ -1,128 +1,166 @@
-import certficate1 from '../../assets/images/certficate1.png'
-import certficate2 from '../../assets/images/certficate2.png'
-import saudibusiness from '../../assets/images/saudibusiness.jpg'
-import maraoof from '../../assets/images/maraoof.jpg'
 // src/components/CertificationBadgesSection.tsx
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import {
   Dialog,
   DialogContent,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { useCertificateStore } from "@/store/home/certificateStore";
+import { useTranslation } from "react-i18next";
 
-const CertificationBadgesSection: React.FC = () => {
-  const [modalImage, setModalImage] = useState<string | null>(null);
+interface Certificate {
+  id: number;
+  name_ar: string;
+  name_en: string;
+  image: string;
+  main_image?: string;
+}
 
-  const handleOpen = (src: string) => {
-    setModalImage(src);
-  };
+interface CertificationBadgesSectionProps {
+  certificates: Certificate[];
+}
+
+const CertificationBadgesSection: React.FC<CertificationBadgesSectionProps> = ({
+  certificates,
+}) => {
+  const { t, i18n } = useTranslation();
+  const isArabic = i18n.language === "ar";
+
+  const {
+    currentCertificate,
+    loadingSingle,
+    fetchCertificateById,
+  } = useCertificateStore();
+
+  const [openDialogId, setOpenDialogId] = useState<number | null>(null);
+
+  const handleOpen = useCallback(
+    (certId: number) => {
+      setOpenDialogId(certId);
+      fetchCertificateById(certId);
+    },
+    [fetchCertificateById]
+  );
+
+  const handleCloseDialog = useCallback(() => {
+    setOpenDialogId(null);
+  }, []);
+
+  const handleImageError = useCallback(
+    (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+      const target = e.currentTarget;
+      target.src = "/placeholder-certificate.png";
+      target.onerror = null;
+    },
+    []
+  );
+
+  // حالة عدم وجود بيانات أو تحميل
+  if (!certificates || certificates.length === 0) {
+    return (
+      <section className="w-full my-[30px] md:!my-20 max-w-[1280px] mx-auto px-4">
+        <h2 className="font-semibold text-[22px] md:text-[32px] text-[#211C4D] text-center mb-8">
+          {t("OurCertificates")}
+        </h2>
+        <div className="flex flex-col items-center justify-center h-40 gap-4 py-20 text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-4 border-blue-600 border-t-transparent mx-auto"></div>
+          <span className="text-gray-600">
+            {isArabic ? t("LoadingCertificates") : t("LoadingCertificatesEn")}
+          </span>
+        </div>
+      </section>
+    );
+  }
 
   return (
-    <div className="w-full my-[30px] md:!my-10 lg:my-30 max-w-[1280px]  h-auto flex flex-row items-start gap-6 md:gap-[80px] mx-auto p-4">
-      {/* Left Section */}
-      <div className="flex flex-col w-full md:w-[504px] gap-4">
-        <div className="relative">
-          <div className="absolute top-1 right-4 z-0">
-            <img src="/Layer_1.svg" alt="" />
+    <section className="w-full my-[30px] md:!my-20 max-w-[1280px] mx-auto px-4">
+      <h2 className="font-semibold text-[22px] md:text-[32px] text-[#211C4D] text-center mb-8">
+        {t("OurCertificates")}
+      </h2>
+
+      <div className="flex flex-wrap justify-center gap-6 lg:gap-8">
+        {certificates.map((cert) => (
+          <div key={cert.id} className="flex flex-col items-center justify-start w-[120px] md:w-[150px] lg:w-[180px]">
+            <Dialog
+              open={openDialogId === cert.id}
+              onOpenChange={(open) => {
+                if (!open) handleCloseDialog();
+              }}
+            >
+              <DialogTrigger asChild>
+                <div
+                  className="w-[120px] h-[120px] md:w-[150px] md:h-[150px] lg:w-[180px] lg:h-[180px] rounded-full overflow-hidden bg-white shadow-[0px_7px_29px_0px_rgba(100,100,111,0.2)] flex items-center justify-center cursor-pointer hover:shadow-xl transition-shadow mx-auto"
+                  onClick={() => handleOpen(cert.id)}
+                >
+                  <img
+                    src={cert.image}
+                    alt={isArabic ? cert.name_ar : cert.name_en}
+                    className="w-full h-full object-contain p-4"
+                    onError={handleImageError}
+                  />
+                </div>
+              </DialogTrigger>
+
+              <DialogContent className="max-w-4xl">
+                {loadingSingle ? (
+                  <div className="flex flex-col items-center justify-center h-[400px] gap-4">
+                    <div className="animate-spin rounded-full h-12 w-12 border-4 border-blue-600 border-t-transparent"></div>
+                    <span className="text-gray-600">
+                      {isArabic ? t("LoadingDetails") : t("LoadingDetailsEn")}
+                    </span>
+                  </div>
+                ) : currentCertificate ? (
+                  <>
+                    <div className="bg-gray-50 p-6 flex items-center justify-center">
+                      <img
+                        src={currentCertificate.main_image}
+                        alt={isArabic ? currentCertificate.name_ar : currentCertificate.name_en}
+                        className="max-w-full max-h-[60vh] object-contain rounded-lg shadow-lg"
+                        onError={handleImageError}
+                      />
+                    </div>
+
+                    <div className="p-8 text-center">
+                      <h3 className="text-2xl md:text-3xl font-bold text-gray-800 mb-3">
+                        {isArabic ? currentCertificate.name_ar : currentCertificate.name_en}
+                      </h3>
+
+                      <p className="text-lg text-gray-600">
+                        {isArabic ? currentCertificate.name_en : currentCertificate.name_ar}
+                      </p>
+
+                      <div className="mt-10">
+                        <button
+                          onClick={handleCloseDialog}
+                          className="px-10 py-4 bg-blue-600 text-white text-lg font-medium rounded-xl hover:bg-blue-700 transition-colors focus:outline-none focus:ring-4 focus:ring-blue-300"
+                        >
+                          {t("Close")}
+                        </button>
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  <div className="text-center py-16">
+                    <p className="text-red-500 text-xl mb-4">{isArabic ? "Warning: فشل تحميل التفاصيل" : "Warning: Failed to load details"}</p>
+                    <button
+                      onClick={handleCloseDialog}
+                      className="px-8 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700"
+                    >
+                      {t("Back")}
+                    </button>
+                  </div>
+                )}
+              </DialogContent>
+            </Dialog>
+
+            <p className="mt-4 text-sm md:text-base text-[#211C4D] font-semibold max-w-[180px] mx-auto text-center line-clamp-2 leading-tight">
+              {isArabic ? cert.name_ar : cert.name_en}
+            </p>
           </div>
-          <h2
-            id="cert-known-title"
-            className="font-roboto font-semibold text-[20px] md:text-[30px] leading-[36px] text-[#211C4D]  relative z-10 text-center"
-          >
-            شهادة توثيق معروف
-          </h2>
-        </div>
-
-        <div className="flex justify-center">
-          <Dialog>
-            <DialogTrigger asChild>
-              <button
-                onClick={() => handleOpen(`${maraoof}`)}
-                className="cursor-pointer focus:outline-none rounded"
-              >
-                <img
-                  src={certficate1}
-                  alt="شهادة معروف - Thumbnail"
-                  className="max-w-full h-[80px] md:h-[150px] block object-contain"
-                />
-              </button>
-            </DialogTrigger>
-            <DialogContent className="md:max-w-[50%] p-0 flex items-center justify-center"   
-            style={{
-    
-    maxHeight: "90vh",
-    padding: 0,
-    background: "transparent",
-    boxShadow: "none",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  }}>
-              {modalImage && (
-                <img
-                  src={modalImage}
-                  alt="عرض مكبر للشهادة"
-                  className="max-w-full max-h-[90vh] object-contain rounded-lg"
-                />
-              )}
-            </DialogContent>
-          </Dialog>
-        </div>
+        ))}
       </div>
-
-      {/* Right Section */}
-      <div className="flex flex-col w-full md:w-[708px] justify-start gap-4">
-        <div className="relative">
-          <div className="absolute top-0 right-47 z-0">
-            <img src="/Layer_1.svg" alt="" />
-          </div>
-          <h2
-            id="cert-verify-title"
-            className="font-roboto font-semibold text-[20px] md:text-[30px] leading-[36px] text-[#211C4D]  relative z-10 text-center"
-          >
-            شهادة توثيق
-          </h2>
-        </div>
-
-        <div className="flex justify-center">
-          <Dialog>
-            <DialogTrigger asChild>
-              <button
-                onClick={() => handleOpen(`${saudibusiness}`)}
-                className="cursor-pointer focus:outline-none rounded"
-              >
-                <img
-                  src={certficate2}
-                  alt="شهادة التوثيق - Thumbnail"
-                  className="max-w-full h-[80px] md:h-[120px] block object-contain"
-                />
-              </button>
-            </DialogTrigger>
-<DialogContent
-  className="p-0 flex md:max-w-[50%] items-center justify-center"
-  style={{
-    maxHeight: "90vh",
-    padding: 0,
-    background: "transparent",
-    boxShadow: "none",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  }}
->
-  {modalImage && (
-    <img
-      src={modalImage}
-      alt="عرض مكبر للشهادة"
-      className="max-w-full max-h-[90vh] w-full object-contain rounded-lg"
-    />
-  )}
-</DialogContent>
-          </Dialog>
-        </div>
-      </div>
-    </div>
+    </section>
   );
 };
 
-export default CertificationBadgesSection;
+export default React.memo(CertificationBadgesSection);

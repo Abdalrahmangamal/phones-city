@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useLangSync } from "@/hooks/useLangSync";
 
 import tiktok from "../../assets/images/tiktok.png";
 import snapchat from "../../assets/images/snapchat.png";
-import whatsapp from "../../assets/images/whatsapp.png";
+// import whatsapp from "../../assets/images/whatsapp.png";
 import x from "../../assets/images/x.png";
 import insta from "../../assets/images/insta.png";
 import facebook from "../../assets/images/facebook.png";
@@ -17,59 +17,48 @@ import Google from "../../assets/images/Google.png";
 import amwal from "../../assets/images/amwal.png";
 import emkan from "../../assets/images/emkan.png";
 import payment from "../../assets/images/payment.png";
+import {useAboutStore} from '@/store/aboutusStore'
 const Footer: React.FC = () => {
   const { t } = useTranslation();
   const { lang } = useLangSync();
+  const {fetchAbout,data}=useAboutStore()
+  useEffect(()=>{fetchAbout(lang)},[])
 
   const navigate = useNavigate();
 
   const serviceMenuItems = [
-    t("InstallmentService"),
-    t("DeviceExchange"),
-    t("DeviceSelling"),
-    t("ProgrammingAndMaintenance"),
-    t("TelecomAndInternet"),
-    t("PremiumCustomerService"),
+    { label: t("InstallmentService"), path: "/servces" },
+    { label: t("DeviceExchange"), path: "/servces" },
+    { label: t("DeviceSelling"), path: "/servces" },
+    { label: t("ProgrammingAndMaintenance"), path: "/servces" },
+    { label: t("TelecomAndInternet"), path: "/servces" },
+    { label: t("PremiumCustomerService"), path: "/servces" },
   ];
 
   const aboutMenuItems = [
-    t("WhoWeAre"),
-    t("Offers"),
-    t("OurServices"),
-    t("ContactUs"),
-    t("TermsAndConditions"),
+    { label: t("WhoWeAre"), path: "/about" },
+    { label: t("Offers"), path: "/offers" },
+    { label: t("OurServices"), path: "/servces" },
+    { label: t("ContactUs"), path: "/contact" },
+    { label: t("TermsAndConditions"), path: "/terms-and-conditions" },
   ];
 
   const customerCareMenuItems = [
-    t("WarrantyPolicy"),
-    t("ReturnPolicy"),
-    t("AfterSalesService"),
-    t("LoyaltyPointsService"),
+    { label: t("WarrantyPolicy"), path: "/warranty-policy" },
+    { label: t("ReturnPolicy"), path: "/return-policy" },
+    { label: t("TermsAndConditions"), path: "/terms-and-conditions" },
+    { label: t("AboutMora"), path: "/about-mora" },
+    { label: t("AboutCoara"), path: "/about-quara" },
   ];
 
-  const handleCustomerCareItemClick = (item: string) => {
-    switch (item) {
-      case `${t("WarrantyPolicy")}`:
-        navigate("/warranty-policy");
-        break;
-      case "سياسة  الاستبدال والارجاع":
-        navigate("/return-policy");
-        break;
-      default:
-        // Handle other menu items if needed
-        break;
+  const handleCustomerCareItemClick = (path: string) => {
+    if (path !== "#") {
+      navigate(path);
     }
   };
 
-  const handleAboutItemClick = (item: string) => {
-    switch (item) {
-      case "الشروط و الاحكام":
-        navigate("/terms-and-conditions");
-        break;
-      default:
-        // Handle other menu items if needed
-        break;
-    }
+  const handleAboutItemClick = (path: string) => {
+    navigate(path);
   };
 
   return (
@@ -102,9 +91,9 @@ const Footer: React.FC = () => {
                     key={i}
                     className="text-[#E0E5EB] hover:text-white text-[15px] sm:text-[12px] lg:text-[18px] text-start bg-transparent border-0 p-0 cursor-pointer"
                     style={{ fontFamily: "Roboto" }}
-                    onClick={() => handleCustomerCareItemClick(item)}
+                    onClick={() => handleCustomerCareItemClick(item.path)}
                   >
-                    {item}
+                    {item.label}
                   </button>
                 ))}
               </div>
@@ -121,9 +110,9 @@ const Footer: React.FC = () => {
                     key={i}
                     className="text-[#E0E5EB] hover:text-white text-[15px] sm:text-[12px] lg:text-[16px] text-start bg-transparent border-0 p-0 cursor-pointer"
                     style={{ fontFamily: "Roboto" }}
-                    onClick={() => handleAboutItemClick(item)}
+                    onClick={() => handleAboutItemClick(item.path)}
                   >
-                    {item}
+                    {item.label}
                   </button>
                 ))}
               </div>
@@ -140,8 +129,13 @@ const Footer: React.FC = () => {
                     key={i}
                     className="text-[#E0E5EB] hover:text-white text-[15px] sm:text-[12px] lg:text-[16px] text-start bg-transparent border-0 p-0 cursor-pointer"
                     style={{ fontFamily: "Roboto" }}
+                    onClick={() => {
+                      if (item.path !== "#") {
+                        navigate(item.path);
+                      }
+                    }}
                   >
-                    {item}
+                    {item.label}
                   </button>
                 ))}
               </div>
@@ -157,39 +151,47 @@ const Footer: React.FC = () => {
                 className="text-[#CAD0D9] text-[15px] sm:text-[12px] lg:text-[16px] leading-[150%]"
                 style={{ fontFamily: "Roboto" }}
               >
-                لمعرفة كل جديد عنا ...... تابع حساباتنا على وسائل التواصل
-                الاجتماعي وحساباتنا على جوجل.
+<div>
+  {data?.about_us?.replace(/<\/?p>/g, "")}
+</div>
               </p>
 
               {/* Social icons */}
               <div className="flex justify-start mt-2">
                 <div className="flex items-center gap-2 sm:gap-3 flex-wrap justify-end">
-                  {[tiktok, snapchat, whatsapp, x, insta, facebook].map(
-                    (icon, i) => (
-                      <a
-                        key={i}
-                        href="#"
-                        className="w-8 h-8 sm:w-7 sm:h-7 lg:w-9 lg:h-9 rounded-full bg-white flex items-center justify-center transition-all hover:bg-gray-100 hover:shadow-md"
-                      >
-                        <img
-                          src={icon}
-                          alt="social"
-                          className="w-4 h-4 sm:w-5 sm:h-5 object-contain"
-                        />
-                      </a>
-                    )
-                  )}
+                  {[
+                    { icon: tiktok, url: "https://www.tiktok.com/@madinatalhawatif?_r=1&_t=ZS-92MSlSSc6D2" },
+                    { icon: snapchat, url: "https://www.snapchat.com/add/madinat6100?share_id=qzDj5oOT5kM&locale=ar-SA" },
+                    // { icon: whatsapp, url: "#" },
+                    { icon: x, url: "https://x.com/AlhwatfMdy43074" },
+                    { icon: insta, url: "https://www.instagram.com/cityphone.sa?igsh=cnVoeGpncWF0Mjc5" },
+                    { icon: facebook, url: "https://www.facebook.com/share/14PAhVuoWz7/" }
+                  ].map((social, i) => (
+                    <a
+                      key={i}
+                      href={social.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-8 h-8 sm:w-7 sm:h-7 lg:w-9 lg:h-9 rounded-full bg-white flex items-center justify-center transition-all hover:bg-gray-100 hover:shadow-md"
+                    >
+                      <img
+                        src={social.icon}
+                        alt="social"
+                        className="w-4 h-4 sm:w-5 sm:h-5 object-contain"
+                      />
+                    </a>
+                  ))}
                 </div>
               </div>
 
               {/* Badges */}
               <div className="flex justify-start flex-wrap gap-2 sm:gap-3 mt-4">
-                {[googleanalytic, googletagmaneger, blue, drive, Google].map(
+                {[googleanalytic, googletagmaneger, blue, drive, Google, emkan, amwal].map(
                   (img, i) => (
-                    <a key={i} href="/" className="inline-block">
+                    <a key={i} href={i >= 5 ? (i === 5 ? "/about-quara" : "/about-mora") : "#"} className="inline-block">
                       <img
                         src={img}
-                        alt="badge"
+                        alt={i >= 5 ? (i === 5 ? "Coara" : "Mora") : "badge"}
                         className="h-9 sm:h-7 lg:h-10 object-contain rounded-lg"
                         style={{ maxWidth: 130 }}
                       />

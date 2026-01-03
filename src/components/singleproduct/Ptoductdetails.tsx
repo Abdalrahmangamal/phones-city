@@ -1,77 +1,73 @@
 import { Plus, Minus, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import tamara from "@/assets/images/tamara.png";
-import tabby from "@/assets/images/tabby 1.png";
-import madfu from "@/assets/images/madfu.png";
-import mispay from "@/assets/images/mispay_installment 1.png";
-import emkn from "@/assets/images/emkann.png";
-import amwal from "@/assets/images/amwal.png";
 import { useEffect, useState } from "react";
 import { TabbyModal } from "@/components/singleproduct/Modelpayment";
 import { TamaraModal } from "@/components/singleproduct/TamaraModal";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useCartStore } from "@/store/cartStore/cartStore";
+import { toast } from "react-toastify";
+import { useLangSync } from "@/hooks/useLangSync";
+import { useTranslation } from "react-i18next";
 
-export default function Ptoductdetails({ product,handleindexchange }: any) {
-  const [selectedColor, setSelectedColor] = useState("blue");
+export default function Ptoductdetails({
+  product,
+  handleindexchange,
+  selectedOptionIndex: propSelectedOptionIndex,
+}: any) {
+  const { addToCart } = useCartStore();
   const [quantity, setQuantity] = useState(1);
   const [isTabbyModalOpen, setIsTabbyModalOpen] = useState(false);
   const [isTamaraModalOpen, setIsTamaraModalOpen] = useState(false);
-  const [selectedOptionIndex, setSelectedOptionIndex] = useState(0);
-useEffect(() => {
-handleindexchange(selectedOptionIndex);}
-,[selectedOptionIndex]);
-if (!product) return <div>Loading...</div>;
+  const [selectedOptionIndex, setSelectedOptionIndex] = useState(
+    propSelectedOptionIndex || 0
+  );
+  const [isAddingToCart, setIsAddingToCart] = useState(false);
+  const [isBuyingNow, setIsBuyingNow] = useState(false);
+  const { lang } = useLangSync();
+  const { t } = useTranslation();
+  const navigate = useNavigate();
 
-  const paymentMethods = [
-    {
-      id: "tamara",
-      img: tamara,
-      name: "تامارا",
-      description:
-        "او قسم فاتورتك علي 3 دفعات بقيمه 24,020 رس بدون رسوم تأخير ، متوافقه مع الشريعه الاسلاميه ",
-      modal: "tamara",
-    },
-    {
-      id: "tabby",
-      img: tabby,
-      name: "تابي",
-      description:
-        "او قسم فاتورتك علي 4 دفعات بقيمه 15,920 رس بدون رسوم تأخير ، متوافقه مع الشريعه الاسلاميه ",
-      modal: "tabby",
-    },
-    {
-      id: "madfu",
-      img: madfu,
-      name: "مدفوع",
-      description:
-        "4 دفعات بقيمة 15,920 رس / شهر، وبدون رسوم تأخير ! ومتوافقه مع الشريعه الاسلاميه ",
-      modal: "tabby",
-    },
-    {
-      id: "mispay",
-      img: mispay,
-      name: "ميسباي",
-      description:
-        "4 دفعات بقيمة 15,920 رس /شهر، بدون رسوم تأخير ! ومتوافقه مع الشريعه الاسلاميه ",
-      modal: "tabby",
-    },
-    {
-      id: "emkn",
-      img: emkn,
-      name: "امكن",
-      description:
-        "4 دفعات بقيمة 15,920 رس /شهر، بدون رسوم تأخير ! ومتوافقه مع الشريعه الاسلاميه ",
-      modal: "tabby",
-    },
-    {
-      id: "amwal",
-      img: amwal,
-      name: "أمـوال",
-      description:
-        "قسّطها إلى 6 دفعات مع البنك وبدون فوائد ، متوافقه مع الشريعه الاسلاميه ",
-      modal: "tabby",
-    },
-  ];
+  useEffect(() => {
+    handleindexchange(selectedOptionIndex);
+  }, [selectedOptionIndex, handleindexchange]);
+
+  // تحديث الـ index عند تغيير الـ prop
+  useEffect(() => {
+    if (propSelectedOptionIndex !== undefined) {
+      setSelectedOptionIndex(propSelectedOptionIndex);
+    }
+  }, [propSelectedOptionIndex]);
+
+  if (!product) return <div>تحميل...</div>;
+
+  // تحديد نوع الخيارات المتاحة
+  const hasOptions = product?.options && Array.isArray(product.options) && product.options.length > 0;
+  const hasMultipleOptions = hasOptions && product.options.length > 1;
+  
+  // التحقق من نوع الخيارات بناءً على قيمة الخيار الأول
+  const firstOption = hasOptions ? product.options[0] : null;
+  const isColorOption = firstOption?.value && (
+    firstOption.value.startsWith('#') || 
+    ['أحمر', 'أزرق', 'أخضر', 'أسود', 'أبيض', 'رمادي'].some(color => 
+      firstOption.name?.includes(color) || firstOption.value?.includes(color)
+    )
+  );
+  const isCapacityOption = firstOption?.value && (
+    firstOption.value.includes('GB') || 
+    firstOption.value.includes('TB') ||
+    firstOption.value.includes('جيجا') ||
+    firstOption.value.includes('تيرا') ||
+    ['64GB', '128GB', '256GB', '512GB', '1TB'].some(capacity => 
+      firstOption.name?.includes(capacity) || firstOption.value?.includes(capacity)
+    )
+  );
+
+  // تحديد نص التسمية بناءً على نوع الخيار
+  const getOptionLabel = () => {
+    if (isColorOption) return t("Chooseyourcolor") || "اختر لونك";
+    if (isCapacityOption) return t("Chooseyourcapacity") || "اختر سعتك";
+    return t("Chooseyouroption") || "اختر خيارك";
+  };
 
   const openModal = (modalType: string) => {
     if (modalType === "tamara") {
@@ -81,19 +77,101 @@ if (!product) return <div>Loading...</div>;
     }
   };
 
+  const handleAddToCart = async () => {
+    try {
+      setIsAddingToCart(true);
+      const selectedVariant = product.options[selectedOptionIndex];
+      const hasMultiple = product.options && product.options.length > 1;
+      const idToSend = hasMultiple ? selectedVariant.id : product.id;
+
+      await addToCart(idToSend, quantity, hasMultiple);
+
+      toast.success(`تم إضافة ${product.name} إلى السلة`, {
+        position: "bottom-right",
+        autoClose: 2000,
+      });
+
+      // إعادة تعيين الكمية بعد الإضافة
+      setQuantity(1);
+    } catch (error) {
+      toast.error("فشل إضافة المنتج إلى السلة", {
+        position: "bottom-right",
+        autoClose: 2000,
+      });
+    } finally {
+      setIsAddingToCart(false);
+    }
+  };
+
+  const handleBuyNow = async () => {
+    try {
+      setIsBuyingNow(true);
+      const selectedVariant = product.options[selectedOptionIndex];
+      const hasMultiple = product.options && product.options.length > 1;
+      const idToSend = hasMultiple ? selectedVariant.id : product.id;
+
+      // إضافة المنتج إلى السلة
+      await addToCart(idToSend, quantity, hasMultiple);
+
+      toast.success(`تم إضافة ${product.name} إلى السلة`, {
+        position: "bottom-right",
+        autoClose: 2000,
+      });
+
+      // التوجيه إلى صفحة checkout
+      navigate(`/${lang}/checkout`);
+    } catch (error) {
+      toast.error("فشل إضافة المنتج إلى السلة", {
+        position: "bottom-right",
+        autoClose: 2000,
+      });
+    } finally {
+      setIsBuyingNow(false);
+    }
+  };
+
+  // الحصول على بوابات الدفع للـ variant المختار
+  const selectedVariant = product.options?.[selectedOptionIndex];
+  const paymentMethodsForSelectedVariant =
+    selectedVariant?.payment_methods || [];
+  const [expanded, setExpanded] = useState(false);
+
+  const toggleExpand = () => setExpanded(!expanded);
+
   return (
-    <div className="space-y-4 md:space-y-6">
+    <div className="space-y-4 md:space-y-6" dir={lang == "ar" ? "rtl" : "ltr"}>
       <div>
-        <h1 className="text-xl md:text-2xl font-bold text-foreground leading-relaxed mb-3">
-          {product?.description}
-        </h1>
+        {/* Product Name */}
+        <h2 className="md:text-base !text-[25px] text-black font-medium mb-1 text-start">
+          {product?.name}
+        </h2>
+
+        {/* Product Description */}
+        <div className="text-start">
+          <p
+            className={` md:text-xl font-bold text-sm  text-gray-600 leading-relaxed 
+            ${expanded ? "" : "line-clamp-3"}`}
+          >
+            {product?.description}
+          </p>
+
+          {product?.description?.length > 100 && (
+            <button
+              onClick={toggleExpand}
+              className="text-[#211C4D] font-semibold text-sm mt-1 hover:underline"
+            >
+              {expanded ? "Read Less" : "Read More"}
+            </button>
+          )}
+        </div>
+
         <div className="flex items-center gap-2 mb-2">
           <div className="flex gap-1">
             {[1, 2, 3, 4, 5].map((star) => (
               <Star
                 key={star}
                 className={`w-[18px] h-[18px] md:w-[22px] md:h-[22px] ${
-                  star <= 4
+                  star <= product.average_rating
                     ? "fill-[#FC9231] text-[#FC9231]"
                     : "fill-none text-gray-300"
                 }`}
@@ -101,70 +179,118 @@ if (!product) return <div>Loading...</div>;
             ))}
           </div>
           <span className="text-xs md:text-sm text-muted-foreground">
-            (68 مراجعة)
+            ({product.reviews_count} {t("review")})
           </span>
         </div>
-        <p className="text-sm text-primary">أختر لونك</p>
       </div>
+      
+      {/* عرض خيارات المنتج (الألوان أو السعات) */}
+      {hasMultipleOptions && (
+        <div>
+          <p className="text-sm text-start text-primary">{getOptionLabel()}</p>
 
-      {/* Color Selection */}
-      <div className="flex gap-2 md:gap-3">
-        {product?.options?.map((opt, index) => (
-          <button
-            key={opt.id}
-            onClick={() => setSelectedOptionIndex(index)}
-            className={`w-8 h-8 md:w-10 md:h-10 rounded-full border-2 transition-all ${
-              selectedOptionIndex === index
-                ? "border-primary scale-110"
-                : "border-border hover:border-muted-foreground"
-            }`}
-            style={{
-              backgroundColor: opt.value,
-              boxShadow:
-                opt.value === "#FFFFFF" ? "inset 0 0 0 1px #e5e7eb" : "none",
-            }}
-          />
-        ))}
-      </div>
+          {/* عرض الخيارات بناءً على نوعها */}
+          <div className="flex gap-2 md:gap-3 flex-wrap">
+            {product?.options?.map((opt: any, index: number) => (
+              <button
+                key={opt.id}
+                onClick={() => setSelectedOptionIndex(index)}
+                className={`flex items-center justify-center rounded-full border-2 transition-all ${
+                  selectedOptionIndex === index
+                    ? "border-primary scale-110"
+                    : "border-border hover:border-muted-foreground"
+                }`}
+                style={
+                  isColorOption
+                    ? {
+                        width: "2rem",
+                        height: "2rem",
+                        backgroundColor: opt.value,
+                        boxShadow:
+                          opt.value === "#FFFFFF"
+                            ? "inset 0 0 0 1px #e5e7eb"
+                            : "none",
+                      }
+                    : {
+                        minWidth: "4rem",
+                        height: "2.5rem",
+                        padding: "0 0.75rem",
+                        backgroundColor: selectedOptionIndex === index ? "#2AA0DC" : "#f3f4f6",
+                        color: selectedOptionIndex === index ? "white" : "#374151",
+                      }
+                }
+              >
+                {isColorOption ? (
+                  // عرض دائرة للون
+                  <span className="sr-only">{opt.name || `اللون ${index + 1}`}</span>
+                ) : (
+                  // عرض نص للسعة أو أي خيار آخر
+                  <span className="text-sm font-medium">
+                    {opt.name || opt.value || `الخيار ${index + 1}`}
+                  </span>
+                )}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Price */}
       <div className="flex items-baseline gap-2 md:gap-3">
         <span className="text-2xl md:text-3xl font-bold text-[#C33104]">
-          {product.options[selectedOptionIndex].final_price}ريس
+          {selectedVariant?.final_price 
+            ? (typeof selectedVariant.final_price === "string"
+                ? selectedVariant.final_price
+                : Number(selectedVariant.final_price || 0).toLocaleString("ar-SA"))
+            : (product.final_price 
+                ? (typeof product.final_price === "string"
+                    ? product.final_price
+                    : Number(product.final_price || 0).toLocaleString("ar-SA"))
+                : "0")}
+          {t("SAR")}
         </span>
-        <span className="text-base md:text-lg text-muted-foreground line-through">
-          {product.options[selectedOptionIndex].original_price}ريس
-        </span>
+        {selectedVariant?.original_price && 
+         selectedVariant.final_price !== selectedVariant.original_price && (
+          <span className="text-base md:text-lg text-muted-foreground line-through">
+            {typeof selectedVariant.original_price === "string"
+              ? selectedVariant.original_price
+              : Number(selectedVariant.original_price || 0).toLocaleString("ar-SA")}
+            {t("SAR")}
+          </span>
+        )}
       </div>
 
       {/* Payment Options */}
       <div className="space-y-3 pt-4 md:pt-6">
-        {paymentMethods.map((item) => (
-          <div
-            key={item.id}
-            className="flex flex-col md:flex-row md:items-center gap-3 p-3 md:h-[72px] h-full rounded-lg border border-[#0000004D]"
-          >
-            <div className="flex-1">
-              <p className="text-xs md:text-[16px] font-[600] text-[#211C4D]">
-                {item.description}
-                <button
-                  onClick={() => openModal(item.modal)}
-                  className="underline cursor-pointer decoration-[#211C4D] underline-offset-2 border-none bg-none"
-                  aria-label={`معرفة التفاصيل عن ${item.name}`}
-                >
-                  لمعرفة التفاصيل
-                </button>
-              </p>
+        {paymentMethodsForSelectedVariant &&
+        paymentMethodsForSelectedVariant.length > 0 ? (
+          paymentMethodsForSelectedVariant.map((item: any) => (
+            <div
+              key={item.id}
+              className="flex flex-col md:flex-row md:items-center gap-3 p-3 md:h-[72px] h-full rounded-lg border border-[#0000004D]"
+            >
+              <div className="flex-1">
+                <p className="text-xs md:text-[16px] font-[600] text-start text-[#211C4D]">
+                  {item.name}
+                  <span className="ml-2 text-[#C33104] font-bold">
+                    {item.total_price}
+                  </span>
+                </p>
+              </div>
+              <div className="px-3 py-1 md:px-4 md:py-1 rounded text-sm font-bold text-card">
+                <img
+                  src={item.image}
+                  className="w-[80px] h-[60px] object-contain"
+                  alt={item.name}
+                />
+              </div>
             </div>
-            <div className="px-3 py-1 md:px-4 md:py-1 rounded text-sm font-bold text-card">
-              <img
-                src={item.img}
-                className="w-[80px] md:w-[120px]"
-                alt={item.name}
-              />
-            </div>
+          ))
+        ) : (
+          <div className="p-4 text-center text-gray-500">
+            لا توجد طرق دفع متاحة لهذا الخيار
           </div>
-        ))}
+        )}
       </div>
 
       {/* Quantity and Add to Cart */}
@@ -190,18 +316,21 @@ if (!product) return <div>Loading...</div>;
         </div>
         <div className="flex flex-col md:flex-row gap-3 md:gap-4">
           <Button
+            onClick={handleAddToCart}
+            disabled={isAddingToCart || isBuyingNow}
             variant="outline"
             size="lg"
-            className="px-4 md:px-6 w-[180px] md:w-[200px] h-[50px] md:h-[64px] border-2 border-black bg-transparent text-xl md:text-[25px]"
+            className="px-4 md:px-6 w-[180px] md:w-[200px] h-[50px] md:h-[64px] border-2 border-black bg-transparent text-xl md:text-[25px] disabled:opacity-50"
           >
-            إضافة للسلة
+            {isAddingToCart ? "جاري الإضافة..." : t("Addtocart")}
           </Button>
-          <Link
-            className="bg-[#2AA0DC] w-[180px] md:w-[200px] h-[50px] md:h-[64px] hover:bg-primary/90 rounded-[8px] flex items-center justify-center text-primary-foreground font-[600] text-xl md:text-[25px]"
-            to={"/checkout"}
+          <Button
+            onClick={handleBuyNow}
+            disabled={isAddingToCart || isBuyingNow}
+            className="bg-[#2AA0DC] w-[180px] md:w-[200px] h-[50px] md:h-[64px] hover:bg-primary/90 rounded-[8px] flex items-center justify-center text-primary-foreground font-[600] text-xl md:text-[25px] disabled:opacity-50"
           >
-            اشتري الآن
-          </Link>
+            {isBuyingNow ? "جاري التوجيه..." : t("Buynow")}
+          </Button>
         </div>
       </div>
       <TabbyModal

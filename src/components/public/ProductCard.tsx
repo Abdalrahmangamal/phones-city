@@ -1,29 +1,52 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { Rating, RatingButton } from "@/components/ui/shadcn-io/rating";
 import type { Product } from "@/types/index";
 import { useLangSync } from "@/hooks/useLangSync";
 import { Link } from "react-router-dom";
 // import { useCart } from "@/store/cart"; // Added cart import
 import { useCartStore } from "@/store/cartStore/cartStore";
+import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
+
 interface ProductCardProps {
   product: Product;
   isNew?: boolean;
   favourite?: boolean;
+  containerstyle?:string;
+  imagecard:string;
   variations?: { color: string; image: string }[];
 }
 import { useFavoritesStore } from "@/store/favoritesStore";
-export default function ProductCard({ product }: ProductCardProps) {
-  const { addFavorite } = useFavoritesStore();
+export default function ProductCard({ product,imagecard,containerstyle }: ProductCardProps) {
+  const { t } = useTranslation();
+
+  const { addFavorite, removeFavorite, favorites } = useFavoritesStore();
+  const favItem = favorites.find((f: any) => f?.product?.id === product.id);
+  const initialFav = Boolean(favItem) || Boolean((product as any)?.is_favorite);
+
+  // Local optimistic state to make the heart toggle reliable
+  const [localFavorite, setLocalFavorite] = useState<boolean>(initialFav);
+
+  // Keep local state in sync with store/product changes
+  useEffect(() => {
+    const currentFav = favorites.find(
+      (f: any) => f?.product?.id === product.id
+    );
+    setLocalFavorite(
+      Boolean(currentFav) || Boolean((product as any)?.is_favorite)
+    );
+  }, [favorites, (product as any)?.is_favorite, product.id]);
   const { addToCart, deleteToCart } = useCartStore();
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const selectedVariant = product.options[selectedIndex];
+  // const isFavorite = favorites.some(f => f.product.id === product.id);
 
   const { lang } = useLangSync();
   const hasOptions =
     Array.isArray(product?.options) && product.options.length > 0;
-  const selectedVariant = hasOptions ? product.options[selectedIndex] : null;
   const currentImage = hasOptions
-    ? selectedVariant?.images?.[0]?.url || product.main_image
-    : product.main_image;
+    ? selectedVariant?.images?.[0]?.url || product.main_image || ""
+    : product.main_image || "";
   const original = hasOptions
     ? Number(selectedVariant?.original_price?.replace(/,/g, "")) || 0
     : Number(product?.original_price?.replace(/,/g, "")) || 0;
@@ -33,31 +56,65 @@ export default function ProductCard({ product }: ProductCardProps) {
     : Number(product?.final_price?.replace(/,/g, "")) || 0;
   const discountPercent =
     original > 0 ? ((original - final) / original) * 100 : 0;
+  const [isInCart, setIsInCart] = useState((product as any)?.in_cart || false);
+
   return (
     <div
       key={product.id}
-      className={`max-w-[350px] md:!w-[320px] scale-[0.9]  md:scale-[1] col-span-1 bg-white w-full min-h-[350px] md:min-h-[400px] rounded-[16px] p-[15px] shadow-[0px_4px_4px_0px_#00000040] flex flex-col`}
+      className={`${containerstyle} max-w-[350px] md:!w-[320px] col-span-1 bg-white w-full min-h-[350px] md:min-h-[400px] rounded-[16px] p-[15px] shadow-[0px_4px_4px_0px_#00000040] flex flex-col hover:shadow-[0px_8px_12px_0px_#00000050] transition-shadow duration-300`}
     >
       {/* الصورة */}
       <div className="flex items-center justify-center pt-7 md:pt-0 relative">
-        <Link to={`/${lang}/singleproduct/${product.id}`}>
+        <Link to={`/${lang}/singleproduct/${product.slug}`}>
           <img
             src={currentImage}
-            className={`md:!w-[220px] h-[160px] w-[160px] object-contain md:!h-[220px] `}
+            className={`md:!w-[220px] h-[160px] w-[160px] object-contain ${imagecard} md:!h-[220px] `}
             alt={product.name}
           />
         </Link>
 
         <div
-          className="flex w-full items-center justify-between absolute right-0 top-0"
-          onClick={
-            product.is_favorite === false
-              ? () => addFavorite(product.id)
-              : () => {}
-          }
+          className="flex w-full items-center justify-between absolute right-0 top-0 z-10 p-2"
+          onClick={(e: any) => {
+            e.stopPropagation();
+            // optimistic toggle
+            const prev = localFavorite;
+            setLocalFavorite(!prev);
+
+            if (!prev) {
+              // add favorite
+              try {
+                const res: any = addFavorite(product.id);
+                if (res && typeof res.then === "function") {
+                  res.catch((err: any) => {
+                    setLocalFavorite(prev);
+                    toast.error("فشل إضافة للمفضلة. حاول مرة أخرى.");
+                  });
+                }
+              } catch (err) {
+                setLocalFavorite(prev);
+                toast.error("فشل إضافة للمفضلة. حاول مرة أخرى.");
+              }
+            } else {
+              // remove favorite
+              const favId = favItem?.id || (product as any)?.favorite_id;
+              try {
+                const res: any = removeFavorite(favId || product.id);
+                if (res && typeof res.then === "function") {
+                  res.catch((err: any) => {
+                    setLocalFavorite(prev);
+                    toast.error("فشل إزالة من المفضلة. حاول مرة أخرى.");
+                  });
+                }
+              } catch (err) {
+                setLocalFavorite(prev);
+                toast.error("فشل إزالة من المفضلة. حاول مرة أخرى.");
+              }
+            }
+          }}
         >
-          <div className="bg-[#EEF1F6] z-5 flex items-center justify-center w-[36px] h-[36px] rounded-full">
-            {product.is_favorite === true ? (
+          <div className="bg-[#EEF1F6] flex items-center justify-center w-[36px] h-[36px] rounded-full cursor-pointer hover:bg-[#e0e5f0] transition-colors">
+            {localFavorite ? (
               <svg
                 width="21"
                 height="18"
@@ -110,40 +167,41 @@ export default function ProductCard({ product }: ProductCardProps) {
       </div>
 
       {/* الاسم */}
-      <Link to={`/${lang}/singleproduct`}>
+      <Link to={`/${lang}/singleproduct/${product.slug}`}>
         <h2 className="text-[15px] md:text-[24px] font-[500] text-[#211C4D] line-clamp-1 mt-[10px]">
           {product?.name}
         </h2>
       </Link>
+<div className="flex items-center justify-between">
 
       {/* الألوان */}
-      {hasOptions && (
+      {product?.options?.length > 1 && (
         <div className="flex items-center gap-[7px] mt-[10px] justify-start">
           {product.options.map((variant, index) => (
             <button
               key={index}
               onClick={() => setSelectedIndex(index)}
               className={`
-    flex items-center justify-center 
-    transition border-2 text-[10px]
-    ${
-      product.options[index].type === "size"
-        ? "min-w-[40px] h-[22px] px-2 rounded-md bg-white text-[#211C4D]" // شكل البادج للـ size
-        : "w-[18px] h-[18px] rounded-full" // شكل اللون
-    }
-    ${
-      index === selectedIndex ? "border-[#211C4D] scale-110" : "border-gray-300"
-    }
-  `}
+          flex items-center justify-center 
+          transition border-2 text-[10px]
+          ${
+            variant.type === "size"
+              ? "min-w-[40px] h-[22px] px-2 rounded-md bg-white text-[#211C4D]"
+              : "w-[18px] h-[18px] rounded-full"
+          }
+          ${
+            index === selectedIndex
+              ? "border-[#211C4D] scale-110"
+              : "border-gray-300"
+          }
+        `}
               style={{
                 backgroundColor:
-                  product.options[index].type === "color"
-                    ? variant?.value // لو color → استعمل اللون
-                    : "#fff", // لو size → خلي الخلفية بيضاء
+                  variant.type === "color" ? variant.value : "#fff",
               }}
-              title={`Select ${variant?.value}`}
+              title={`Select ${variant.value}`}
             >
-              {product.options[index].type === "size" ? variant.value : ""}
+              {variant.type === "size" ? variant.value : ""}
             </button>
           ))}
         </div>
@@ -151,7 +209,7 @@ export default function ProductCard({ product }: ProductCardProps) {
 
       {/* التقييم */}
       <div className="flex mt-[10px] items-center justify-start gap-0">
-        <Rating defaultValue={3} className="pointer-events-none">
+        <Rating defaultValue={product.average_rating} className="pointer-events-none">
           {Array.from({ length: 5 }).map((_, index) => (
             <RatingButton
               key={index}
@@ -160,46 +218,71 @@ export default function ProductCard({ product }: ProductCardProps) {
           ))}
         </Rating>
 
-        <p className="text-[#9CA3AF] text-[10px] md:!w-[15px]">(125)</p>
+        <p className="text-[#9CA3AF] text-[10px] md:!w-[15px]">({product.reviews_count})</p>
       </div>
+</div>
+
 
       {/* السعر + زر السلة */}
       <div className="flex items-center justify-between mt-[10px] w-full">
         <div className="relative flex gap-3">
           <p className="text-[#211C4D] md:text-[18px] text-[11px] font-[500]">
-            {final?.toLocaleString()} ر.س
+            {final?.toLocaleString()}
+            {t("SAR")}
           </p>
-          <div className="relative">
-            <p className="text-[#211C4D] md:text-[18px] text-[11px] font-[500]">
-              {original?.toLocaleString()} ر.س
-            </p>
-            <svg
-              className="absolute top-2 md:top-3 w-full right-0  z-1"
-              height="5"
-              viewBox="0 0 87 5"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M15 1.51396C6.40086 2.41917 2.25702 2.59053 0.748739 3.9048C-0.759546 5.21908 4.82858 2.71501 11.1019 3.83643C1.50418 7.64729 19.8998 0.595701 11.1019 3.83643C13.52 3.65675 37.5718 3.55427 43.4152 1.91822C46.3024 1.89069 47.0564 1.38262 49.7085 1.51396C52.3607 1.6453 54.6749 1.8494 56.4452 2.10758C58.2155 2.36576 61.0433 1.78554 61.5 2.10758C64.6992 1.20738 82.7675 2.99182 86.5 0.89135C81.2405 0.499791 75.344 0.22942 69.1506 0.0958978C62.9572 -0.0376246 56.5908 -0.0316571 50.418 0.113434C44.2452 0.258525 38.39 0.539867 33.189 0.941212C27.988 1.34256 21.9276 0.918209 18.5 1.51396C12.6347 1.00384 15 2.08409 15 1.51396Z"
-                fill="#F03D3D"
-              />
-            </svg>
-          </div>
+          {final?.toLocaleString() == original?.toLocaleString() ? (
+            ""
+          ) : (
+            <div className="relative">
+              <p className="text-[#211C4D] md:text-[18px] text-[11px] font-[500]">
+                {original?.toLocaleString()}
+                {t("SAR")}
+              </p>
+              <svg
+                className="absolute top-2 md:top-3 w-full right-0  z-1"
+                height="5"
+                viewBox="0 0 87 5"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M15 1.51396C6.40086 2.41917 2.25702 2.59053 0.748739 3.9048C-0.759546 5.21908 4.82858 2.71501 11.1019 3.83643C1.50418 7.64729 19.8998 0.595701 11.1019 3.83643C13.52 3.65675 37.5718 3.55427 43.4152 1.91822C46.3024 1.89069 47.0564 1.38262 49.7085 1.51396C52.3607 1.6453 54.6749 1.8494 56.4452 2.10758C58.2155 2.36576 61.0433 1.78554 61.5 2.10758C64.6992 1.20738 82.7675 2.99182 86.5 0.89135C81.2405 0.499791 75.344 0.22942 69.1506 0.0958978C62.9572 -0.0376246 56.5908 -0.0316571 50.418 0.113434C44.2452 0.258525 38.39 0.539867 33.189 0.941212C27.988 1.34256 21.9276 0.918209 18.5 1.51396C12.6347 1.00384 15 2.08409 15 1.51396Z"
+                  fill="#F03D3D"
+                />
+              </svg>
+            </div>
+          )}
         </div>
         <div
-          onClick={
-            product.in_cart == false
-              ? () => addToCart(product.options[0].id, 1)
-              : () => deleteToCart(product.id)
-          }
-          className={`w-[40px] h-[40px] flex items-center justify-center rounded-[8px] cursor-pointer transition ${
-            product.in_cart === true
-              ? "bg-[#211C4D]"
-              : "bg-[#EEF1F6] hover:bg-[#dfe3ea]"
+          onClick={() => {
+            const hasMultiple = product.options.length > 1;
+            const idToSend = hasMultiple ? selectedVariant.id : product.id;
+
+            if (!isInCart) {
+              addToCart(idToSend, 1, hasMultiple).then(() => {
+                setIsInCart(true);
+                toast.success(`تم إضافة ${product.name} إلى السلة`, {
+                  position: "bottom-right",
+                  autoClose: 2000,
+                });
+              });
+            } else {
+              deleteToCart(idToSend).then(() => {
+                setIsInCart(false);
+                toast.info(`تم حذف ${product.name} من السلة`, {
+                  position: "bottom-right",
+                  autoClose: 2000,
+                });
+              });
+            }
+          }}
+          className={`w-[40px] h-[40px] flex items-center justify-center rounded-[8px] cursor-pointer transition-all duration-200 ${
+            isInCart === true
+              ? "bg-[#211C4D] shadow-[0px_4px_8px_0px_#211C4D4d] hover:shadow-[0px_6px_12px_0px_#211C4D66]"
+              : "bg-[#EEF1F6] hover:bg-[#dfe3ea] shadow-[0px_2px_4px_0px_#00000020]"
           }`}
         >
-          {product.in_cart ? (
+          {isInCart ? (
             // شكل مختلف لما تكون في السلة
             <svg
               width="18"

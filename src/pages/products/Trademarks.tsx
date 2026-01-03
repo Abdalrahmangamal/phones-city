@@ -1,129 +1,66 @@
 import Bestseller from "@/components/home/Bestseller";
-import Layout from "@/components/layout/Layout";
+import Layout from "@/components/layout/layout";
 import Offerherosection from "@/components/public/Offerherosection";
 import Sliderbycategory from "@/components/public/Sliderbycategory";
-import BannerSection from "@/components/public/BannerSection";
 import Parttner from "@/components/public/Parttner";
-import sceondbanner from "@/assets/images/sceondbanner.png";
 import Offerbannersingle from "@/components/public/Offerbannersingle";
-import {useLangSync} from '@/hooks/useLangSync'
-// import type {Product} from '@/types/index'
-import {useCategoriesStore} from '@/store/categories/useCategoriesStore';
-import { useEffect } from "react";
+import { useLangSync } from "@/hooks/useLangSync";
+import { useCategoriesStore } from "@/store/categories/useCategoriesStore";
+import { useEffect, useState } from "react";
+import { usePageStore } from "@/store/customerCareStore";
 import { useParams } from "react-router";
-
+// import { useProductsStore } from "@/store/productsStore";
 export default function Trademarks() {
-  const {lang}=useLangSync();
-const {fetchCategoriesbyid,Categoriesbyid}=useCategoriesStore();
-const {id}= useParams();
-useEffect(() => {
-  fetchCategoriesbyid(id,"products");
-},[]);
+  const { lang } = useLangSync();
+  const [activeSubCategory, setActiveSubCategory] = useState(null);
+  const { page, fetchPage } = usePageStore();
 
-console.log("id",Categoriesbyid)
-  // const products: Product[] = [
-  //   {
-  //     id: 1,
-  //     name: "لابتوب ابل ماك بوك برو 2024",
-  //     price: 8999,
-  //     isNew: true,
-      
-  //     variations: [
-  //       { color: "#fff", image: orangelabtop },
-  //       { color: "#000", image: bluephone },
-  //       { color: "#f68b1f", image: airbuds },
-  //     ],
-  //   },
-  //   {
-  //     id: 2,
-  //     name: "ايفون 15 برو",
-  //     discount: "16",
-  //     price: 7499,
-  //     variations: [
-  //       { color: "#ccc", image: bluephone },
-  //       { color: "#000", image: product2 },
-  //     ],
-  //   },
-  //   {
-  //     id: 3,
-  //     name: "ايفون 15 برو",
-  //     discount: "16",
-  //     price: 7499,
-  //     variations: [
-  //       { color: "red", image: product1 },
-  //       { color: "#000", image: product2 },
-  //     ],
-  //   },
-  //   {
-  //     id: 4,
-  //     name: "ايفون 15 برو",
-  //     discount: "16",
-  //     price: 7499,
-  //     variations: [
-  //       { color: "#ccc", image: bluephone },
-  //       { color: "#000", image: watch },
-  //     ],
-  //   },
-  //   {
-  //     id: 1,
-  //     name: "لابتوب ابل ماك بوك برو 2024",
-  //     price: 8999,
-  //     isNew: true,
-  //     variations: [
-  //       { color: "#fff", image: orangelabtop },
-  //       { color: "#000", image: bluephone },
-  //       { color: "#f68b1f", image: airbuds },
-  //     ],
-  //   },
-  //   {
-  //     id: 2,
-  //     name: "ايفون 15 برو",
-  //     discount: "16",
-  //     price: 7499,
-  //     variations: [
-  //       { color: "#ccc", image: bluephone },
-  //       { color: "#000", image: product2 },
-  //     ],
-  //   },
-  //   {
-  //     id: 3,
-  //     name: "ايفون 15 برو",
-  //     discount: "16",
-  //     price: 7499,
-  //     variations: [
-  //       { color: "red", image: product1 },
-  //       { color: "#000", image: product2 },
-  //     ],
-  //   },
-  //   {
-  //     id: 4,
-  //     name: "ايفون 15 برو",
-  //     discount: "16",
-  //     price: 7499,
-  //     variations: [
-  //       { color: "#ccc", image: bluephone },
-  //       { color: "#000", image: watch },
-  //     ],
-  //   },
-  // ];
+  // const{response,fetchProducts}=useProductsStore();
+  const {
+    fetchCategoriesbyid,
+    Categoriesbyid,
+    Catesubgategory,
+    fetchCatesubgategory,
+  } = useCategoriesStore();
+  const { id } = useParams();
+  useEffect(() => {
+    if (!id) return;
+    fetchCategoriesbyid(id, "products");
+    fetchCatesubgategory(id);
+    fetchPage("tredmarks-banner", lang);
+
+    // fetchProducts({category_id:Number(id)},lang);
+  }, [id, lang]);
+  console.log("tredmarks-banner",page)
+  console.log("caregory response", Catesubgategory);
+  console.log("id", Categoriesbyid);
+  const filteredProducts = activeSubCategory
+    ? Categoriesbyid.filter((p) => p.category?.id === activeSubCategory)
+    : Categoriesbyid;
+
   return (
     <div>
       <Layout>
         <div className=" lg:px-[45px]  pt-20 md:pt-0 flex-grow">
           <Offerherosection
-            title={"افضل اجهزه ابل "}
-            description={
-              "استمتع بتجربة استثنائية مع أحدث الاجهزه بأفضل الأسعار وخدمة ما بعد البيع المميزة"
-            }
+            title={page?.title}
+            description={page?.short_description}
           />
           <div className="mx-[-4px] md:-mx-[45px]">
-
-          <Sliderbycategory />
+            {Catesubgategory.length > 0 ? (
+              <Sliderbycategory
+                category={Catesubgategory}
+                setSelectedSubCategory={setActiveSubCategory}
+              />
+            ) : (
+              ""
+            )}
           </div>
-          <Bestseller title={"افضل العروض"} link={`/${lang}/trademarkbestoffer`} products={Categoriesbyid} btn={true} />
-          <BannerSection image={sceondbanner} />
-          <Bestseller title={"الأكثر مبيعاً"} link={`/${lang}/trademarksbestseller`} btn={true} products={Categoriesbyid} />
+          <Bestseller products={filteredProducts} />
+          {/* <Bestseller products={filteredProducts} /> */}
+
           <Offerbannersingle />
+
           <div className="my-12">
             <Parttner />
           </div>

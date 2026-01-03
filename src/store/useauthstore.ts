@@ -58,7 +58,9 @@ export const useAuthStore = create<AuthState>((set) => ({
         },
       });
       console.log(res.data);
-      localStorage.setItem("userData", JSON.stringify(res.data));
+      try {
+        localStorage.setItem("userData", JSON.stringify(res.data));
+      } catch (e) {}
       return res.data;
     } catch (err: any) {
       set({ loading: false, error: err?.response?.data?.data || "Error" });
@@ -80,6 +82,25 @@ export const useAuthStore = create<AuthState>((set) => ({
         },
       });
       console.log("VERIFY-CODE RESPONSE:", res.data);
+
+      // If verification succeeded, persist token and user data for immediate use
+      const api = res.data; // API response body
+      if (api?.status === true) {
+        const token = api?.data?.token ?? api?.token ?? api?.access_token;
+        if (token) {
+          try {
+            localStorage.setItem("token", token);
+          } catch (e) {}
+        }
+
+        const user = api?.data?.user ?? api?.data ?? null;
+        if (user) {
+          try {
+            localStorage.setItem("userData", JSON.stringify(user));
+          } catch (e) {}
+        }
+      }
+
       return res.data;
     } catch (err) {
       set({ loading: false });
@@ -90,33 +111,37 @@ export const useAuthStore = create<AuthState>((set) => ({
     }
   },
 
-  sendLogin: async (data) => {
-    try {
-      set({ loading: true });
-      const res = await axios.post(`${baseUrl}api/v1/auth/login`, data, {
+sendLogin: async (data) => {
+  try {
+    set({ loading: true });
+
+    const res = await axios.post(
+      `${baseUrl}api/v1/auth/login`,
+      data,
+      {
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
           "Accept-Language": "en",
+          // ❌ مفيش Authorization هنا
         },
-      });
+      }
+    );
 
-      console.log("LOGIN RESPONSE:", res.data);
+    const token = res?.data?.data?.token;
+    const user = res?.data?.data?.user;
 
-      // على حسب شكل API بتاعك، افترضنا:
-      // { status, message, data: { token, user } }
-      localStorage.setItem("userData", JSON.stringify(res.data));
-      localStorage.setItem("token", JSON.stringify(res.data.data.token));
+    if (token) localStorage.setItem("token", token);
+    if (user) localStorage.setItem("userData", JSON.stringify(user));
 
-      return res.data; // ← ApiResponse
-    } catch (err) {
-      set({ loading: false });
-      console.log(err);
-      return null;
-    } finally {
-      set({ loading: false });
-    }
-  },
+    return res.data;
+  } catch (err) {
+    console.log(err);
+    return null;
+  } finally {
+    set({ loading: false });
+  }
+},
 
   forgotpassword: async (data) => {
     try {

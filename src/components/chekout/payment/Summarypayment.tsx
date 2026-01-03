@@ -1,12 +1,21 @@
+// Summarypayment.tsx
+import CheckoutSummarySection from "../summary/CheckoutSummarySection";
 
-export default function Summarypayment() {
+interface SummarypaymentProps {
+  usePoints: boolean;
+  onUsePointsChange: (value: boolean) => void;
+}
 
+export default function Summarypayment({ 
+  usePoints, 
+  onUsePointsChange 
+}: SummarypaymentProps) {
   return (
     <div>
-      <p className="text-[#211C4D] text-start text-[24px] font-[600]"> الملخص</p>
-      <div>
-
-      </div>
+      <CheckoutSummarySection 
+        usePoints={usePoints}
+        onUsePointsChange={onUsePointsChange}
+      />
     </div>
   )
 }

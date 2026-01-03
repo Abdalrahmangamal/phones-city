@@ -43,16 +43,23 @@ export default function ResetPasswordModal({
   const handleSubmit = async () => {
     if (!passwordsMatch) return;
 
-    const res = await resetPassword({
+    const payload = {
       email,
-      code,
+      code: typeof code === "string" ? code.trim() : code,
       password,
       password_confirmation: passwordConfirm,
-    });
+    };
 
-    if (res?.status === true) {
-      handleClose();
-      // هنا لو عايز ترجع لصفحة اللوجين استخدم navigate
+    console.log("ResetPasswordModal: sending reset payload ->", payload);
+
+    try {
+      const res = await resetPassword(payload);
+      console.log("ResetPasswordModal: reset response ->", res);
+      if (res?.status === true) {
+        handleClose();
+      }
+    } catch (err) {
+      console.error("ResetPasswordModal: reset error ->", err);
     }
   };
 
@@ -61,7 +68,7 @@ export default function ResetPasswordModal({
       {loading && <Loader />}
 
       <Dialog
-        open={open}
+        open={open && !loading}
         onClose={handleClose}
         PaperProps={{
           sx: {
@@ -134,7 +141,7 @@ export default function ResetPasswordModal({
           <button
             onClick={handleSubmit}
             disabled={!passwordsMatch}
-            className="bg-[#2AA0DC] w-[344px] h-[52px] my-3 rounded-[32px] text-[20px] text-white disabled:opacity-50 disabled:cursor-not-allowed"
+            className="bg-[#2AA0DC] w-[380px] h-[52px] my-3 rounded-[32px] text-[20px] text-white disabled:opacity-50 disabled:cursor-not-allowed"
           >
             تأكيد كلمة المرور
           </button>

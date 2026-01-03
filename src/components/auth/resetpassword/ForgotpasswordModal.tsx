@@ -44,11 +44,28 @@ export default function ForgotpasswordModal({ isopen, onClose }: ForgotProps) {
     }
   };
 
+  useEffect(() => {
+    if (verifiedCode) {
+      console.log("ForgotpasswordModal: verifiedCode set ->", verifiedCode);
+    }
+  }, [verifiedCode]);
+
   return (
     <>
       {loading && <Loader />}
 
-      <Dialog open={open} onClose={handleClose}>
+      <Dialog 
+        open={open && !loading} 
+        onClose={handleClose}
+        PaperProps={{
+          sx: {
+            width: "600px",
+            maxWidth: "90%",
+            height: "350px",
+            borderRadius: "16px",
+          },
+        }}
+      >
         <div className="w-full h-full flex flex-col items-center justify-around p-6">
           <DialogTitle>
             <p className="text-[32px] text-center font-bold">
@@ -64,13 +81,13 @@ export default function ForgotpasswordModal({ isopen, onClose }: ForgotProps) {
             placeholder="username@gmail.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-3/4 p-3 border rounded-lg outline-none"
+            className="w-3/4 p-3 border rounded-lg outline-none h-[50px]"
           />
 
           <button
             onClick={handlesendemail}
             disabled={!isValid}
-            className="bg-[#2AA0DC] w-[400px] h-[52px] rounded-[32px] text-white disabled:opacity-40"
+            className="bg-[#2AA0DC] w-[380px] h-[52px] rounded-[32px] text-white text-[18px] disabled:opacity-40"
           >
             استمر
           </button>

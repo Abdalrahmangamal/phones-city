@@ -1,80 +1,127 @@
-import Comments from "@/components/singleproduct/Comments"
+import Comments from "@/components/singleproduct/Comments";
+import { useLangSync } from "@/hooks/useLangSync";
+import { useTranslation } from "react-i18next";
 
-export default function Informationproduct() {
-  const specifications = [
-    { label: "العلامة التجارية :", value: "HP" },
-    { label: "حجم الشاشة :", value: "أنش 15,6" },
-    { label: "اللون :", value: "ميكا سيلفر" },
-    { label: "حجم القرص الثابت :", value: "جيجابايت 512" },
-    { label: "طراز وحدة المعالجة المركزية :", value: "إنتل كور i5" },
-    { label: "حجم ذاكرة الوصول العشوائي :", value: "جيجابايت 16" },
-    { label: "أنظمة التشغيل :", value: "Windows 11 Home" },
-    { label: "ميزة خاصة :", value: "لوحة مفاتيح بإضاءة خلفية" },
-    { label: "وصف بطاقة الرسومات :", value: "مخصص" },
-  ];
+// مكون مساعد لعرض قائمة التفاصيل
+const DetailsList = ({ details }: { details: any[] }) => {
+  if (!details || !Array.isArray(details)) return null;
 
-  const features = [
-    "أداء قوي: مجهز بمعالج إنتل كور i5-13420H لتعدد المهام بسلاسة وتجربة لعب سلسة.",
-    "مساحة تخزين واسعة: يوفر محرك الأقراص ذو الحالة الثابتة سعة 512 جيجابايت أوقات تشغيل سريع ومساحة واسعة وتطبيقاتك.",
-    "ذاكرة كبيرة: تتضمن ذاكرة SDRAM سودريم DDR4 سعة 16 جيجابايت لإدارة ذاكرة فعالة للمهام الصعبة.",
-    "نظام تشغيل حديث: يعمل على أحدث نظام تشغيل ويندوز 11 لتعزيز الأمان وتجربة المستخدم.",
-    "شاشة نابضة بالحياة: شاشة LED FHD IPS مقاس 15.6 أنش مع سطوع 250 ووحدة مضيئة في البكسل ومعدل تحديث 144 .",
-  ];
-
+  console.log("DetailsList rendering with details:", details);
+  
   return (
-    <div className="rounded-lg bg-white p-4 md:p-8" dir="rtl">
-      {/* Main Title */}
-      <h1 className="mb-6 md:mb-8 text-right text-2xl md:text-3xl font-bold text-gray-900">
-        تفاصيل المنتج
-      </h1>
-
-      {/* Specifications Section */}
-      <div className="mb-8 md:mb-12">
-        <h2 className="mb-4 md:mb-6 text-right text-lg md:text-xl font-semibold text-gray-900">
-          المواصفات العامة
-        </h2>
-
-        <div className="space-y-3 md:space-y-4">
-          {specifications.map((spec, index) => (
+    <div className="space-y-3 md:space-y-4">
+      {details.map((item, index) => {
+        console.log(`Item ${index}:`, item, "Type:", typeof item);
+        
+        // إذا كان العنصر كائنًا يحتوي على key و value
+        if (item && typeof item === 'object' && item.key && item.value) {
+          return (
             <div
               key={index}
-              className="grid grid-cols-[1fr_auto] justify-between items-center gap-3 md:gap-4"
+              className="grid grid-cols-1 md:grid-cols-[1fr_auto] justify-between items-center gap-3 md:gap-4"
             >
               <div className="flex items-center gap-3 md:gap-4">
                 <div className="whitespace-nowrap text-right text-sm md:text-base text-[#211C4DCC]">
-                  {spec.label}
+                  {item.key}:
                 </div>
                 <div className="h-px flex-1 border-b border-dotted border-gray-300" />
               </div>
               <div className="text-right text-sm md:text-base text-[#211C4D] font-[500]">
-                {spec.value}
+                {item.value}
               </div>
             </div>
-          ))}
+          );
+        }
+        
+        // إذا كان العنصر نصًا عاديًا
+        return (
+          <div
+            key={index}
+            className="grid grid-cols-1 md:grid-cols-[1fr_auto] justify-between items-center gap-3 md:gap-4"
+          >
+            <div className="flex items-center gap-3 md:gap-4">
+              <div className="whitespace-nowrap text-right text-sm md:text-base text-[#211C4DCC]">
+                خاصية {index + 1}:
+              </div>
+              <div className="h-px flex-1 border-b border-dotted border-gray-300" />
+            </div>
+            <div className="text-right text-sm md:text-base text-[#211C4D] font-[500]">
+              {String(item)}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
+// مكون لعرض محتوى HTML
+const HTMLContent = ({ content }: { content: string }) => {
+  if (!content) return null;
+
+  return (
+    <div 
+      className="text-[#211C4DCC] text-lg font-[400] leading-relaxed"
+      dangerouslySetInnerHTML={{ __html: content }}
+    />
+  );
+};
+
+export default function Informationproduct({ product }: any) {
+  const { lang } = useLangSync();
+  const { t } = useTranslation();
+
+  console.log("product details structure:", product?.details);
+  console.log("product about:", product?.about);
+
+  // معالجة التفاصيل إذا كانت موجودة
+  const hasDetails = product?.details && Array.isArray(product.details) && product.details.length > 0;
+  const hasAbout = product?.about && product.about.trim() !== "";
+
+  return (
+    <div
+      className="rounded-lg bg-white p-4 md:p-8"
+      dir={lang == "ar" ? "rtl" : "ltr"}
+    >
+      {/* Main Title */}
+      <h1 className="mb-6 md:mb-8 text-start text-2xl md:text-3xl font-bold text-gray-900">
+        {t("Productdetails")}
+      </h1>
+
+      {/* Specifications Section */}
+      {hasDetails && (
+        <div className="mb-8 md:mb-12">
+          <h2 className="mb-4 md:mb-6 text-start text-lg md:text-xl font-semibold text-gray-900">
+            {t("Generalspecifications")}
+          </h2>
+          <DetailsList details={product.details} />
         </div>
-      </div>
+      )}
 
       {/* About Section */}
-      <div className="mb-8 md:mb-12">
-        <h2 className="mb-4 md:mb-6 text-right text-2xl md:text-[32px] font-semibold text-[#211C4D]">
-          عن هذا المنتج
-        </h2>
+      {hasAbout && (
+        <div className="mb-8 md:mb-12">
+          <h2 className="mb-4 md:mb-6 text-start text-2xl md:text-[32px] font-semibold text-[#211C4D]">
+            {t("Aboutthisproduct")}
+          </h2>
+          <HTMLContent content={product.about} />
+        </div>
+      )}
 
-        <ul className="space-y-3 md:space-y-4">
-          {features.map((feature, index) => (
-            <li
-              key={index}
-              className="flex items-start px-3 md:px-4 gap-2 md:gap-3 text-right text-sm md:text-base leading-relaxed text-[#211C4DCC]"
-            >
-              <span className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-gray-900" />
-              <span>{feature}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
+      {/* Description Section - Only show if there's no about section or if about section is different from description */}
+      {!hasAbout && product?.description && (
+        <div className="mb-8 md:mb-12">
+          <h2 className="mb-4 md:mb-6 text-start text-2xl md:text-[32px] font-semibold text-[#211C4D]">
+            {t("Description")}
+          </h2>
+          <div className="text-[#211C4DCC] text-lg font-[400] leading-relaxed">
+            {product.description}
+          </div>
+        </div>
+      )}
 
-      {/* Comments Section */}
-      <Comments />
+      {/* Comments Section - مع تمرير productId */}
+      <Comments productId={product?.id} />
     </div>
   );
 }

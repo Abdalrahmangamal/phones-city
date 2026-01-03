@@ -76,7 +76,7 @@ export default function Contactform() {
 
   return (
     <div
-      className="w-full bg-white py-10  md:p-4 h-full md:px-16 font-sans lg:px-[90px] px-2 pt-20 md:pt-0"
+      className="w-full bg-white py-10 md:p-4 h-full md:px-16 font-sans lg:px-[90px] px-2 pt-20 md:pt-0"
       dir={lang === "ar" ? "rtl" : "ltr"}
     >
       {/* العنوان */}
@@ -149,8 +149,8 @@ export default function Contactform() {
         </form>
 
         {/* بيانات التواصل */}
-        <div  className="bg-white p-9 md:w-[35%] w-full rounded-xl  shadow-[0px_1px_13px_0px_rgba(0,0,0,0.05)]">
-          <div  className="flex mt-[20px] items-center gap-3 mb-4">
+        <div className="bg-white p-9 md:w-[35%] w-full rounded-xl shadow-[0px_1px_13px_0px_rgba(0,0,0,0.05)]">
+          <div className="flex mt-[20px] items-center gap-3 mb-4">
             <svg
               width="40"
               height="40"
@@ -162,24 +162,24 @@ export default function Contactform() {
               <path
                 d="M18.5542 14.241L15.1712 10.336C14.7812 9.88601 14.0662 9.88801 13.6132 10.342L10.8312 13.129C10.0032 13.958 9.76623 15.189 10.2452 16.176C13.1069 22.101 17.8853 26.8861 23.8062 29.756C24.7922 30.235 26.0222 29.998 26.8502 29.169L29.6582 26.356C30.1132 25.901 30.1142 25.182 29.6602 24.792L25.7402 21.427C25.3302 21.075 24.6932 21.121 24.2822 21.533L22.9182 22.899C22.8484 22.9722 22.7565 23.0204 22.6566 23.0363C22.5567 23.0522 22.4543 23.0349 22.3652 22.987C20.1357 21.7031 18.2862 19.8512 17.0052 17.62C16.9573 17.5308 16.9399 17.4282 16.9558 17.3282C16.9717 17.2281 17.02 17.136 17.0932 17.066L18.4532 15.705C18.8652 15.291 18.9102 14.651 18.5542 14.24V14.241Z"
                 stroke="white"
-                stroke-width="1.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
               />
             </svg>
 
-            <h3 className="font-[500] text-[#000000]  text-[24px] ">
+            <h3 className="font-[500] text-[#000000] text-[24px]">
               {t("Contactinformation")}
             </h3>
           </div>
           <p className="text-[#000000] font-[400] mt-[30px] text-[16px] mb-2">
-            نحن متاحون على مدار 24 ساعة طوال الأسبوع.
+           {t("Weareavailable24hoursaday7daysaweek")}
           </p>
           <p className="text-[#000000] font-[400] text-[16px] mb-4">
             {t("PhoneNumber")}: +2222222222
           </p>
-          <hr className=" h-[1px] my-[35px] bg-black text-black" />
-          <div className="flex items-center  gap-3 mb-2">
+          <hr className="h-[1px] my-[35px] bg-black text-black" />
+          <div className="flex items-center gap-3 mb-2">
             <svg
               width="40"
               height="40"
@@ -191,22 +191,22 @@ export default function Contactform() {
               <path
                 d="M10 13L20 20L30 13M10 27H30V13H10V27Z"
                 stroke="white"
-                stroke-width="1.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
               />
             </svg>
 
-            <h3 className=" font-[500] text-[black] text-[24px] ">
+            <h3 className="font-[500] text-[black] text-[24px]">
               {t("Sendtothephonecity")}
             </h3>
           </div>
           <p className="text-black font-[400] mt-[30px] text-[16px] mb-1">
-            املأ النموذج وسنتواصل معك خلال 24 ساعة.
+           {t("Fillouttheformandwewillcontactyouwithin24hours")}
           </p>
           <div className="flex items-center gap-2 mt-[20px]">
             <p className="text-black font-[400] text-[16px]">
-               {t("Email")} :
+              {t("Email")}:
             </p>
             <p className="text-black font-[400] text-[16px]">
               PHONECITY@gmail.com

@@ -1,0 +1,99 @@
+/* SpecialOffersSection.css */
+.special-offers-swiper {
+  position: relative;
+}
+
+.special-offers-prev,
+.special-offers-next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  background: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.3s ease;
+}
+
+.special-offers-prev:hover,
+.special-offers-next:hover {
+  background: #f3f4f6;
+  transform: translateY(-50%) scale(1.1);
+}
+
+.special-offers-prev {
+  left: 0;
+}
+
+.special-offers-next {
+  right: 0;
+}
+
+/* للغة العربية */
+[dir="rtl"] .special-offers-prev {
+  left: auto;
+  right: 0;
+  transform: translateY(-50%) rotate(180deg);
+}
+
+[dir="rtl"] .special-offers-next {
+  right: auto;
+  left: 0;
+  transform: translateY(-50%) rotate(180deg);
+}
+
+/* إخفاء الأزرار عند عدم الحاجة */
+.special-offers-prev.swiper-button-disabled,
+.special-offers-next.swiper-button-disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.special-offers-prev.swiper-button-disabled:hover,
+.special-offers-next.swiper-button-disabled:hover {
+  background: white;
+  transform: translateY(-50%) scale(1);
+}
+
+/* منع التمرير (scroll) في السلايدر */
+.special-offers-swiper .swiper {
+  overflow: hidden !important;
+  touch-action: pan-y; 
+}
+
+.special-offers-swiper .swiper-wrapper {
+  overscroll-behavior-x: contain; 
+  -webkit-overflow-scrolling: auto;
+}
+
+/* عندما لا يكون هناك حاجة للتمرير */
+.special-offers-swiper.no-scroll .swiper {
+  overflow: visible !important;
+}
+
+.special-offers-swiper.no-scroll .swiper-wrapper {
+  justify-content: center; 
+}
+
+/* تحسين الشاشات الصغيرة */
+@media (max-width: 768px) {
+  .special-offers-prev,
+  .special-offers-next {
+    width: 32px;
+    height: 32px;
+  }
+  
+  .special-offers-prev {
+    left: -10px;
+  }
+  
+  .special-offers-next {
+    right: -10px;
+  }
+}

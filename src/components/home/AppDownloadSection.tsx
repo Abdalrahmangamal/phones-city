@@ -1,17 +1,21 @@
 import background from "../../assets/images/background.png";
-import bolitse from "../../assets/images/politssection.png";
 import expotuer from "../../assets/images/expotuer.png";
 import appstore from "../../assets/images/appstore.png";
 import googleplay from "../../assets/images/googleplay.png";
 import useS24Ultra from "@/hooks/useS24Ultra";
 import S24AppDownloadSection from "@/components/s24-ultra/S24AppDownloadSection";
-
-const AppDownloadSection = () => {
+interface typeapp{
+title:string;
+description:string;
+image:string;
+}
+const AppDownloadSection = ({title,description,image}:typeapp) => {
   const isS24Ultra = useS24Ultra();
 
   if (isS24Ultra) {
     return <S24AppDownloadSection />;
   }
+
 
   return (
     <div className="w-full">
@@ -23,7 +27,7 @@ const AppDownloadSection = () => {
 
         {/* Images */}
         <div className="absolute top-[10%] md:top-auto md:bottom-[0%] left-[18%] md:left-[9%]  z-10 w-[280px] md:w-[230px]  lg:w-[360px]">
-          <img src={background} alt="main visual" className="w-full h-auto" />
+          <img src={image} alt="main visual" className="w-full h-auto" />
           <img
             src={expotuer}
             alt="decor"
@@ -43,10 +47,10 @@ const AppDownloadSection = () => {
         <div className="absolute top-[15%] right-[8%] w-[60%] md:max-w-[50%] max-w-[600px] flex flex-col gap-6">
           <div className="flex flex-col gap-3 text-right">
             <h2 className="font-roboto font-bold text-[#211C4D] leading-[1.4] text-[28px] md:text-[27px] md:mt-0 lg:text-[35px] xl:text-[42px]">
-              قم بتحميل تطبيقنا واحصل علي خصم 10% وتسوق افضل
+             {title}
             </h2>
             <p className="font-roboto font-medium text-[#211C4D] text-[16px] md:text-[20px] lg:text-[24px] leading-relaxed">
-              «اطلب ما تريد في أي وقت ومن أي مكان، واستلمه في أسرع وقت»
+              {description}
             </p>
           </div>
 
@@ -69,10 +73,10 @@ const AppDownloadSection = () => {
       <div className="md:hidden bg-white py-8 pb-0 md:pb-8 px-4 mt-6">
         <div className="flex flex-col items-center text-center">
           <h2 className="font-roboto font-bold text-xl sm:text-2xl text-[15px] text-[#211C4D] mb-3">
-            قم بتحميل تطبيقنا واحصل علي خصم 10% وتسوق افضل
+            {title}
           </h2>
           <p className="font-roboto font-medium text-base sm:text-lg text-[12px] text-[#211C4D] mb-6">
-            «اطلب ما تريد في أي وقت ومن أي مكان، واستلمه في أسرع وقت»
+           {description}
           </p>
 
           <div className="flex gap-3 sm:gap-4 mb-6">
@@ -89,7 +93,7 @@ const AppDownloadSection = () => {
           </div>
 
           <img
-            src={background}
+            src={image}
             alt="App visual"
             className="w-[70%] max-w-[150px]  md:max-w-[250px] mx-auto mt-4"
           />

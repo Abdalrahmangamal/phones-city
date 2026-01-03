@@ -18,7 +18,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Link, NavLink } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+
+const baseUrl = import.meta.env.VITE_BASE_URL;
 import MobileMenu from "./MobileMenu";
 import MobileNavbar from "./MobileNavbar";
 
@@ -28,6 +32,7 @@ export default function Header() {
   useEffect(() => {
     fetchCategories(lang);
   }, [lang]);
+  console.log("header",categories)
   const [isSectionOpen, setIsSectionOpen] = useState(false);
 
   // language btn
@@ -35,6 +40,12 @@ export default function Header() {
   const [open] = useState(false);
   // ⬇⬇ state عشان نتحكم في الموبايل منيو
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [query, setQuery] = useState("");
+  const [suggestions, setSuggestions] = useState<any[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [suggestionsLoading, setSuggestionsLoading] = useState(false);
+  const debounceRef = useRef<number | null>(null);
+  const navigate = useNavigate();
   const navitem = [
     {
       link: `/${lang}/`,
@@ -77,13 +88,13 @@ export default function Header() {
             <Link to={""} className="flex items-center gap-2">
               <img
                 src={logo}
-                alt="مدينة الهواتف"
+                alt={t("CityPhones")}
                 width={127}
                 height={20}
                 className="h-[70px] w-[70px] object-contain"
               />
               <h1 className="flex items-center text-[20px] font-[700] ">
-                مدينة الهواتف
+                {t("CityPhones")}
               </h1>
             </Link>
             {/* Search */}
@@ -92,10 +103,77 @@ export default function Header() {
                 className="relative w-full max-w-2xl"
                 dir={lang === "ar" ? "rtl" : "ltr"}
               >
-                <Input
-                  placeholder={t("search")}
-                  className="h-[48px] rounded-full px-9  bg-transparent border-white text-white placeholder:text-[#6C727F] focus-visible:ring-white/40"
-                />
+                <div className="relative">
+                  <Input
+                    value={query}
+                    onChange={(e: any) => {
+                      const v = e.target.value;
+                      setQuery(v);
+                      setShowSuggestions(!!v.trim());
+
+                      // debounce
+                      if (debounceRef.current) window.clearTimeout(debounceRef.current);
+                      debounceRef.current = window.setTimeout(async () => {
+                        if (!v.trim()) {
+                          setSuggestions([]);
+                          setSuggestionsLoading(false);
+                          return;
+                        }
+                        setSuggestionsLoading(true);
+                        try {
+                          const res = await axios.get(`${baseUrl}api/v1/products`, {
+                            params: { search: v.trim(), per_page: 6 },
+                            headers: { "Accept-Language": lang || "ar", Accept: "application/json" },
+                          });
+                          const data = res?.data?.data;
+                          if (Array.isArray(data)) setSuggestions(data.slice(0, 6));
+                          else setSuggestions([]);
+                        } catch (e) {
+                          setSuggestions([]);
+                        } finally {
+                          setSuggestionsLoading(false);
+                        }
+                      }, 300);
+                    }}
+                    onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+                      if (e.key === "Enter" && query.trim().length > 0) {
+                        navigate(`/${lang}/search?q=${encodeURIComponent(query.trim())}`);
+                        setShowSuggestions(false);
+                      }
+                    }}
+                    placeholder={t("search")}
+                    className="h-[48px] rounded-full px-9  bg-transparent border-white text-white placeholder:text-[#6C727F] focus-visible:ring-white/40"
+                    onFocus={() => setShowSuggestions(!!query.trim())}
+                    onBlur={() => setTimeout(() => setShowSuggestions(false), 150)}
+                  />
+
+                  {showSuggestions && (
+                    <div className="absolute left-0 right-0 mt-2 bg-white text-black rounded-lg shadow-lg z-50 max-h-72 overflow-auto">
+                      {suggestionsLoading ? (
+                        <div className="text-start p-3">{t("Searching...")}</div>
+                      ) : suggestions.length === 0 ? (
+                        <div className="p-3 text-start">{t("Noresultsfound")}</div>
+                      ) : (
+                        suggestions.map((p: any) => (
+                          <div
+                            key={p.id}
+                            onMouseDown={() => {
+                              // navigate to product page
+                              navigate(`/${lang}/singleproduct/${p.slug}`);
+                            }}
+                            className="flex items-center gap-3 p-3 hover:bg-gray-100 cursor-pointer"
+                          >
+                            <img src={p.main_image || p.images?.[0] || "/logo.png"} alt={p.name} className="w-12 h-12 object-cover rounded" />
+                            <div className="flex-1">
+                              <div className="font-medium">{p.name}</div>
+                              <div className="text-sm text-gray-500">{p.final_price ? p.final_price + t("SAR") : ''}</div>
+                            </div>
+                          </div>
+                        ))
+                      )}
+                    </div>
+                  )}
+                </div>
                 <svg
                   className={`absolute  top-3 ${
                     lang === "ar" ? "right-3" : "left-3"
@@ -119,6 +197,16 @@ export default function Header() {
                     fill="white"
                   />
                 </svg>
+                {/* <button
+                  onClick={() => {
+                    if (query.trim().length === 0) return;
+                    navigate(`/${lang}/search?q=${encodeURIComponent(query.trim())}`);
+                    setShowSuggestions(false);
+                  }}
+                  className="absolute top-2.5 right-12 h-[34px] w-[34px] rounded-full bg-white/10 flex items-center justify-center"
+                >
+                  🔎
+                </button> */}
               </div>
             </div>
 
@@ -130,7 +218,7 @@ export default function Header() {
                   className="w-[160px] h-[40px] rounded-[16px] bg-[#FFFFFF1A] flex items-center justify-center text-[19px] font-[400] 
   text-white transition-all duration-300 hover:bg-white hover:text-[#211C4D]"
                 >
-                  تسجيل الدخول
+              {  t("Login")}
                 </Link>
               )}
               <Link to={`/${lang}/favourite`}>
@@ -162,7 +250,7 @@ export default function Header() {
                 <DropdownMenuTrigger asChild>
                   <div className="flex items-center gap-1 text-sm opacity-90 hover:opacity-100">
                     <Globe className="h-4 w-4" />
-                    عربي
+                    {lang === "ar" ? t("Arabic") : t("English")}
                     <svg
                       width="16"
                       height="16"
@@ -281,14 +369,15 @@ export default function Header() {
               <DropdownMenuContent className="w-56" align="start">
                 <DropdownMenuGroup>
                   {categories.map((category) => (
-                       <DropdownMenuSub>
+                       <DropdownMenuSub key={category.id}>
+                      <Link to={`/${lang}/categorySingle/${category.slug}/products`}>
                       <DropdownMenuSubTrigger>
                         {category.name}
                       </DropdownMenuSubTrigger>
-                      
+                      </Link>
                       <DropdownMenuSubContent>
                         {category.children?.map((child) => (
-                          <Link to={`categorySingle/${child.id}`}>
+                          <Link to={`/${lang}/categorySingle/${child.slug}/products`}>
                           <DropdownMenuItem key={child.id}>
                             {child.name}
                           </DropdownMenuItem>
