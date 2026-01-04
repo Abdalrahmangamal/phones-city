@@ -192,7 +192,7 @@ export default function SpecialOffersPage() {
                 }
               />
               {/* Pagination controls for offers */}
-              {offersMeta && offersMeta.last_page > 1 && (
+              {/* {offersMeta && offersMeta.last_page > 1 && (
                 <div className="flex items-center justify-center gap-2 mt-6">
                   <button
                     onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
@@ -223,7 +223,7 @@ export default function SpecialOffersPage() {
                     {t("Next") || "Next"}
                   </button>
                 </div>
-              )}
+              )} */}
             </div>
           ) : (
             <div className="max-w-4xl mx-auto text-center py-16 bg-white rounded-2xl shadow-sm">

@@ -36,6 +36,7 @@ import Protectedroutse from "./store/protectedroutse";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ScrollToTop from "./components/ScrollToTop";
+import Offers from "./pages/products/Offers";
 
 // Language Wrapper Component
 function LangWrapper() {
@@ -55,7 +56,9 @@ function LangWrapper() {
       <Route path="/contact" element={<Contact />} />
       
       {/* صفحة قائمة جميع العروض */}
-      <Route path="/offers" element={<SpecialOffersPage />} />
+      <Route path="/offers" element={<Offers />} />
+
+      <Route path="/SpecialOffersPage" element={<SpecialOffersPage />} />
       
       {/* صفحة تفاصيل عرض فردي - الجديدة */}
       {/* <Route path="offer/:slugOrId" element={<OfferDetails />} /> */}
@@ -121,8 +124,8 @@ export default function App() {
           <Route path="/servces" element={<Navigate to={`/${lang}/servces`} replace />} />
           <Route path="/contact" element={<Navigate to={`/${lang}/contact`} replace />} />
           <Route path="/offers" element={<Navigate to={`/${lang}/offers`} replace />} />
-          <Route path="/SpecialOffersPage" element={<Navigate to={`/${lang}/offers`} replace />} /> {/* إضافة جديدة */}
-          <Route path="/offer/:slugOrId" element={<Navigate to={`/${lang}/offer/:slugOrId`} replace />} /> {/* دعم بدون لغة */}
+          <Route path="/SpecialOffersPage" element={<Navigate to={`/${lang}/SpecialOffersPage`} replace />} /> 
+          <Route path="/offer/:slugOrId" element={<Navigate to={`/${lang}/offer/:slugOrId`} replace />} /> 
           <Route path="/login" element={<Navigate to={`/${lang}/login`} replace />} />
           <Route path="/register" element={<Navigate to={`/${lang}/register`} replace />} />
           <Route path="/product-details" element={<Navigate to={`/${lang}/product-details`} replace />} />

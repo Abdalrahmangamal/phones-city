@@ -169,29 +169,35 @@ sendLogin: async (data) => {
     }
   },
 
-  resetPassword: async (data) => {
-    try {
-      set({ loading: true });
-      const res = await axios.post(
-        `${baseUrl}api/v1/auth/reset-password`,
-        data,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-            "Accept-Language": "en",
-          },
-        }
-      );
+  // Update the resetPassword function for bett
+resetPassword: async (data) => {
+  try {
+    set({ loading: true, error: null });
+    const res = await axios.post(
+      `${baseUrl}api/v1/auth/reset-password`,
+      data,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          "Accept-Language": "ar",
+        },
+      }
+    );
 
-      console.log("RESET-PASSWORD RESPONSE:", res.data);
-      return res.data;
-    } catch (err) {
-      set({ loading: false });
-      console.log(err);
-      return null;
-    } finally {
-      set({ loading: false });
-    }
-  },
+    console.log("RESET-PASSWORD RESPONSE:", res.data);
+    return res.data;
+  } catch (err: any) {
+    console.log("Reset Password Error:", err.response?.data || err.message);
+    
+    // Return structured error response
+    return {
+      status: false,
+      message: err.response?.data?.message || "فشل إعادة تعيين كلمة المرور",
+      data: err.response?.data?.data || null
+    };
+  } finally {
+    set({ loading: false });
+  }
+},
 }));

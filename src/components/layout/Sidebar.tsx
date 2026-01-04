@@ -133,7 +133,7 @@ export default function Sidebar() {
                 to={`${item.link}`}
                 onClick={() => {
                   if (item.action) item.action();
-                  setOpen(false); // يقفل السايدبار لما اضغط
+                  setOpen(false); 
                 }}
                 className="flex items-center justify-end gap-3 text-gray-700 hover:text-[#2AA0DC] cursor-pointer transition-all"
               >
