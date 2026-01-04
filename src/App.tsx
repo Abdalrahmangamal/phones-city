@@ -36,6 +36,8 @@ import Protectedroutse from "./store/protectedroutse";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ScrollToTop from "./components/ScrollToTop";
+import Blog from "./pages/Blog";
+import SingleBlog from "./pages/SingleBlog";
 import Offers from "./pages/products/Offers";
 
 // Language Wrapper Component
@@ -92,6 +94,8 @@ function LangWrapper() {
       <Route path="/singleproduct/:id" element={<Singleproduct />} />
       <Route path="/checkout" element={<Checkout />} />
       <Route path="/categorySingle/:id/:productmain?" element={<CategorySingle />} />
+      <Route path="/blog" element={<Blog />} />
+      <Route path="/blog/:slug" element={<SingleBlog />} />
     </Routes>
   );
 }
@@ -136,6 +140,8 @@ export default function App() {
           <Route path="/about-quara" element={<Navigate to={`/${lang}/about-quara`} replace />} />
           <Route path="/about-mora" element={<Navigate to={`/${lang}/about-mora`} replace />} />
           <Route path="/profile" element={<Navigate to={`/${lang}/profile`} replace />} />
+          <Route path="/blog" element={<Navigate to={`/${lang}/blog`} replace />} />
+          <Route path="/blog/:slug" element={<Navigate to={`/${lang}/blog/:slug`} replace />} />
 
           {/* جميع الروتات التي تدعم اللغة */}
           <Route path="/:lang/*" element={<LangWrapper />} />
