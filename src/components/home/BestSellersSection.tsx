@@ -36,7 +36,7 @@ const BestSellersSection: React.FC<BestSellersSectionProps> = ({
         {/* Header */}
         <div className="w-full flex items-center justify-between relative mb-4">
           <div className="relative">
-            <div className="absolute md:-top-2 right-[200px] md:-right-4 z-5">
+            <div className={`absolute md:-top-2 z-5 ${lang === 'en' ? 'left-[200px] md:-left-4 -scale-x-100' : 'right-[200px] md:-right-4'}`}>
               <img src="/Layer_1.svg" alt="" className="opacity-100" />
             </div>
             <h2 className="font-roboto font-semibold md:!text-[40px] text-[24px] leading-[36px] text-[#211C4D] relative z-10">
@@ -145,7 +145,7 @@ const BestSellersSection: React.FC<BestSellersSectionProps> = ({
       {/* Header */}
       <div className="w-full flex items-center justify-between relative mb-4">
         <div className="relative">
-          <div className="absolute md:-top-2 right-[200px] md:-right-4 z-5">
+          <div className={`absolute md:-top-2 z-5 ${lang === 'en' ? 'left-[200px] md:-left-4 -scale-x-100' : 'right-[200px] md:-right-4'}`}>
             <img src="/Layer_1.svg" alt="" className="opacity-100" />
           </div>
           <h2 className="font-roboto font-semibold md:!text-[40px] text-[24px] leading-[36px] text-[#211C4D] relative z-10">

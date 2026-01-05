@@ -4,13 +4,16 @@ import appstore from "../../assets/images/appstore.png";
 import googleplay from "../../assets/images/googleplay.png";
 import useS24Ultra from "@/hooks/useS24Ultra";
 import S24AppDownloadSection from "@/components/s24-ultra/S24AppDownloadSection";
-interface typeapp{
-title:string;
-description:string;
-image:string;
+import { useLangSync } from "@/hooks/useLangSync";
+
+interface typeapp {
+  title: string;
+  description: string;
+  image: string;
 }
-const AppDownloadSection = ({title,description,image}:typeapp) => {
+const AppDownloadSection = ({ title, description, image }: typeapp) => {
   const isS24Ultra = useS24Ultra();
+  const { lang } = useLangSync();
 
   if (isS24Ultra) {
     return <S24AppDownloadSection />;
@@ -22,11 +25,11 @@ const AppDownloadSection = ({title,description,image}:typeapp) => {
       {/* Desktop / Tablet */}
       <div className="relative w-full hidden md:block overflow-hidden mt-6 md:h-[350px] lg:h-[530px] xl:h-[580px]">
         {/* Glow / Blur Elements */}
-      
+
 
 
         {/* Images */}
-        <div className="absolute top-[10%] md:top-auto md:bottom-[0%] left-[18%] md:left-[9%]  z-10 w-[280px] md:w-[230px]  lg:w-[360px]">
+        <div className={`absolute top-[10%] md:top-auto md:bottom-[0%] z-10 w-[280px] md:w-[230px] lg:w-[360px] ${lang === 'en' ? 'right-[18%] md:right-[9%]' : 'left-[18%] md:left-[9%]'}`}>
           <img src={image} alt="main visual" className="w-full h-auto" />
           <img
             src={expotuer}
@@ -44,10 +47,10 @@ const AppDownloadSection = ({title,description,image}:typeapp) => {
         </div>
 
         {/* Text & Buttons */}
-        <div className="absolute top-[15%] right-[8%] w-[60%] md:max-w-[50%] max-w-[600px] flex flex-col gap-6">
-          <div className="flex flex-col gap-3 text-right">
+        <div className={`absolute top-[15%] w-[60%] md:max-w-[50%] max-w-[600px] flex flex-col gap-6 ${lang === 'en' ? 'left-[8%] items-start' : 'right-[8%]'}`}>
+          <div className={`flex flex-col gap-3 ${lang === 'en' ? 'text-left' : 'text-right'}`}>
             <h2 className="font-roboto font-bold text-[#211C4D] leading-[1.4] text-[28px] md:text-[27px] md:mt-0 lg:text-[35px] xl:text-[42px]">
-             {title}
+              {title}
             </h2>
             <p className="font-roboto font-medium text-[#211C4D] text-[16px] md:text-[20px] lg:text-[24px] leading-relaxed">
               {description}
@@ -76,7 +79,7 @@ const AppDownloadSection = ({title,description,image}:typeapp) => {
             {title}
           </h2>
           <p className="font-roboto font-medium text-base sm:text-lg text-[12px] text-[#211C4D] mb-6">
-           {description}
+            {description}
           </p>
 
           <div className="flex gap-3 sm:gap-4 mb-6">
