@@ -20,17 +20,17 @@ interface SpecialOffersSectionProps {
   isLoading?: boolean;
 }
 
-const SpecialOffersSection: React.FC<SpecialOffersSectionProps> = ({ 
-  products, 
-  title = "Special Offers", 
+const SpecialOffersSection: React.FC<SpecialOffersSectionProps> = ({
+  products,
+  title = "Special Offers",
   style = "",
-  link="",
+  link = "",
   isLoading = false
 }) => {
   const { lang } = useLangSync();
   const { t } = useTranslation();
   const [shouldAllowSlide, setShouldAllowSlide] = useState(true);
-  
+
   // حالة التحميل
   if (isLoading) {
     return (
@@ -45,13 +45,13 @@ const SpecialOffersSection: React.FC<SpecialOffersSectionProps> = ({
               {t(title)}
             </h2>
           </div>
-          
+
           <div className="flex items-center gap-[6px] py-[10px] rounded-[4px] opacity-50">
             <span className="font-roboto font-medium md:text-[24px] leading-[20px] text-[#211C4D]">
               {t('ViewAll')}
             </span>
             <svg
-              className="w-[18px] md:w-[25px]"
+              className={`w-[18px] md:w-[25px] ${lang === 'en' ? 'rotate-180' : ''}`}
               width="25.47"
               height="28.44"
               viewBox="0 0 25 28"
@@ -107,7 +107,7 @@ const SpecialOffersSection: React.FC<SpecialOffersSectionProps> = ({
     );
   }
 
-  
+
   if (!products || products.length === 0) {
     return null;
   }
@@ -149,8 +149,8 @@ const SpecialOffersSection: React.FC<SpecialOffersSectionProps> = ({
             {t(title)}
           </h2>
         </div>
-        
-        <Link 
+
+        <Link
           className="flex items-center gap-[6px] py-[10px] rounded-[4px] hover:opacity-80 transition-opacity"
           to={`/${lang}/${link}`}
         >
@@ -158,7 +158,7 @@ const SpecialOffersSection: React.FC<SpecialOffersSectionProps> = ({
             {t('ViewAll')}
           </span>
           <svg
-            className="w-[18px] md:w-[25px]"
+            className={`w-[18px] md:w-[25px] ${lang === 'en' ? 'rotate-180' : ''}`}
             width="25.47"
             height="28.44"
             viewBox="0 0 25 28"
@@ -180,7 +180,7 @@ const SpecialOffersSection: React.FC<SpecialOffersSectionProps> = ({
       <div className={`w-full relative special-offers-swiper ${!shouldAllowSlide ? 'no-scroll' : ''}`}>
         <Swiper
           key={lang + products.length}
-          modules={[Navigation, 
+          modules={[Navigation,
             // Autoplay
           ]}
           navigation={{
@@ -264,12 +264,12 @@ const SpecialOffersSection: React.FC<SpecialOffersSectionProps> = ({
           <>
             <div className={`special-offers-prev ${!shouldAllowSlide ? 'opacity-50 cursor-not-allowed' : ''}`}>
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <path d="M15 18l-6-6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M15 18l-6-6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </div>
             <div className={`special-offers-next ${!shouldAllowSlide ? 'opacity-50 cursor-not-allowed' : ''}`}>
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <path d="M9 18l6-6-6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M9 18l6-6-6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </div>
           </>

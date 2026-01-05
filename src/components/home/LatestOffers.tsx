@@ -75,7 +75,11 @@ export default function LatestOffers() {
         {t("LatestOffers")}
       </h1>
 
-      <img className="absolute hidden md:block top-[20px] right-[37%] w-[80px]" src={svg} alt="" />
+      <img
+        className={`absolute hidden md:block top-[20px] w-[80px] ${lang === 'en' ? 'left-[37%] -scale-x-100' : 'right-[37%]'}`}
+        src={svg}
+        alt=""
+      />
 
       <div className="flex flex-col md:flex-row items-center h-full md:items-start justify-center pt-[40px] md:pt-[50px] gap-[20px]">
         {/* Laptop Section - Desktop */}
