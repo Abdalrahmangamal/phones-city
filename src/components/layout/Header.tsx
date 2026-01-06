@@ -1,7 +1,7 @@
 "use client";
 import * as React from "react";
 import logo from "../../assets/images/logo.png";
-import { ShoppingCart, UserRound, Heart, Globe, Search } from "lucide-react";
+import { ShoppingCart, UserRound, Heart, Globe, Search, Smartphone, Watch, Headphones, Laptop, Tablet, Speaker, Cable, Gamepad, Camera, Tv, Printer, HardDrive, Zap, Grid, Cpu, Plug, Router } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import "../../style.css";
@@ -38,6 +38,64 @@ interface SuggestionItem {
   image?: string;
   productsCount?: number;
 }
+
+const getCategoryIcon = (name: string) => {
+  const n = name.toLowerCase();
+
+  // Routers & Networking
+  if (n.includes("router") || n.includes("راوتر") || n.includes("network") || n.includes("شبك") || n.includes("wifi") || n.includes("واي فاي")) return <Router />;
+
+  // Phones & Brands (Detailed list for Arabic & English)
+  if (
+    n.includes("mobile") || n.includes("phone") || n.includes("jawal") || n.includes("mob") ||
+    n.includes("هاتف") || n.includes("جوال") || n.includes("تليفون") ||
+    n.includes("apple") || n.includes("ابل") || n.includes("آبل") ||
+    n.includes("iphone") || n.includes("ايفون") ||
+    n.includes("samsung") || n.includes("سامسونج") ||
+    n.includes("nokia") || n.includes("نوكيا") ||
+    n.includes("huawei") || n.includes("هواوي") ||
+    n.includes("xiaomi") || n.includes("شاومي") ||
+    n.includes("oppo") || n.includes("اوبو") ||
+    n.includes("realme") || n.includes("ريلمي") ||
+    n.includes("infinix") || n.includes("انفينكس") ||
+    n.includes("vivo") || n.includes("فيفو") ||
+    n.includes("honor") || n.includes("هونر") ||
+    n.includes("itel") || n.includes("ايتل") ||
+    n.includes("redmi") || n.includes("ريدمي") ||
+    n.includes("poco") || n.includes("بوكو") ||
+    n.includes("tecno") || n.includes("تكنو")
+  ) return <Smartphone />;
+
+  // Smartwatches
+  if (n.includes("watch") || n.includes("sa3") || n.includes("ساعة") || n.includes("ساعه")) return <Watch />;
+
+  // Audio
+  if (n.includes("head") || n.includes("ear") || n.includes("sound") || n.includes("audio") || n.includes("airpod") || n.includes("سماعة") || n.includes("سماعه")) return <Headphones />;
+
+  // Laptops & Computers
+  if (n.includes("lap") || n.includes("computer") || n.includes("pc") || n.includes("mac") || n.includes("كمبيوتر") || n.includes("لابتوب")) return <Laptop />;
+
+  // Tablets
+  if (n.includes("tab") || n.includes("pad") || n.includes("تابلت") || n.includes("ايباد")) return <Tablet />;
+
+  // Electronics (General)
+  if (n.includes("electro") || n.includes("الكترونيات") || n.includes("إلكترونيات")) return <Cpu />;
+
+  // Accessories
+  if (n.includes("access") || n.includes("اكسسوار") || n.includes("إكسسوار")) return <Plug />;
+
+  // Other specific categories
+  if (n.includes("speaker") || n.includes("bluetooth") || n.includes("مكبر")) return <Speaker />;
+  if (n.includes("cable") || n.includes("charge") || n.includes("wire") || n.includes("كابل") || n.includes("شاحن") || n.includes("توصيلة")) return <Cable />;
+  if (n.includes("game") || n.includes("playstation") || n.includes("xbox") || n.includes("العاب") || n.includes("بلايستيشن")) return <Gamepad />;
+  if (n.includes("camera") || n.includes("cam") || n.includes("كاميرا")) return <Camera />;
+  if (n.includes("tv") || n.includes("monitor") || n.includes("screen") || n.includes("تلفزيون") || n.includes("شاشة")) return <Tv />;
+  if (n.includes("print") || n.includes("طابعة")) return <Printer />;
+  if (n.includes("drive") || n.includes("storage") || n.includes("memory") || n.includes("قرص") || n.includes("ذاكرة")) return <HardDrive />;
+  if (n.includes("power") || n.includes("bank") || n.includes("battery") || n.includes("بطارية") || n.includes("باور")) return <Zap />;
+
+  return <Grid />;
+};
 
 export default function Header() {
   const { categories, fetchCategories } = useCategoriesStore();
@@ -355,8 +413,7 @@ export default function Header() {
                   to={`${item.link}`}
                   end={item.link === `/${lang}/`}
                   className={({ isActive }) =>
-                    `xl:text-[20px] lg:text-[15px] py-[9px] px-[24px] md:text-[12px] font-[400] text-white hover:text-[#F3AC5D] transition-all duration-300 ${
-                      isActive ? "navactive text-[#F3AC5D]" : ""
+                    `xl:text-[20px] lg:text-[15px] py-[9px] px-[24px] md:text-[12px] font-[400] text-white hover:text-[#F3AC5D] transition-all duration-300 ${isActive ? "navactive text-[#F3AC5D]" : ""
                     }`
                   }
                 >
@@ -416,16 +473,21 @@ export default function Header() {
                 </div>
               </DropdownMenuTrigger>
 
-              <DropdownMenuContent className="w-56 z-50" align="start" sideOffset={5}>
-                <DropdownMenuGroup>
+              <DropdownMenuContent className="w-[249px] p-[12px] bg-[#FFFFFF] rounded-b-[16px] rounded-t-none shadow-[0px_8px_32px_-4px_#676F7B1A] border-none z-50" align="start" sideOffset={5}>
+                <DropdownMenuGroup className="flex flex-col gap-[6px]">
                   {categories.map((category: any) => {
                     const hasChildren = category.children && category.children.length > 0;
 
                     if (!hasChildren) {
                       return (
-                        <DropdownMenuItem key={category.id} asChild>
-                          <Link to={`/${lang}/categorySingle/${category.slug}/products`}>
-                            {category.name}
+                        <DropdownMenuItem key={category.id} asChild className="w-full h-[38px] px-[12px] py-[8px] rounded-[8px] focus:bg-[#F5F7FA] hover:bg-[#F5F7FA] cursor-pointer outline-none">
+                          <Link to={`/${lang}/categorySingle/${category.slug}/products`} className="flex items-center gap-[12px] w-full">
+                            <div className="w-[20px] h-[20px] flex items-center justify-center shrink-0 [&>svg]:w-[20px] [&>svg]:h-[20px] [&>svg]:text-[#858B94]">
+                              {getCategoryIcon(category.name)}
+                            </div>
+                            <span className="font-inter font-[500] text-[14px] leading-[22px] text-[#333D4C] flex-1 text-right truncate">
+                              {category.name}
+                            </span>
                           </Link>
                         </DropdownMenuItem>
                       );
@@ -433,28 +495,44 @@ export default function Header() {
 
                     return (
                       <DropdownMenuSub key={category.id}>
-                        <DropdownMenuSubTrigger>
-                          {category.name}
+                        <DropdownMenuSubTrigger className="w-full h-[38px] px-[12px] py-[8px] rounded-[8px] focus:bg-[#F5F7FA] hover:bg-[#F5F7FA] data-[state=open]:bg-[#F5F7FA] cursor-pointer outline-none [&>svg]:rotate-180 [&>svg]:text-[#333D4C] [&>svg]:opacity-100">
+                          <div className="flex items-center gap-[12px] w-full overflow-hidden">
+                            <div className="w-[20px] h-[20px] flex items-center justify-center shrink-0 [&>svg]:w-[20px] [&>svg]:h-[20px] [&>svg]:text-[#858B94]">
+                              {getCategoryIcon(category.name)}
+                            </div>
+                            <span className="font-inter font-[500] text-[14px] leading-[22px] text-[#333D4C] truncate flex-1 text-right">
+                              {category.name}
+                            </span>
+                          </div>
                         </DropdownMenuSubTrigger>
 
                         <DropdownMenuPortal>
-                          <DropdownMenuSubContent className="w-48" sideOffset={10}>
-                            <DropdownMenuItem asChild>
-                              <Link
-                                to={`/${lang}/categorySingle/${category.slug}/products`}
-                                className="font-semibold text-primary border-b pb-2 mb-2"
-                              >
-                                {t("View all")} {category.name}
-                              </Link>
-                            </DropdownMenuItem>
-
-                            {category.children.map((child: any) => (
-                              <DropdownMenuItem key={child.id} asChild>
-                                <Link to={`/${lang}/categorySingle/${child.slug}/products`}>
-                                  {child.name}
+                          <DropdownMenuSubContent className="w-[211px] p-[12px] bg-[#FFFFFF] rounded-[16px] shadow-[0px_8px_32px_-4px_#676F7B1A] border-none" sideOffset={10}>
+                            <div className="flex flex-col gap-[6px]">
+                              <DropdownMenuItem asChild className="w-full h-[36px] rounded-[8px] px-[12px] py-[8px] focus:bg-[#F5F7FA] hover:bg-[#F5F7FA] cursor-pointer outline-none">
+                                <Link
+                                  to={`/${lang}/categorySingle/${category.slug}/products`}
+                                  className="flex items-center gap-[12px] w-full"
+                                >
+                                  <span className="font-roboto font-[400] text-[14px] leading-normal text-[#272727]">
+                                    {t("View all")} {category.name}
+                                  </span>
                                 </Link>
                               </DropdownMenuItem>
-                            ))}
+
+                              {category.children.map((child: any) => (
+                                <DropdownMenuItem key={child.id} asChild className="w-full h-[36px] rounded-[8px] px-[12px] py-[8px] focus:bg-[#F5F7FA] hover:bg-[#F5F7FA] cursor-pointer outline-none">
+                                  <Link to={`/${lang}/categorySingle/${child.slug}/products`} className="flex items-center gap-[12px] w-full">
+                                    <div className="w-[20px] h-[20px] flex items-center justify-center shrink-0 [&>svg]:w-[20px] [&>svg]:h-[20px] [&>svg]:text-[#181D25] [&>svg]:opacity-60">
+                                      {getCategoryIcon(child.name)}
+                                    </div>
+                                    <span className="font-roboto font-[400] text-[14px] leading-normal text-[#272727] truncate flex-1 text-right">
+                                      {child.name}
+                                    </span>
+                                  </Link>
+                                </DropdownMenuItem>
+                              ))}
+                            </div>
                           </DropdownMenuSubContent>
                         </DropdownMenuPortal>
                       </DropdownMenuSub>
@@ -473,7 +551,7 @@ export default function Header() {
           isOpen={isMenuOpen}
           onClose={() => setIsMenuOpen(false)}
           openSections={false}
-          setOpenSections={() => {}}
+          setOpenSections={() => { }}
         />
 
         <MobileNavbar
