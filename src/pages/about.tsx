@@ -9,27 +9,34 @@ import { useLangSync } from "@/hooks/useLangSync";
 import { useTranslation } from "react-i18next";
 import Loader from "@/components/Loader";
 
+import { usePageStore } from "@/store/customerCareStore";
+
 export default function About() {
   const { t } = useTranslation();
 
   const { lang } = useLangSync();
   const { fetchAbout, data } = useAboutStore();
+  const { fetchPage, page } = usePageStore();
+
   useEffect(() => {
     fetchAbout(lang);
+    fetchPage("image-of-the-place", lang);
   }, [lang]);
+
   return (
     <Layout>
-       {
+      {
         !data ? <Loader /> : null
       }
       <div>
         <Internalbanner title={t("AboutCityPhones")} description={t("Gettoknowus")} />
         <Aboutcityphones description={data?.about_website} />
         <AboutUsSection
-          image={data?.image ?? ""}
+          image={page?.banner || data?.image || ""}
           about_us={data?.about_us ?? ""}
           lang={lang}
           aboutus={t("AboutUs")}
+          overlayTitle={page?.title}
         />
         <Location />
       </div>
