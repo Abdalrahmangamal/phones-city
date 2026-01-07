@@ -102,9 +102,9 @@ const TestimonialsSection = () => {
             <img
               src={pattern}
               alt=""
-              className={`absolute hidden lg:block ${lang === 'en'
-                ? 'w-[110px] -bottom-7 -left-16 -scale-x-100'
-                : 'w-[110px] -bottom-10 -right-16'}`}
+              className={`absolute block ${lang === 'en'
+                ? 'w-[80px] lg:w-[110px] -bottom-5 lg:-bottom-7 -left-10 lg:-left-16 -scale-x-100'
+                : 'w-[80px] lg:w-[110px] -bottom-5 lg:-bottom-10 -right-10 lg:-right-16'}`}
             />
           </div>
 

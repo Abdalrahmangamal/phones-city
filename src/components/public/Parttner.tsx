@@ -107,9 +107,9 @@ export default function Parttner() {
         </h1>
         <img
           src={pattern}
-          className={`absolute hidden md:block ${lang === 'en'
-            ? 'w-[110px] -bottom-4 -left-16 -scale-x-100'
-            : 'w-[118px] -bottom-6 -right-12'}`}
+          className={`absolute block ${lang === 'en'
+            ? 'w-[80px] md:w-[110px] -bottom-4 md:-bottom-4 -left-8 md:-left-16 -scale-x-100'
+            : 'w-[88px] md:w-[118px] -bottom-5 md:-bottom-6 -right-8 md:-right-12'}`}
           alt=""
         />
       </div>
