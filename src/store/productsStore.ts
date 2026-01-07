@@ -12,9 +12,9 @@ interface productsParams {
   search?: string;
   max_price?: number;
   min_price?: number;
-  sort_by?: string; 
+  sort_by?: string;
   sort_order?: string;
-  best_seller?: boolean; 
+  best_seller?: boolean;
   new?: number;
 }
 
@@ -45,17 +45,17 @@ export const useProductsStore = create<PageState>((set) => ({
 
       console.log("Fetching products with params:", params);
       console.log("Full URL:", `${baseUrl}api/v1/products`);
-      
+
       // تنظيف المعلمات - إزالة القيم undefined
       const cleanedParams: Record<string, any> = {};
       Object.keys(params).forEach(key => {
-        if (params[key as keyof productsParams] !== undefined) {
+        if (params[key as keyof productsParams] !== undefined && params[key as keyof productsParams] !== null) {
           cleanedParams[key] = params[key as keyof productsParams];
         }
       });
 
       console.log("Cleaned params:", cleanedParams);
-      
+
       const res = await axios.get(`${baseUrl}api/v1/products`, {
         params: cleanedParams,
         headers: {
@@ -73,7 +73,7 @@ export const useProductsStore = create<PageState>((set) => ({
         response: res.data.data,
         loading: false,
       });
-      
+
       // إرجاع البيانات لاستخدامها في Home.tsx
       return res.data.data;
     } catch (err: any) {
@@ -87,7 +87,7 @@ export const useProductsStore = create<PageState>((set) => ({
   },
   offersMeta: null,
 
-  fetchOffers: async (lang : string, page: number = 1) => {
+  fetchOffers: async (lang: string, page: number = 1) => {
     try {
       set({ loading: true });
 
@@ -139,7 +139,7 @@ export const useProductsStore = create<PageState>((set) => ({
     }
   },
 
-  fetchBestSellers: async (lang :string ) => {
+  fetchBestSellers: async (lang: string) => {
     try {
       set({ loading: true });
 
