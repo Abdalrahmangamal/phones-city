@@ -21,8 +21,9 @@ const VerifyCode: React.FC<VerifyProps> = ({
   const [open, setOpen] = useState(false);
   const [otp, setOtp] = useState("");
   const [showSuccess, setShowSuccess] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
-  const { sendVerifyCode, loading } = useAuthStore();
+  const { sendVerifyCode, loading, error } = useAuthStore();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -30,12 +31,33 @@ const VerifyCode: React.FC<VerifyProps> = ({
     if (!isopen) {
       setOtp("");
       setShowSuccess(false);
+      setErrorMessage("");
     }
   }, [isopen]);
+
+  useEffect(() => {
+    if (error) {
+      if (typeof error === "string") {
+        setErrorMessage(error);
+      } else {
+        const errorObj = error as Record<string, any>;
+        const messages: string[] = [];
+        Object.entries(errorObj).forEach(([key, value]) => {
+          if (Array.isArray(value)) {
+            messages.push(...value);
+          } else if (value && typeof value === "string") {
+            messages.push(value);
+          }
+        });
+        setErrorMessage(messages.join(" • ") || "حدث خطأ في التحقق");
+      }
+    }
+  }, [error]);
 
   const handleSubmit = async () => {
     if (otp.length !== 6) return;
 
+    setErrorMessage("");
     const res = await sendVerifyCode({
       email,
       code: otp,
@@ -106,10 +128,18 @@ const VerifyCode: React.FC<VerifyProps> = ({
           <>
             <MuiOtpInput value={otp} length={6} onChange={setOtp} />
 
+            {errorMessage && (
+              <div className="w-full max-w-[400px] bg-red-50 border border-red-200 rounded-lg p-3">
+                <p className="text-red-600 text-center text-sm font-semibold">
+                  ✗ {errorMessage}
+                </p>
+              </div>
+            )}
+
             <button
               onClick={handleSubmit}
-              disabled={loading}
-              className="bg-[#2AA0DC] w-[344px] h-[52px] rounded-[32px] text-white text-[22px] disabled:opacity-60"
+              disabled={loading || otp.length !== 6}
+              className="bg-[#2AA0DC] w-[344px] h-[52px] rounded-[32px] text-white text-[22px] disabled:opacity-60 disabled:cursor-not-allowed transition-all"
             >
               {loading ? "جاري التحقق..." : "استمر"}
             </button>

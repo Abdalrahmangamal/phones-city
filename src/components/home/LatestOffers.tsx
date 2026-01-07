@@ -71,11 +71,19 @@ export default function LatestOffers() {
 
   return (
     <div className="w-full translate-y-[-50px] md:h-[60vh] xl:h-[100vh] xl:px-[90px] px-2 pt-8 md:pt-0 relative md:px-0">
-      <h1 className="text-[24px] mb-[0px] md:text-[40px] font-[700] text-[#211C4D] text-center">
-        {t("LatestOffers")}
-      </h1>
-
-      <img className="absolute hidden md:block top-[20px] right-[37%] w-[80px]" src={svg} alt="" />
+      <div className="relative w-fit mx-auto mb-8">
+        <h1 className="text-[24px] md:text-[40px] font-[700] text-[#211C4D] text-center">
+          {t("LatestOffers")}
+        </h1>
+        <img
+          className={`absolute hidden md:block ${lang === "ar"
+            ? "w-[200px] -bottom-15 -right-23"
+            : "w-[200px] -bottom-15 -left-20 -scale-x-100"
+            }`}
+          src={svg}
+          alt=""
+        />
+      </div>
 
       <div className="flex flex-col md:flex-row items-center h-full md:items-start justify-center pt-[40px] md:pt-[50px] gap-[20px]">
         {/* Laptop Section - Desktop */}

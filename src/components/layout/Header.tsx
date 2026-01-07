@@ -1,8 +1,9 @@
 "use client";
 import * as React from "react";
 import logo from "../../assets/images/logo.png";
-import { ShoppingCart, UserRound, Heart, Globe } from "lucide-react";
+import { ShoppingCart, UserRound, Heart, Globe, Search, Smartphone, Watch, Headphones, Laptop, Tablet, Speaker, Cable, Gamepad, Camera, Tv, Printer, HardDrive, Zap, Grid, Cpu, Plug, Router } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
 import "../../style.css";
 import { useTranslation } from "react-i18next";
 import { useLangSync } from "@/hooks/useLangSync";
@@ -12,80 +13,164 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
+  DropdownMenuSub,
+  DropdownMenuSubTrigger,
+  DropdownMenuSubContent,
+  DropdownMenuPortal,
 } from "@/components/ui/dropdown-menu";
 import { Link, NavLink } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+
+// استيراد store السلة الفعلي
+import { useCartStore } from "@/store/cartStore/cartStore"; // ← تأكد من المسار الصحيح
 
 const baseUrl = import.meta.env.VITE_BASE_URL;
 import MobileMenu from "./MobileMenu";
 import MobileNavbar from "./MobileNavbar";
 
+interface SuggestionItem {
+  id: number;
+  name: string;
+  slug: string;
+  type: "category";
+  image?: string;
+  productsCount?: number;
+}
+
+
+
 export default function Header() {
   const { categories, fetchCategories } = useCategoriesStore();
   const { lang } = useLangSync();
-  useEffect(() => {
-    fetchCategories(lang);
-  }, [lang]);
-  console.log("header",categories)
-  const [isSectionOpen, setIsSectionOpen] = useState(false);
 
-  // language btn
   const { t, i18n } = useTranslation();
-  const [open] = useState(false);
-  // ⬇⬇ state عشان نتحكم في الموبايل منيو
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
   const [query, setQuery] = useState("");
-  const [suggestions, setSuggestions] = useState<any[]>([]);
+  const [suggestions, setSuggestions] = useState<SuggestionItem[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [suggestionsLoading, setSuggestionsLoading] = useState(false);
   const debounceRef = useRef<number | null>(null);
   const navigate = useNavigate();
+
+  // جلب بيانات السلة من الـ store
+  const { items: cartItems, fetchCart } = useCartStore();
+
+  // حساب إجمالي الكمية (عدد المنتجات في السلة)
+  const cartQuantity = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+
+  // جلب السلة عند تحميل المكون
+  useEffect(() => {
+    fetchCategories(lang);
+  }, [lang, fetchCategories]);
+
+  useEffect(() => {
+    fetchCart();
+  }, [fetchCart]);
+
   const navitem = [
-    {
-      link: `/${lang}/`,
-      name: `${t("Home")}`,
-    },
-    {
-      link: `/${lang}/about`,
-      name: `${t("About")}`,
-    },
-    {
-      link: `/${lang}/offers`,
-      name: `${t("Offers")}`,
-    },
-    {
-      link: `/${lang}/servces`,
-      name: `${t("Servces")}`,
-    },
-    {
-      link: `/${lang}/Contact`,
-      name: `${t("Contactus")}`,
-    },
+    { link: `/${lang}/`, name: `${t("Home")}` },
+    { link: `/${lang}/about`, name: `${t("About")}` },
+    { link: `/${lang}/offers`, name: `${t("Offers")}` },
+    { link: `/${lang}/servces`, name: `${t("Servces")}` },
+    { link: `/${lang}/Contact`, name: `${t("Contactus")}` },
   ];
+
   const token = localStorage.getItem("token");
   const headerKey = lang;
 
+  // Mobile search handler
+  const handleMobileSearch = () => {
+    if (query.trim().length > 0) {
+      navigate(`/${lang}/search?q=${encodeURIComponent(query.trim())}`);
+      setIsMobileSearchOpen(false);
+      setQuery("");
+    }
+  };
+
+  // Function to fetch suggestions
+  const fetchSearchSuggestions = async (searchQuery: string) => {
+    if (!searchQuery.trim()) {
+      setSuggestions([]);
+      setSuggestionsLoading(false);
+      return;
+    }
+
+    setSuggestionsLoading(true);
+    try {
+      const allCategories = categories;
+      const searchTerm = searchQuery.trim().toLowerCase();
+
+      let searchResults: SuggestionItem[] = [];
+
+      allCategories.forEach((category: any) => {
+        if (category.name.toLowerCase().includes(searchTerm)) {
+          searchResults.push({
+            id: category.id,
+            name: category.name,
+            slug: category.slug,
+            type: "category",
+            image: category.image || "/logo.png",
+            productsCount: category.products_count || 0,
+          });
+        }
+
+        if (category.children && Array.isArray(category.children)) {
+          category.children.forEach((child: any) => {
+            if (child.name.toLowerCase().includes(searchTerm)) {
+              searchResults.push({
+                id: child.id,
+                name: child.name,
+                slug: child.slug,
+                type: "category",
+                image: child.image || "/logo.png",
+                productsCount: 0,
+              });
+            }
+          });
+        }
+      });
+
+      searchResults = searchResults
+        .filter((cat, index, self) => index === self.findIndex((c) => c.id === cat.id))
+        .slice(0, 6);
+
+      setSuggestions(searchResults);
+    } catch (e: any) {
+      console.error("Error in local category search:", e.message);
+      setSuggestions([]);
+    } finally {
+      setSuggestionsLoading(false);
+    }
+  };
+
+  // Debounced search handler
+  const handleSearchChange = (value: string) => {
+    setQuery(value);
+    setShowSuggestions(!!value.trim());
+
+    if (debounceRef.current) window.clearTimeout(debounceRef.current);
+    debounceRef.current = window.setTimeout(() => {
+      fetchSearchSuggestions(value);
+    }, 300);
+  };
+
   return (
     <>
-      {/* desktop  header */}
+      {/* Desktop Header */}
       <header
         key={headerKey}
         dir="rtl"
-        className="w-full border-b  items-center justify-center h-[170px] hidden md:flex border-white/10 bg-[#211a44] text-white"
+        className="w-full border-b items-center justify-center h-[170px] hidden md:flex border-white/10 bg-[#211a44] text-white"
       >
-        
-        <div className="  flex flex-col w-full h-[170px] justify-around  lg:px-[90px] px-2 pt-20 md:pt-0">
+        <div className="flex flex-col w-full h-[170px] justify-around lg:px-[90px] px-2 pt-20 md:pt-0">
           {/* Top row */}
-          <div className="flex items-center gap-3 py-3 ">
+          <div className="flex items-center gap-3 py-3">
             {/* Logo */}
-
-            <Link to={""} className="flex items-center gap-2">
+            <Link to="/" className="flex items-center gap-2">
               <img
                 src={logo}
                 alt={t("CityPhones")}
@@ -93,56 +178,25 @@ export default function Header() {
                 height={20}
                 className="h-[70px] w-[70px] object-contain"
               />
-              <h1 className="flex items-center text-[20px] font-[700] ">
-                {t("CityPhones")}
-              </h1>
+              <h1 className="flex items-center text-[20px] font-[700]">{t("CityPhones")}</h1>
             </Link>
+
             {/* Search */}
             <div className="mx-auto hidden flex-1 max-w-[500px] justify-center items-center md:flex">
-              <div
-                className="relative w-full max-w-2xl"
-                dir={lang === "ar" ? "rtl" : "ltr"}
-              >
+              <div className="relative w-full max-w-2xl" dir={lang === "ar" ? "rtl" : "ltr"}>
                 <div className="relative">
                   <Input
                     value={query}
-                    onChange={(e: any) => {
-                      const v = e.target.value;
-                      setQuery(v);
-                      setShowSuggestions(!!v.trim());
-
-                      // debounce
-                      if (debounceRef.current) window.clearTimeout(debounceRef.current);
-                      debounceRef.current = window.setTimeout(async () => {
-                        if (!v.trim()) {
-                          setSuggestions([]);
-                          setSuggestionsLoading(false);
-                          return;
-                        }
-                        setSuggestionsLoading(true);
-                        try {
-                          const res = await axios.get(`${baseUrl}api/v1/products`, {
-                            params: { search: v.trim(), per_page: 6 },
-                            headers: { "Accept-Language": lang || "ar", Accept: "application/json" },
-                          });
-                          const data = res?.data?.data;
-                          if (Array.isArray(data)) setSuggestions(data.slice(0, 6));
-                          else setSuggestions([]);
-                        } catch (e) {
-                          setSuggestions([]);
-                        } finally {
-                          setSuggestionsLoading(false);
-                        }
-                      }, 300);
-                    }}
+                    onChange={(e: any) => handleSearchChange(e.target.value)}
                     onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
                       if (e.key === "Enter" && query.trim().length > 0) {
                         navigate(`/${lang}/search?q=${encodeURIComponent(query.trim())}`);
                         setShowSuggestions(false);
+                        setQuery("");
                       }
                     }}
                     placeholder={t("search")}
-                    className="h-[48px] rounded-full px-9  bg-transparent border-white text-white placeholder:text-[#6C727F] focus-visible:ring-white/40"
+                    className="h-[48px] rounded-full px-9 bg-transparent border-white text-white placeholder:text-[#6C727F] focus-visible:ring-white/40"
                     onFocus={() => setShowSuggestions(!!query.trim())}
                     onBlur={() => setTimeout(() => setShowSuggestions(false), 150)}
                   />
@@ -154,30 +208,57 @@ export default function Header() {
                       ) : suggestions.length === 0 ? (
                         <div className="p-3 text-start">{t("Noresultsfound")}</div>
                       ) : (
-                        suggestions.map((p: any) => (
+                        suggestions.map((item: SuggestionItem) => (
                           <div
-                            key={p.id}
+                            key={`category-${item.id}`}
                             onMouseDown={() => {
-                              // navigate to product page
-                              navigate(`/${lang}/singleproduct/${p.slug}`);
+                              navigate(`/${lang}/categorySingle/${item.slug}/products`);
+                              setShowSuggestions(false);
+                              setQuery("");
                             }}
-                            className="flex items-center gap-3 p-3 hover:bg-gray-100 cursor-pointer"
+                            className="flex items-center gap-3 p-3 hover:bg-gray-100 cursor-pointer border-b last:border-b-0 group"
                           >
-                            <img src={p.main_image || p.images?.[0] || "/logo.png"} alt={p.name} className="w-12 h-12 object-cover rounded" />
-                            <div className="flex-1">
-                              <div className="font-medium">{p.name}</div>
-                              <div className="text-sm text-gray-500">{p.final_price ? p.final_price + t("SAR") : ''}</div>
+                            <div className="w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center overflow-hidden">
+                              {item.image ? (
+                                <img
+                                  src={item.image}
+                                  alt={item.name}
+                                  className="w-full h-full object-cover"
+                                  onError={(e) => {
+                                    e.currentTarget.src = "/logo.png";
+                                  }}
+                                />
+                              ) : (
+                                <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                                </svg>
+                              )}
                             </div>
+
+                            <div className="flex-1">
+                              <div className="font-medium text-gray-800">{item.name}</div>
+                              <div className="flex items-center gap-2 mt-1">
+                                <span className="text-xs text-gray-500">{t("Category")}</span>
+                                {item.productsCount !== undefined && item.productsCount > 0 && (
+                                  <span className="text-xs bg-blue-100 text-blue-600 px-2 py-0.5 rounded-full">
+                                    {item.productsCount} {t("products")}
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+
+                            <svg className="w-4 h-4 text-gray-400 group-hover:text-blue-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                            </svg>
                           </div>
                         ))
                       )}
                     </div>
                   )}
                 </div>
+
                 <svg
-                  className={`absolute  top-3 ${
-                    lang === "ar" ? "right-3" : "left-3"
-                  }`}
+                  className={`absolute top-3 ${lang === "ar" ? "right-3" : "left-3"}`}
                   width="18"
                   height="24"
                   viewBox="0 0 18 24"
@@ -197,28 +278,17 @@ export default function Header() {
                     fill="white"
                   />
                 </svg>
-                {/* <button
-                  onClick={() => {
-                    if (query.trim().length === 0) return;
-                    navigate(`/${lang}/search?q=${encodeURIComponent(query.trim())}`);
-                    setShowSuggestions(false);
-                  }}
-                  className="absolute top-2.5 right-12 h-[34px] w-[34px] rounded-full bg-white/10 flex items-center justify-center"
-                >
-                  🔎
-                </button> */}
               </div>
             </div>
 
-            {/* Left icons */}
+            {/* Right icons */}
             <div className="flex items-center gap-2">
               {token ? null : (
                 <Link
                   to="/login"
-                  className="w-[160px] h-[40px] rounded-[16px] bg-[#FFFFFF1A] flex items-center justify-center text-[19px] font-[400] 
-  text-white transition-all duration-300 hover:bg-white hover:text-[#211C4D]"
+                  className="w-[160px] h-[40px] rounded-[16px] bg-[#FFFFFF1A] flex items-center justify-center text-[19px] font-[400] text-white transition-all duration-300 hover:bg-white hover:text-[#211C4D]"
                 >
-              {  t("Login")}
+                  {t("Login")}
                 </Link>
               )}
               <Link to={`/${lang}/favourite`}>
@@ -226,29 +296,34 @@ export default function Header() {
                   <Heart className="h-5 w-5 opacity-90" />
                 </IconButton>
               </Link>
-              <Link to={"/profile"}>
+              <Link to="/profile">
                 <IconButton aria-label="حسابي">
                   <UserRound className="h-5 w-5 opacity-90" />
                 </IconButton>
               </Link>
               <Link to={`/${lang}/checkout`}>
-                <IconButton aria-label="عربة التسوق">
-                  <span className="relative">
-                    <ShoppingCart className="h-5 w-5 opacity-90" />
-                    <span className="absolute -right-1 -top-1 h-2.5 w-2.5 rounded-full bg-orange-400" />
-                  </span>
+                <IconButton aria-label="عربة التسوق" className="relative">
+                  <ShoppingCart className="h-5 w-5 opacity-90" />
+                  {cartQuantity > 0 && (
+                    <Badge
+                      variant="destructive"
+                      className="absolute -top-2 -right-2 h-6 w-6 rounded-full p-0 flex items-center justify-center text-xs font-bold bg-[#F3AC5D]"
+                    >
+                      {cartQuantity}
+                    </Badge>
+                  )}
                 </IconButton>
               </Link>
             </div>
           </div>
 
           {/* Bottom nav */}
-          <div className="flex items-center w-full !justify-between  gap-4 pb-3">
+          <div className="flex items-center w-full !justify-between gap-4 pb-3">
             {/* Language */}
             <div className="relative inline-block text-left">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <div className="flex items-center gap-1 text-sm opacity-90 hover:opacity-100">
+                  <div className="flex items-center gap-1 text-sm opacity-90 hover:opacity-100 cursor-pointer">
                     <Globe className="h-4 w-4" />
                     {lang === "ar" ? t("Arabic") : t("English")}
                     <svg
@@ -257,9 +332,7 @@ export default function Header() {
                       viewBox="0 0 16 16"
                       fill="none"
                       xmlns="http://www.w3.org/2000/svg"
-                      className={`transition-transform duration-200 ${
-                        open ? "rotate-180" : ""
-                      }`}
+                      className="transition-transform duration-200"
                     >
                       <path
                         d="M8 15.5C7.5 15.5 7 15.3 6.66 14.94L2.15 10.39C1.95 10.19 1.95 9.85 2.15 9.65C2.35 9.45 2.68 9.45 2.88 9.65L7.39 14.2C7.73 14.53 8.26 14.53 8.6 14.2L13.11 9.65C13.31 9.45 13.64 9.45 13.84 9.65C14.05 9.85 14.05 10.19 13.84 10.39L9.33 14.94C8.97 15.31 8.48 15.5 8 15.5Z"
@@ -269,34 +342,22 @@ export default function Header() {
                   </div>
                 </DropdownMenuTrigger>
 
-                <DropdownMenuContent
-                  align="end"
-                  sideOffset={8}
-                  className="z-[9999] relative"
-                >
-                  <DropdownMenuItem onClick={() => i18n.changeLanguage("ar")}>
-                    العربية
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => i18n.changeLanguage("en")}>
-                    English
-                  </DropdownMenuItem>
+                <DropdownMenuContent align="end" sideOffset={8} className="z-[9999]">
+                  <DropdownMenuItem onClick={() => i18n.changeLanguage("ar")}>العربية</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => i18n.changeLanguage("en")}>English</DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
 
-            {/* Main Links */}
-            <nav
-              className="hidden items-center lg:gap-2 h-[53px]   text-sm md:flex"
-              dir={lang === "ar" ? "rtl" : "ltr"}
-            >
+            {/* Main Navigation Links */}
+            <nav className="hidden items-center lg:gap-2 h-[53px] text-sm md:flex" dir={lang === "ar" ? "rtl" : "ltr"}>
               {navitem.map((item, index) => (
                 <NavLink
                   key={index}
                   to={`${item.link}`}
-                  end={item.link === `/${lang}/`} // علشان الـ home مايفضلش active دايمًا
+                  end={item.link === `/${lang}/`}
                   className={({ isActive }) =>
-                    `xl:text-[20px] lg:text-[15px] py-[9px] px-[24px] md:text-[12px] font-[400] text-white hover:text-[#F3AC5D] transition-all duration-300 ${
-                      isActive ? "navactive text-[#F3AC5D]" : ""
+                    `xl:text-[20px] lg:text-[15px] py-[9px] px-[24px] md:text-[12px] font-[400] text-white hover:text-[#F3AC5D] transition-all duration-300 ${isActive ? "navactive text-[#F3AC5D]" : ""
                     }`
                   }
                 >
@@ -305,10 +366,10 @@ export default function Header() {
               ))}
             </nav>
 
-            {/* category btn */}
+            {/* Categories Dropdown */}
             <DropdownMenu dir="rtl">
               <DropdownMenuTrigger asChild>
-                <div className="w-[150px] bg-transparent">
+                <div className="w-[150px] bg-transparent cursor-pointer">
                   <div className="flex items-center justify-center gap-[10px]">
                     <svg
                       className="!w-[25px] !h-[25px]"
@@ -343,18 +404,8 @@ export default function Header() {
                         fill="#E0E5EB"
                       />
                     </svg>
-
-                    <p className="text-[19px] text-[#E0E5EB]">
-                      {t("Sections")}
-                    </p>
-                    <svg
-                      className="ml-[10px]"
-                      width="13"
-                      height="9"
-                      viewBox="0 0 14 9"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
+                    <p className="text-[19px] text-[#E0E5EB]">{t("Sections")}</p>
+                    <svg className="ml-[10px]" width="13" height="9" viewBox="0 0 14 9" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path
                         fillRule="evenodd"
                         clipRule="evenodd"
@@ -366,28 +417,46 @@ export default function Header() {
                 </div>
               </DropdownMenuTrigger>
 
-              <DropdownMenuContent className="w-56" align="start">
+              <DropdownMenuContent className="w-56 z-50" align="start" sideOffset={5}>
                 <DropdownMenuGroup>
-                  {categories.map((category) => (
-                       <DropdownMenuSub key={category.id}>
-                      <Link to={`/${lang}/categorySingle/${category.slug}/products`}>
-                      <DropdownMenuSubTrigger>
-                        {category.name}
-                      </DropdownMenuSubTrigger>
-                      </Link>
-                      <DropdownMenuSubContent>
-                        {category.children?.map((child) => (
-                          <Link to={`/${lang}/categorySingle/${child.slug}/products`}>
-                          <DropdownMenuItem key={child.id}>
-                            {child.name}
-                          </DropdownMenuItem>
+                  {categories.map((category: any) => {
+                    const hasChildren = category.children && category.children.length > 0;
 
+                    if (!hasChildren) {
+                      return (
+                        <DropdownMenuItem key={category.id} asChild>
+                          <Link to={`/${lang}/categorySingle/${category.slug}/products`} className="flex items-center gap-2 cursor-pointer">
+                            {category.name}
                           </Link>
-                          
-                        ))}
-                      </DropdownMenuSubContent>
-                    </DropdownMenuSub>
-                  ))}
+                        </DropdownMenuItem>
+                      );
+                    }
+
+                    return (
+                      <DropdownMenuSub key={category.id}>
+                        <DropdownMenuSubTrigger className="flex items-center gap-2 cursor-pointer">
+                          {category.name}
+                        </DropdownMenuSubTrigger>
+
+                        <DropdownMenuPortal>
+                          <DropdownMenuSubContent className="w-48">
+                            <DropdownMenuItem asChild>
+                              <Link to={`/${lang}/categorySingle/${category.slug}/products`}>
+                                {t("View all")} {category.name}
+                              </Link>
+                            </DropdownMenuItem>
+                            {category.children.map((child: any) => (
+                              <DropdownMenuItem key={child.id} asChild>
+                                <Link to={`/${lang}/categorySingle/${child.slug}/products`}>
+                                  {child.name}
+                                </Link>
+                              </DropdownMenuItem>
+                            ))}
+                          </DropdownMenuSubContent>
+                        </DropdownMenuPortal>
+                      </DropdownMenuSub>
+                    );
+                  })}
                 </DropdownMenuGroup>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -395,48 +464,127 @@ export default function Header() {
         </div>
       </header>
 
-      {/* mobile header */}
+      {/* Mobile Header */}
       <div className="md:hidden">
-        {/* المنيو */}
         <MobileMenu
           isOpen={isMenuOpen}
           onClose={() => setIsMenuOpen(false)}
-          openSections={isSectionOpen}
-          setOpenSections={setIsSectionOpen}
+          openSections={false}
+          setOpenSections={() => { }}
         />
 
         <MobileNavbar
           onMenuToggle={() => setIsMenuOpen(!isMenuOpen)}
-          onSectionToggle={() => {
-            // لو المنيو لسه مقفولة، افتحها ووسّع الأقسام فورًا
-            if (!isMenuOpen) {
-              setIsMenuOpen(true);
-              setIsSectionOpen(true);
-            } else {
-              // لو مفتوحة بالفعل، غيّر حالة الأقسام فقط
-              setIsSectionOpen(!isSectionOpen);
-            }
-          }}
+          onSectionToggle={() => setIsMenuOpen(true)}
           isMenuOpen={isMenuOpen}
+          onSearchToggle={() => setIsMobileSearchOpen(true)}
         />
+
+        {/* Mobile Search Modal */}
+        {isMobileSearchOpen && (
+          <div className="fixed inset-0 z-[100] bg-black/50 backdrop-blur-sm md:hidden">
+            <div className="absolute inset-0" onClick={() => setIsMobileSearchOpen(false)} />
+            <div className="absolute top-0 left-0 right-0 bg-[#211a44] p-4">
+              <div className="flex items-center gap-2">
+                <div className="relative flex-1" dir={lang === "ar" ? "rtl" : "ltr"}>
+                  <Input
+                    value={query}
+                    onChange={(e: any) => handleSearchChange(e.target.value)}
+                    onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+                      if (e.key === "Enter") handleMobileSearch();
+                    }}
+                    placeholder={t("search")}
+                    className="h-12 rounded-full px-12 pr-12 bg-white/10 border-white/20 text-white placeholder:text-[#6C727F] focus-visible:ring-white/40"
+                    autoFocus
+                  />
+                  <button
+                    onClick={handleMobileSearch}
+                    className="absolute top-1/2 transform -translate-y-1/2 right-3 h-8 w-8 rounded-full bg-[#F3AC5D] flex items-center justify-center"
+                  >
+                    <Search className="h-4 w-4 text-white" />
+                  </button>
+                </div>
+                <button
+                  onClick={() => setIsMobileSearchOpen(false)}
+                  className="h-12 w-12 rounded-full bg-white/10 flex items-center justify-center text-white"
+                >
+                  ✕
+                </button>
+              </div>
+
+              {showSuggestions && (
+                <div className="mt-2 bg-white text-black rounded-lg shadow-lg max-h-72 overflow-auto">
+                  {suggestionsLoading ? (
+                    <div className="text-start p-3">{t("Searching...")}</div>
+                  ) : suggestions.length === 0 ? (
+                    <div className="p-3 text-start">{t("Noresultsfound")}</div>
+                  ) : (
+                    suggestions.map((item: SuggestionItem) => (
+                      <div
+                        key={`category-${item.id}`}
+                        onClick={() => {
+                          navigate(`/${lang}/categorySingle/${item.slug}/products`);
+                          setIsMobileSearchOpen(false);
+                          setQuery("");
+                        }}
+                        className="flex items-center gap-3 p-3 hover:bg-gray-100 cursor-pointer border-b last:border-b-0 active:bg-gray-50"
+                      >
+                        <div className="w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center overflow-hidden">
+                          {item.image ? (
+                            <img
+                              src={item.image}
+                              alt={item.name}
+                              className="w-full h-full object-cover"
+                              onError={(e) => {
+                                e.currentTarget.src = "/logo.png";
+                              }}
+                            />
+                          ) : (
+                            <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                            </svg>
+                          )}
+                        </div>
+
+                        <div className="flex-1">
+                          <div className="font-medium text-gray-800">{item.name}</div>
+                          <div className="flex items-center gap-2 mt-1">
+                            <span className="text-xs text-gray-500">{t("Category")}</span>
+                            {item.productsCount !== undefined && item.productsCount > 0 && (
+                              <span className="text-xs bg-blue-100 text-blue-600 px-2 py-0.5 rounded-full">
+                                {item.productsCount} {t("products")}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+
+                        <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        </svg>
+                      </div>
+                    ))
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
       </div>
     </>
   );
 }
 
-/** ــــــــــــــــ عناصر مساعدة ــــــــــــــــ */
+/* Helper Component */
 function IconButton({
   children,
   className,
   ...props
-}: React.ButtonHTMLAttributes<HTMLButtonElement> & {
-  children: React.ReactNode;
-}) {
+}: React.ButtonHTMLAttributes<HTMLButtonElement> & { children: React.ReactNode }) {
   return (
     <button
       {...props}
       className={
-        "inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/10 backdrop-blur transition hover:bg-white/15 " +
+        "inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/10 backdrop-blur transition hover:bg-white/15 relative " +
         (className ?? "")
       }
     >

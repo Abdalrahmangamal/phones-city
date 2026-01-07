@@ -12,12 +12,12 @@ interface ProductCardProps {
   product: Product;
   isNew?: boolean;
   favourite?: boolean;
-  containerstyle?:string;
-  imagecard:string;
+  containerstyle?: string;
+  imagecard: string;
   variations?: { color: string; image: string }[];
 }
 import { useFavoritesStore } from "@/store/favoritesStore";
-export default function ProductCard({ product,imagecard,containerstyle }: ProductCardProps) {
+export default function ProductCard({ product, imagecard, containerstyle }: ProductCardProps) {
   const { t } = useTranslation();
 
   const { addFavorite, removeFavorite, favorites } = useFavoritesStore();
@@ -38,7 +38,7 @@ export default function ProductCard({ product,imagecard,containerstyle }: Produc
   }, [favorites, (product as any)?.is_favorite, product.id]);
   const { addToCart, deleteToCart } = useCartStore();
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const selectedVariant = product.options[selectedIndex];
+  const selectedVariant = product?.options?.[selectedIndex];
   // const isFavorite = favorites.some(f => f.product.id === product.id);
 
   const { lang } = useLangSync();
@@ -172,55 +172,53 @@ export default function ProductCard({ product,imagecard,containerstyle }: Produc
           {product?.name}
         </h2>
       </Link>
-<div className="flex items-center justify-between">
+      <div className="flex items-center justify-between">
 
-      {/* الألوان */}
-      {product?.options?.length > 1 && (
-        <div className="flex items-center gap-[7px] mt-[10px] justify-start">
-          {product.options.map((variant, index) => (
-            <button
-              key={index}
-              onClick={() => setSelectedIndex(index)}
-              className={`
+        {/* الألوان */}
+        {product?.options?.length > 1 && (
+          <div className="flex items-center gap-[7px] mt-[10px] justify-start">
+            {product.options.map((variant, index) => (
+              <button
+                key={index}
+                onClick={() => setSelectedIndex(index)}
+                className={`
           flex items-center justify-center 
           transition border-2 text-[10px]
-          ${
-            variant.type === "size"
-              ? "min-w-[40px] h-[22px] px-2 rounded-md bg-white text-[#211C4D]"
-              : "w-[18px] h-[18px] rounded-full"
-          }
-          ${
-            index === selectedIndex
-              ? "border-[#211C4D] scale-110"
-              : "border-gray-300"
-          }
+          ${variant.type === "size"
+                    ? "min-w-[40px] h-[22px] px-2 rounded-md bg-white text-[#211C4D]"
+                    : "w-[18px] h-[18px] rounded-full"
+                  }
+          ${index === selectedIndex
+                    ? "border-[#211C4D] scale-110"
+                    : "border-gray-300"
+                  }
         `}
-              style={{
-                backgroundColor:
-                  variant.type === "color" ? variant.value : "#fff",
-              }}
-              title={`Select ${variant.value}`}
-            >
-              {variant.type === "size" ? variant.value : ""}
-            </button>
-          ))}
+                style={{
+                  backgroundColor:
+                    variant.type === "color" ? variant.value : "#fff",
+                }}
+                title={`Select ${variant.value}`}
+              >
+                {variant.type === "size" ? variant.value : ""}
+              </button>
+            ))}
+          </div>
+        )}
+
+        {/* التقييم */}
+        <div className="flex mt-[10px] items-center justify-start gap-0">
+          <Rating defaultValue={product.average_rating} className="pointer-events-none">
+            {Array.from({ length: 5 }).map((_, index) => (
+              <RatingButton
+                key={index}
+                className="text-yellow-500 [&>svg]:w-3 [&>svg]:h-3 md:[&>svg]:h-5 md:[&>svg]:w-5"
+              />
+            ))}
+          </Rating>
+
+          <p className="text-[#9CA3AF] text-[10px] md:!w-[15px]">({product.reviews_count})</p>
         </div>
-      )}
-
-      {/* التقييم */}
-      <div className="flex mt-[10px] items-center justify-start gap-0">
-        <Rating defaultValue={product.average_rating} className="pointer-events-none">
-          {Array.from({ length: 5 }).map((_, index) => (
-            <RatingButton
-              key={index}
-              className="text-yellow-500 [&>svg]:w-3 [&>svg]:h-3 md:[&>svg]:h-5 md:[&>svg]:w-5"
-            />
-          ))}
-        </Rating>
-
-        <p className="text-[#9CA3AF] text-[10px] md:!w-[15px]">({product.reviews_count})</p>
       </div>
-</div>
 
 
       {/* السعر + زر السلة */}
@@ -276,11 +274,10 @@ export default function ProductCard({ product,imagecard,containerstyle }: Produc
               });
             }
           }}
-          className={`w-[40px] h-[40px] flex items-center justify-center rounded-[8px] cursor-pointer transition-all duration-200 ${
-            isInCart === true
+          className={`w-[40px] h-[40px] flex items-center justify-center rounded-[8px] cursor-pointer transition-all duration-200 ${isInCart === true
               ? "bg-[#211C4D] shadow-[0px_4px_8px_0px_#211C4D4d] hover:shadow-[0px_6px_12px_0px_#211C4D66]"
               : "bg-[#EEF1F6] hover:bg-[#dfe3ea] shadow-[0px_2px_4px_0px_#00000020]"
-          }`}
+            }`}
         >
           {isInCart ? (
             // شكل مختلف لما تكون في السلة

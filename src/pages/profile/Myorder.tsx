@@ -42,7 +42,7 @@ export default function Myorder() {
   useEffect(() => {
     fetchOrders();
   }, [fetchOrders]);
-  
+
   const getFilteredOrders = () => {
     if (activeTab === 'total') return orders;
     if (activeTab === 'Delivering') return getOrdersByStatus('Delivery is in progress');
@@ -50,16 +50,16 @@ export default function Myorder() {
     if (activeTab === 'Cancelled') return getOrdersByStatus('cancelled');
     return orders;
   };
-  
+
   const filteredOrders = getFilteredOrders();
-  
+
   const orderCounts = {
     total: orders.length,
     Delivering: getOrdersByStatus('Delivery is in progress').length,
     completed: getOrdersByStatus('completed').length,
     Cancelled: getOrdersByStatus('cancelled').length,
   };
-  
+
   const toggleOrderDetails = (order: any) => {
     if (isMobile) {
       setSelectedOrder(order);
@@ -67,7 +67,7 @@ export default function Myorder() {
       setExpandedOrderId(expandedOrderId === order.id ? null : order.id);
     }
   };
-  
+
   const handleCancelOrder = async (orderId: number) => {
     if (window.confirm(t("Are you sure you want to cancel this order?"))) {
       await cancelOrder(orderId);
@@ -83,7 +83,7 @@ export default function Myorder() {
       'cancelled': { text: t('Cancelled'), color: '#E50000', bgColor: '#FFF0F0' },
       'processing': { text: t('Processing'), color: '#9B51E0', bgColor: '#F9F5FF' },
     };
-    
+
     return statusMap[status] || { text: status, color: '#211C4D', bgColor: '#F5F5F5' };
   };
 
@@ -122,7 +122,7 @@ export default function Myorder() {
             )}
           </div>
         </div>
-        
+
         {/* المنتجات + الفاتورة */}
         <div className="lg:col-span-2 bg-white p-5 rounded-xl border border-gray-200">
           <div className="flex items-center justify-between mb-4">
@@ -157,10 +157,10 @@ export default function Myorder() {
                     <td className="py-4 px-4">
                       <div className="flex items-center gap-3">
                         {item.product?.main_image ? (
-                          <img 
-                            src={item.product.main_image} 
-                            alt={item.product.name_ar} 
-                            className="w-12 h-12 object-contain rounded border" 
+                          <img
+                            src={item.product.main_image}
+                            alt={item.product.name_ar}
+                            className="w-12 h-12 object-contain rounded border"
                           />
                         ) : (
                           <div className="w-12 h-12 bg-gray-100 rounded border flex items-center justify-center">
@@ -231,7 +231,7 @@ export default function Myorder() {
           </div>
         </div>
       </div>
-      
+
       {/* أزرار الإجراءات */}
       {/* <div className="mt-6 pt-6 border-t border-gray-200 flex flex-wrap gap-3 justify-end">
         {order.invoice?.invoice_pdf_path && (
@@ -280,7 +280,7 @@ export default function Myorder() {
       </Layout>
     );
   }
-  
+
   if (error) {
     return (
       <Layout>
@@ -295,16 +295,16 @@ export default function Myorder() {
       </Layout>
     );
   }
-  
+
   return (
     <Layout>
-      <div className="flex flex-col md:flex-row justify-center gap-[30px] mt-[80px] px-4 md:px-6">
+      <div className="flex flex-col md:flex-row justify-center gap-[30px] mt-[80px] mb-20 px-4 md:px-6">
         <Sidebar />
         <div className="md:w-[883px] w-full">
           <div className="w-full p-5 bg-gradient-to-r from-[#F8FAFC] to-[#85afe6] border border-gray-100 flex items-center justify-between rounded-2xl shadow-sm">
             <div>
               <h1 className="text-[#211C4D] text-[22px] font-bold">{t('MyOrders')}</h1>
-              
+
             </div>
             <div className="flex items-center gap-2">
               <div className="text-right">
@@ -316,7 +316,7 @@ export default function Myorder() {
               </div>
             </div>
           </div>
-          
+
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full mt-[40px]">
             <div className="border-b border-gray-200">
               <TabsList className="flex flex-wrap md:flex-row items-center justify-start gap-2 w-full bg-transparent rounded-none px-2 md:px-5 py-2 overflow-x-auto">
@@ -448,7 +448,7 @@ export default function Myorder() {
                               </td>
 
                               <td className="py-4 px-4">
-                                <span 
+                                <span
                                   className="px-3 py-1.5 rounded-full text-xs font-semibold inline-flex items-center gap-1.5 whitespace-nowrap"
                                   style={{ color: getStatusText(order.status).color, backgroundColor: getStatusText(order.status).bgColor }}
                                 >
@@ -458,7 +458,7 @@ export default function Myorder() {
                               </td>
 
                               <td className="py-4 px-4">
-                                <button 
+                                <button
                                   onClick={(e) => {
                                     e.stopPropagation();
                                     toggleOrderDetails(order);

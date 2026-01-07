@@ -1,4 +1,4 @@
-import Layout from "@/components/layout/Layout";
+import Layout from "@/components/layout/layout";
 import Sidebar from "@/components/layout/Sidebar";
 import Bestseller from "@/components/home/Bestseller";
 import { useTranslation } from "react-i18next";
@@ -9,11 +9,11 @@ import { Trash2 } from "lucide-react";
 
 export default function Favourite() {
   const { fetchFavorites, favorites, clearFavorites } = useFavoritesStore();
-  
+
   useEffect(() => {
     fetchFavorites();
   }, []);
-  
+
   const { t } = useTranslation();
 
   const handleDeleteAll = () => {
@@ -21,10 +21,15 @@ export default function Favourite() {
     clearFavorites();
   };
 
+  // Filter out any favorite items that don't have a valid product
+  const validProducts = favorites
+    .filter(f => f && f.product)
+    .map(f => f.product);
+
   return (
     <div>
       <Layout>
-        <div className="flex flex-col md:flex-row justify-center gap-[30px] mt-[80px]">
+        <div className="flex flex-col md:flex-row justify-center gap-[30px] my-[60px]">
           <Sidebar />
           <div className="md:w-[1100px] md:px-0">
             <div className="flex justify-between items-center mb-6">
@@ -32,10 +37,10 @@ export default function Favourite() {
                 {t("Favoriteproducts")}
               </h1>
               {favorites.length > 0 && (
-              <Button
-  variant="destructive"
-  onClick={handleDeleteAll}
-  className="
+                <Button
+                  variant="destructive"
+                  onClick={handleDeleteAll}
+                  className="
     flex items-center gap-2
     transition-all duration-200
     hover:bg-red-700
@@ -43,10 +48,10 @@ export default function Favourite() {
     corser:pointer
     active:scale-[0.97]
   "
->
-  <Trash2 className="w-4 h-4 transition-transform group-hover:rotate-6" />
-  {t("Delete All")}
-</Button>
+                >
+                  <Trash2 className="w-4 h-4 transition-transform group-hover:rotate-6" />
+                  {t("Delete All")}
+                </Button>
 
               )}
             </div>
@@ -54,7 +59,7 @@ export default function Favourite() {
               title=""
               btn={false}
               style="lg:!grid-cols-3 gap-[20px] lg:!gap-[80px]"
-              products={favorites.map(f => f.product)}
+              products={validProducts}
               imagecard=" !object-contain !w-[100px]"
               containerstyle="!p-2 pb-3 !px-0 !rounded-[10px] !min-h-fit"
             />

@@ -1,188 +1,77 @@
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useLangSync } from "@/hooks/useLangSync";
-import { useState } from "react";
-import axiosClient from "@/api/axiosClient";
-import { toast } from "react-toastify";
+import axios from "axios";
 
-interface ContactFormData {
-  name: string;
-  email: string;
-  phone: string;
-  message: string;
-}
-
-interface ValidationErrors {
-  name?: string;
-  email?: string;
-  phone?: string;
-  message?: string;
-  general?: string;
-}
+const baseUrl = import.meta.env.VITE_BASE_URL;
 
 export default function Contactform() {
   const { t } = useTranslation();
   const { lang } = useLangSync();
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [validationErrors, setValidationErrors] = useState<ValidationErrors>({});
   
-  const [formData, setFormData] = useState<ContactFormData>({
+  const [formData, setFormData] = useState({
     name: "",
     email: "",
     phone: "",
-    message: ""
+    message: "",
   });
+  
+  const [loading, setLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
-  // التحقق على العميل قبل الإرسال
-  const validateForm = (): boolean => {
-    const errors: ValidationErrors = {};
-    
-    if (!formData.name.trim()) {
-      errors.name = t("Name is required") || "Name is required";
-    }
-    
-    if (!formData.email.trim()) {
-      errors.email = t("Email is required") || "Email is required";
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      errors.email = t("Please enter a valid email address") || "Please enter a valid email address";
-    }
-    
-    if (!formData.phone.trim()) {
-      errors.phone = t("Phone number is required") || "Phone number is required";
-    } else if (!/^[\+]?[0-9\s\-\(\)]+$/.test(formData.phone)) {
-      errors.phone = t("Please enter a valid phone number") || "Please enter a valid phone number";
-    }
-    
-    if (!formData.message.trim()) {
-      errors.message = t("Message is required") || "Message is required";
-    }
-    
-    setValidationErrors(errors);
-    return Object.keys(errors).length === 0;
-  };
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
-    
-    // مسح خطأ الحقل عند البدء بالكتابة
-    if (validationErrors[name as keyof ValidationErrors]) {
-      setValidationErrors(prev => ({
-        ...prev,
-        [name]: undefined
-      }));
-    }
+    // Clear messages when user starts typing
+    if (successMessage) setSuccessMessage("");
+    if (errorMessage) setErrorMessage("");
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
-    // التحقق على العميل أولاً
-    if (!validateForm()) {
-      toast.error(t("Please correct the errors in the form") || "Please correct the errors in the form");
-      return;
-    }
-
-    setIsSubmitting(true);
-    setValidationErrors({}); // مسح الأخطاء السابقة
+    setLoading(true);
+    setSuccessMessage("");
+    setErrorMessage("");
 
     try {
-      const response = await axiosClient.post("/api/v1/contact", {
-        name: formData.name.trim(),
-        email: formData.email.trim(),
-        phone: formData.phone.trim(),
-        message: formData.message.trim()
-      });
-      
-      if (response.data.status) {
-        toast.success(t("Message sent successfully") || "Message sent successfully");
-        // إعادة تعيين النموذج
-        setFormData({
-          name: "",
-          email: "",
-          phone: "",
-          message: ""
-        });
-      } else {
-        toast.error(response.data.message || t("Failed to send message") || "Failed to send message");
-      }
-    } catch (error: any) {
-      console.error("Error submitting contact form:", error);
-      
-      if (error.response) {
-        // خطأ من الخادم (مثل 422 للتحقق)
-        const responseData = error.response.data;
-        
-        if (error.response.status === 422 && responseData.errors) {
-          // أخطاء التحقق من الخادم
-          const serverErrors: ValidationErrors = {};
-          
-          if (responseData.errors.name) {
-            serverErrors.name = Array.isArray(responseData.errors.name) 
-              ? responseData.errors.name[0] 
-              : responseData.errors.name;
-          }
-          
-          if (responseData.errors.email) {
-            serverErrors.email = Array.isArray(responseData.errors.email) 
-              ? responseData.errors.email[0] 
-              : responseData.errors.email;
-          }
-          
-          if (responseData.errors.phone) {
-            serverErrors.phone = Array.isArray(responseData.errors.phone) 
-              ? responseData.errors.phone[0] 
-              : responseData.errors.phone;
-          }
-          
-          if (responseData.errors.message) {
-            serverErrors.message = Array.isArray(responseData.errors.message) 
-              ? responseData.errors.message[0] 
-              : responseData.errors.message;
-          }
-          
-          setValidationErrors(serverErrors);
-          
-          // عرض رسالة عامة
-          toast.error(t("Please correct the errors in the form") || "Please correct the errors in the form");
-        } else if (responseData.message) {
-          // خطأ عام من الخادم
-          toast.error(responseData.message);
-        } else {
-          toast.error(t("Server error. Please try again later.") || "Server error. Please try again later.");
+      const response = await axios.post(
+        `${baseUrl}api/v1/tickets`,
+        {
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          message: formData.message,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
         }
-      } else if (error.request) {
-        // لم يتم استلام رد من الخادم
-        toast.error(t("Network error. Please check your connection and try again.") || "Network error. Please check your connection and try again.");
-      } else {
-        // خطأ آخر
-        toast.error(t("Something went wrong. Please try again.") || "Something went wrong. Please try again.");
-      }
+      );
+
+      console.log("Ticket submitted successfully:", response.data);
+      setSuccessMessage("تم إرسال التذكرة بنجاح!");
+      
+      // Reset form
+      setFormData({
+        name: "",
+        email: "",
+        phone: "",
+        message: "",
+      });
+    } catch (error: any) {
+      console.error("Error submitting ticket:", error);
+      setErrorMessage(
+        error?.response?.data?.message || "حدث خطأ أثناء إرسال التذكرة. يرجى المحاولة مرة أخرى."
+      );
     } finally {
-      setIsSubmitting(false);
+      setLoading(false);
     }
-  };
-
-  // دالة للحصول على class name للحقل بناءً على وجود خطأ
-  const getInputClassName = (fieldName: keyof ValidationErrors) => {
-    const baseClass = "border-none h-[50px] bg-[#F5F5F5] rounded-[4px] p-3 transition-all duration-300 ease-in-out focus:bg-white hover:scale-[1.02] w-full";
-    const errorClass = validationErrors[fieldName] 
-      ? "ring-2 ring-red-500 bg-red-50 focus:ring-red-500" 
-      : "focus:ring-2 focus:ring-[#211C4D]";
-    
-    return `${baseClass} ${errorClass}`;
-  };
-
-  // دالة للحصول على class name لـ textarea
-  const getTextareaClassName = () => {
-    const baseClass = "border-none h-[200px] w-full bg-[#F5F5F5] rounded-[4px] p-3 transition-all duration-300 ease-in-out focus:bg-white hover:scale-[1.01]";
-    const errorClass = validationErrors.message 
-      ? "ring-2 ring-red-500 bg-red-50 focus:ring-red-500" 
-      : "focus:ring-2 focus:ring-[#211C4D]";
-    
-    return `${baseClass} ${errorClass}`;
   };
 
   return (
@@ -198,88 +87,64 @@ export default function Contactform() {
       {/* المحتوى */}
       <div className="flex flex-col justify-between md:flex-row gap-[80px]">
         {/* نموذج التواصل */}
-        <form onSubmit={handleSubmit} className="bg-white md:w-[800px] p-[40px] h-auto rounded-xl shadow-[0px_1px_13px_0px_rgba(0,0,0,0.05)]">
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
-            <div className="flex flex-col">
-              <input
-                type="text"
-                name="name"
-                value={formData.name}
-                onChange={handleInputChange}
-                placeholder={t("Name")}
-                className={getInputClassName("name")}
-                required
-                disabled={isSubmitting}
-              />
-              {validationErrors.name && (
-                <p className="text-red-500 text-xs mt-1">{validationErrors.name}</p>
-              )}
-            </div>
-            
-            <div className="flex flex-col">
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleInputChange}
-                placeholder={t("Email")}
-                className={getInputClassName("email")}
-                required
-                disabled={isSubmitting}
-              />
-              {validationErrors.email && (
-                <p className="text-red-500 text-xs mt-1">{validationErrors.email}</p>
-              )}
-            </div>
-            
-            <div className="flex flex-col col-span-2 md:col-span-1">
-              <input
-                type="text"
-                name="phone"
-                value={formData.phone}
-                onChange={handleInputChange}
-                placeholder={t("PhoneNumber")}
-                className={getInputClassName("phone")}
-                required
-                disabled={isSubmitting}
-              />
-              {validationErrors.phone && (
-                <p className="text-red-500 text-xs mt-1">{validationErrors.phone}</p>
-              )}
-            </div>
+        <form onSubmit={handleSubmit} className="bg-white md:w-[800px] p-[40px]  h-[450px] rounded-xl shadow-[0px_1px_13px_0px_rgba(0,0,0,0.05)]">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
+            <input
+              type="text"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              placeholder={t("Name")}
+              className="border-none h-[50px] bg-[#F5F5F5] rounded-[4px] p-3 transition-all duration-300 ease-in-out focus:bg-white focus:ring-2 focus:ring-[#211C4D] hover:scale-[1.02]"
+              required
+            />
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              placeholder={t("Email")}
+              className="border-none h-[50px] bg-[#F5F5F5] rounded-[4px] p-3 transition-all duration-300 ease-in-out focus:bg-white focus:ring-2 focus:ring-[#211C4D] hover:scale-[1.02]"
+              required
+            />
+            <input
+              type="text"
+              name="phone"
+              value={formData.phone}
+              onChange={handleChange}
+              placeholder={t("PhoneNumber")}
+              className="border-none h-[50px] col-span-2 md:col-span-1 bg-[#F5F5F5] rounded-[4px] p-3 transition-all duration-300 ease-in-out focus:bg-white focus:ring-2 focus:ring-[#211C4D] hover:scale-[1.02]"
+              required
+            />
           </div>
 
-          <div className="mb-4">
-            <textarea
-              name="message"
-              value={formData.message}
-              onChange={handleInputChange}
-              placeholder={t("YourMessage")}
-              className={getTextareaClassName()}
-              required
-              disabled={isSubmitting}
-            ></textarea>
-            {validationErrors.message && (
-              <p className="text-red-500 text-xs mt-1">{validationErrors.message}</p>
-            )}
-          </div>
+          <textarea
+            name="message"
+            value={formData.message}
+            onChange={handleChange}
+            placeholder={t("YourMessage")}
+            className="border-none h-[200px] w-full bg-[#F5F5F5] rounded-[4px] p-3 transition-all duration-300 ease-in-out focus:bg-white focus:ring-2 focus:ring-[#211C4D] hover:scale-[1.01]"
+            required
+          ></textarea>
+
+          {/* Success/Error Messages */}
+          {successMessage && (
+            <div className="mt-4 p-3 bg-green-100 text-green-700 rounded-lg text-sm">
+              {successMessage}
+            </div>
+          )}
+          {errorMessage && (
+            <div className="mt-4 p-3 bg-red-100 text-red-700 rounded-lg text-sm">
+              {errorMessage}
+            </div>
+          )}
 
           <button
             type="submit"
-            disabled={isSubmitting}
-            className="bg-[#F3AC5D] mt-[30px] w-[136px] h-[56px] text-white px-6 py-2 rounded-[16px] transition-all duration-300 ease-in-out hover:bg-[#e29b4a] hover:scale-[1.05] focus:ring-4 focus:ring-[#F3AC5D]/50 disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:scale-100"
+            disabled={loading}
+            className="bg-[#F3AC5D] mt-[30px] w-[136px] h-[56px] text-white px-6 py-2 rounded-[16px] transition-all duration-300 ease-in-out hover:bg-[#e29b4a] hover:scale-[1.05] focus:ring-4 focus:ring-[#F3AC5D]/50 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {isSubmitting ? (
-              <span className="flex items-center justify-center">
-                <svg className="animate-spin h-5 w-5 mr-2 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-                {t("Sending")}
-              </span>
-            ) : (
-              t("Submit")
-            )}
+            {loading ? "جاري الإرسال..." : t("Submit")}
           </button>
         </form>
 

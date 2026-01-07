@@ -148,6 +148,11 @@ const NewHome = () => {
           <ProductCategoriesSection />
           <LatestOffers />
           <SpecialOffersSection 
+            title="SpecialOffersForYou"    
+            products={offersProducts} 
+            link="offers"
+          />
+          <SpecialOffersSection 
             title="BestSellers"    
             products={bestSellerProducts} 
             link="BestSellerPage"

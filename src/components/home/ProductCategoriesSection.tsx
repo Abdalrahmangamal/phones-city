@@ -18,15 +18,25 @@ export default function ProductCategoriesSection() {
   useEffect(() => {
     fetchCategories(lang);
   }, []);
-  console.log("home",categories);
+  console.log("home", categories);
 
 
   return (
     <div className="xl:px-[90px] px-2 pt-2 md:pt-0">
       <div className="relative my-6">
-        <h1 className="text-center text-[#211C4D] text-[22px] sm:text-[26px] md:text-[32px] lg:text-[40px] font-[700]">
-          {t("Sections")} {/* Use translation */}
-        </h1>
+        <div className="relative w-fit mx-auto mb-8">
+          <h1 className="text-center text-[#211C4D] text-[22px] sm:text-[26px] md:text-[32px] lg:text-[40px] font-[700]">
+            {t("Sections")}
+          </h1>
+          <img
+            src={svg1}
+            alt=""
+            className={`absolute hidden md:block ${lang === "ar"
+              ? "w-[110px] -bottom-7 -right-15"
+              : "w-[110px] -bottom-7 -left-15 -scale-x-100"
+              }`}
+          />
+        </div>
 
         <Swiper
           key={lang} // لإعادة تهيئة السلايدر عند تغيير اللغة
@@ -82,16 +92,8 @@ export default function ProductCategoriesSection() {
           ))}
         </Swiper>
 
-        {/* الزخرفة الثابتة */}
-        <div className="absolute md:top-[10%] top-[2%] right-[20%] md:right-[42%] z-[1] opacity-70 pointer-events-none">
-          <img
-            src={svg1}
-            alt=""
-            className="w-[100px] sm:w-[100px] md:w-[150px]"
-          />
-        </div>
       </div>
-      {!categories?(<Loader/>):("")}
+      {!categories ? (<Loader />) : ("")}
     </div>
   );
 };

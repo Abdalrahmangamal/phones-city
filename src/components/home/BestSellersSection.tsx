@@ -4,7 +4,8 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
-import "./BestSellersSection.css"; 
+import "./BestSellersSection.css";
+import svg1 from "../../assets/images/Layer_1.png";
 
 import { useLangSync } from '@/hooks/useLangSync';
 import { Link } from "react-router-dom";
@@ -19,37 +20,42 @@ interface BestSellersSectionProps {
   isLoading?: boolean;
 }
 
-const BestSellersSection: React.FC<BestSellersSectionProps> = ({ 
-  products, 
-  title = "Best Sellers", 
+const BestSellersSection: React.FC<BestSellersSectionProps> = ({
+  products,
+  title = "Best Sellers",
   style = "",
   isLoading = false
 }) => {
   const { lang } = useLangSync();
   const { t } = useTranslation();
   const [shouldAllowSlide, setShouldAllowSlide] = useState(true);
-  
+
   // حالة التحميل
   if (isLoading) {
     return (
       <div className={`special-offers-container w-full flex md:mt-[80px] flex-col xl:px-[90px] px-2 pt-0 md:pt-0 items-start md:gap-[32px] gap-[0px] ${style}`}>
         {/* Header */}
         <div className="w-full flex items-center justify-between relative mb-4">
-          <div className="relative">
-            <div className="absolute md:-top-2 right-[200px] md:-right-4 z-5">
-              <img src="/Layer_1.svg" alt="" className="opacity-100" />
-            </div>
+          <div className="relative w-fit">
             <h2 className="font-roboto font-semibold md:!text-[40px] text-[24px] leading-[36px] text-[#211C4D] relative z-10">
               {t(title)}
             </h2>
+            <img
+              src={svg1}
+              alt=""
+              className={`absolute hidden md:block ${lang === "ar"
+                ? "w-[110px] -bottom-9 -right-15"
+                : "w-[110px] -bottom-7 -left-15 -scale-x-100"
+                }`}
+            />
           </div>
-          
+
           <div className="flex items-center gap-[6px] py-[10px] rounded-[4px] opacity-50">
             <span className="font-roboto font-medium md:text-[24px] leading-[20px] text-[#211C4D]">
               {t('ViewAll')}
             </span>
             <svg
-              className="w-[18px] md:w-[25px]"
+              className={`w-[18px] md:w-[25px] ${lang === 'en' ? 'rotate-180' : ''}`}
               width="25.47"
               height="28.44"
               viewBox="0 0 25 28"
@@ -144,25 +150,30 @@ const BestSellersSection: React.FC<BestSellersSectionProps> = ({
     <div className={`best-sellers-container w-full flex md:mt-[80px] flex-col xl:px-[90px] px-2 pt-0 md:pt-0 items-start md:gap-[32px] gap-[0px] ${style}`}>
       {/* Header */}
       <div className="w-full flex items-center justify-between relative mb-4">
-        <div className="relative">
-          <div className="absolute md:-top-2 right-[200px] md:-right-4 z-5">
-            <img src="/Layer_1.svg" alt="" className="opacity-100" />
-          </div>
+        <div className="relative w-fit">
           <h2 className="font-roboto font-semibold md:!text-[40px] text-[24px] leading-[36px] text-[#211C4D] relative z-10">
             {t(title)}
           </h2>
+          <img
+            src={svg1}
+            alt=""
+            className={`absolute hidden md:block ${lang === "ar"
+              ? "w-[110px] -bottom-7 -right-15"
+              : "w-[110px] -bottom-7 -left-15 -scale-x-100"
+              }`}
+          />
         </div>
-        
-        <Link 
+
+        <Link
           className="flex items-center gap-[6px] py-[10px] rounded-[4px] hover:opacity-80 transition-opacity"
-          to={`/${lang}/BestSellerPage`} 
-          
+          to={`/${lang}/BestSellerPage`}
+
         >
           <span className="font-roboto font-medium md:text-[24px] leading-[20px] text-[#211C4D]">
             {t('ViewAll')}
           </span>
           <svg
-            className="w-[18px] md:w-[25px]"
+            className={`w-[18px] md:w-[25px] ${lang === 'en' ? 'rotate-180' : ''}`}
             width="25.47"
             height="28.44"
             viewBox="0 0 25 28"
@@ -186,9 +197,9 @@ const BestSellersSection: React.FC<BestSellersSectionProps> = ({
           key={lang + products.length}
           modules={[Navigation, Autoplay]}
           navigation={{
-            nextEl: '.best-sellers-next',  
-            prevEl: '.best-sellers-prev',  
-            enabled: shouldAllowSlide, 
+            nextEl: '.best-sellers-next',
+            prevEl: '.best-sellers-prev',
+            enabled: shouldAllowSlide,
           }}
           loop={shouldAllowSlide && products.length > slidesPerView}
           dir={lang === "ar" ? "rtl" : "ltr"}
@@ -201,9 +212,9 @@ const BestSellersSection: React.FC<BestSellersSectionProps> = ({
           slidesPerView={slidesPerView}
           spaceBetween={20}
           className="w-full pb-10"
-          allowTouchMove={shouldAllowSlide} 
-          allowSlidePrev={shouldAllowSlide} 
-          allowSlideNext={shouldAllowSlide} 
+          allowTouchMove={shouldAllowSlide}
+          allowSlidePrev={shouldAllowSlide}
+          allowSlideNext={shouldAllowSlide}
           watchSlidesProgress={shouldAllowSlide}
           resistance={shouldAllowSlide}
           resistanceRatio={shouldAllowSlide ? 0.85 : 0}
@@ -266,12 +277,12 @@ const BestSellersSection: React.FC<BestSellersSectionProps> = ({
           <>
             <div className={`best-sellers-prev ${!shouldAllowSlide ? 'opacity-50 cursor-not-allowed' : ''}`}>
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <path d="M15 18l-6-6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M15 18l-6-6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </div>
             <div className={`best-sellers-next ${!shouldAllowSlide ? 'opacity-50 cursor-not-allowed' : ''}`}>
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <path d="M9 18l6-6-6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M9 18l6-6-6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </div>
           </>

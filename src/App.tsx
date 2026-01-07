@@ -7,7 +7,7 @@ import About from "@/pages/about";
 import Servces from "@/pages/Servces";
 import Contact from "@/pages/Contact";
 import SpecialOffersPage from "./pages/products/SpecialOffersPage"; // الصفحة الفعلية لقائمة العروض
-import OfferDetails from "./pages/products/OfferDetails"; // الصفحة الجديدة لتفاصيل العرض
+
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import ProductDetails from "./pages/ProductDetails";
@@ -36,6 +36,9 @@ import Protectedroutse from "./store/protectedroutse";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ScrollToTop from "./components/ScrollToTop";
+import Blog from "./pages/Blog";
+import SingleBlog from "./pages/SingleBlog";
+import Offers from "./pages/products/Offers";
 
 // Language Wrapper Component
 function LangWrapper() {
@@ -55,10 +58,12 @@ function LangWrapper() {
       <Route path="/contact" element={<Contact />} />
       
       {/* صفحة قائمة جميع العروض */}
-      <Route path="/offers" element={<SpecialOffersPage />} />
+      <Route path="/offers" element={<Offers />} />
+
+      <Route path="/SpecialOffersPage" element={<SpecialOffersPage />} />
       
       {/* صفحة تفاصيل عرض فردي - الجديدة */}
-      <Route path="offer/:slugOrId" element={<OfferDetails />} />
+      {/* <Route path="offer/:slugOrId" element={<OfferDetails />} /> */}
       
       <Route path="/search" element={<SearchResults />} />
       <Route path="/login" element={<Login />} />
@@ -89,6 +94,8 @@ function LangWrapper() {
       <Route path="/singleproduct/:id" element={<Singleproduct />} />
       <Route path="/checkout" element={<Checkout />} />
       <Route path="/categorySingle/:id/:productmain?" element={<CategorySingle />} />
+      <Route path="/blog" element={<Blog />} />
+      <Route path="/blog/:slug" element={<SingleBlog />} />
     </Routes>
   );
 }
@@ -121,8 +128,8 @@ export default function App() {
           <Route path="/servces" element={<Navigate to={`/${lang}/servces`} replace />} />
           <Route path="/contact" element={<Navigate to={`/${lang}/contact`} replace />} />
           <Route path="/offers" element={<Navigate to={`/${lang}/offers`} replace />} />
-          <Route path="/SpecialOffersPage" element={<Navigate to={`/${lang}/offers`} replace />} /> {/* إضافة جديدة */}
-          <Route path="/offer/:slugOrId" element={<Navigate to={`/${lang}/offer/:slugOrId`} replace />} /> {/* دعم بدون لغة */}
+          <Route path="/SpecialOffersPage" element={<Navigate to={`/${lang}/SpecialOffersPage`} replace />} /> 
+          <Route path="/offer/:slugOrId" element={<Navigate to={`/${lang}/offer/:slugOrId`} replace />} /> 
           <Route path="/login" element={<Navigate to={`/${lang}/login`} replace />} />
           <Route path="/register" element={<Navigate to={`/${lang}/register`} replace />} />
           <Route path="/product-details" element={<Navigate to={`/${lang}/product-details`} replace />} />
@@ -133,6 +140,8 @@ export default function App() {
           <Route path="/about-quara" element={<Navigate to={`/${lang}/about-quara`} replace />} />
           <Route path="/about-mora" element={<Navigate to={`/${lang}/about-mora`} replace />} />
           <Route path="/profile" element={<Navigate to={`/${lang}/profile`} replace />} />
+          <Route path="/blog" element={<Navigate to={`/${lang}/blog`} replace />} />
+          <Route path="/blog/:slug" element={<Navigate to={`/${lang}/blog/:slug`} replace />} />
 
           {/* جميع الروتات التي تدعم اللغة */}
           <Route path="/:lang/*" element={<LangWrapper />} />

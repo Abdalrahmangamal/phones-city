@@ -17,7 +17,7 @@ const BannerSection: React.FC<BannerSectionProps> = ({
   // 🟡 لا توجد صور
   if (!images || images.length === 0) {
     return (
-      <div className="w-full md:my-15 xl:px-[90px] px-2 md:px-0">
+      <div className="w-full md:my-15 xl:px-[90px] px-2">
         <div className="w-full h-[140px] md:h-[190.38px] rounded-[16px] overflow-hidden bg-gray-100 flex items-center justify-center">
           <p className="text-gray-500">لا توجد صور متاحة</p>
         </div>
@@ -28,12 +28,12 @@ const BannerSection: React.FC<BannerSectionProps> = ({
   // 🟢 صورة واحدة فقط
   if (images.length === 1) {
     return (
-      <div className="w-full md:my-15 xl:px-[90px] px-2 md:px-0">
+      <div className="w-full md:my-15 xl:px-[90px] px-2">
         <div className="w-full h-[140px] md:h-[190.38px] rounded-[16px] overflow-hidden">
           <img
             src={images[0]} // Fixed to use first image
             alt="بانر"
-            className="w-full h-full !object-contain rounded-[20px]"
+            className="w-full h-full object-cover rounded-[16px]"
             loading="eager"
           />
         </div>
@@ -43,7 +43,7 @@ const BannerSection: React.FC<BannerSectionProps> = ({
 
   // 🔵 عدة صور → استخدام Swiper مع تأثير Fade
   return (
-    <div className="w-full md:my-15 xl:px-[90px] px-2 md:px-0">
+    <div className="w-full md:my-15 xl:px-[90px] px-2">
       <div className="w-full h-[140px] md:h-[190.38px] rounded-[16px] overflow-hidden">
         <Swiper
           effect="fade"
@@ -65,7 +65,7 @@ const BannerSection: React.FC<BannerSectionProps> = ({
               <img
                 src={image}
                 alt={`بانر ${index + 1}`}
-                className="w-full h-full !object-contain rounded-[20px]"
+                className="w-full h-full object-cover rounded-[16px]"
                 loading={index === 0 ? "eager" : "lazy"}
               />
             </SwiperSlide>
