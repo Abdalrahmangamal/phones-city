@@ -159,7 +159,7 @@ export default function Myorder() {
                         {item.product?.main_image ? (
                           <img
                             src={item.product.main_image}
-                            alt={item.product.name_ar}
+                            alt={lang === 'ar' ? (item.product.name_ar || item.product.name) : (item.product.name_en || item.product.name)}
                             className="w-12 h-12 object-contain rounded border"
                           />
                         ) : (
@@ -168,14 +168,14 @@ export default function Myorder() {
                           </div>
                         )}
                         <div className="text-right">
-                          <p className="text-sm font-medium text-[#211C4D]">{item.product?.name_ar || item.product?.name}</p>
+                          <p className="text-sm font-medium text-[#211C4D]">{lang === 'ar' ? (item.product?.name_ar || item.product?.name) : (item.product?.name_en || item.product?.name)}</p>
                           <p className="text-xs text-gray-500">#{item.product?.slug}</p>
                         </div>
                       </div>
                     </td>
                     <td className="py-4 px-4 text-center">
                       {item.product_option ? (
-                        <span className="text-xs bg-gray-100 px-3 py-1 rounded">{item.product_option.value_ar}</span>
+                        <span className="text-xs bg-gray-100 px-3 py-1 rounded">{lang === 'ar' ? (item.product_option.value_ar || item.product_option.value) : (item.product_option.value_en || item.product_option.value)}</span>
                       ) : (
                         <span className="text-xs text-gray-400">-</span>
                       )}
@@ -422,7 +422,7 @@ export default function Myorder() {
                                   {order.items.slice(0, 2).map((item: any, index: number) => (
                                     <div key={index} className="flex items-center gap-2">
                                       {item.product?.main_image ? (
-                                        <img src={item.product.main_image} alt={item.product.name_ar} className="w-10 h-10 object-contain rounded border border-gray-200" />
+                                        <img src={item.product.main_image} alt={lang === 'ar' ? (item.product.name_ar || item.product.name) : (item.product.name_en || item.product.name)} className="w-10 h-10 object-contain rounded border border-gray-200" />
                                       ) : (
                                         <div className="w-10 h-10 bg-gray-100 rounded border border-gray-200 flex items-center justify-center">
                                           <Package className="w-4 h-4 text-gray-400" />
