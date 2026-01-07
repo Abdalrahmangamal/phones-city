@@ -1,7 +1,7 @@
 // Offers.tsx
 import Layout from "@/components/layout/layout";
 import NewHeroSection from "@/components/public/HeroSection";
-import BannerSection from "@/components/public/BannerSection"; 
+import BannerSection from "@/components/public/BannerSection";
 import Bestseller from "@/components/home/Bestseller";
 import Parttner from "@/components/public/Parttner";
 import Filter from "@/components/public/Filter"; // Import Filter component
@@ -21,19 +21,19 @@ export default function Offers() {
   const { lang } = useLangSync();
   const { t } = useTranslation();
   const { sliders, fetchSliders } = useHeroSectionStore();
-  const { fetchHomePage, data } = useHomePageStore(); 
-  
+  const { fetchHomePage, data } = useHomePageStore();
+
   // State for filters
   const [selectedSubCategory, setSelectedSubCategory] = useState<number | null>(null);
   const [sortOption, setSortOption] = useState<string>("");
   const [priceRange, setPriceRange] = useState<[number | null, number | null]>([null, null]);
-  
+
   // Pagination states
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
   const itemsPerPage = 10;
-  
+
   const [isLoading, setIsLoading] = useState(true);
 
   // Fetch initial data
@@ -67,7 +67,7 @@ export default function Offers() {
       try {
         const queryParams: any = {
           has_offer: 1,
-          simple: false,
+          simple: 0,
           page: currentPage,
           per_page: itemsPerPage
         };
@@ -102,7 +102,7 @@ export default function Offers() {
         }
 
         // Fetch products with filters
-        const result = await fetchProducts(queryParams, lang);
+        const result: any = await fetchProducts(queryParams, lang);
 
         // Handle response data
         let productsData: Product[] = [];
@@ -110,7 +110,7 @@ export default function Offers() {
 
         if (result && result.data && Array.isArray(result.data)) {
           productsData = result.data;
-          
+
           // Extract pagination info
           if (result.pagination) {
             totalCount = result.pagination.total || productsData.length;
@@ -127,7 +127,7 @@ export default function Offers() {
         // Update states
         setTotalItems(totalCount);
         setTotalPages(Math.ceil(totalCount / itemsPerPage));
-        
+
       } catch (error) {
         console.error("Error loading filtered products:", error);
         setTotalItems(0);
@@ -135,9 +135,9 @@ export default function Offers() {
       }
     };
 
-    if (categories.length > 0) {
-      loadFilteredProducts();
-    }
+    // Always load products, even if no categories yet (or empty)
+    loadFilteredProducts();
+
   }, [lang, selectedSubCategory, categories, sortOption, priceRange, currentPage]);
 
   // تأكد من أن response مصفوفة
@@ -173,7 +173,7 @@ export default function Offers() {
     <Layout>
       <div>
         <NewHeroSection sliders={sliders} />
-        
+
         <BannerSection images={data?.main_images || []} />
 
         <Bestseller
