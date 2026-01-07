@@ -139,7 +139,7 @@ export default function Bestseller({
       {!isLoading && (
         <>
           <div
-            className={`grid grid-cols-2 gap-[20px] sm:grid-cols-3 xl:grid-cols-4 ${style} gap-[2px] md:gap-[20px] justify-items-center mt-[60px]`}
+            className={`grid grid-cols-2 gap-[20px] sm:grid-cols-3 xl:grid-cols-4 ${style} md:gap-[40px] lg:gap-[100px] justify-items-center mt-[60px]`}
           >
             {hasProducts ? (
               productsToShow.map((item) => (

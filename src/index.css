@@ -4,7 +4,7 @@
 @import "./components/s24-ultra/s24-responsive.css";
 .swiper-wrapper{
   padding-bottom: 10px;
-  padding-top: 10px;
+  padding-bottom: 10px;
 }
 [dir="rtl"] {
   direction: rtl;
