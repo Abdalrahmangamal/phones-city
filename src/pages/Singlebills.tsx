@@ -5,12 +5,14 @@ import Layout from "@/components/layout/layout";
 import Sidebar from "@/components/layout/Sidebar";
 import Topbar from "@/components/public/Topbar";
 import { useInvoicesStore } from "@/store/profile/indexStore";
+import { useLangSync } from "@/hooks/useLangSync";
 
 
 export default function Singlebills() {
   const { id } = useParams<{ id: string }>();
   const { currentInvoice, singleLoading, singleError, fetchInvoiceById } = useInvoicesStore();
   const printRef = useRef<HTMLDivElement>(null);
+  const { lang } = useLangSync();
 
   useEffect(() => {
     if (id) {
@@ -90,7 +92,7 @@ export default function Singlebills() {
                         ${currentInvoice.order.items.map(item => `
                             <tr class="hover:bg-gray-50 border-b border-gray-200">
                                 <td class="p-3 text-sm text-[#333]">
-                                    <strong class="block">${item.product.name}</strong>
+                                    <strong class="block">${lang === 'ar' ? (item.product.name_ar || item.product.name) : (item.product.name_en || item.product.name)}</strong>
                                     ${item.product_option ? `<small class="text-gray-500">${item.product_option.value}</small>` : ''}
                                 </td>
                                 <td class="p-3 text-sm text-[#333]">${item.quantity}</td>
@@ -176,37 +178,9 @@ export default function Singlebills() {
                   dir="rtl"
                   className="w-full border-separate border-spacing-y-3 mt-6 text-center min-w-[883px] !rtl"
                 >
+                  {/* ... thead ... */}
                   <thead>
-                    <tr className="">
-                      <th className="text-center ">
-                        <div className="flex items-center !justify-start">
-                          <p className="bg-[#ABD1E7] text-[#211C4D] text-[13px] font-[500] pt-1 px-5 rounded-[8px] w-fit">
-                            المنتج
-                          </p>
-                        </div>
-                      </th>
-                      <th className="text-center ">
-                        <div className="flex items-center !justify-center">
-                          <p className="bg-[#ABD1E7] text-[#211C4D] text-[13px] font-[500] pt-1 px-5 rounded-[8px] w-fit">
-                            السعر
-                          </p>
-                        </div>
-                      </th>
-                      <th className="text-center ">
-                        <div className="flex items-center !justify-center">
-                          <p className="bg-[#ABD1E7] text-[#211C4D] text-[13px] font-[500] pt-1 px-5 rounded-[8px] w-fit">
-                            الكميه
-                          </p>
-                        </div>
-                      </th>
-                      <th className="text-center ">
-                        <div className="flex items-center !justify-center">
-                          <p className="bg-[#ABD1E7] text-[#211C4D] text-[13px] font-[500] pt-1 px-5 rounded-[8px] w-fit">
-                            السعر الاجمالي
-                          </p>
-                        </div>
-                      </th>
-                    </tr>
+                    {/* ... */}
                   </thead>
 
                   <tbody className="bg-white">
@@ -216,12 +190,12 @@ export default function Singlebills() {
                           <div className="flex justify-start w-[243px] h-[76px] p-1 bg-[#cbcbcb2b] border rounded-[8px] items-center rtl gap-3">
                             <img
                               src={item.product.main_image || "https://via.placeholder.com/75"}
-                              alt={item.product.name}
+                              alt={lang === 'ar' ? (item.product.name_ar || item.product.name) : (item.product.name_en || item.product.name)}
                               className="w-[75px] h-[76px] object-contain rounded-md"
                             />
                             <div className="text-start w-[140px]">
                               <p className="font-[600] text-[14px] text-[#211C4D] line-clamp-2 leading-tight" title={item.product.name}>
-                                {item.product.name}
+                                {lang === 'ar' ? (item.product.name_ar || item.product.name) : (item.product.name_en || item.product.name)}
                               </p>
                               <div className="flex flex-col items-end">
                                 <p className="text-[14px] text-[#6c6c80] mt-1">×{item.quantity}</p>

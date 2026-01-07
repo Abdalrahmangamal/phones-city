@@ -44,7 +44,7 @@ import Offers from "./pages/products/Offers";
 function LangWrapper() {
   const { lang } = useSettings();
   const { lang: urlLang } = useParams<{ lang: string }>();
-  
+
   // إعادة توجيه إذا اللغة في الـ URL غير صحيحة
   if (urlLang !== "ar" && urlLang !== "en") {
     return <Navigate to={`/${lang}/`} replace />;
@@ -56,15 +56,15 @@ function LangWrapper() {
       <Route path="/about" element={<About />} />
       <Route path="/servces" element={<Servces />} />
       <Route path="/contact" element={<Contact />} />
-      
+
       {/* صفحة قائمة جميع العروض */}
       <Route path="/offers" element={<Offers />} />
 
       <Route path="/SpecialOffersPage" element={<SpecialOffersPage />} />
-      
+
       {/* صفحة تفاصيل عرض فردي - الجديدة */}
       {/* <Route path="offer/:slugOrId" element={<OfferDetails />} /> */}
-      
+
       <Route path="/search" element={<SearchResults />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
@@ -83,6 +83,7 @@ function LangWrapper() {
 
       <Route path="/myorder" element={<Myorder />} />
       <Route path="/bills" element={<Bills />} />
+      <Route path="/singlebills" element={<Navigate to={`/${lang}/bills`} replace />} />
       <Route path="/singlebills/:id" element={<Singlebills />} />
       <Route path="/address" element={<Address />} />
       <Route path="/singleaddress" element={<Singleaddress />} />
@@ -128,8 +129,8 @@ export default function App() {
           <Route path="/servces" element={<Navigate to={`/${lang}/servces`} replace />} />
           <Route path="/contact" element={<Navigate to={`/${lang}/contact`} replace />} />
           <Route path="/offers" element={<Navigate to={`/${lang}/offers`} replace />} />
-          <Route path="/SpecialOffersPage" element={<Navigate to={`/${lang}/SpecialOffersPage`} replace />} /> 
-          <Route path="/offer/:slugOrId" element={<Navigate to={`/${lang}/offer/:slugOrId`} replace />} /> 
+          <Route path="/SpecialOffersPage" element={<Navigate to={`/${lang}/SpecialOffersPage`} replace />} />
+          <Route path="/offer/:slugOrId" element={<Navigate to={`/${lang}/offer/:slugOrId`} replace />} />
           <Route path="/login" element={<Navigate to={`/${lang}/login`} replace />} />
           <Route path="/register" element={<Navigate to={`/${lang}/register`} replace />} />
           <Route path="/product-details" element={<Navigate to={`/${lang}/product-details`} replace />} />
