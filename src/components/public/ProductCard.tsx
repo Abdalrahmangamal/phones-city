@@ -61,7 +61,7 @@ export default function ProductCard({ product, imagecard, containerstyle }: Prod
   return (
     <div
       key={product.id}
-      className={`${containerstyle} max-w-[350px] md:!w-[320px] col-span-1 bg-white w-full min-h-[350px] md:min-h-[400px] rounded-[16px] p-[15px] shadow-[0px_4px_4px_0px_#00000040] flex flex-col hover:shadow-[0px_8px_12px_0px_#00000050] transition-shadow duration-300`}
+      className={`${containerstyle} max-w-[350px] lg:!w-[320px] col-span-1 bg-white w-full min-h-[350px] md:min-h-[400px] rounded-[16px] p-[15px] shadow-[0px_4px_4px_0px_#00000040] flex flex-col hover:shadow-[0px_8px_12px_0px_#00000050] transition-shadow duration-300`}
     >
       {/* الصورة */}
       <div className="flex items-center justify-center pt-7 md:pt-0 relative">
@@ -172,7 +172,7 @@ export default function ProductCard({ product, imagecard, containerstyle }: Prod
           {product?.name}
         </h2>
       </Link>
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between flex-wrap">
 
         {/* الألوان */}
         {product?.options?.length > 1 && (
@@ -223,7 +223,7 @@ export default function ProductCard({ product, imagecard, containerstyle }: Prod
 
       {/* السعر + زر السلة */}
       <div className="flex items-center justify-between mt-[10px] w-full">
-        <div className="relative flex gap-3">
+        <div className="relative flex md:gap-3">
           <p className="text-[#211C4D] md:text-[18px] text-[11px] font-[500]">
             {final?.toLocaleString()}
             {t("SAR")}
