@@ -93,7 +93,7 @@ const SpecialOffersSection: React.FC<SpecialOffersSectionProps> = ({
             }}
           >
             {[...Array(4)].map((_, index) => (
-              <SwiperSlide key={index} className="h-auto">
+              <SwiperSlide key={index} className="h-auto my-[10px]">
                 <div className="h-full animate-pulse">
                   <div className="bg-gray-200 rounded-[10px] p-2 pb-3 min-h-[200px] h-full">
                     <div className="h-[100px] w-[100px] bg-gray-300 rounded mx-auto mb-2"></div>

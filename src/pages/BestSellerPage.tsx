@@ -179,9 +179,9 @@ export default function BestSellerPage() {
           />
 
           {/* البانر الديناميكي تمامًا مثل الـ Home Page */}
-          <div className="my-8 md:my-15 xl:px-[90px] px-2 md:px-0">
+          {/* <div className="my-8 md:my-15 xl:px-[90px] px-2 md:px-0">
             <BannerSection images={data?.main_images || []} />
-          </div>
+          </div> */}
 
           <div className="lg:px-[90px] px-2 my-12">
             <Parttner />
