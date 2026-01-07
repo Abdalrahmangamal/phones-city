@@ -62,9 +62,9 @@ const FrameSection: React.FC<FrameSectionProps> = ({ features }) => {
           <img
             src={pattern}
             alt=""
-            className={`absolute hidden md:block ${lang === 'en'
-              ? 'w-[110px] -bottom-7 -left-16 -scale-x-100'
-              : 'w-[110px] -bottom-7 -right-16'}`}
+            className={`absolute block ${lang === 'en'
+              ? 'w-[80px] md:w-[110px] -bottom-5 md:-bottom-7 -left-10 md:-left-16 -scale-x-100'
+              : 'w-[80px] md:w-[110px] -bottom-5 md:-bottom-7 -right-10 md:-right-16'}`}
           />
         </div>
 

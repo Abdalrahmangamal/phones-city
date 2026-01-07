@@ -76,9 +76,9 @@ export default function LatestOffers() {
           {t("LatestOffers")}
         </h1>
         <img
-          className={`absolute hidden md:block ${lang === "ar"
-            ? "w-[200px] -bottom-15 -right-23"
-            : "w-[200px] -bottom-15 -left-20 -scale-x-100"
+          className={`absolute block ${lang === "ar"
+            ? "w-[120px] md:w-[200px] -bottom-10 md:-bottom-15 -right-16 md:-right-23"
+            : "w-[120px] md:w-[200px] -bottom-10 md:-bottom-15 -left-12 md:-left-20 -scale-x-100"
             }`}
           src={svg}
           alt=""

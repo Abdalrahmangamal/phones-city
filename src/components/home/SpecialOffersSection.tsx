@@ -45,9 +45,9 @@ const SpecialOffersSection: React.FC<SpecialOffersSectionProps> = ({
             <img
               src={svg1}
               alt=""
-              className={`absolute hidden md:block ${lang === "ar"
-                ? "w-[110px] -bottom-7 -right-15"
-                : "w-[110px] -bottom-7 -left-15 -scale-x-100"
+              className={`absolute block ${lang === "ar"
+                ? "w-[80px] md:w-[110px] -bottom-5 md:-bottom-7 -right-10 md:-right-15"
+                : "w-[80px] md:w-[110px] -bottom-5 md:-bottom-7 -left-10 md:-left-15 -scale-x-100"
                 }`}
             />
           </div>
@@ -154,9 +154,9 @@ const SpecialOffersSection: React.FC<SpecialOffersSectionProps> = ({
           <img
             src={svg1}
             alt=""
-            className={`absolute hidden md:block ${lang === "ar"
-              ? "w-[110px] -bottom-11 -right-16"
-              : "w-[110px] -bottom-7 -left-15 -scale-x-100"
+            className={`absolute block ${lang === "ar"
+              ? "w-[80px] md:w-[110px] -bottom-8 md:-bottom-11 -right-12 md:-right-16"
+              : "w-[80px] md:w-[110px] -bottom-5 md:-bottom-7 -left-10 md:-left-15 -scale-x-100"
               }`}
           />
         </div>
@@ -191,7 +191,7 @@ const SpecialOffersSection: React.FC<SpecialOffersSectionProps> = ({
       <div className={`w-full relative special-offers-swiper ${!shouldAllowSlide ? 'no-scroll' : ''}`}>
         <Swiper
           key={lang + products.length}
-          modules={[Navigation, 
+          modules={[Navigation,
             Autoplay
           ]}
           navigation={{
