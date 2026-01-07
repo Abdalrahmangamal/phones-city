@@ -158,7 +158,7 @@ const BestSellersSection: React.FC<BestSellersSectionProps> = ({
             src={svg1}
             alt=""
             className={`absolute hidden md:block ${lang === "ar"
-              ? "w-[500px] -bottom-7 -right-15"
+              ? "w-[110px] -bottom-7 -right-15"
               : "w-[110px] -bottom-7 -left-15 -scale-x-100"
               }`}
           />
