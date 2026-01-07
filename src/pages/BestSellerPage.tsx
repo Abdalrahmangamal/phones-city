@@ -4,10 +4,10 @@ import Bestseller from "@/components/home/Bestseller";
 import Layout from "@/components/layout/Layout";
 import Offerherosection from "@/components/public/Offerherosection";
 import Sliderbycategory from "@/components/public/Sliderbycategory";
-import BannerSection from "@/components/public/BannerSection";
+// import BannerSection from "@/components/public/BannerSection";
 import Parttner from "@/components/public/Parttner";
 import Filter from "@/components/public/Filter";
-import sceondbanner from "../assets/images/sceondbanner.png";
+// import sceondbanner from "../assets/images/sceondbanner.png";
 import type { Product } from '@/types/index';
 import { useProductsStore } from "@/store/productsStore";
 import { useLangSync } from "@/hooks/useLangSync";
@@ -130,7 +130,7 @@ export default function BestSellerPage() {
               </div>
             }
           />
-          <BannerSection image={sceondbanner} />
+          {/* <BannerSection image={sceondbanner} /> */}
           <div className="my-12">
             <Parttner />
           </div>

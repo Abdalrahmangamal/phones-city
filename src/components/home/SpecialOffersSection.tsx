@@ -181,7 +181,7 @@ const SpecialOffersSection: React.FC<SpecialOffersSectionProps> = ({
         <Swiper
           key={lang + products.length}
           modules={[Navigation, 
-            // Autoplay
+            Autoplay
           ]}
           navigation={{
             nextEl: '.special-offers-next',
@@ -190,12 +190,12 @@ const SpecialOffersSection: React.FC<SpecialOffersSectionProps> = ({
           }}
           loop={shouldAllowSlide && products.length > slidesPerView}
           dir={lang === "ar" ? "rtl" : "ltr"}
-          // autoplay={
-          //   shouldAllowSlide ? {
-          //     delay: 4000,
-          //     disableOnInteraction: false,
-          //   } : false
-          // }
+          autoplay={
+            shouldAllowSlide ? {
+              delay: 4000,
+              disableOnInteraction: false,
+            } : false
+          }
           slidesPerView={slidesPerView}
           spaceBetween={20}
           className="w-full pb-10"

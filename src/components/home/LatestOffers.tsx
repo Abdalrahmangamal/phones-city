@@ -55,7 +55,7 @@ export default function LatestOffers() {
       productId = offer.products[productIndex]?.id;
     } else {
       // للكروت الكبيرة (لابتوب أو Gaming)
-      productId = offer.first_related?.id;
+      productId = offer.first_related?.slug;
     }
 
     if (!productId) {
