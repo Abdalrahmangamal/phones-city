@@ -76,7 +76,7 @@ export default function Sidebar() {
     },
     {
       icon: <Wallet className="w-5 h-5" />,
-      text: `${t("Wallet")}`,
+      text: `${t("wallet")}`,
       link: `/${lang}/wallet`,
     },
     {

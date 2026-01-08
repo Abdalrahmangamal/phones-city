@@ -122,6 +122,7 @@ export const useCartStore = create<CartState>((set, get) => ({
       await get().fetchCart();
     } catch (error: any) {
       console.error("Add to cart error:", error?.response?.data || error.message);
+      throw error; // <--- إضافة هذا لرفض الـ Promise وتنفيذ .catch
     }
   },
 
@@ -148,6 +149,7 @@ export const useCartStore = create<CartState>((set, get) => ({
         error: err?.response?.data?.message || "Failed to remove from cart",
         loading: false,
       });
+      throw err; // اختياري: إضافة throw هنا أيضًا للتوافق مع .catch في ProductCard
     }
   },
 
@@ -173,6 +175,7 @@ export const useCartStore = create<CartState>((set, get) => ({
         error: err?.response?.data?.message || "Failed to remove from cart",
         loading: false,
       });
+      throw err; // اختياري: للتوافق
     }
   },
 
@@ -212,6 +215,7 @@ export const useCartStore = create<CartState>((set, get) => ({
         error: error?.response?.data?.message || "فشل تحديث الكمية",
         loading: false,
       });
+      throw error; // اختياري: للتوافق إذا كان هناك .catch خارجي
     }
   },
 
@@ -221,40 +225,40 @@ export const useCartStore = create<CartState>((set, get) => ({
   },
 
   // ----------------- CLEAR CART (اختياري) ------------------
+  clearCart: async () => {
+    try {
+      set({ loading: true, error: null });
+      const token = localStorage.getItem("token");
+      
+      if (!token) {
+        set({ error: "No authentication token found", loading: false });
+        return;
+      }
 
-clearCart: async () => {
-  try {
-    set({ loading: true, error: null });
-    const token = localStorage.getItem("token");
-    
-    if (!token) {
-      set({ error: "No authentication token found", loading: false });
-      return;
+      // استخدام الـ endpoint الخاص بحذف الكل
+      await axios.delete(`${baseUrl}api/v1/cart`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: "application/json",
+        },
+      });
+      
+      // تحديث الحالة المحلية مباشرة
+      set({ 
+        items: [], 
+        total: 0, 
+        finalTotal: 0, 
+        selectedPaymentId: null,
+        loading: false 
+      });
+      
+    } catch (error: any) {
+      console.error("Clear cart error:", error?.response?.data || error.message);
+      set({
+        error: error?.response?.data?.message || "فشل حذف السلة",
+        loading: false,
+      });
+      throw error; // اختياري
     }
-
-    // استخدام الـ endpoint الخاص بحذف الكل
-    await axios.delete(`${baseUrl}api/v1/cart`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        Accept: "application/json",
-      },
-    });
-    
-    // تحديث الحالة المحلية مباشرة
-    set({ 
-      items: [], 
-      total: 0, 
-      finalTotal: 0, 
-      selectedPaymentId: null,
-      loading: false 
-    });
-    
-  } catch (error: any) {
-    console.error("Clear cart error:", error?.response?.data || error.message);
-    set({
-      error: error?.response?.data?.message || "فشل حذف السلة",
-      loading: false,
-    });
-  }
-},
+  },
 }));

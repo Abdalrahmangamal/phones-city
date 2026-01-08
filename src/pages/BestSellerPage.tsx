@@ -141,13 +141,12 @@ export default function BestSellerPage() {
           />
 
           {categories.length > 0 && (
-          <div className="lg:px-[90px] px-2 -mt-8 md:-mt-8 relative z-10">
             <Sliderbycategory
               category={categories}
               selectedSubCategory={selectedSubCategory}
               setSelectedSubCategory={setSelectedSubCategory}
             />
-          </div>
+          
         )}
 
           <Bestseller
@@ -183,9 +182,9 @@ export default function BestSellerPage() {
             <BannerSection images={data?.main_images || []} />
           </div> */}
 
-          <div className="lg:px-[90px] px-2 my-12">
-            <Parttner />
-          </div>
+           <Parttner />
+
+          
         </div>
       </Layout>
     </div>

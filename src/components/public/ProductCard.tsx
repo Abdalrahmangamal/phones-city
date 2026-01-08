@@ -3,10 +3,10 @@ import { Rating, RatingButton } from "@/components/ui/shadcn-io/rating";
 import type { Product } from "@/types/index";
 import { useLangSync } from "@/hooks/useLangSync";
 import { Link } from "react-router-dom";
-// import { useCart } from "@/store/cart"; // Added cart import
 import { useCartStore } from "@/store/cartStore/cartStore";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
+import { useFavoritesStore } from "@/store/favoritesStore";
 
 interface ProductCardProps {
   product: Product;
@@ -16,7 +16,7 @@ interface ProductCardProps {
   imagecard: string;
   variations?: { color: string; image: string }[];
 }
-import { useFavoritesStore } from "@/store/favoritesStore";
+
 export default function ProductCard({ product, imagecard, containerstyle }: ProductCardProps) {
   const { t } = useTranslation();
 
@@ -24,39 +24,87 @@ export default function ProductCard({ product, imagecard, containerstyle }: Prod
   const favItem = favorites.find((f: any) => f?.product?.id === product.id);
   const initialFav = Boolean(favItem) || Boolean((product as any)?.is_favorite);
 
-  // Local optimistic state to make the heart toggle reliable
+  // Local optimistic state for favorite heart
   const [localFavorite, setLocalFavorite] = useState<boolean>(initialFav);
 
-  // Keep local state in sync with store/product changes
+  // Sync local state with store/product changes
   useEffect(() => {
-    const currentFav = favorites.find(
-      (f: any) => f?.product?.id === product.id
-    );
-    setLocalFavorite(
-      Boolean(currentFav) || Boolean((product as any)?.is_favorite)
-    );
+    const currentFav = favorites.find((f: any) => f?.product?.id === product.id);
+    setLocalFavorite(Boolean(currentFav) || Boolean((product as any)?.is_favorite));
   }, [favorites, (product as any)?.is_favorite, product.id]);
+
   const { addToCart, deleteToCart } = useCartStore();
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const selectedVariant = product?.options?.[selectedIndex];
-  // const isFavorite = favorites.some(f => f.product.id === product.id);
 
   const { lang } = useLangSync();
-  const hasOptions =
-    Array.isArray(product?.options) && product.options.length > 0;
-  const currentImage = hasOptions
-    ? selectedVariant?.images?.[0]?.url || product.main_image || ""
-    : product.main_image || "";
-  const original = hasOptions
-    ? Number(selectedVariant?.original_price?.replace(/,/g, "")) || 0
-    : Number(product?.original_price?.replace(/,/g, "")) || 0;
 
-  const final = hasOptions
-    ? Number(selectedVariant?.final_price?.replace(/,/g, "")) || 0
-    : Number(product?.final_price?.replace(/,/g, "")) || 0;
-  const discountPercent =
-    original > 0 ? ((original - final) / original) * 100 : 0;
+  const hasOptions = Array.isArray(product?.options) && product.options.length > 0;
+  
+  // الحصول على الـ variant المحدد بناءً على selectedIndex
+  const getSelectedVariant = () => {
+    if (hasOptions && product?.options?.[selectedIndex]) {
+      return product.options[selectedIndex];
+    }
+    return null;
+  };
+
+  const selectedVariant = getSelectedVariant();
+
+  // استخراج الأسعار بشكل آمن
+  const extractPrice = (price: any): number => {
+    if (!price && price !== 0) return 0;
+    
+    if (typeof price === 'number') return price;
+    
+    if (typeof price === 'string') {
+      // إزالة أي رموز غير رقمية مثل العملة والفواصل
+      const cleanStr = price.replace(/[^\d.-]/g, '').replace(/,/g, '');
+      const num = parseFloat(cleanStr);
+      return isNaN(num) ? 0 : num;
+    }
+    
+    return 0;
+  };
+
+  // الحصول على الأسعار من الـ variant المحدد أو المنتج الرئيسي
+  const original = selectedVariant 
+    ? extractPrice(selectedVariant.original_price || selectedVariant.price || product?.original_price)
+    : extractPrice(product?.original_price || product?.price);
+
+  const final = selectedVariant 
+    ? extractPrice(selectedVariant.final_price || selectedVariant.sale_price || product?.final_price)
+    : extractPrice(product?.final_price || product?.price);
+
+  const discountPercent = original > 0 && final < original 
+    ? Math.round(((original - final) / original) * 100) 
+    : 0;
+
+  // حالة المخزون بناءً على البيانات الفعلية من الـ API
+  const stockQuantity = selectedVariant?.quantity ?? product?.quantity ?? 0;
+  const stockStatus = selectedVariant?.stock_status ?? product?.stock_status ?? "in_stock";
+
+  const isOutOfStock = stockQuantity <= 0 || stockStatus === "out_of_stock";
+  const isLimited = stockStatus === "limited" && stockQuantity > 0;
+
+  // الصورة الحالية - أولوية للصورة من الـ variant المحدد
+  const currentImage = selectedVariant?.images?.[0]?.url 
+    || product.main_image 
+    || "";
+
+  // حالة السلة محلياً
   const [isInCart, setIsInCart] = useState((product as any)?.in_cart || false);
+
+  // إضافة console.log للتصحيح
+  useEffect(() => {
+    console.log('ProductCard Debug:');
+    console.log('- Selected index:', selectedIndex);
+    console.log('- Has options:', hasOptions);
+    console.log('- Product options:', product?.options);
+    console.log('- Selected variant:', selectedVariant);
+    console.log('- Original price:', original);
+    console.log('- Final price:', final);
+    console.log('- Discount percent:', discountPercent);
+  }, [selectedIndex, product, selectedVariant]);
 
   return (
     <div
@@ -68,60 +116,36 @@ export default function ProductCard({ product, imagecard, containerstyle }: Prod
         <Link to={`/${lang}/singleproduct/${product.slug}`}>
           <img
             src={currentImage}
-            className={`md:!w-[220px] h-[160px] w-[160px] object-contain ${imagecard} md:!h-[220px] `}
+            className={`md:!w-[220px] h-[160px] w-[160px] object-contain ${imagecard} md:!h-[220px]`}
             alt={product.name}
           />
         </Link>
 
-        <div
-          className="flex w-full items-center justify-between absolute right-0 top-0 z-10 p-2"
-          onClick={(e: any) => {
-            e.stopPropagation();
-            // optimistic toggle
-            const prev = localFavorite;
-            setLocalFavorite(!prev);
+        <div className="flex w-full items-center justify-between absolute right-0 top-0 z-10 p-2">
+          {/* زر المفضلة */}
+          <div
+            className="bg-[#EEF1F6] flex items-center justify-center w-[36px] h-[36px] rounded-full cursor-pointer hover:bg-[#e0e5f0] transition-colors"
+            onClick={(e: any) => {
+              e.stopPropagation();
+              const prev = localFavorite;
+              setLocalFavorite(!prev);
 
-            if (!prev) {
-              // add favorite
-              try {
-                const res: any = addFavorite(product.id);
-                if (res && typeof res.then === "function") {
-                  res.catch((err: any) => {
-                    setLocalFavorite(prev);
-                    toast.error("فشل إضافة للمفضلة. حاول مرة أخرى.");
-                  });
-                }
-              } catch (err) {
-                setLocalFavorite(prev);
-                toast.error("فشل إضافة للمفضلة. حاول مرة أخرى.");
+              if (!prev) {
+                addFavorite(product.id).catch(() => {
+                  setLocalFavorite(prev);
+                  toast.error("فشل إضافة للمفضلة. حاول مرة أخرى.");
+                });
+              } else {
+                const favId = favItem?.id || (product as any)?.favorite_id;
+                removeFavorite(favId || product.id).catch(() => {
+                  setLocalFavorite(prev);
+                  toast.error("فشل إزالة من المفضلة. حاول مرة أخرى.");
+                });
               }
-            } else {
-              // remove favorite
-              const favId = favItem?.id || (product as any)?.favorite_id;
-              try {
-                const res: any = removeFavorite(favId || product.id);
-                if (res && typeof res.then === "function") {
-                  res.catch((err: any) => {
-                    setLocalFavorite(prev);
-                    toast.error("فشل إزالة من المفضلة. حاول مرة أخرى.");
-                  });
-                }
-              } catch (err) {
-                setLocalFavorite(prev);
-                toast.error("فشل إزالة من المفضلة. حاول مرة أخرى.");
-              }
-            }
-          }}
-        >
-          <div className="bg-[#EEF1F6] flex items-center justify-center w-[36px] h-[36px] rounded-full cursor-pointer hover:bg-[#e0e5f0] transition-colors">
+            }}
+          >
             {localFavorite ? (
-              <svg
-                width="21"
-                height="18"
-                viewBox="0 0 21 18"
-                fill="red"
-                xmlns="http://www.w3.org/2000/svg"
-              >
+              <svg width="21" height="18" viewBox="0 0 21 18" fill="red" xmlns="http://www.w3.org/2000/svg">
                 <path
                   d="M6.9 1.96094C4.11914 1.96094 1.75 4.04024 1.75 6.74073C1.75 8.60369 2.62235 10.1721 3.77849 11.4714C4.93066 12.7661 6.41714 13.853 7.76097 14.7626L10.0796 16.332C10.3335 16.5039 10.6665 16.5039 10.9204 16.332L13.239 14.7626C14.5829 13.853 16.0693 12.7661 17.2215 11.4714C18.3777 10.1721 19.25 8.60369 19.25 6.74073C19.25 4.04024 16.8809 1.96094 14.1 1.96094C12.6665 1.96094 11.4052 2.63308 10.5 3.50277C9.59484 2.63308 8.33347 1.96094 6.9 1.96094Z"
                   stroke=""
@@ -131,13 +155,7 @@ export default function ProductCard({ product, imagecard, containerstyle }: Prod
                 />
               </svg>
             ) : (
-              <svg
-                width="21"
-                height="18"
-                viewBox="0 0 21 18"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
+              <svg width="21" height="18" viewBox="0 0 21 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path
                   d="M6.9 1.96094C4.11914 1.96094 1.75 4.04024 1.75 6.74073C1.75 8.60369 2.62235 10.1721 3.77849 11.4714C4.93066 12.7661 6.41714 13.853 7.76097 14.7626L10.0796 16.332C10.3335 16.5039 10.6665 16.5039 10.9204 16.332L13.239 14.7626C14.5829 13.853 16.0693 12.7661 17.2215 11.4714C18.3777 10.1721 19.25 8.60369 19.25 6.74073C19.25 4.04024 16.8809 1.96094 14.1 1.96094C12.6665 1.96094 11.4052 2.63308 10.5 3.50277C9.59484 2.63308 8.33347 1.96094 6.9 1.96094Z"
                   stroke="#211C4D"
@@ -149,20 +167,26 @@ export default function ProductCard({ product, imagecard, containerstyle }: Prod
             )}
           </div>
 
-          {/* {isNew && (
-            <div className="w-[41px] h-[20px] flex items-center justify-center rounded-[4px] bg-[#259ACB]">
-              <p className="text-white text-[13px]">جديد</p>
-            </div>
-          )} */}
-          {discountPercent > 0 && (
+          {/* Badge: غير متوفر / كمية محدودة / نسبة الخصم */}
+          {isOutOfStock ? (
             <div className="flex w-full items-center justify-end absolute right-0 top-0 p-1">
-              <div className="w-fit px-2 h-[22px] flex items-center justify-center rounded-[4px] bg-[#F03D3D]">
-                <p className="text-white text-[13px]">
-                  {discountPercent.toFixed(0)}%
-                </p>
+              <div className="w-fit px-3 h-[22px] flex items-center justify-center rounded-[4px] bg-[#6B7280] opacity-90">
+                <p className="text-white text-[13px] font-medium">غير متوفر</p>
               </div>
             </div>
-          )}
+          ) : isLimited ? (
+            <div className="flex w-full items-center justify-end absolute right-0 top-0 p-1">
+              <div className="w-fit px-3 h-[22px] flex items-center justify-center rounded-[4px] bg-orange-600">
+                <p className="text-white text-[13px] font-medium">كمية محدودة</p>
+              </div>
+            </div>
+          ) : discountPercent > 0 ? (
+            <div className="flex w-full items-center justify-end absolute right-0 top-0 p-1">
+              <div className="w-fit px-2 h-[22px] flex items-center justify-center rounded-[4px] bg-[#F03D3D]">
+                <p className="text-white text-[13px]">{discountPercent}%</p>
+              </div>
+            </div>
+          ) : null}
         </div>
       </div>
 
@@ -172,9 +196,9 @@ export default function ProductCard({ product, imagecard, containerstyle }: Prod
           {product?.name}
         </h2>
       </Link>
-      <div className="flex items-center justify-between flex-wrap">
 
-        {/* الألوان */}
+      <div className="flex items-center justify-between flex-wrap">
+        {/* الألوان / المقاسات */}
         {product?.options?.length > 1 && (
           <div className="flex items-center gap-[7px] mt-[10px] justify-start">
             {product.options.map((variant, index) => (
@@ -182,20 +206,16 @@ export default function ProductCard({ product, imagecard, containerstyle }: Prod
                 key={index}
                 onClick={() => setSelectedIndex(index)}
                 className={`
-          flex items-center justify-center 
-          transition border-2 text-[10px]
-          ${variant.type === "size"
+                  flex items-center justify-center 
+                  transition border-2 text-[10px]
+                  ${variant.type === "size"
                     ? "min-w-[40px] h-[22px] px-2 rounded-md bg-white text-[#211C4D]"
                     : "w-[18px] h-[18px] rounded-full"
                   }
-          ${index === selectedIndex
-                    ? "border-[#211C4D] scale-110"
-                    : "border-gray-300"
-                  }
-        `}
+                  ${index === selectedIndex ? "border-[#211C4D] scale-110" : "border-gray-300"}
+                `}
                 style={{
-                  backgroundColor:
-                    variant.type === "color" ? variant.value : "#fff",
+                  backgroundColor: variant.type === "color" ? variant.value : "#fff",
                 }}
                 title={`Select ${variant.value}`}
               >
@@ -215,29 +235,23 @@ export default function ProductCard({ product, imagecard, containerstyle }: Prod
               />
             ))}
           </Rating>
-
           <p className="text-[#9CA3AF] text-[10px] md:!w-[15px]">({product.reviews_count})</p>
         </div>
       </div>
-
 
       {/* السعر + زر السلة */}
       <div className="flex items-center justify-between mt-[10px] w-full">
         <div className="relative flex md:gap-3">
           <p className="text-[#211C4D] md:text-[18px] text-[11px] font-[500]">
-            {final?.toLocaleString()}
-            {t("SAR")}
+            {final?.toLocaleString()} {t("SAR")}
           </p>
-          {final?.toLocaleString() == original?.toLocaleString() ? (
-            ""
-          ) : (
+          {final < original && (
             <div className="relative">
-              <p className="text-[#211C4D] md:text-[18px] text-[11px] font-[500]">
-                {original?.toLocaleString()}
-                {t("SAR")}
+              <p className="text-[#211C4D] md:text-[18px] text-[11px] font-[500] opacity-60">
+                {original?.toLocaleString()} {t("SAR")}
               </p>
               <svg
-                className="absolute top-2 md:top-3 w-full right-0  z-1"
+                className="absolute top-2 md:top-3 w-full right-0 z-1"
                 height="5"
                 viewBox="0 0 87 5"
                 fill="none"
@@ -251,54 +265,72 @@ export default function ProductCard({ product, imagecard, containerstyle }: Prod
             </div>
           )}
         </div>
-        <div
-          onClick={() => {
-            const hasMultiple = product.options.length > 1;
-            const idToSend = hasMultiple ? selectedVariant.id : product.id;
 
-            if (!isInCart) {
-              addToCart(idToSend, 1, hasMultiple).then(() => {
-                setIsInCart(true);
-                toast.success(`تم إضافة ${product.name} إلى السلة`, {
-                  position: "bottom-right",
-                  autoClose: 2000,
-                });
-              });
-            } else {
-              deleteToCart(idToSend).then(() => {
-                setIsInCart(false);
-                toast.info(`تم حذف ${product.name} من السلة`, {
-                  position: "bottom-right",
-                  autoClose: 2000,
-                });
-              });
-            }
-          }}
-          className={`w-[40px] h-[40px] flex items-center justify-center rounded-[8px] cursor-pointer transition-all duration-200 ${isInCart === true
-              ? "bg-[#211C4D] shadow-[0px_4px_8px_0px_#211C4D4d] hover:shadow-[0px_6px_12px_0px_#211C4D66]"
-              : "bg-[#EEF1F6] hover:bg-[#dfe3ea] shadow-[0px_2px_4px_0px_#00000020]"
-            }`}
+        {/* زر السلة - معطل فقط إذا كان غير متوفر تماماً */}
+        <div
+          onClick={
+            isOutOfStock
+              ? undefined
+              : () => {
+                  const hasMultiple = product.options && product.options.length > 1;
+                  const idToSend = hasMultiple ? selectedVariant?.id : product.id;
+
+                  if (!isInCart) {
+                    addToCart(idToSend, 1, hasMultiple)
+                      .then(() => {
+                        setIsInCart(true);
+                        toast.success(`تم إضافة ${product.name} إلى السلة`, {
+                          position: "bottom-right",
+                          autoClose: 2000,
+                        });
+                      })
+                      .catch((error: any) => {
+                        let errorMessage = "فشلت إضافة المنتج إلى السلة";
+                        if (error?.response?.data?.message) {
+                          const apiMessage = error.response.data.message;
+                          if (apiMessage.includes("out of stock") || apiMessage.includes("نفد المخزون")) {
+                            errorMessage = "عذراً، هذا المنتج نفد من المخزون";
+                          } else if (apiMessage.includes("already in cart")) {
+                            errorMessage = "المنتج موجود مسبقاً في السلة";
+                            setIsInCart(true);
+                          } else {
+                            errorMessage = apiMessage;
+                          }
+                        }
+                        toast.error(errorMessage, { position: "bottom-right", autoClose: 3000 });
+                      });
+                  } else {
+                    deleteToCart(idToSend)
+                      .then(() => {
+                        setIsInCart(false);
+                        toast.info(`تم حذف ${product.name} من السلة`, {
+                          position: "bottom-right",
+                          autoClose: 2000,
+                        });
+                      })
+                      .catch(() => {
+                        toast.error("فشل حذف المنتج من السلة", {
+                          position: "bottom-right",
+                          autoClose: 3000,
+                        });
+                      });
+                  }
+                }
+          }
+          className={`w-[40px] h-[40px] flex items-center justify-center rounded-[8px] transition-all duration-200 ${
+            isOutOfStock
+              ? "bg-gray-300 cursor-not-allowed opacity-60"
+              : isInCart
+              ? "bg-[#211C4D] shadow-[0px_4px_8px_0px_#211C4D4d] hover:shadow-[0px_6px_12px_0px_#211C4D66] cursor-pointer"
+              : "bg-[#EEF1F6] hover:bg-[#dfe3ea] shadow-[0px_2px_4px_0px_#00000020] cursor-pointer"
+          }`}
         >
           {isInCart ? (
-            // شكل مختلف لما تكون في السلة
-            <svg
-              width="18"
-              height="18"
-              viewBox="0 0 24 24"
-              fill="white"
-              xmlns="http://www.w3.org/2000/svg"
-            >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
               <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zm10 0c-1.1 0-1.99.9-1.99 2S15.9 22 17 22s2-.9 2-2-.9-2-2-2zM7.16 14l-.94-2h11.53c.75 0 1.41-.41 1.75-1.03l3.58-6.49A.996.996 0 0018.76 3H5.21l-.94-2H1v2h2l3.6 7.59-1.35 2.44C5.09 13.37 5 13.68 5 14a2 2 0 002 2h12v-2H7.42c-.14 0-.25-.11-.26-.25L7.16 14z" />
             </svg>
           ) : (
-            // الشكل العادي للسلة
-            <svg
-              width="16"
-              height="17"
-              viewBox="0 0 16 17"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
+            <svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
               <g clipPath="url(#clip0_2531_3183)">
                 <path
                   fillRule="evenodd"
@@ -321,12 +353,7 @@ export default function ProductCard({ product, imagecard, containerstyle }: Prod
               </g>
               <defs>
                 <clipPath id="clip0_2531_3183">
-                  <rect
-                    width="16"
-                    height="16"
-                    fill="white"
-                    transform="translate(0 0.417969)"
-                  />
+                  <rect width="16" height="16" fill="white" transform="translate(0 0.417969)" />
                 </clipPath>
               </defs>
             </svg>

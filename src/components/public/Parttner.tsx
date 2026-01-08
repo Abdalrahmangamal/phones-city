@@ -75,7 +75,7 @@ export default function Parttner() {
   // حالة الخطأ
   if (error) {
     return (
-      <div className="py-20 text-center">
+      <div className="lg:px-[90px] px-2 py-20 text-center">
         <p className="text-red-500 text-lg">{error}</p>
         <button
           onClick={fetchTrademarks}
@@ -90,7 +90,7 @@ export default function Parttner() {
   // حالة عدم وجود علامات تجارية
   if (!trademarks || trademarks.length === 0) {
     return (
-      <div className="py-20 text-center">
+      <div className="lg:px-[90px] px-2 py-20 text-center">
         <p className="text-gray-500 text-lg">
           {t("noBrandsAvailable") || "لا توجد علامات تجارية متاحة حاليًا"}
         </p>
@@ -99,8 +99,8 @@ export default function Parttner() {
   }
 
   return (
-    <div>
-      {/* العنوان مع الزخرفة */}
+    <div className="lg:px-[90px] px-2 my-12">
+      {/* العنوان مع الزخرفة - نفس محاذاة Offerherosection */}
       <div className="relative w-fit mx-auto mt-[40px] mb-8">
         <h1 className="md:text-[40px] text-[24px] font-[700] text-[#211C4D] text-center relative z-10">
           {t("Brands")}
@@ -114,7 +114,7 @@ export default function Parttner() {
         />
       </div>
 
-      {/* السلايدر */}
+      {/* السلايدر - نفس المحاذاة */}
       <Swiper
         key={lang} // لإعادة تهيئة السلايدر عند تغيير اللغة
         slidesPerView={6}
@@ -126,7 +126,7 @@ export default function Parttner() {
           768: { slidesPerView: 4 },
           1024: { slidesPerView: 6 },
         }}
-        className="mySwiper !px-[20px] md:px-[0px] h-[100px] md:h-[130px] pt-[50px] mt-[60px]"
+        className="mySwiper h-[100px] md:h-[130px] pt-[50px] mt-[60px]"
       >
         {trademarks.map((item) => (
           <SwiperSlide

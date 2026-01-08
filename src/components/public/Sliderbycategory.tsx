@@ -1,34 +1,37 @@
 "use client";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
-// import { Link } from "react-router-dom";
 import { useLangSync } from "@/hooks/useLangSync";
 import { ChevronRight, ChevronLeft } from "lucide-react";
 import { useRef } from "react";
-
-// صور الفئات
 
 export default function CategorySlider({ category ,setSelectedSubCategory }: any) {
   const { lang } = useLangSync();
   const swiperRef = useRef<any>(null);
 
   return (
-    <div className="relative w-full bg-[#E5E5F7] py-6">
-      {/* الأسهم */}
+    <div className="lg:px-[90px] px-2 relative w-full bg-[#E5E5F7] py-6">
+      {/* الأسهم - نفس محاذاة Offerherosection */}
       <button
         onClick={() => swiperRef.current.swiper.slidePrev()}
-        className="absolute right-2 top-1/2 -translate-y-1/2 z-10 w-8 h-8 flex items-center justify-center bg-white rounded-full shadow-md hover:bg-gray-100"
+        className={`absolute ${lang === "ar" ? "left-2" : "right-2"} top-1/2 -translate-y-1/2 z-10 w-8 h-8 flex items-center justify-center bg-white rounded-full shadow-md hover:bg-gray-100`}
       >
-        <ChevronLeft className="w-4 h-4 rotate-180 text-[#211C4D]" />
+        {lang === "ar" ? 
+          <ChevronRight className="w-4 h-4 text-[#211C4D]" /> : 
+          <ChevronLeft className="w-4 h-4 text-[#211C4D]" />
+        }
       </button>
       <button
         onClick={() => swiperRef.current.swiper.slideNext()}
-        className="absolute left-2 top-1/2 -translate-y-1/2 z-10 w-8 h-8 flex items-center justify-center bg-white rounded-full shadow-md hover:bg-gray-100"
+        className={`absolute ${lang === "ar" ? "right-2" : "left-2"} top-1/2 -translate-y-1/2 z-10 w-8 h-8 flex items-center justify-center bg-white rounded-full shadow-md hover:bg-gray-100`}
       >
-        <ChevronRight className="w-4 h-4 text-[#211C4D]" />
+        {lang === "ar" ? 
+          <ChevronLeft className="w-4 h-4 text-[#211C4D]" /> : 
+          <ChevronRight className="w-4 h-4 text-[#211C4D]" />
+        }
       </button>
 
-      {/* السلايدر */}
+      {/* السلايدر - نفس المحاذاة */}
       <Swiper
         ref={swiperRef}
         slidesPerView={6}
@@ -53,7 +56,7 @@ export default function CategorySlider({ category ,setSelectedSubCategory }: any
                 alt={cat.name}
                 className="!w-[182px] !h-[122px] !object-contain"
               />
-              <p className="mt-3 text-[#211C4D] text-[24px] font-medium">
+              <p className="mt-3 text-[#211C4D] text-[24px] font-medium text-center">
                 {cat.name}
               </p>
             </button>
