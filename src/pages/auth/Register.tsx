@@ -32,8 +32,8 @@ export default function Register() {
       phone: z.string().min(1, { message: `${t(`Phoneisrequired`)}` }),
       password: z
         .string()
-        .min(6, { message: `${t(`Passwordmustbeatleast6characters`)}` }),
-      password_confirmation: z.string().min(6, {
+        .min(8, { message: `${t(`Passwordmustbeatleast6characters`)}` }),
+      password_confirmation: z.string().min(8, {
         message: `${t(`Passwordconfirmationmustbeatleast6characters`)}`,
       }),
     })
@@ -79,27 +79,45 @@ export default function Register() {
       console.error("Register: sendRegisterData error:", err);
     }
   };
+  const formatServerFieldError = (field: string) => {
+    if (!error) return undefined;
+    if (typeof error === "string") return error;
+    
+    // Handle { email: ["message"], phone: ["message"] }
+    const val = (error as any)?.[field];
+    if (!val) return undefined;
+    
+    // If it's an array, join with bullet
+    if (Array.isArray(val)) {
+      return val.join(" • ");
+    }
+    
+    // Otherwise convert to string
+    return String(val);
+  };
+
+
   const signupInputs = [
     {
       title: "Name",
       type: "text",
       name: "name",
       register: register("name"),
-      error: errors.name?.message,
+      error: errors.name?.message || formatServerFieldError("name"),
     },
     {
       title: "Email",
       type: "text",
       name: "email",
       register: register("email") ,
-      error: errors.email?.message || error?.email,
+      error: errors.email?.message || formatServerFieldError("email"),
     },
     {
       title: "Phone",
       type: "Number",
       name: "phone",
       register: register("phone"),
-      error: errors.phone?.message || error?.phone,
+      error: errors.phone?.message || formatServerFieldError("phone"),
     },
     {
       title: "Password",
@@ -108,7 +126,7 @@ export default function Register() {
       register: register("password"),
       showtoggle: true,
       function: () => setShowPassword(!showPassword),
-      error: errors.password?.message,
+      error: errors.password?.message || formatServerFieldError("password"),
       icontoggle: showPassword ? <EyeOff size={22} /> : <Eye size={22} />,
     },
     {
@@ -118,7 +136,7 @@ export default function Register() {
       register: register("password_confirmation"),
       showtoggle: true,
       function: () => setShowConfirmPassword(!showConfirmPassword),
-      error: errors.password_confirmation?.message,
+      error: errors.password_confirmation?.message || formatServerFieldError("password_confirmation"),
       icontoggle: showConfirmPassword ? (
         <EyeOff size={22} />
       ) : (
@@ -158,6 +176,7 @@ export default function Register() {
             {/* الاسم */}
             {signupInputs.map((inputt) => (
               <div
+                key={inputt.name}
                 className={`relative ${
                   inputt.name === "password_confirmation" ? "col-span-2" : ""
                 }`}
@@ -168,7 +187,11 @@ export default function Register() {
                 <input
                   type={inputt.type}
                   placeholder={`${t("Enter")} ${t(`${inputt.title}`)}`}
-                  className="w-full p-3 border border-gray-300 rounded-xl h-[50px]"
+                  className={`w-full p-3 border rounded-xl h-[50px] transition-all ${
+                    inputt.error
+                      ? "border-red-400 bg-red-50 focus:ring-red-300 focus:ring-2"
+                      : "border-gray-300 focus:ring-blue-300 focus:ring-2"
+                  }`}
                   {...inputt.register}
                 />
                 {inputt.showtoggle && (
@@ -181,7 +204,9 @@ export default function Register() {
                 )}
 
                 {inputt.error && (
-                  <p className="text-red-500 text-sm mt-1">{inputt.error}</p>
+                  <div className="mt-2 bg-red-50 border border-red-200 rounded px-2 py-1">
+                    <p className="text-red-600 text-xs font-semibold">✗ {inputt.error}</p>
+                  </div>
                 )}
               </div>
             ))}
@@ -279,8 +304,10 @@ export default function Register() {
             </div> */}
 
             {/* زر التسجيل */}
+        
             <button
               type="submit"
+              disabled={isSubmitting}
               className="
     col-span-2 w-full h-[54px] bg-[#2AA0DC] rounded-[32px] text-[20px] font-bold text-white mt-2
     transition-all duration-300 ease-out
@@ -288,9 +315,10 @@ export default function Register() {
     hover:scale-[1.02]
     hover:shadow-[0_8px_20px_rgba(42,160,220,0.35)]
     active:scale-[0.98]
+    disabled:opacity-60 disabled:cursor-not-allowed
   "
             >
-              تسجيل الدخول
+              {isSubmitting ? "جاري التسجيل..." : "تسجيل الدخول"}
             </button>
 
             {/* تسجيل عبر السوشيال */}

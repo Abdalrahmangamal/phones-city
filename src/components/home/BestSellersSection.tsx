@@ -5,6 +5,7 @@ import { Navigation, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "./BestSellersSection.css";
+import svg1 from "../../assets/images/Layer_1.png";
 
 import { useLangSync } from '@/hooks/useLangSync';
 import { Link } from "react-router-dom";
@@ -35,13 +36,18 @@ const BestSellersSection: React.FC<BestSellersSectionProps> = ({
       <div className={`special-offers-container w-full flex md:mt-[80px] flex-col xl:px-[90px] px-2 pt-0 md:pt-0 items-start md:gap-[32px] gap-[0px] ${style}`}>
         {/* Header */}
         <div className="w-full flex items-center justify-between relative mb-4">
-          <div className="relative">
-            <div className={`absolute md:-top-2 z-5 ${lang === 'en' ? 'left-[200px] md:-left-4 -scale-x-100' : 'right-[200px] md:-right-4'}`}>
-              <img src="/Layer_1.svg" alt="" className="opacity-100" />
-            </div>
+          <div className="relative w-fit">
             <h2 className="font-roboto font-semibold md:!text-[40px] text-[24px] leading-[36px] text-[#211C4D] relative z-10">
               {t(title)}
             </h2>
+            <img
+              src={svg1}
+              alt=""
+              className={`absolute block ${lang === "ar"
+                ? "w-[80px] md:w-[110px] -bottom-5 md:-bottom-7 -right-10 md:-right-15"
+                : "w-[80px] md:w-[110px] -bottom-5 md:-bottom-7 -left-10 md:-left-15 -scale-x-100"
+                }`}
+            />
           </div>
 
           <div className="flex items-center gap-[6px] py-[10px] rounded-[4px] opacity-50">
@@ -144,13 +150,18 @@ const BestSellersSection: React.FC<BestSellersSectionProps> = ({
     <div className={`best-sellers-container w-full flex md:mt-[80px] flex-col xl:px-[90px] px-2 pt-0 md:pt-0 items-start md:gap-[32px] gap-[0px] ${style}`}>
       {/* Header */}
       <div className="w-full flex items-center justify-between relative mb-4">
-        <div className="relative">
-          <div className={`absolute md:-top-2 z-5 ${lang === 'en' ? 'left-[200px] md:-left-4 -scale-x-100' : 'right-[200px] md:-right-4'}`}>
-            <img src="/Layer_1.svg" alt="" className="opacity-100" />
-          </div>
+        <div className="relative w-fit">
           <h2 className="font-roboto font-semibold md:!text-[40px] text-[24px] leading-[36px] text-[#211C4D] relative z-10">
             {t(title)}
           </h2>
+          <img
+            src={svg1}
+            alt=""
+            className={`absolute block ${lang === "ar"
+              ? "w-[80px] md:w-[110px] -bottom-5 md:-bottom-7 -right-10 md:-right-15"
+              : "w-[80px] md:w-[110px] -bottom-5 md:-bottom-7 -left-10 md:-left-15 -scale-x-100"
+              }`}
+          />
         </div>
 
         <Link

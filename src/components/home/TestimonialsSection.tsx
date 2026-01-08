@@ -8,12 +8,12 @@ import arrowDown from "../../assets/images/arrowdown.png";
 import { useEffect, useRef } from "react";
 import { useLangSync } from "@/hooks/useLangSync";
 import pattern from "../../assets/images/Layer_1.png";
-import { useTestimonialStore } from "@/store/home/testimonialStore"; 
+import { useTestimonialStore } from "@/store/home/testimonialStore";
 
 const TestimonialsSection = () => {
   const { lang } = useLangSync();
   const swiperRef = useRef<SwiperType | null>(null);
-  
+
   // استخدام المخزن
   const {
     testimonials,
@@ -34,7 +34,7 @@ const TestimonialsSection = () => {
     if (swiperRef.current) {
       swiperRef.current.update();
     }
-  }, [lang, testimonials]); 
+  }, [lang, testimonials]);
 
   const handlePrev = () => {
     if (swiperRef.current) {
@@ -69,7 +69,7 @@ const TestimonialsSection = () => {
 
   if (error) {
     console.warn('Error loading testimonials:', error);
-    
+
   }
 
   // استخدام البيانات من المخزن أو البيانات الثابتة كنسخة احتياطية
@@ -87,23 +87,29 @@ const TestimonialsSection = () => {
       created_at: "",
       updated_at: ""
     },
-    
+
   ];
 
   return (
-    <section className="w-full xl:px-[90px] px-2 pt-0 md:pt-0 min-h-[500px] lg:h-[900px] flex items-center justify-center py-10 lg:py-0 lg:mt-6 relative overflow-hidden">
+    <section className={`w-full xl:px-[90px] px-2 min-h-[500px] lg:h-[900px] flex items-center justify-center py-10 lg:py-0 lg:mt-6 relative overflow-hidden ${lang === "ar" ? "pt-20 md:pt-24" : "pt-0 md:pt-0"}`}>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-10 w-full items-center relative z-10">
         {/* الجزء الأيمن */}
         <div className="flex flex-col items-start mb-10 gap-4 lg:gap-6 relative z-20 text-right order-1 lg:order-1 lg:col-span-1">
-          <div className="flex items-center justify-center lg:justify-start w-full lg:w-auto">
-            <img src={pattern} alt="" className="w-12 h-12 lg:w-20 lg:h-20" />
-            <h2 className="font-roboto font-semibold text-2xl sm:text-3xl lg:text-[40px] leading-[28px] lg:leading-[36px] text-[#211C4D] mr-2">
+          <div className="relative w-fit">
+            <h2 className="font-roboto font-semibold text-2xl sm:text-3xl lg:text-[40px] leading-[28px] lg:leading-[36px] text-[#211C4D] relative z-10">
               {getTitle()}
             </h2>
+            <img
+              src={pattern}
+              alt=""
+              className={`absolute block ${lang === 'en'
+                ? 'w-[80px] lg:w-[110px] -bottom-5 lg:-bottom-7 -left-10 lg:-left-16 -scale-x-100'
+                : 'w-[80px] lg:w-[110px] -bottom-5 lg:-bottom-10 -right-10 lg:-right-16'}`}
+            />
           </div>
 
           {/* أزرار التحكم */}
-          <div className={`flex mt-4 lg:mt-8 justify-center lg:justify-start w-full lg:w-auto lg:mr-[50px] gap-4 ${lang=="en"?"flex-row-reverse":""}`}>
+          <div className={`flex mt-4 lg:mt-8 justify-center lg:justify-start w-full lg:w-auto lg:mr-[50px] gap-4 ${lang == "en" ? "flex-row-reverse" : ""}`}>
             <button
               className="swiper-button-prev-custom p-2 hover:bg-gray-100 rounded transition-colors"
               onClick={handlePrev}
@@ -142,7 +148,7 @@ const TestimonialsSection = () => {
           <div className="w-full h-full flex items-center justify-center md:!justify-end z-20 relative ml-0 lg:ml-8">
             <div className="w-full max-w-[900px] md:w-[72%] lg:w-[94%] mx-auto md:!m-0 px-2 sm:px-4">
               <Swiper
-                key={`${lang}-${testimonials.length}`} 
+                key={`${lang}-${testimonials.length}`}
                 dir={lang === "ar" ? "rtl" : "ltr"}
                 modules={[Navigation, Autoplay]}
                 spaceBetween={20}
@@ -189,11 +195,10 @@ const TestimonialsSection = () => {
                               {[...Array(5)].map((_, i) => (
                                 <span
                                   key={i}
-                                  className={`text-[20px] sm:text-[25px] w-[20px] h-[20px] sm:w-[25px] sm:h-[25px] lg:w-[20px] lg:h-[20px] flex items-center justify-center ${
-                                    i < Math.round(testimonial.rate)
-                                      ? "text-[#F3AC5D]"
-                                      : "text-gray-300"
-                                  }`}
+                                  className={`text-[20px] sm:text-[25px] w-[20px] h-[20px] sm:w-[25px] sm:h-[25px] lg:w-[20px] lg:h-[20px] flex items-center justify-center ${i < Math.round(testimonial.rate)
+                                    ? "text-[#F3AC5D]"
+                                    : "text-gray-300"
+                                    }`}
                                 >
                                   ★
                                 </span>
@@ -216,8 +221,8 @@ const TestimonialsSection = () => {
                   </SwiperSlide>
                 ))}
               </Swiper>
-              
-              
+
+
               {!loading && displayTestimonials.length === 0 && (
                 <div className="text-center py-8">
                   <p className="text-[#211C4D]">

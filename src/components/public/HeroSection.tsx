@@ -67,18 +67,19 @@ const NewHeroSection: React.FC<HeroSectionProps> = ({ sliders }) => {
           delay: 4000,
           disableOnInteraction: false,
         }}
+        
         loop={true}
         pagination={{
           clickable: true,
           dynamicBullets: true,
         }}
         modules={[Pagination, Autoplay]}
-        className="mySwiper md:h-[400px] h-[200px] rounded-[16px] mt-6"
+        className="mySwiper md:h-[400px]  h-[200px] rounded-[16px] mt-6"
       >
         {sliders.map((slide, index) => (
-          <SwiperSlide key={`${slide.title}-${index}`} className="relative">
+          <SwiperSlide key={`${slide.title}-${index}`} className=" relative">
             {/* خلفية الصورة */}
-            <div className="absolute inset-0 w-full h-full">
+            <div className="absolute inset-0 w-[99%] h-full">
               <img
                 src={slide.bg}
                 alt={`${slide.title} - Slide ${index + 1}`}
@@ -91,7 +92,7 @@ const NewHeroSection: React.FC<HeroSectionProps> = ({ sliders }) => {
             </div>
 
             {/* المحتوى النصي والزر */}
-            <div className="relative z-10 w-full h-full flex flex-col justify-start items-start px-[40px] pt-[40px] md:pt-[60px]">
+            <div className="relative z-10 w-full h-full flex flex-col justify-start items-start px-[40px] pt-[20px] md:pt-[60px]">
               <h1 className="font-[700] md:text-[3rem] text-[1.5rem] text-white textshad">
                 {slide.title}
               </h1>

@@ -33,7 +33,7 @@ interface ForgotPasswordTypes {
 
 interface AuthState {
   loading: boolean;
-  error: string | null;
+  error: any | null;
   sendRegisterData: (data: RegisterData) => Promise<any>;
   sendVerifyCode: (data: VerifyCodetypes) => Promise<any>;
   sendLogin: (data: Logintypes) => Promise<any>;
@@ -49,7 +49,7 @@ export const useAuthStore = create<AuthState>((set) => ({
 
   sendRegisterData: async (data) => {
     try {
-      set({ loading: true });
+      set({ loading: true, error: null });
       const res = await axios.post(`${baseUrl}api/v1/auth/register`, data, {
         headers: {
           "Content-Type": "application/json",
@@ -61,10 +61,13 @@ export const useAuthStore = create<AuthState>((set) => ({
       try {
         localStorage.setItem("userData", JSON.stringify(res.data));
       } catch (e) {}
+      set({ error: null });
       return res.data;
     } catch (err: any) {
-      set({ loading: false, error: err?.response?.data?.data || "Error" });
-      console.log(err?.response?.data?.data);
+      // Extract errors from response - API returns { errors: { field: ["message"] } }
+      const serverErrors = err?.response?.data?.errors ?? err?.response?.data?.data ?? err?.response?.data ?? err?.message ?? "Error";
+      set({ loading: false, error: serverErrors });
+      console.log("Register error:", serverErrors);
       return null;
     } finally {
       set({ loading: false });
@@ -73,12 +76,12 @@ export const useAuthStore = create<AuthState>((set) => ({
 
   sendVerifyCode: async (data) => {
     try {
-      set({ loading: true });
+      set({ loading: true, error: null });
       const res = await axios.post(`${baseUrl}api/v1/auth/verify-code`, data, {
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
-          "Accept-Language": "en",
+          "Accept-Language": "ar",
         },
       });
       console.log("VERIFY-CODE RESPONSE:", res.data);
@@ -101,10 +104,12 @@ export const useAuthStore = create<AuthState>((set) => ({
         }
       }
 
+      set({ error: null });
       return res.data;
-    } catch (err) {
-      set({ loading: false });
-      console.log(err);
+    } catch (err: any) {
+      const serverErrors = err?.response?.data?.errors ?? err?.response?.data?.data ?? err?.response?.data ?? err?.message ?? "Error";
+      set({ loading: false, error: serverErrors });
+      console.log("Verify Code error:", serverErrors);
       return null;
     } finally {
       set({ loading: false });

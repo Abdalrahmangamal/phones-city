@@ -1,7 +1,7 @@
 "use client";
 import * as React from "react";
 import logo from "../../assets/images/logo.png";
-import { ShoppingCart, UserRound, Heart, Globe, Search } from "lucide-react";
+import { ShoppingCart, UserRound, Heart, Globe, Search, Smartphone, Watch, Headphones, Laptop, Tablet, Speaker, Cable, Gamepad, Camera, Tv, Printer, HardDrive, Zap, Grid, Cpu, Plug, Router } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import "../../style.css";
@@ -38,6 +38,8 @@ interface SuggestionItem {
   image?: string;
   productsCount?: number;
 }
+
+
 
 export default function Header() {
   const { categories, fetchCategories } = useCategoriesStore();
@@ -355,8 +357,7 @@ export default function Header() {
                   to={`${item.link}`}
                   end={item.link === `/${lang}/`}
                   className={({ isActive }) =>
-                    `xl:text-[20px] lg:text-[15px] py-[9px] px-[24px] md:text-[12px] font-[400] text-white hover:text-[#F3AC5D] transition-all duration-300 ${
-                      isActive ? "navactive text-[#F3AC5D]" : ""
+                    `xl:text-[20px] lg:text-[15px] py-[9px] px-[24px] md:text-[12px] font-[400] text-white hover:text-[#F3AC5D] transition-all duration-300 ${isActive ? "navactive text-[#F3AC5D]" : ""
                     }`
                   }
                 >
@@ -424,7 +425,7 @@ export default function Header() {
                     if (!hasChildren) {
                       return (
                         <DropdownMenuItem key={category.id} asChild>
-                          <Link to={`/${lang}/categorySingle/${category.slug}/products`}>
+                          <Link to={`/${lang}/categorySingle/${category.slug}/products`} className="flex items-center gap-2 cursor-pointer">
                             {category.name}
                           </Link>
                         </DropdownMenuItem>
@@ -433,21 +434,17 @@ export default function Header() {
 
                     return (
                       <DropdownMenuSub key={category.id}>
-                        <DropdownMenuSubTrigger>
+                        <DropdownMenuSubTrigger className="flex items-center gap-2 cursor-pointer">
                           {category.name}
                         </DropdownMenuSubTrigger>
 
                         <DropdownMenuPortal>
-                          <DropdownMenuSubContent className="w-48" sideOffset={10}>
+                          <DropdownMenuSubContent className="w-48">
                             <DropdownMenuItem asChild>
-                              <Link
-                                to={`/${lang}/categorySingle/${category.slug}/products`}
-                                className="font-semibold text-primary border-b pb-2 mb-2"
-                              >
+                              <Link to={`/${lang}/categorySingle/${category.slug}/products`}>
                                 {t("View all")} {category.name}
                               </Link>
                             </DropdownMenuItem>
-
                             {category.children.map((child: any) => (
                               <DropdownMenuItem key={child.id} asChild>
                                 <Link to={`/${lang}/categorySingle/${child.slug}/products`}>
@@ -473,7 +470,7 @@ export default function Header() {
           isOpen={isMenuOpen}
           onClose={() => setIsMenuOpen(false)}
           openSections={false}
-          setOpenSections={() => {}}
+          setOpenSections={() => { }}
         />
 
         <MobileNavbar

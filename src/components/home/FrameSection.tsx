@@ -5,6 +5,7 @@ import "@/style.css";
 import topYellow from "../../assets/images/Frame 546526596png.png";
 import bottomYellow from "../../assets/images/Frame 1321317129.png";
 import pattern from "../../assets/images/Layer_1.png";
+import { useLangSync } from "@/hooks/useLangSync";
 
 // تعريف نوع الميزة (Feature) حسب الـ API المتوقع
 interface Feature {
@@ -22,6 +23,7 @@ interface FrameSectionProps {
 
 const FrameSection: React.FC<FrameSectionProps> = ({ features }) => {
   const { t } = useTranslation();
+  const { lang } = useLangSync();
 
   // حالة تحميل أو عدم وجود بيانات
   if (!features || features.length === 0) {
@@ -52,12 +54,18 @@ const FrameSection: React.FC<FrameSectionProps> = ({ features }) => {
       />
 
       <div className="relative z-10 max-w-7xl mx-auto">
-        {/* العنوان الرئيسي مع الزخرفة */}
-        <div className="flex items-center justify-center lg:justify-center w-full lg:w-auto">
-          <img src={pattern} alt="" className="w-12 h-12 lg:w-20 lg:h-20" />
-          <h2 className="text-center text-[#211C4D] text-[clamp(24px,5vw,36px)] font-[700] mb-4 ml-6">
+        {/* Title with decorative pattern - Consistent with SpecialOffers */}
+        <div className="relative w-fit mx-auto mb-8">
+          <h2 className="text-center text-[#211C4D] text-[clamp(24px,5vw,36px)] font-[700] relative z-10">
             {t("StoreFeatures") || "مميزات المتجر"}
           </h2>
+          <img
+            src={pattern}
+            alt=""
+            className={`absolute block ${lang === 'en'
+              ? 'w-[80px] md:w-[110px] -bottom-5 md:-bottom-7 -left-10 md:-left-16 -scale-x-100'
+              : 'w-[80px] md:w-[110px] -bottom-5 md:-bottom-7 -right-10 md:-right-16'}`}
+          />
         </div>
 
         {/* الوصف الفرعي */}

@@ -5,6 +5,7 @@ import { Navigation, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "./SpecialOffersSection.css";
+import svg1 from "../../assets/images/Layer_1.png";
 
 import { useLangSync } from '@/hooks/useLangSync';
 import { Link } from "react-router-dom";
@@ -37,13 +38,18 @@ const SpecialOffersSection: React.FC<SpecialOffersSectionProps> = ({
       <div className={`special-offers-container w-full flex md:mt-[80px] flex-col xl:px-[90px] px-2 pt-0 md:pt-0 items-start md:gap-[32px] gap-[0px] ${style}`}>
         {/* Header - مطابق لـ BestSellers */}
         <div className="w-full flex items-center justify-between relative mb-4">
-          <div className="relative">
-            <div className={`absolute md:-top-2 z-5 ${lang === 'en' ? 'left-[200px] md:-left-4 -scale-x-100' : 'right-[200px] md:-right-4'}`}>
-              <img src="/Layer_1.svg" alt="" className="opacity-100" />
-            </div>
+          <div className="relative w-fit">
             <h2 className="font-roboto font-semibold md:!text-[40px] text-[24px] leading-[36px] text-[#211C4D] relative z-10">
               {t(title)}
             </h2>
+            <img
+              src={svg1}
+              alt=""
+              className={`absolute block ${lang === "ar"
+                ? "w-[80px] md:w-[110px] -bottom-5 md:-bottom-7 -right-10 md:-right-15"
+                : "w-[80px] md:w-[110px] -bottom-5 md:-bottom-7 -left-10 md:-left-15 -scale-x-100"
+                }`}
+            />
           </div>
 
           <div className="flex items-center gap-[6px] py-[10px] rounded-[4px] opacity-50">
@@ -87,7 +93,7 @@ const SpecialOffersSection: React.FC<SpecialOffersSectionProps> = ({
             }}
           >
             {[...Array(4)].map((_, index) => (
-              <SwiperSlide key={index} className="h-auto">
+              <SwiperSlide key={index} className="h-auto my-[10px]">
                 <div className="h-full animate-pulse">
                   <div className="bg-gray-200 rounded-[10px] p-2 pb-3 min-h-[200px] h-full">
                     <div className="h-[100px] w-[100px] bg-gray-300 rounded mx-auto mb-2"></div>
@@ -141,13 +147,18 @@ const SpecialOffersSection: React.FC<SpecialOffersSectionProps> = ({
     <div className={`special-offers-container w-full flex md:mt-[80px] flex-col xl:px-[90px] px-2 pt-0 md:pt-0 items-start md:gap-[32px] gap-[0px] ${style}`}>
       {/* Header */}
       <div className="w-full flex items-center justify-between relative mb-4">
-        <div className="relative">
-          <div className={`absolute md:-top-2 z-5 ${lang === 'en' ? 'left-[200px] md:-left-4 -scale-x-100' : 'right-[200px] md:-right-4'}`}>
-            <img src="/Layer_1.svg" alt="" className="opacity-100" />
-          </div>
+        <div className="relative w-fit">
           <h2 className="font-roboto font-semibold md:!text-[40px] text-[24px] leading-[36px] text-[#211C4D] relative z-10">
             {t(title)}
           </h2>
+          <img
+            src={svg1}
+            alt=""
+            className={`absolute block ${lang === "ar"
+              ? "w-[80px] md:w-[110px] -bottom-8 md:-bottom-11 -right-12 md:-right-16"
+              : "w-[80px] md:w-[110px] -bottom-5 md:-bottom-7 -left-10 md:-left-15 -scale-x-100"
+              }`}
+          />
         </div>
 
         <Link
@@ -181,7 +192,7 @@ const SpecialOffersSection: React.FC<SpecialOffersSectionProps> = ({
         <Swiper
           key={lang + products.length}
           modules={[Navigation,
-            // Autoplay
+            Autoplay
           ]}
           navigation={{
             nextEl: '.special-offers-next',
@@ -190,12 +201,12 @@ const SpecialOffersSection: React.FC<SpecialOffersSectionProps> = ({
           }}
           loop={shouldAllowSlide && products.length > slidesPerView}
           dir={lang === "ar" ? "rtl" : "ltr"}
-          // autoplay={
-          //   shouldAllowSlide ? {
-          //     delay: 4000,
-          //     disableOnInteraction: false,
-          //   } : false
-          // }
+          autoplay={
+            shouldAllowSlide ? {
+              delay: 4000,
+              disableOnInteraction: false,
+            } : false
+          }
           slidesPerView={slidesPerView}
           spaceBetween={20}
           className="w-full pb-10"

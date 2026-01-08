@@ -1,7 +1,6 @@
-import Layout from "@/components/layout/Layout";
+import Layout from "@/components/layout/layout";
 import Sidebar from "@/components/layout/Sidebar";
 import { useEffect, useState } from "react";
-import edit from "@/assets/images/aedit.png";
 import close from "@/assets/images/Close.png";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -11,7 +10,7 @@ import { toast, ToastContainer } from "react-toastify";
 
 export default function Address() {
   const { t, i18n } = useTranslation();
-  
+
   // استخدام الـ store
   const {
     addresses,
@@ -30,14 +29,14 @@ export default function Address() {
   useEffect(() => {
     fetchAddresses();
   }, [fetchAddresses]);
-console.log(addresses)
+  console.log(addresses)
   const handleDelete = async (id: number) => {
     // عرض toast.
     toast(
       <div className="flex flex-col gap-3">
         <p className="font-semibold text-lg">
-          {i18n.language === "ar" 
-            ? "هل أنت متأكد أنك تريد حذف هذا العنوان؟" 
+          {i18n.language === "ar"
+            ? "هل أنت متأكد أنك تريد حذف هذا العنوان؟"
             : "Are you sure you want to delete this address?"}
         </p>
         <div className="flex justify-end gap-2 mt-2">
@@ -74,11 +73,11 @@ console.log(addresses)
     setDeletingId(id);
     try {
       await deleteAddress(id);
-      
+
       // عرض رسالة نجاح
       toast.success(
-        i18n.language === "ar" 
-          ? "تم حذف العنوان بنجاح" 
+        i18n.language === "ar"
+          ? "تم حذف العنوان بنجاح"
           : "Address deleted successfully",
         {
           position: i18n.language === "ar" ? "top-center" : "top-center",
@@ -92,7 +91,7 @@ console.log(addresses)
       );
     } catch (err: any) {
       setError(err.response?.data?.message || "Failed to delete address");
-      
+
       // عرض رسالة خطأ
       toast.error(
         err.response?.data?.message || t("Failed to delete address"),
@@ -131,7 +130,7 @@ console.log(addresses)
           pauseOnHover
           theme="light"
         />
-        <div className="flex flex-col md:flex-row justify-center gap-[30px] mt-[80px]">
+        <div className="flex flex-col md:flex-row justify-center gap-[30px] mt-[80px] md:mb-20">
           <Sidebar />
           <div className="md:w-[883px] w-full">
             <p className="text-[20px] text-[#211C4D] font-[600]">{t("Address")}</p>
@@ -160,13 +159,13 @@ console.log(addresses)
           pauseOnHover
           theme="light"
         />
-        <div className="flex flex-col md:flex-row justify-center gap-[30px] mt-[80px]">
+        <div className="flex flex-col md:flex-row justify-center gap-[30px] mt-[80px] md:mb-20">
           <Sidebar />
           <div className="md:w-[883px] w-full">
             <p className="text-[20px] text-[#211C4D] font-[600]">{t("Address")}</p>
             <div className="w-full mt-10">
               <p className="text-red-500 text-center">{error}</p>
-              <button 
+              <button
                 onClick={() => fetchAddresses()}
                 className="mt-4 mx-auto block bg-[#211C4D] text-white px-4 py-2 rounded hover:opacity-90"
               >
@@ -195,8 +194,8 @@ console.log(addresses)
           pauseOnHover
           theme="light"
         />
-        
-        <div className="flex flex-col md:flex-row justify-center gap-[30px] mt-[80px]">
+
+        <div className="flex flex-col md:flex-row justify-center gap-[30px] mt-[80px] md:mb-20">
           <Sidebar />
           <div className="md:w-[883px] w-full">
             <p className="text-[20px] text-[#211C4D] font-[600]">{t("Address")}</p>
@@ -216,11 +215,10 @@ console.log(addresses)
                   {addresses.map((item) => (
                     <div
                       key={item.id}
-                      className={`flex justify-between my-12 items-center bg-[#F7F7F7] rounded-xl p-5 mb-4 relative transition-all duration-300 ${
-                        selectedAddressId === item.id
-                          ? "border border-[#211C4D] shadow-[0_4px_12px_rgba(0,0,0,0.1)]"
-                          : "border border-transparent"
-                      }`}
+                      className={`flex justify-between my-12 items-center bg-[#F7F7F7] rounded-xl p-5 mb-4 relative transition-all duration-300 ${selectedAddressId === item.id
+                        ? "border border-[#211C4D] shadow-[0_4px_12px_rgba(0,0,0,0.1)]"
+                        : "border border-transparent"
+                        }`}
                     >
                       {/* Right Side (Address Info) */}
                       <div className="text-right">
@@ -238,11 +236,10 @@ console.log(addresses)
                           </p>
                           {item.label && (
                             <span
-                              className={`text-white text-[13px] rounded-md px-3 py-1 ${
-                                item.label.toLowerCase() === "home" || item.label.toLowerCase() === "المنزل"
-                                  ? "bg-[#F4B740]"
-                                  : "bg-[#F3AC5D]"
-                              }`}
+                              className={`text-white text-[13px] rounded-md px-3 py-1 ${item.label.toLowerCase() === "home" || item.label.toLowerCase() === "المنزل"
+                                ? "bg-[#F4B740]"
+                                : "bg-[#F3AC5D]"
+                                }`}
                             >
                               {item.label}
                             </span>
@@ -266,9 +263,8 @@ console.log(addresses)
                         <button
                           onClick={() => handleDelete(item.id)}
                           disabled={deletingId === item.id}
-                          className={`text-gray-500 hover:text-red-600 text-xl transition ${
-                            deletingId === item.id ? "opacity-50 cursor-not-allowed" : ""
-                          }`}
+                          className={`text-gray-500 hover:text-red-600 text-xl transition ${deletingId === item.id ? "opacity-50 cursor-not-allowed" : ""
+                            }`}
                           title={t("Delete")}
                         >
                           <img src={close} alt={t("Delete")} />

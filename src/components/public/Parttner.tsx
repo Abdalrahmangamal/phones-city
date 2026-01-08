@@ -1,5 +1,5 @@
 // components/public/Parttner.tsx
-import pattern from "../../assets/images/Layer_1.png";
+import pattern from "../../assets/images/svg2.png";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { useLangSync } from "@/hooks/useLangSync";
 import "../../style.css";
@@ -23,7 +23,7 @@ export default function Parttner() {
   const { lang } = useLangSync();
   const { t } = useTranslation();
   const isS24Ultra = useS24Ultra();
-  
+
   const [trademarks, setTrademarks] = useState<Trademark[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -37,12 +37,12 @@ export default function Parttner() {
     try {
       setLoading(true);
       setError(null);
-      
+
       const baseUrl = import.meta.env.VITE_BASE_URL;
-      
+
       // ⭐⭐ التعديل الوحيد هنا: الرابط الصحيح ⭐⭐
       const apiUrl = `${baseUrl}api/v1/categories/trademarks`;
-      
+
       const res = await axios.get(apiUrl, {
         headers: {
           "Accept-Language": lang,
@@ -52,7 +52,7 @@ export default function Parttner() {
 
       // البيانات تأتي في res.data.data
       setTrademarks(res.data.data || []);
-      
+
     } catch (err: any) {
       console.error("Error fetching trademarks:", err);
       setError(err?.response?.data?.message || "Failed to load brands");
@@ -77,7 +77,7 @@ export default function Parttner() {
     return (
       <div className="py-20 text-center">
         <p className="text-red-500 text-lg">{error}</p>
-        <button 
+        <button
           onClick={fetchTrademarks}
           className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
         >
@@ -101,13 +101,15 @@ export default function Parttner() {
   return (
     <div>
       {/* العنوان مع الزخرفة */}
-      <div className="relative flex items-center justify-center mt-[40px]">
-        <h1 className="md:text-[40px] text-[24px] font-[700] text-[#211C4D]">
+      <div className="relative w-fit mx-auto mt-[40px] mb-8">
+        <h1 className="md:text-[40px] text-[24px] font-[700] text-[#211C4D] text-center relative z-10">
           {t("Brands")}
         </h1>
         <img
           src={pattern}
-          className="absolute w-[80px] top-2 md:top-[20px] right-[18%] md:right-[36%]"
+          className={`absolute block ${lang === 'en'
+            ? 'w-[80px] md:w-[110px] -bottom-4 md:-bottom-4 -left-8 md:-left-16 -scale-x-100'
+            : 'w-[88px] md:w-[118px] -bottom-5 md:-bottom-6 -right-8 md:-right-12'}`}
           alt=""
         />
       </div>

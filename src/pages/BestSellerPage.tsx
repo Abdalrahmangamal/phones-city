@@ -4,10 +4,10 @@ import Bestseller from "@/components/home/Bestseller";
 import Layout from "@/components/layout/Layout";
 import Offerherosection from "@/components/public/Offerherosection";
 import Sliderbycategory from "@/components/public/Sliderbycategory";
-import BannerSection from "@/components/public/BannerSection"; 
+// import BannerSection from "@/components/public/BannerSection";
 import Parttner from "@/components/public/Parttner";
 import Filter from "@/components/public/Filter";
-
+// import sceondbanner from "../assets/images/sceondbanner.png";
 import type { Product } from '@/types/index';
 import { useProductsStore } from "@/store/productsStore";
 import { useLangSync } from "@/hooks/useLangSync";
@@ -179,9 +179,9 @@ export default function BestSellerPage() {
           />
 
           {/* البانر الديناميكي تمامًا مثل الـ Home Page */}
-          <div className="my-8 md:my-15 xl:px-[90px] px-2 md:px-0">
+          {/* <div className="my-8 md:my-15 xl:px-[90px] px-2 md:px-0">
             <BannerSection images={data?.main_images || []} />
-          </div>
+          </div> */}
 
           <div className="lg:px-[90px] px-2 my-12">
             <Parttner />
