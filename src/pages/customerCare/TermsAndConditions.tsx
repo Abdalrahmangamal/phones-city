@@ -1,20 +1,26 @@
+
 import Layout from "@/components/layout/Layout";
 import InternalBanner from "@/components/public/Internalbanner";
 import { useLangSync } from "@/hooks/useLangSync";
-import { usePageStore } from "@/store/customerCareStore";
-import { useEffect } from "react";
 import Loader from "@/components/Loader";
+import { usePageData } from "@/hooks/usePageData";
+
 const TermsAndConditions = () => {
-  const { page, fetchPage } = usePageStore();
   const { lang } = useLangSync();
-  useEffect(() => {
-    fetchPage("terms-and-conditions", lang);
-  }, [ lang]);
+  const { page, loading } = usePageData("terms-and-conditions");
+  
+  if (loading) {
+    return (
+      <Layout>
+        <div className="flex justify-center items-center min-h-screen">
+          <Loader />
+        </div>
+      </Layout>
+    );
+  }
+
   return (
     <Layout>
-        {
-        !page ? <Loader /> : null
-      }
       <div
         className="container mx-auto px-4 py-8"
         dir={lang === "ar" ? "rtl" : "ltr"}
@@ -24,9 +30,8 @@ const TermsAndConditions = () => {
           description={page?.short_description || ""}
         />
 
-        {/* Content section with policy details - aligned with hero banner */}
         <div
-          className="w-full max-w-[1264px] mx-auto py-8 "
+          className="w-full max-w-[1264px] mx-auto py-8"
           style={{ gap: "50px" }}
         >
           <div className="mb-8 relative">

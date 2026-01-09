@@ -1,3 +1,4 @@
+
 import { create } from "zustand";
 import axios from "axios";
 
@@ -6,43 +7,65 @@ interface PageData {
   slug: string;
   title: string;
   banner: string | null;
-  lang:string;
+  lang: string;
   short_description: string | null;
-  description: string; // HTML
+  description: string;
 }
 
 interface PageState {
-  page: PageData | null;
-  loading: boolean;
+  pages: Record<string, PageData>; 
+  loading: Record<string, boolean>;
   error: string | null;
 
-  fetchPage: (slug: string,lang:string) => Promise<void>;
+  fetchPage: (slug: string, lang: string) => Promise<void>;
+  getPage: (slug: string, lang: string) => PageData | null;
+  isLoading: (slug: string, lang: string) => boolean;
 }
+
 const baseUrl = import.meta.env.VITE_BASE_URL;
 
-export const usePageStore = create<PageState>((set) => ({
-    page: null,
-    loading: false,
-    error: null,
+export const usePageStore = create<PageState>((set, get) => ({
+  pages: {},
+  loading: {},
+  error: null,
+
+  fetchPage: async (slug: string, lang: string) => {
+    const key = `${slug}-${lang}`;
     
-    fetchPage: async (slug: string,lang:string) => {
-        try {
-      set({ loading: true, error: null });
-console.log(lang)
+    // إذا كانت الصفحة محملة بالفعل أو قيد التحميل، لا تعيد جلبها
+    if (get().pages[key] || get().loading[key]) return;
+
+    try {
+      set((state) => ({
+        loading: { ...state.loading, [key]: true },
+        error: null,
+      }));
+
       const res = await axios.get(`${baseUrl}api/v1/pages/${slug}`, {
         headers: {
-          "Accept-Language": `${lang}`},
+          "Accept-Language": `${lang}`,
+        },
       });
 
-      set({
-        page: res.data.data,
-        loading: false,
-      });
+      set((state) => ({
+        pages: { ...state.pages, [key]: res.data.data },
+        loading: { ...state.loading, [key]: false },
+      }));
     } catch (err: any) {
-      set({
+      set((state) => ({
         error: err?.response?.data?.message || "Something went wrong",
-        loading: false,
-      });
+        loading: { ...state.loading, [key]: false },
+      }));
     }
+  },
+
+  getPage: (slug: string, lang: string) => {
+    const key = `${slug}-${lang}`;
+    return get().pages[key] || null;
+  },
+
+  isLoading: (slug: string, lang: string) => {
+    const key = `${slug}-${lang}`;
+    return get().loading[key] || false;
   },
 }));

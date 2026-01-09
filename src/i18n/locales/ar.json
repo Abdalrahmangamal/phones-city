@@ -429,5 +429,18 @@
   "NoBlogPostsAvailable": "لا توجد مقالات متاحة",
   "ReadMore": "اقرأ المزيد",
   "BlogPostNotFound": "المقال غير موجود",
-  "BackToBlog": "العودة إلى المدونة"
+  "BackToBlog": "العودة إلى المدونة",
+  
+  "products": "منتجات",
+  "BrandProducts": "منتجات العلامات التجارية",
+  
+  "showingFilteredProducts": "عرض المنتجات المفلترة",
+  "resetFilters": "إعادة تعيين الفلاتر",
+  "category": "الفئة",
+  "sortedBy": "تم الترتيب حسب",
+  "priceRange": "نطاق السعر",
+  "noProductsInCategory": "لا توجد منتجات في هذه الفئة حاليًا",
+  "noProductsAvailable": "لا توجد منتجات متاحة حاليًا",
+  "viewAllProducts": "عرض جميع المنتجات"
+  
 }

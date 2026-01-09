@@ -53,23 +53,8 @@ export default function Bestseller({
   const hasProducts = Array.isArray(products) && products.length > 0;
   
   // ====== التعديل المهم هنا ======
-  // منطق عرض المنتجات بناءً على نوع العرض (Pagination أو limit)
-  const productsToShow = (() => {
-    if (!hasProducts) return [];
-    
-    if (showPagination) {
-      // عند استخدام Pagination، نعتمد على currentPage و itemsPerPage
-      const startIndex = (currentPage - 1) * itemsPerPage;
-      const endIndex = startIndex + itemsPerPage;
-      return products.slice(startIndex, endIndex);
-    } else if (limit) {
-      // للحالات بدون Pagination ولكن مع limit
-      return products.slice(0, limit);
-    }
-    
-    // بدون pagination وبدون limit: عرض كل المنتجات
-    return products;
-  })();
+  // استبدل الكود القديم كله بهذا السطر:
+const productsToShow = showPagination ? products : (limit ? products.slice(0, limit) : products);
   
   // ====== إضافة console.log للتصحيح ======
   console.log("Bestseller - Debug Info:", {
