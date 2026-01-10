@@ -14,10 +14,11 @@ interface ProductCardProps {
   favourite?: boolean;
   containerstyle?: string;
   imagecard: string;
+  quantity?:string;
   variations?: { color: string; image: string }[];
 }
 
-export default function ProductCard({ product, imagecard, containerstyle }: ProductCardProps) {
+export default function ProductCard({ product, imagecard, containerstyle ,quantity }: ProductCardProps) {
   const { t } = useTranslation();
 
   const { addFavorite, removeFavorite, favorites } = useFavoritesStore();
@@ -171,13 +172,13 @@ export default function ProductCard({ product, imagecard, containerstyle }: Prod
           {isOutOfStock ? (
             <div className="flex w-full items-center justify-end absolute right-0 top-0 p-1">
               <div className="w-fit px-3 h-[22px] flex items-center justify-center rounded-[4px] bg-[#6B7280] opacity-90">
-                <p className="text-white text-[13px] font-medium">غير متوفر</p>
+                <p className={`text-white text-[13px] font-medium ${quantity}`}>غير متوفر</p>
               </div>
             </div>
           ) : isLimited ? (
             <div className="flex w-full items-center justify-end absolute right-0 top-0 p-1">
               <div className="w-fit px-3 h-[22px] flex items-center justify-center rounded-[4px] bg-orange-600">
-                <p className="text-white text-[13px] font-medium">كمية محدودة</p>
+                <p className={`text-white text-[13px] font-medium ${quantity}`}>كمية محدودة</p>
               </div>
             </div>
           ) : discountPercent > 0 ? (
@@ -200,7 +201,7 @@ export default function ProductCard({ product, imagecard, containerstyle }: Prod
       <div className="flex items-center justify-between flex-wrap">
         {/* الألوان / المقاسات */}
         {product?.options?.length > 1 && (
-          <div className="flex items-center gap-[7px] mt-[10px] justify-start">
+          <div className="flex items-center gap-[7px] flex-wrap mt-[10px] justify-start">
             {product.options.map((variant, index) => (
               <button
                 key={index}
