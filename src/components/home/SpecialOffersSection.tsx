@@ -84,9 +84,9 @@ const SpecialOffersSection: React.FC<SpecialOffersSectionProps> = ({
             spaceBetween={20}
             className="w-full pb-10"
             breakpoints={{
-              320: { slidesPerView: 2, spaceBetween: 10 },
-              480: { slidesPerView: 2, spaceBetween: 10 },
-              640: { slidesPerView: 2, spaceBetween: 15 },
+              320: { slidesPerView: 3, spaceBetween: 10 },
+              480: { slidesPerView: 3, spaceBetween: 10 },
+              640: { slidesPerView: 3, spaceBetween: 15 },
               768: { slidesPerView: 3, spaceBetween: 20 },
               1024: { slidesPerView: 3, spaceBetween: 20 },
               1280: { slidesPerView: 4, spaceBetween: 20 },
@@ -124,9 +124,9 @@ const SpecialOffersSection: React.FC<SpecialOffersSectionProps> = ({
     const width = window.innerWidth;
     let currentSlidesPerView = slidesPerView;
 
-    if (width < 480) currentSlidesPerView = 2;
-    else if (width < 640) currentSlidesPerView = 2;
-    else if (width < 768) currentSlidesPerView = 2;
+    if (width < 480) currentSlidesPerView = 3;
+    else if (width < 640) currentSlidesPerView = 3;
+    else if (width < 768) currentSlidesPerView = 3;
     else if (width < 1024) currentSlidesPerView = 3;
     else if (width < 1280) currentSlidesPerView = 3;
     else currentSlidesPerView = 4;
@@ -218,17 +218,17 @@ const SpecialOffersSection: React.FC<SpecialOffersSectionProps> = ({
           resistanceRatio={shouldAllowSlide ? 0.85 : 0}
           breakpoints={{
             320: {
-              slidesPerView: 2,
+              slidesPerView: 3,
               spaceBetween: 10,
               allowTouchMove: products.length > 1,
             },
             480: {
-              slidesPerView: 2,
+              slidesPerView: 3,
               spaceBetween: 10,
               allowTouchMove: products.length > 2,
             },
             640: {
-              slidesPerView: 2,
+              slidesPerView: 3,
               spaceBetween: 15,
               allowTouchMove: products.length > 2,
             },
@@ -263,7 +263,8 @@ const SpecialOffersSection: React.FC<SpecialOffersSectionProps> = ({
                   variations={item.variations || []}
                   id={item.slug}
                   imagecard="!h-[100px] !w-[100px]"
-                  containerstyle="!p-2 pb-3 !rounded-[10px]  !w-[150px]  !min-h-fit h-full"
+                  quantity="!text-[8px] !p-0 md:text-[13px]"
+                  containerstyle="!p-2 pb-3 !rounded-[10px]  !w-[120px]  !min-h-fit h-full"
                 />
               </div>
             </SwiperSlide>
