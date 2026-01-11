@@ -8,6 +8,12 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
+      // Fix for Botpress Webchat compilation
+      "C:/Users/c.city/OneDrive/Desktop/phones-city-main/node_modules/@botpress/webchat/dist/style.css": path.resolve(__dirname, "./src/utils/empty.css"),
+      "@botpress/webchat/dist/style.css": path.resolve(__dirname, "./src/utils/empty.css"),
     },
   },
+  optimizeDeps: {
+    include: ['@botpress/webchat', '@botpress/chat']
+  }
 });
