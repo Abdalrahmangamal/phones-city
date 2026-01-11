@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { useWebchat } from '@botpress/webchat';
+import ropot from '../../assets/images/ropot.png';
 
 export default function Chatbot() {
   const [isOpen, setIsOpen] = useState(false);
@@ -22,7 +23,7 @@ export default function Chatbot() {
   const isConnected = clientState === 'connected';
 
   // Toggle Chat
-  const toggleChat = () => setIsOpen(!isOpen);
+  // const toggleChat = () => setIsOpen(!isOpen);
 
   // Auto-scroll to bottom
   useEffect(() => {
@@ -125,24 +126,15 @@ export default function Chatbot() {
 
   return (
     <>
-      {/* Floating Button - Robot Icon */}
-      <motion.button
-        onClick={toggleChat}
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-        className="fixed bottom-6 right-6 z-50 bg-[#2F2C79] text-white p-3.5 rounded-full shadow-2xl border-[3px] border-white hover:bg-[#27246a] transition-all flex items-center justify-center"
-      >
-        {isOpen ? (
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-          </svg>
-        ) : (
-          // Robot Icon
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7V5.73C7.4 5.39 7 4.74 7 4a2 2 0 0 1 2-2h3M7.5 13A2.5 2.5 0 0 0 5 15.5A2.5 2.5 0 0 0 7.5 18a2.5 2.5 0 0 0 2.5-2.5A2.5 2.5 0 0 0 7.5 13m9 0a2.5 2.5 0 0 0-2.5 2.5a2.5 2.5 0 0 0 2.5 2.5a2.5 2.5 0 0 0 2.5-2.5a2.5 2.5 0 0 0-2.5-2.5" />
-          </svg>
-        )}
-      </motion.button>
+      {/* Floating Button - Robot Image (Exact User Code) */}
+      {!isOpen && (
+        <img
+          src={ropot}
+          alt="Chat Bot"
+          onClick={() => setIsOpen(!isOpen)}
+          className="fixed z-[500] w-[200px] h-[180px] bottom-[-20px] right-[-20px] cursor-pointer transition-transform duration-300 hover:scale-110"
+        />
+      )}
 
       {/* Chat Window */}
       <AnimatePresence>
@@ -151,18 +143,15 @@ export default function Chatbot() {
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            className="fixed bottom-24 right-6 z-50 w-[360px] h-[550px] bg-white rounded-2xl shadow-2xl flex flex-col border border-gray-100 overflow-hidden font-sans"
+            className="fixed bottom-28 right-6 z-50 w-[360px] h-[550px] bg-white rounded-2xl shadow-2xl flex flex-col border border-gray-100 overflow-hidden font-sans"
             style={{ direction: 'rtl' }}
           >
             {/* Header */}
             <div className="bg-[#2F2C79] text-white p-4 flex items-center justify-between shadow-md z-10">
               <div className="flex items-center gap-3">
                 <div className="relative">
-                  <div className="bg-white/10 p-2 rounded-full backdrop-blur-sm">
-                    {/* Small Robot Icon for Header */}
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7V5.73C7.4 5.39 7 4.74 7 4a2 2 0 0 1 2-2h3M7.5 13A2.5 2.5 0 0 0 5 15.5A2.5 2.5 0 0 0 7.5 18a2.5 2.5 0 0 0 2.5-2.5A2.5 2.5 0 0 0 7.5 13m9 0a2.5 2.5 0 0 0-2.5 2.5a2.5 2.5 0 0 0 2.5 2.5a2.5 2.5 0 0 0 2.5-2.5a2.5 2.5 0 0 0-2.5-2.5" />
-                    </svg>
+                  <div className="bg-white/10 p-2 rounded-full backdrop-blur-sm w-10 h-10 overflow-hidden flex items-center justify-center">
+                    <img src={ropot} alt="Bot" className="w-full h-full object-cover" />
                   </div>
                   {isConnected && <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-400 border-2 border-[#2F2C79] rounded-full"></span>}
                 </div>
@@ -171,7 +160,7 @@ export default function Chatbot() {
                   <p className="text-[10px] text-gray-300 opacity-90">دائماً في خدمتك</p>
                 </div>
               </div>
-              <button onClick={toggleChat} className="bg-white/10 p-1.5 rounded-full text-white hover:bg-white/20 transition">
+              <button onClick={() => setIsOpen(false)} className="bg-white/10 p-1.5 rounded-full text-white hover:bg-white/20 transition">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>
@@ -195,26 +184,46 @@ export default function Chatbot() {
                 const payload = msg.payload;
                 let content: React.ReactNode = null;
 
-                // 1. CAROUSEL Specific Logic
+                // 1. CAROUSEL
                 if (block && block.type === 'carousel') {
                   content = renderCarousel(block);
                 }
-                // 2. TEXT Specific Logic (Handling Nested 'bubble' structure)
+                // 2. TEXT (Nested in Bubble)
                 else if (block && block.type === 'bubble' && block.block?.type === 'text') {
-                  // Case: block -> type: 'bubble' -> block: { type: 'text', text: '...' }
                   content = block.block.text;
                 }
-                // 3. Direct TEXT Block
+                // 3. IMAGE
+                else if (block && block.type === 'image') {
+                  // Wrap image in Card Style
+                  content = (
+                    <div className="min-w-[240px] max-w-sm bg-white border border-gray-100 rounded-xl p-3 flex flex-col gap-3 shadow-md">
+                      <div className="w-full h-48 bg-gray-50 rounded-lg overflow-hidden relative">
+                        <img
+                          src={block.url}
+                          alt="Product"
+                          className="w-full h-full object-contain mix-blend-multiply p-2"
+                        />
+                      </div>
+                    </div>
+                  );
+                }
+                // 4. Direct TEXT
                 else if (block && block.type === 'text') {
                   content = block.text;
                 }
-                // 4. Payload-based (Fallbacks)
+                // 5. Payload-based (Fallbacks)
                 else if (payload) {
                   if (payload.type === 'text') {
                     content = payload.text;
                   }
                   else if (payload.type === 'image') {
-                    content = <img src={payload.image || payload.imageUrl} alt="content" className="rounded-lg max-h-48 border border-gray-100" />
+                    content = (
+                      <div className="min-w-[240px] max-w-sm bg-white border border-gray-100 rounded-xl p-3 flex flex-col gap-3 shadow-md">
+                        <div className="w-full h-48 bg-gray-50 rounded-lg overflow-hidden relative">
+                          <img src={payload.image || payload.imageUrl} alt="content" className="w-full h-full object-contain mix-blend-multiply p-2" />
+                        </div>
+                      </div>
+                    );
                   }
                   else if (['single-choice', 'choice', 'quick_reply'].includes(payload.type)) {
                     content = (
@@ -236,7 +245,7 @@ export default function Chatbot() {
                   }
                 }
 
-                // 5. Final Fallback (Debug)
+                // 6. Final Fallback (Debug)
                 if (!content) {
                   content = msg.text || (
                     <div className="p-2 bg-red-50 rounded border border-red-100 text-left" dir="ltr">
@@ -248,29 +257,29 @@ export default function Chatbot() {
                   );
                 }
 
-                // --- Alignment Logic (RTL Optimized) ---
-                // User (Right Side): Start
-                // Bot (Left Side): End
-
+                // --- Alignment ---
                 const containerClass = isUser
-                  ? "self-start items-start ml-auto" // User: Right
-                  : "self-end items-end mr-auto";    // Bot: Left
+                  ? "self-start items-start ml-auto"
+                  : "self-end items-end mr-auto";
 
                 const bubbleClass = isUser
                   ? "bg-[#2F2C79] text-white rounded-br-none"
                   : "bg-white text-gray-800 rounded-bl-none border border-gray-100 shadow-sm";
 
-                // If carousel, remove standard bubble padding/bg to let it span
                 const isCarousel = block && (block.type === 'carousel' || (block.type === 'bubble' && block.block?.type === 'carousel'));
 
-                const finalBubbleClass = isCarousel ? "w-full max-w-full !p-0 !bg-transparent !shadow-none" : bubbleClass;
-                const finalContainerClass = isCarousel ? "w-full max-w-full" : `${containerClass} max-w-[85%]`;
+                // Allow card-styled images to be full width
+                const isImage = (block && block.type === 'image') || (payload && payload.type === 'image');
+
+                const finalBubbleClass = (isCarousel || isImage) ? "w-full max-w-full !p-0 !bg-transparent !shadow-none" : bubbleClass;
+                const finalContainerClass = (isCarousel || isImage) ? "w-full max-w-full relative" : `${containerClass} max-w-[85%]`;
 
                 return (
                   <div
                     key={msg.id || idx}
                     className={`px-4 py-3 rounded-2xl text-sm flex flex-col mb-3 ${finalContainerClass} ${finalBubbleClass}`}
                   >
+                    {isCarousel && <div className="absolute top-0 right-0 w-2 h-full bg-gradient-to-l from-white/50 to-transparent z-10 pointer-events-none rounded-r-xl"></div>}
                     {content}
                   </div>
                 );
@@ -305,7 +314,8 @@ export default function Chatbot() {
                   disabled={!isConnected || !inputValue.trim()}
                   className="p-2 bg-[#2F2C79] text-white rounded-full hover:bg-[#27246a] disabled:opacity-50 disabled:cursor-not-allowed transition transform active:scale-95 shrink-0"
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 rotate-180" viewBox="0 0 20 20" fill="currentColor">
+                  {/* Rotated -90deg to point LEFT (Outwards in RTL) */}
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 -rotate-90" viewBox="0 0 20 20" fill="currentColor">
                     <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
                   </svg>
                 </button>
