@@ -43,7 +43,7 @@ const BannerSection: React.FC<BannerSectionProps> = ({
 
   // 🔵 عدة صور → استخدام Swiper مع تأثير Fade
   return (
-    <div className="w-full md:my-15 xl:px-[90px] px-2">
+    <div className="w-full my-15 xl:px-[90px] px-2">
       <div className="w-full h-[140px] md:h-[190.38px] rounded-[16px] overflow-hidden">
         <Swiper
           effect="fade"
@@ -65,7 +65,7 @@ const BannerSection: React.FC<BannerSectionProps> = ({
               <img
                 src={image}
                 alt={`بانر ${index + 1}`}
-                className="w-full h-full object-cover rounded-[16px]"
+                className="w-full h-full object-contain rounded-[16px]"
                 loading={index === 0 ? "eager" : "lazy"}
               />
             </SwiperSlide>

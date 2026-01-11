@@ -157,11 +157,11 @@ const NewHome = () => {
             products={bestSellerProducts} 
             link="BestSellerPage"
           />
-          <SpecialOffersSection 
+          {/* <SpecialOffersSection 
             title="SpecialOffersForYou"    
             products={offersProducts} 
             link="offers"
-          />
+          /> */}
 
          
           <TestimonialsSection />
