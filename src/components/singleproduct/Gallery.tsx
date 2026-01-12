@@ -1,7 +1,17 @@
 import { Heart } from "lucide-react";
 import { useState } from "react";
 
-export default function Gallery({ images = [], discountPercent = 0 }: { images?: any; discountPercent?: number }) {
+interface GalleryProps {
+  images?: any;
+  discountPercent?: number;
+  isOutOfStock?: boolean; // إضافة خاصية جديدة
+}
+
+export default function Gallery({ 
+  images = [], 
+  discountPercent = 0, 
+  isOutOfStock = false 
+}: GalleryProps) {
   const [selectedImage, setSelectedImage] = useState(0);
   const [isWishlisted, setIsWishlisted] = useState(false);
 
@@ -57,11 +67,17 @@ export default function Gallery({ images = [], discountPercent = 0 }: { images?:
     <div className="md:w-full">
       <div className="space-y-6 md:space-y-8">
         <div className="relative border border-border rounded-lg shadow-xl p-2 md:p-2 aspect-[4/3] flex items-center justify-center">
-          {discountPercent > 0 && (
+          {/* عرض "غير متوفر" بدلاً من نسبة الخصم عندما يكون المنتج غير متوفر */}
+          {isOutOfStock ? (
+            <div className="absolute top-2 md:top-4 left-2 md:left-4 bg-gray-600 text-white px-3 py-1 md:px-4 md:py-1.5 rounded text-sm md:text-base font-bold">
+              غير متوفر
+            </div>
+          ) : discountPercent > 0 ? (
             <div className="absolute top-2 md:top-4 left-2 md:left-4 bg-destructive text-white px-2 py-0.5 md:px-3 md:py-1 rounded text-xs md:text-sm font-bold">
               {Math.round(discountPercent)}%
             </div>
-          )}
+          ) : null}
+          
           <button
             onClick={() => setIsWishlisted(!isWishlisted)}
             className="absolute top-2 md:top-4 right-2 md:right-4 p-1 md:p-2 bg-card rounded-full hover:bg-accent transition-colors"

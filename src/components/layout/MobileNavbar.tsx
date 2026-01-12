@@ -30,7 +30,7 @@ export default function MobileNavbar({
   const { lang } = useLangSync();
   const { i18n, t } = useTranslation();
   const [showLang, setShowLang] = useState(false);
-  const token = localStorage.getItem("token"); // التحقق من وجود التوكن
+  const token = localStorage.getItem("token");
 
   // جلب بيانات السلة من الـ store
   const { items: cartItems } = useCartStore();
@@ -47,12 +47,17 @@ export default function MobileNavbar({
     }
   };
 
+  // 🔥 ضبط setShowLang عند فتح/إغلاق قائمة اللغة
+  const handleLangTrigger = () => {
+    setShowLang(!showLang);
+  };
+
   return (
     <div className="fixed top-0 left-0 right-0 bg-[#211C4DDE] backdrop-blur-md border-b border-[#FFFFFF20] z-50 h-[70px] px-4">
       <div className="flex items-center justify-between h-full">
-        {/* زر الأقسام */}
+        {/* زر الأقسام - استخدم onSectionToggle مباشرة */}
         <button
-          onClick={onSectionToggle}
+          onClick={onSectionToggle}  
           className="flex items-center gap-2 text-white"
         >
           <Menu className="w-6 h-6" />
@@ -61,7 +66,7 @@ export default function MobileNavbar({
 
         {/* اختيار اللغة */}
         <div className="relative inline-block text-left">
-          <DropdownMenu>
+          <DropdownMenu onOpenChange={handleLangTrigger}>
             <DropdownMenuTrigger asChild>
               <div className="text-sm bg-transparent">
                 <button className="flex items-center gap-1 text-sm opacity-90 hover:opacity-100">

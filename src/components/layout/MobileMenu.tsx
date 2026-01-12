@@ -4,8 +4,7 @@ import { Link } from "react-router-dom";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 import { useTranslation } from "react-i18next";
 import { useLangSync } from "@/hooks/useLangSync";
-import { Button } from "../ui/button";
-import React from "react";
+import React, { useEffect } from "react";
 import { useCategoriesStore } from "@/store/categories/useCategoriesStore";
 
 export default function MobileMenu({
@@ -23,7 +22,23 @@ export default function MobileMenu({
   const { lang } = useLangSync();
   const { i18n, t } = useTranslation();
   const [open] = React.useState(false);
-  const { categories } = useCategoriesStore();
+  const { categories, fetchCategories } = useCategoriesStore();
+
+  
+  useEffect(() => {
+    if (isOpen && lang) {
+      fetchCategories(lang);
+      console.log("MobileMenu: Fetching categories for language:", lang);
+    }
+  }, [isOpen, lang, fetchCategories]);
+
+  
+  useEffect(() => {
+    if (isOpen && openSections) {
+      // لا حاجة لفعل أي شيء، openSections يتم استخدامه في render
+      console.log("MobileMenu: Opening sections automatically");
+    }
+  }, [isOpen, openSections]);
 
   const navitem = [
     { link: `/${lang}/`, name: `${t("Home")}` },
@@ -82,7 +97,7 @@ export default function MobileMenu({
           </button>
         </div>
 
-        {/* الأقسام */}
+        {/* الأقسام - 🔥 افتحها تلقائياً إذا كان openSections = true */}
         <div className="px-4 py-3 border-b border-gray-200">
           <button
             onClick={() => setOpenSections(!openSections)}
@@ -94,61 +109,67 @@ export default function MobileMenu({
 
           {openSections && (
             <div className="mt-2 space-y-1">
-              {categories.map((cat) => {
-                const hasChildren = cat.children && cat.children.length > 0;
-                
-                return (
-                  <div key={cat.id}>
-                    {/* رابط القسم الرئيسي */}
-                    <Link 
-                      to={hasChildren ? "#" : `/${lang}/categorySingle/${cat.slug}/products`}
-                      onClick={(e) => handleCategoryClick(cat.id.toString(), cat.slug, hasChildren, e)}
-                      className="flex items-center justify-between w-full px-3 py-2 text-gray-800 hover:bg-gray-50 rounded-lg"
-                    >
-                      <div className="flex items-center gap-2">
-                        {getCategoryIcon(cat.name)}
-                        <span>{t(cat.name)}</span>
-                      </div>
-                      {hasChildren && (
-                        <ChevronDown
-                          className={`w-4 h-4 transition-transform ${
-                            openCategory === cat.id.toString() ? "rotate-180" : ""
-                          }`}
-                        />
-                      )}
-                    </Link>
+              {categories.length === 0 ? (
+                <div className="px-3 py-2 text-gray-500 text-center">
+                  {t("Loading categories...")}
+                </div>
+              ) : (
+                categories.map((cat) => {
+                  const hasChildren = cat.children && cat.children.length > 0;
+                  
+                  return (
+                    <div key={cat.id}>
+                      {/* رابط القسم الرئيسي */}
+                      <Link 
+                        to={hasChildren ? "#" : `/${lang}/categorySingle/${cat.slug}/products`}
+                        onClick={(e) => handleCategoryClick(cat.id.toString(), cat.slug, hasChildren, e)}
+                        className="flex items-center justify-between w-full px-3 py-2 text-gray-800 hover:bg-gray-50 rounded-lg"
+                      >
+                        <div className="flex items-center gap-2">
+                          {getCategoryIcon(cat.name)}
+                          <span>{cat.name}</span>
+                        </div>
+                        {hasChildren && (
+                          <ChevronDown
+                            className={`w-4 h-4 transition-transform ${
+                              openCategory === cat.id.toString() ? "rotate-180" : ""
+                            }`}
+                          />
+                        )}
+                      </Link>
 
-                    {/* الأقسام الفرعية */}
-                    {openCategory === cat.id.toString() && hasChildren && (
-                      <ul className="mr-6 mt-1 border-r-2 border-[#F3AC5D] pr-2 space-y-1">
-                        {/* رابط للقسم الرئيسي نفسه (عرض جميع المنتجات) */}
-                        <li>
-                          <Link 
-                            to={`/${lang}/categorySingle/${cat.slug}/products`} 
-                            className="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg font-semibold"
-                            onClick={onClose}
-                          >
-                            {t("View all")} {t(cat.name)}
-                          </Link>
-                        </li>
-                        
-                        {/* الأقسام الفرعية */}
-                        {cat.children.map((sub: any) => (
-                          <li key={sub.id}>
+                      {/* الأقسام الفرعية */}
+                      {openCategory === cat.id.toString() && hasChildren && (
+                        <ul className="mr-6 mt-1 border-r-2 border-[#F3AC5D] pr-2 space-y-1">
+                          {/* رابط للقسم الرئيسي نفسه (عرض جميع المنتجات) */}
+                          <li>
                             <Link 
-                              to={`/${lang}/categorySingle/${sub.slug}/products`} 
-                              className="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg"
+                              to={`/${lang}/categorySingle/${cat.slug}/products`} 
+                              className="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg font-semibold"
                               onClick={onClose}
                             >
-                              {t(sub.name)}
+                              {t("View all")} {cat.name}
                             </Link>
                           </li>
-                        ))}
-                      </ul>
-                    )}
-                  </div>
-                );
-              })}
+                          
+                          {/* الأقسام الفرعية */}
+                          {cat.children.map((sub: any) => (
+                            <li key={sub.id}>
+                              <Link 
+                                to={`/${lang}/categorySingle/${sub.slug}/products`} 
+                                className="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg"
+                                onClick={onClose}
+                              >
+                                {sub.name}
+                              </Link>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
+                  );
+                })
+              )}
             </div>
           )}
         </div>
