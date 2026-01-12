@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { useWebchat } from '@botpress/webchat';
-import ropot from '../../assets/images/ropot.png';
+import botGif from '../../assets/images/Untitled design (1).gif';
 
 export default function Chatbot() {
   const [isOpen, setIsOpen] = useState(false);
@@ -129,7 +129,7 @@ export default function Chatbot() {
       {/* Floating Button - Robot Image (Exact User Code) */}
       {!isOpen && (
         <img
-          src={ropot}
+          src={botGif}
           alt="Chat Bot"
           onClick={() => setIsOpen(!isOpen)}
           className="fixed z-[500] w-[200px] h-[180px] bottom-[-20px] right-[-20px] cursor-pointer transition-transform duration-300 hover:scale-110"
@@ -151,7 +151,7 @@ export default function Chatbot() {
               <div className="flex items-center gap-3">
                 <div className="relative">
                   <div className="bg-white/10 p-2 rounded-full backdrop-blur-sm w-10 h-10 overflow-hidden flex items-center justify-center">
-                    <img src={ropot} alt="Bot" className="w-full h-full object-cover" />
+                    <img src={botGif} alt="Bot" className="w-full h-full object-cover" />
                   </div>
                   {isConnected && <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-400 border-2 border-[#2F2C79] rounded-full"></span>}
                 </div>
@@ -177,45 +177,32 @@ export default function Chatbot() {
 
               {/* Loop through Webchat Messages */}
               {messages.map((msg: any, idx: number) => {
-                const isUser = msg.publisher === 'user' || msg.authorId === user?.id;
+                // 1. Precise User Detection (Robust)
+                const storedUserId = typeof window !== 'undefined' ? localStorage.getItem('bp-webchat-user-id') : null;
+                const currentUserId = user?.id || (client as any)?.user?.id || storedUserId;
+                const isUser = msg.publisher === 'user' || (currentUserId && msg.authorId === currentUserId);
 
                 // --- Content Extraction ---
-                const block = msg.block; // Top level block
+                const block = msg.block;
                 const payload = msg.payload;
                 let content: React.ReactNode = null;
 
-                // 1. CAROUSEL
                 if (block && block.type === 'carousel') {
                   content = renderCarousel(block);
-                }
-                // 2. TEXT (Nested in Bubble)
-                else if (block && block.type === 'bubble' && block.block?.type === 'text') {
+                } else if (block && block.type === 'bubble' && block.block?.type === 'text') {
                   content = block.block.text;
-                }
-                // 3. IMAGE
-                else if (block && block.type === 'image') {
-                  // Wrap image in Card Style
+                } else if (block && block.type === 'image') {
                   content = (
                     <div className="min-w-[240px] max-w-sm bg-white border border-gray-100 rounded-xl p-3 flex flex-col gap-3 shadow-md">
                       <div className="w-full h-48 bg-gray-50 rounded-lg overflow-hidden relative">
-                        <img
-                          src={block.url}
-                          alt="Product"
-                          className="w-full h-full object-contain mix-blend-multiply p-2"
-                        />
+                        <img src={block.url} alt="Product" className="w-full h-full object-contain mix-blend-multiply p-2" />
                       </div>
                     </div>
                   );
-                }
-                // 4. Direct TEXT
-                else if (block && block.type === 'text') {
+                } else if (block && block.type === 'text') {
                   content = block.text;
-                }
-                // 5. Payload-based (Fallbacks)
-                else if (payload) {
-                  if (payload.type === 'text') {
-                    content = payload.text;
-                  }
+                } else if (payload) {
+                  if (payload.type === 'text') content = payload.text;
                   else if (payload.type === 'image') {
                     content = (
                       <div className="min-w-[240px] max-w-sm bg-white border border-gray-100 rounded-xl p-3 flex flex-col gap-3 shadow-md">
@@ -245,41 +232,30 @@ export default function Chatbot() {
                   }
                 }
 
-                // 6. Final Fallback (Debug)
-                if (!content) {
-                  content = msg.text || (
-                    <div className="p-2 bg-red-50 rounded border border-red-100 text-left" dir="ltr">
-                      <p className="text-[10px] text-red-500 font-bold mb-1">Debug: Unsupported Message</p>
-                      <pre className="text-[9px] text-gray-600 overflow-auto max-w-[200px] max-h-[100px] font-mono leading-tight">
-                        {JSON.stringify(msg, null, 2)}
-                      </pre>
-                    </div>
-                  );
-                }
+                if (!content) content = msg.text || "";
 
-                // --- Alignment ---
-                const containerClass = isUser
-                  ? "self-start items-start ml-auto"
-                  : "self-end items-end mr-auto";
+                // 3. Media Check
+                const isMedia = (block?.type === 'carousel' || block?.type === 'image' || payload?.type === 'image');
 
-                const bubbleClass = isUser
-                  ? "bg-[#2F2C79] text-white rounded-br-none"
-                  : "bg-white text-gray-800 rounded-bl-none border border-gray-100 shadow-sm";
+                // --- Final Styling (Simple & Radical) ---
 
-                const isCarousel = block && (block.type === 'carousel' || (block.type === 'bubble' && block.block?.type === 'carousel'));
+                // RTL Context: 
+                // self-start -> Right (User)
+                // self-end   -> Left (Bot)
 
-                // Allow card-styled images to be full width
-                const isImage = (block && block.type === 'image') || (payload && payload.type === 'image');
+                const alignmentClass = isUser ? "self-start" : "self-end";
 
-                const finalBubbleClass = (isCarousel || isImage) ? "w-full max-w-full !p-0 !bg-transparent !shadow-none" : bubbleClass;
-                const finalContainerClass = (isCarousel || isImage) ? "w-full max-w-full relative" : `${containerClass} max-w-[85%]`;
+                const colorClass = isUser
+                  ? "bg-[#2F2C79] text-white rounded-tr-2xl rounded-tl-2xl rounded-bl-2xl rounded-br-none" // User: Blue
+                  : "bg-white text-gray-800 border border-gray-100 rounded-tr-2xl rounded-tl-2xl rounded-br-2xl rounded-bl-none shadow-sm"; // Bot: White/Gray
+
+                // Media: Transparent
+                const finalClass = isMedia
+                  ? `w-full max-w-full bg-transparent ${alignmentClass}`
+                  : `max-w-[85%] px-4 py-3 shadow-sm ${alignmentClass} ${colorClass}`;
 
                 return (
-                  <div
-                    key={msg.id || idx}
-                    className={`px-4 py-3 rounded-2xl text-sm flex flex-col mb-3 ${finalContainerClass} ${finalBubbleClass}`}
-                  >
-                    {isCarousel && <div className="absolute top-0 right-0 w-2 h-full bg-gradient-to-l from-white/50 to-transparent z-10 pointer-events-none rounded-r-xl"></div>}
+                  <div key={msg.id || idx} className={`flex flex-col mb-3 ${finalClass}`}>
                     {content}
                   </div>
                 );
