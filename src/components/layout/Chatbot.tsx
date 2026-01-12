@@ -9,7 +9,6 @@ export default function Chatbot() {
   const [inputValue, setInputValue] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Use the Webchat hook
   const {
     client,
     messages,
@@ -22,26 +21,16 @@ export default function Chatbot() {
 
   const isConnected = clientState === 'connected';
 
-  // Toggle Chat
-  // const toggleChat = () => setIsOpen(!isOpen);
-
-  // Auto-scroll to bottom
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isTyping, isOpen]);
 
-  // Handle Send
   const handleSend = async () => {
     if (!inputValue.trim() || !client) return;
-
     const text = inputValue;
     setInputValue("");
-
     try {
-      await client.sendMessage({
-        type: 'text',
-        text: text
-      });
+      await client.sendMessage({ type: 'text', text: text });
     } catch (err) {
       console.error("Failed to send message:", err);
     }
@@ -51,19 +40,14 @@ export default function Chatbot() {
     if (e.key === "Enter") handleSend();
   };
 
-  // Helper to parse Botpress Carousel Structure
   const renderCarousel = (carouselBlock: any) => {
     if (!carouselBlock || !carouselBlock.blocks) return null;
-
-    // Structure: block.blocks (Array of Columns) -> Column.blocks (Array of Elements)
     const columns = carouselBlock.blocks;
-
     if (!columns.length) return null;
 
     return (
       <div className="flex gap-3 overflow-x-auto pb-4 max-w-[300px] snap-x no-scrollbar">
         {columns.map((col: any, colIdx: number) => {
-          // Extract data from the column's nested blocks
           const colBlocks = col.blocks || [];
           let image = "";
           let title = "";
@@ -71,20 +55,13 @@ export default function Chatbot() {
           let buttons: any[] = [];
 
           colBlocks.forEach((b: any) => {
-            if (b.type === 'image') {
-              image = b.url;
-            } else if (b.type === 'text') {
-              if (b.text?.startsWith('####')) {
-                title = b.text.replace('####', '').trim();
-              } else {
-                subtitle = b.text;
-              }
+            if (b.type === 'image') image = b.url;
+            else if (b.type === 'text') {
+              if (b.text?.startsWith('####')) title = b.text.replace('####', '').trim();
+              else subtitle = b.text;
             } else if (b.type === 'row') {
-              // Row usually contains buttons
               (b.blocks || []).forEach((btn: any) => {
-                if (btn.type === 'button') {
-                  buttons.push(btn);
-                }
+                if (btn.type === 'button') buttons.push(btn);
               });
             }
           });
@@ -96,25 +73,29 @@ export default function Chatbot() {
                   <img src={image} alt={title} className="w-full h-full object-contain mix-blend-multiply p-2" />
                 </div>
               )}
-
               <div className="flex flex-col gap-1 flex-grow">
                 {title && <h4 className="font-bold text-gray-900 text-sm">{title}</h4>}
                 {subtitle && <p className="text-xs text-gray-500 line-clamp-2 leading-relaxed">{subtitle}</p>}
               </div>
-
               {buttons.length > 0 && (
                 <div className="flex flex-col gap-2 mt-auto pt-2">
-                  {buttons.map((btn: any, btnIdx: number) => (
-                    <a
-                      key={btnIdx}
-                      href={btn.buttonValue || '#'}
-                      target={btn.buttonValue?.startsWith('http') ? '_blank' : '_self'}
-                      rel="noreferrer"
-                      className="text-xs bg-[#2F2C79] text-white py-2 px-3 rounded-lg hover:bg-[#27246a] transition text-center font-medium shadow-sm transition-transform active:scale-95"
-                    >
-                      {btn.text || "عرض التفاصيل"}
-                    </a>
-                  ))}
+                  {buttons.map((btn: any, btnIdx: number) => {
+                    const rawUrl = btn.buttonValue || '';
+                    let isInternal = false;
+                    let href = rawUrl;
+                    if (rawUrl.includes('/product/')) {
+                      const parts = rawUrl.split('/product/');
+                      if (parts.length > 1) {
+                        const pathSegments = window.location.pathname.split('/');
+                        const currentLang = (pathSegments[1] === 'en' || pathSegments[1] === 'ar') ? pathSegments[1] : 'ar';
+                        href = `/${currentLang}/singleproduct/${parts[1]}`;
+                        isInternal = true;
+                      }
+                    }
+                    const classes = "text-xs bg-[#2F2C79] text-white py-2 px-3 rounded-lg hover:bg-[#27246a] transition text-center font-medium shadow-sm transition-transform active:scale-95 block";
+                    if (isInternal) return <Link key={btnIdx} to={href} className={classes}>{btn.text || "عرض التفاصيل"}</Link>;
+                    return <a key={btnIdx} href={href || '#'} target={href?.startsWith('http') ? '_blank' : '_self'} rel="noreferrer" className={classes}>{btn.text || "عرض التفاصيل"}</a>;
+                  })}
                 </div>
               )}
             </div>
@@ -126,7 +107,6 @@ export default function Chatbot() {
 
   return (
     <>
-      {/* Floating Button - Robot Image (Exact User Code) */}
       {!isOpen && (
         <img
           src={botGif}
@@ -136,7 +116,6 @@ export default function Chatbot() {
         />
       )}
 
-      {/* Chat Window */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -146,7 +125,6 @@ export default function Chatbot() {
             className="fixed bottom-28 right-6 z-50 w-[360px] h-[550px] bg-white rounded-2xl shadow-2xl flex flex-col border border-gray-100 overflow-hidden font-sans"
             style={{ direction: 'rtl' }}
           >
-            {/* Header */}
             <div className="bg-[#2F2C79] text-white p-4 flex items-center justify-between shadow-md z-10">
               <div className="flex items-center gap-3">
                 <div className="relative">
@@ -167,7 +145,6 @@ export default function Chatbot() {
               </button>
             </div>
 
-            {/* Messages Area */}
             <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-4 bg-[#F8FAFC]">
               {clientState === 'error' && (
                 <div className="text-center bg-red-50 text-red-500 text-xs p-2 rounded-lg border border-red-100">
@@ -175,14 +152,33 @@ export default function Chatbot() {
                 </div>
               )}
 
-              {/* Loop through Webchat Messages */}
               {messages.map((msg: any, idx: number) => {
-                // 1. Precise User Detection (Robust)
-                const storedUserId = typeof window !== 'undefined' ? localStorage.getItem('bp-webchat-user-id') : null;
-                const currentUserId = user?.id || (client as any)?.user?.id || storedUserId;
-                const isUser = msg.publisher === 'user' || (currentUserId && msg.authorId === currentUserId);
+                // -------------------------------------------------------------
+                // FINAL FIX: ROBUST IDENTIFICATION
+                // -------------------------------------------------------------
 
-                // --- Content Extraction ---
+                const isUser =
+                  // 1. المطابقة العادية (إذا توفرت البيانات)
+                  (user?.id && msg.userId === user.id) ||
+                  // 2. التحقق من وجود Client Message ID (هذا أقوى دليل أن الرسالة منك)
+                  (msg.metadata && !!msg.metadata.clientMessageId) ||
+                  // 3. حالة الرسائل المحلية السريعة
+                  (!msg.userId && msg.payload?.type === 'text');
+
+                // -------------------------------------------------------------
+
+                const userStyle = {
+                  container: "self-start",
+                  bubble: "bg-[#2F2C79] text-white rounded-tr-2xl rounded-tl-2xl rounded-bl-2xl rounded-br-none shadow-md",
+                };
+
+                const botStyle = {
+                  container: "self-end",
+                  bubble: "bg-white text-gray-800 border border-gray-100 rounded-tr-2xl rounded-tl-2xl rounded-br-2xl rounded-bl-none shadow-sm",
+                };
+
+                const activeStyle = isUser ? userStyle : botStyle;
+
                 const block = msg.block;
                 const payload = msg.payload;
                 let content: React.ReactNode = null;
@@ -193,70 +189,45 @@ export default function Chatbot() {
                   content = block.block.text;
                 } else if (block && block.type === 'image') {
                   content = (
-                    <div className="min-w-[240px] max-w-sm bg-white border border-gray-100 rounded-xl p-3 flex flex-col gap-3 shadow-md">
-                      <div className="w-full h-48 bg-gray-50 rounded-lg overflow-hidden relative">
-                        <img src={block.url} alt="Product" className="w-full h-full object-contain mix-blend-multiply p-2" />
+                    <div className="min-w-[240px] max-w-sm bg-white border border-gray-100 rounded-xl p-3 shadow-md">
+                      <img src={block.url} className="w-full h-48 object-contain p-2" alt="img" />
+                    </div>
+                  );
+                } else if (payload?.type === 'text') {
+                  content = payload.text;
+                } else if (payload?.type === 'image') {
+                  content = (
+                    <div className="min-w-[240px] max-w-sm bg-white border border-gray-100 rounded-xl p-3 shadow-md">
+                      <img src={payload.imageUrl || payload.image} className="w-full h-48 object-contain p-2" alt="img" />
+                    </div>
+                  );
+                } else if (['single-choice', 'choice', 'quick_reply'].includes(payload?.type)) {
+                  content = (
+                    <div className="flex flex-col gap-2">
+                      {payload.text && <span className="mb-1">{payload.text}</span>}
+                      <div className="flex flex-wrap gap-2">
+                        {(payload.choices || payload.quick_replies)?.map((choice: any, i: number) => (
+                          <button
+                            key={i}
+                            onClick={() => client?.sendMessage({ type: 'text', text: choice.value || choice.title })}
+                            className="bg-white border border-[#2F2C79] text-[#2F2C79] px-3 py-1.5 rounded-full text-xs hover:bg-[#2F2C79] hover:text-white transition"
+                          >
+                            {choice.title}
+                          </button>
+                        ))}
                       </div>
                     </div>
                   );
-                } else if (block && block.type === 'text') {
-                  content = block.text;
-                } else if (payload) {
-                  if (payload.type === 'text') content = payload.text;
-                  else if (payload.type === 'image') {
-                    content = (
-                      <div className="min-w-[240px] max-w-sm bg-white border border-gray-100 rounded-xl p-3 flex flex-col gap-3 shadow-md">
-                        <div className="w-full h-48 bg-gray-50 rounded-lg overflow-hidden relative">
-                          <img src={payload.image || payload.imageUrl} alt="content" className="w-full h-full object-contain mix-blend-multiply p-2" />
-                        </div>
-                      </div>
-                    );
-                  }
-                  else if (['single-choice', 'choice', 'quick_reply'].includes(payload.type)) {
-                    content = (
-                      <div className="flex flex-col gap-2">
-                        {payload.text && <span className="mb-1">{payload.text}</span>}
-                        <div className="flex flex-wrap gap-2">
-                          {(payload.choices || payload.quick_replies)?.map((choice: any, i: number) => (
-                            <button
-                              key={i}
-                              onClick={() => client?.sendMessage({ type: 'text', text: choice.value || choice.title })}
-                              className="bg-white border border-[#2F2C79] text-[#2F2C79] px-3 py-1.5 rounded-full text-xs hover:bg-[#2F2C79] hover:text-white transition"
-                            >
-                              {choice.title}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                    );
-                  }
                 }
 
                 if (!content) content = msg.text || "";
-
-                // 3. Media Check
                 const isMedia = (block?.type === 'carousel' || block?.type === 'image' || payload?.type === 'image');
 
-                // --- Final Styling (Simple & Radical) ---
-
-                // RTL Context: 
-                // self-start -> Right (User)
-                // self-end   -> Left (Bot)
-
-                const alignmentClass = isUser ? "self-start" : "self-end";
-
-                const colorClass = isUser
-                  ? "bg-[#2F2C79] text-white rounded-tr-2xl rounded-tl-2xl rounded-bl-2xl rounded-br-none" // User: Blue
-                  : "bg-white text-gray-800 border border-gray-100 rounded-tr-2xl rounded-tl-2xl rounded-br-2xl rounded-bl-none shadow-sm"; // Bot: White/Gray
-
-                // Media: Transparent
-                const finalClass = isMedia
-                  ? `w-full max-w-full bg-transparent ${alignmentClass}`
-                  : `max-w-[85%] px-4 py-3 shadow-sm ${alignmentClass} ${colorClass}`;
-
                 return (
-                  <div key={msg.id || idx} className={`flex flex-col mb-3 ${finalClass}`}>
-                    {content}
+                  <div key={msg.id || idx} className={`flex flex-col mb-4 ${activeStyle.container} ${isMedia ? 'w-full' : 'max-w-[85%]'}`}>
+                    <div className={`${isMedia ? '' : activeStyle.bubble + ' px-4 py-3'}`}>
+                      {content}
+                    </div>
                   </div>
                 );
               })}
@@ -273,7 +244,6 @@ export default function Chatbot() {
               <div ref={messagesEndRef} />
             </div>
 
-            {/* Input Area */}
             <div className="p-3 bg-white border-t border-gray-100 shadow-[0_-5px_15px_rgba(0,0,0,0.02)]">
               <div className="flex items-center gap-2 bg-gray-50 p-1.5 rounded-full border border-gray-200">
                 <input
@@ -290,7 +260,6 @@ export default function Chatbot() {
                   disabled={!isConnected || !inputValue.trim()}
                   className="p-2 bg-[#2F2C79] text-white rounded-full hover:bg-[#27246a] disabled:opacity-50 disabled:cursor-not-allowed transition transform active:scale-95 shrink-0"
                 >
-                  {/* Rotated -90deg to point LEFT (Outwards in RTL) */}
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 -rotate-90" viewBox="0 0 20 20" fill="currentColor">
                     <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
                   </svg>
