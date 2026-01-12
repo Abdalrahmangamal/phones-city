@@ -24,7 +24,7 @@ import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
 // استيراد store السلة الفعلي
-import { useCartStore } from "@/store/cartStore/cartStore"; // ← تأكد من المسار الصحيح
+import { useCartStore } from "@/store/cartStore/cartStore"; 
 
 const baseUrl = import.meta.env.VITE_BASE_URL;
 import MobileMenu from "./MobileMenu";
@@ -38,8 +38,6 @@ interface SuggestionItem {
   image?: string;
   productsCount?: number;
 }
-
-
 
 export default function Header() {
   const { categories, fetchCategories } = useCategoriesStore();
@@ -55,6 +53,9 @@ export default function Header() {
   const [suggestionsLoading, setSuggestionsLoading] = useState(false);
   const debounceRef = useRef<number | null>(null);
   const navigate = useNavigate();
+  
+  //  أضف حالة openSections
+  const [openSections, setOpenSections] = useState(false);
 
   // جلب بيانات السلة من الـ store
   const { items: cartItems, fetchCart } = useCartStore();
@@ -62,7 +63,7 @@ export default function Header() {
   // حساب إجمالي الكمية (عدد المنتجات في السلة)
   const cartQuantity = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
-  // جلب السلة عند تحميل المكون
+  // جلب الأقسام عند تحميل المكون وعند تغيير اللغة
   useEffect(() => {
     fetchCategories(lang);
   }, [lang, fetchCategories]);
@@ -156,6 +157,18 @@ export default function Header() {
     debounceRef.current = window.setTimeout(() => {
       fetchSearchSuggestions(value);
     }, 300);
+  };
+
+  //  دالة للتعامل مع ضغط زر الأقسام في شريط التنقل المتنقل
+  const handleMobileSectionToggle = () => {
+    setIsMenuOpen(true);
+    setOpenSections(true); 
+  };
+
+  // دالة للتعامل مع إغلاق القائمة
+  const handleCloseMenu = () => {
+    setIsMenuOpen(false);
+    setOpenSections(false); 
   };
 
   return (
@@ -466,16 +479,17 @@ export default function Header() {
 
       {/* Mobile Header */}
       <div className="md:hidden">
+        
         <MobileMenu
           isOpen={isMenuOpen}
-          onClose={() => setIsMenuOpen(false)}
-          openSections={false}
-          setOpenSections={() => { }}
+          onClose={handleCloseMenu}  
+          openSections={openSections}
+          setOpenSections={setOpenSections}
         />
 
         <MobileNavbar
           onMenuToggle={() => setIsMenuOpen(!isMenuOpen)}
-          onSectionToggle={() => setIsMenuOpen(true)}
+          onSectionToggle={handleMobileSectionToggle} 
           isMenuOpen={isMenuOpen}
           onSearchToggle={() => setIsMobileSearchOpen(true)}
         />

@@ -9,11 +9,19 @@ import { toast } from "react-toastify";
 import { useLangSync } from "@/hooks/useLangSync";
 import { useTranslation } from "react-i18next";
 
+interface PtoductdetailsProps {
+  product: any;
+  handleindexchange: (index: number) => void;
+  selectedOptionIndex: number;
+  isOutOfStock?: boolean; // إضافة الخاصية الجديدة
+}
+
 export default function Ptoductdetails({
   product,
   handleindexchange,
   selectedOptionIndex: propSelectedOptionIndex,
-}: any) {
+  isOutOfStock = false, // قيمة افتراضية
+}: PtoductdetailsProps) {
   const { addToCart } = useCartStore();
   const [quantity, setQuantity] = useState(1);
   const [isTabbyModalOpen, setIsTabbyModalOpen] = useState(false);
@@ -44,30 +52,8 @@ export default function Ptoductdetails({
   const hasOptions = product?.options && Array.isArray(product.options) && product.options.length > 0;
   const hasMultipleOptions = hasOptions && product.options.length > 1;
   
-  // التحقق من نوع الخيارات بناءً على قيمة الخيار الأول
-  const firstOption = hasOptions ? product.options[0] : null;
-  const isColorOption = firstOption?.value && (
-    firstOption.value.startsWith('#') || 
-    ['أحمر', 'أزرق', 'أخضر', 'أسود', 'أبيض', 'رمادي'].some(color => 
-      firstOption.name?.includes(color) || firstOption.value?.includes(color)
-    )
-  );
-  const isCapacityOption = firstOption?.value && (
-    firstOption.value.includes('GB') || 
-    firstOption.value.includes('TB') ||
-    firstOption.value.includes('جيجا') ||
-    firstOption.value.includes('تيرا') ||
-    ['64GB', '128GB', '256GB', '512GB', '1TB'].some(capacity => 
-      firstOption.name?.includes(capacity) || firstOption.value?.includes(capacity)
-    )
-  );
-
-  // تحديد نص التسمية بناءً على نوع الخيار
-  const getOptionLabel = () => {
-    if (isColorOption) return t("Chooseyourcolor") || "اختر لونك";
-    if (isCapacityOption) return t("Chooseyourcapacity") || "اختر سعتك";
-    return t("Chooseyouroption") || "اختر خيارك";
-  };
+  // الحصول على الـ variant المحدد
+  const selectedVariant = product.options?.[selectedOptionIndex];
 
   const openModal = (modalType: string) => {
     if (modalType === "tamara") {
@@ -78,9 +64,17 @@ export default function Ptoductdetails({
   };
 
   const handleAddToCart = async () => {
+    // منع الإضافة إذا كان المنتج غير متوفر
+    if (isOutOfStock) {
+      toast.error("هذا المنتج غير متوفر حالياً", {
+        position: "bottom-right",
+        autoClose: 2000,
+      });
+      return;
+    }
+
     try {
       setIsAddingToCart(true);
-      const selectedVariant = product.options[selectedOptionIndex];
       const hasMultiple = product.options && product.options.length > 1;
       const idToSend = hasMultiple ? selectedVariant.id : product.id;
 
@@ -104,9 +98,17 @@ export default function Ptoductdetails({
   };
 
   const handleBuyNow = async () => {
+    // منع الشراء إذا كان المنتج غير متوفر
+    if (isOutOfStock) {
+      toast.error("هذا المنتج غير متوفر حالياً", {
+        position: "bottom-right",
+        autoClose: 2000,
+      });
+      return;
+    }
+
     try {
       setIsBuyingNow(true);
-      const selectedVariant = product.options[selectedOptionIndex];
       const hasMultiple = product.options && product.options.length > 1;
       const idToSend = hasMultiple ? selectedVariant.id : product.id;
 
@@ -131,9 +133,9 @@ export default function Ptoductdetails({
   };
 
   // الحصول على بوابات الدفع للـ variant المختار
-  const selectedVariant = product.options?.[selectedOptionIndex];
   const paymentMethodsForSelectedVariant =
     selectedVariant?.payment_methods || [];
+
   const [expanded, setExpanded] = useState(false);
 
   const toggleExpand = () => setExpanded(!expanded);
@@ -184,60 +186,20 @@ export default function Ptoductdetails({
         </div>
       </div>
       
-      {/* عرض خيارات المنتج (الألوان أو السعات) */}
-      {hasMultipleOptions && (
-        <div>
-          <p className="text-sm text-start text-primary">{getOptionLabel()}</p>
-
-          {/* عرض الخيارات بناءً على نوعها */}
-          <div className="flex gap-2 md:gap-3 flex-wrap">
-            {product?.options?.map((opt: any, index: number) => (
-              <button
-                key={opt.id}
-                onClick={() => setSelectedOptionIndex(index)}
-                className={`flex items-center justify-center rounded-full border-2 transition-all ${
-                  selectedOptionIndex === index
-                    ? "border-primary scale-110"
-                    : "border-border hover:border-muted-foreground"
-                }`}
-                style={
-                  isColorOption
-                    ? {
-                        width: "2rem",
-                        height: "2rem",
-                        backgroundColor: opt.value,
-                        boxShadow:
-                          opt.value === "#FFFFFF"
-                            ? "inset 0 0 0 1px #e5e7eb"
-                            : "none",
-                      }
-                    : {
-                        minWidth: "4rem",
-                        height: "2.5rem",
-                        padding: "0 0.75rem",
-                        backgroundColor: selectedOptionIndex === index ? "#2AA0DC" : "#f3f4f6",
-                        color: selectedOptionIndex === index ? "white" : "#374151",
-                      }
-                }
-              >
-                {isColorOption ? (
-                  // عرض دائرة للون
-                  <span className="sr-only">{opt.name || `اللون ${index + 1}`}</span>
-                ) : (
-                  // عرض نص للسعة أو أي خيار آخر
-                  <span className="text-sm font-medium">
-                    {opt.name || opt.value || `الخيار ${index + 1}`}
-                  </span>
-                )}
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
-
+      {/* حالة المخزون */}
+      <div className="mt-2">
+        <p className={`text-sm md:text-base font-semibold ${
+          isOutOfStock ? "text-red-600" : "text-green-600"
+        }`}>
+          {isOutOfStock ? "غير متوفر" : "متوفر"}
+        </p>
+      </div>
+      
       {/* Price */}
       <div className="flex items-baseline gap-2 md:gap-3">
-        <span className="text-2xl md:text-3xl font-bold text-[#C33104]">
+        <span className={`text-2xl md:text-3xl font-bold ${
+          isOutOfStock ? "text-gray-500" : "text-[#C33104]"
+        }`}>
           {selectedVariant?.final_price 
             ? (typeof selectedVariant.final_price === "string"
                 ? selectedVariant.final_price
@@ -249,7 +211,7 @@ export default function Ptoductdetails({
                 : "0")}
           {t("SAR")}
         </span>
-        {selectedVariant?.original_price && 
+        {!isOutOfStock && selectedVariant?.original_price && 
          selectedVariant.final_price !== selectedVariant.original_price && (
           <span className="text-base md:text-lg text-muted-foreground line-through">
             {typeof selectedVariant.original_price === "string"
@@ -260,11 +222,10 @@ export default function Ptoductdetails({
         )}
       </div>
 
-      {/* Payment Options */}
-      <div className="space-y-3 pt-4 md:pt-6">
-        {paymentMethodsForSelectedVariant &&
-        paymentMethodsForSelectedVariant.length > 0 ? (
-          paymentMethodsForSelectedVariant.map((item: any) => (
+      {/* Payment Options - إخفاء خيارات الدفع إذا كان المنتج غير متوفر */}
+      {!isOutOfStock && paymentMethodsForSelectedVariant.length > 0 && (
+        <div className="space-y-3 pt-4 md:pt-6">
+          {paymentMethodsForSelectedVariant.map((item: any) => (
             <div
               key={item.id}
               className="flex flex-col md:flex-row md:items-center gap-3 p-3 md:h-[72px] h-full rounded-lg border border-[#0000004D]"
@@ -285,54 +246,87 @@ export default function Ptoductdetails({
                 />
               </div>
             </div>
-          ))
-        ) : (
-          <div className="p-4 text-center text-gray-500">
-            لا توجد طرق دفع متاحة لهذا الخيار
-          </div>
-        )}
-      </div>
+          ))}
+        </div>
+      )}
 
       {/* Quantity and Add to Cart */}
       <div className="flex flex-col md:flex-row md:justify-between justify-center flex-wrap items-center gap-4 md:gap-0 pt-4">
-        <div className="flex items-center justify-between border-2 w-[180px] md:w-[159px] h-[50px] md:h-[62px] border-border rounded-lg overflow-hidden">
+        {/* قسم الكمية - معطل إذا كان المنتج غير متوفر */}
+        <div className={`flex items-center justify-between border-2 w-[180px] md:w-[159px] h-[50px] md:h-[62px] rounded-lg overflow-hidden ${
+          isOutOfStock ? "border-gray-300 opacity-60" : "border-border"
+        }`}>
           <button
-            onClick={() => setQuantity(Math.max(1, quantity - 1))}
-            className="px-3 md:px-4 py-2 h-full bg-gray-200 hover:bg-accent transition-colors"
+            onClick={() => !isOutOfStock && setQuantity(Math.max(1, quantity - 1))}
+            disabled={isOutOfStock}
+            className={`px-3 md:px-4 py-2 h-full transition-colors ${
+              isOutOfStock 
+                ? "bg-gray-200 cursor-not-allowed opacity-60" 
+                : "bg-gray-200 hover:bg-accent"
+            }`}
             aria-label="تقليل الكمية"
           >
             <Minus className="w-4 h-4" />
           </button>
-          <span className="px-4 md:px-6 py-2 border-x-2 border-border font-bold min-w-[40px] md:min-w-[60px] text-center text-sm md:text-base">
+          <span className={`px-4 md:px-6 py-2 border-x-2 border-border font-bold min-w-[40px] md:min-w-[60px] text-center text-sm md:text-base ${
+            isOutOfStock ? "opacity-60" : ""
+          }`}>
             {quantity}
           </span>
           <button
-            onClick={() => setQuantity(quantity + 1)}
-            className="px-3 md:px-4 py-2 bg-[#2AA0DC] h-full text-white hover:text-black hover:bg-accent transition-colors"
+            onClick={() => !isOutOfStock && setQuantity(quantity + 1)}
+            disabled={isOutOfStock}
+            className={`px-3 md:px-4 py-2 h-full transition-colors ${
+              isOutOfStock
+                ? "bg-gray-300 cursor-not-allowed opacity-60"
+                : "bg-[#2AA0DC] text-white hover:bg-[#1e8bc0]"
+            }`}
             aria-label="زيادة الكمية"
           >
             <Plus className="w-4 h-4" />
           </button>
         </div>
+        
+        {/* أزرار الإضافة إلى السلة والشراء - معطلة إذا كان المنتج غير متوفر */}
         <div className="flex flex-col md:flex-row gap-3 md:gap-4">
           <Button
             onClick={handleAddToCart}
-            disabled={isAddingToCart || isBuyingNow}
-            variant="outline"
+            disabled={isAddingToCart || isBuyingNow || isOutOfStock}
+            variant={isOutOfStock ? "secondary" : "outline"}
             size="lg"
-            className="px-4 md:px-6 w-[180px] md:w-[200px] h-[50px] md:h-[64px] border-2 border-black bg-transparent text-xl md:text-[25px] disabled:opacity-50"
+            className={`px-4 md:px-6 w-[180px] md:w-[200px] h-[50px] md:h-[64px] text-xl md:text-[25px] ${
+              isOutOfStock
+                ? "border-gray-300 bg-gray-100 text-gray-500 cursor-not-allowed"
+                : "border-2 border-black bg-transparent hover:bg-gray-50"
+            } disabled:opacity-50`}
           >
-            {isAddingToCart ? "جاري الإضافة..." : t("Addtocart")}
+            {isAddingToCart 
+              ? "جاري الإضافة..." 
+              : isOutOfStock 
+                ? "غير متوفر" 
+                : t("Addtocart")}
           </Button>
+          
           <Button
             onClick={handleBuyNow}
-            disabled={isAddingToCart || isBuyingNow}
-            className="bg-[#2AA0DC] w-[180px] md:w-[200px] h-[50px] md:h-[64px] hover:bg-primary/90 rounded-[8px] flex items-center justify-center text-primary-foreground font-[600] text-xl md:text-[25px] disabled:opacity-50"
+            disabled={isAddingToCart || isBuyingNow || isOutOfStock}
+            variant={isOutOfStock ? "secondary" : "default"}
+            size="lg"
+            className={`w-[180px] md:w-[200px] h-[50px] md:h-[64px] rounded-[8px] flex items-center justify-center font-[600] text-xl md:text-[25px] ${
+              isOutOfStock
+                ? "bg-gray-400 text-gray-600 cursor-not-allowed"
+                : "bg-[#2AA0DC] hover:bg-[#1e8bc0] text-white"
+            } disabled:opacity-50`}
           >
-            {isBuyingNow ? "جاري التوجيه..." : t("Buynow")}
+            {isBuyingNow 
+              ? "جاري التوجيه..." 
+              : isOutOfStock 
+                ? "غير متوفر" 
+                : t("Buynow")}
           </Button>
         </div>
       </div>
+      
       <TabbyModal
         isOpen={isTabbyModalOpen}
         onClose={() => setIsTabbyModalOpen(false)}
