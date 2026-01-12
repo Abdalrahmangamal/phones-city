@@ -1,4 +1,3 @@
-// Profile.tsx
 import { useEffect, useState } from "react";
 import Layout from "@/components/layout/layout";
 import Sidebar from "@/components/layout/Sidebar";
@@ -7,7 +6,7 @@ import { useProfileStore } from "@/store/profile/profileStore";
 import axiosClient from "@/api/axiosClient";
 
 import user from "@/assets/images/User.png";
-import edit from "@/assets/images/edit.png";
+
 import call from "@/assets/images/call-calling.png";
 import sms from "@/assets/images/sms.png";
 import home from "@/assets/images/home-2.png";
@@ -19,9 +18,11 @@ import { useLangSync } from "@/hooks/useLangSync";
 
 export default function Profile() {
   const { t } = useTranslation();
-  const { profile, isLoading, error, fetchProfile, updateProfile } = useProfileStore();
-  const { page, fetchPage, loading: pageLoading } = usePageStore();
   const { lang } = useLangSync();
+  const { profile, isLoading, error, fetchProfile, updateProfile } = useProfileStore();
+  const { fetchPage, getPage, isLoading: isPageLoading } = usePageStore();
+  const page = getPage("profilepagebaner", lang);
+  const pageLoading = isPageLoading("profilepagebaner", lang);
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -47,7 +48,7 @@ export default function Profile() {
     fetchProfile();
     // Fetch banner data from backend
     fetchPage("profilepagebaner", lang);
-  }, [ lang]);
+  }, [lang, fetchProfile, fetchPage]);
 
   // Update form data when profile is loaded
   useEffect(() => {
@@ -63,7 +64,7 @@ export default function Profile() {
       setFormData(newData);
       setOriginalData(newData);
     }
-  }, []);
+  }, [profile]);
 
   const handleInputChange = (field: keyof typeof formData, value: string) => {
     setFormData(prev => ({
@@ -209,7 +210,7 @@ export default function Profile() {
     setPasswordSuccess("");
   };
 
-  if (isLoading && !profile) {
+  if (isLoading) {
     return (
       <Layout>
         <div className="flex justify-center items-center h-screen">
