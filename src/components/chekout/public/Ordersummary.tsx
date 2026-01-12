@@ -149,7 +149,7 @@ export default function OrderSummary({ onTotalUpdate }: OrderSummaryProps) {
       </h1>
 
       {/* كود الخصم */}
-      <div className="mb-6 space-y-2">
+      {/* <div className="mb-6 space-y-2">
         <label 
           className={`block text-xs font-medium text-gray-600 ${isRTL ? 'text-right' : 'text-left'}`}
         >
@@ -175,7 +175,7 @@ export default function OrderSummary({ onTotalUpdate }: OrderSummaryProps) {
             {t("Apply")}
           </button>
         </div>
-      </div>
+      </div> */}
 
       {/* تفاصيل الأسعار */}
       <div className="mb-6 space-y-3 text-sm">

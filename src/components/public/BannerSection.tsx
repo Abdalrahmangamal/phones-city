@@ -65,7 +65,7 @@ const BannerSection: React.FC<BannerSectionProps> = ({
               <img
                 src={image}
                 alt={`بانر ${index + 1}`}
-                className="w-full h-full object-contain rounded-[16px]"
+                className="w-full h-full !object-fill rounded-[16px]"
                 loading={index === 0 ? "eager" : "lazy"}
               />
             </SwiperSlide>
