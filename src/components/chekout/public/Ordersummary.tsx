@@ -125,7 +125,7 @@ export default function OrderSummary({ onTotalUpdate }: OrderSummaryProps) {
         ? textFn("", isRTL)
         : textFn(amount, isRTL)
       : isRTL
-        ? `${p.name} • ${amount} ريال`
+        ? `${p.name} • ${amount} ﷼`
         : `${p.name} • ${amount} SAR`;
 
     return {

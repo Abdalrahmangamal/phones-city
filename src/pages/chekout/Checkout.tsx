@@ -202,7 +202,23 @@ const steps = [
       // إغلاق toast التحميل
       toast.dismiss(loadingToast);
 
-      // حفظ رقم الطلب وتحديث الحالة
+      // بعض بوابات الدفع (مثل Moyasar) يرجعون بيانات دفع مع رابط تحويل
+      const paymentData = response.data?.payment || response.data?.data?.payment;
+      const redirectUrl = paymentData?.redirect_url || paymentData?.redirectUrl || paymentData?.url || null;
+      const requiresRedirect = paymentData?.requires_redirect || paymentData?.requiresRedirect || false;
+
+      if (requiresRedirect || redirectUrl) {
+        // حفظ رقم الطلب جزئياً (قد نعود لاحقاً عبر webhook أو callback)
+        const orderNum = response.data.order_number || response.data.id;
+        setOrderNumber(orderNum);
+
+        // لا ننظف السلة هنا لأن الدفع سيكمل خارج الموقع
+        // افتح رابط الدفع
+        window.location.href = redirectUrl as string;
+        return;
+      }
+
+      // حفظ رقم الطلب وتحديث الحالة للحالات التي لا تحتاج تحويل
       const orderNum = response.data.order_number || response.data.id;
       setOrderNumber(orderNum);
       setOrderCompleted(true);
