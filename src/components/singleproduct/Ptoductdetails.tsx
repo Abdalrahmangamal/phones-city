@@ -82,11 +82,19 @@ export default function Ptoductdetails({
       });
 
       setQuantity(1);
-    } catch (error) {
-      toast.error("فشل إضافة المنتج إلى السلة", {
-        position: "bottom-right",
-        autoClose: 2000,
-      });
+    } catch (error: any) {
+      const errorMessage = error?.response?.data?.message;
+      if (errorMessage === "Insufficient stock") {
+        toast.error(lang === "ar" ? "الكمية المطلوبة غير متوفرة" : "Requested quantity not available", {
+          position: "bottom-right",
+          autoClose: 2000,
+        });
+      } else {
+        toast.error(lang === "ar" ? "فشل إضافة المنتج إلى السلة" : "Failed to add product to cart", {
+          position: "bottom-right",
+          autoClose: 2000,
+        });
+      }
     } finally {
       setIsAddingToCart(false);
     }
@@ -114,11 +122,19 @@ export default function Ptoductdetails({
       });
 
       navigate(`/${lang}/checkout`);
-    } catch (error) {
-      toast.error("فشل إضافة المنتج إلى السلة", {
-        position: "bottom-right",
-        autoClose: 2000,
-      });
+    } catch (error: any) {
+      const errorMessage = error?.response?.data?.message;
+      if (errorMessage === "Insufficient stock") {
+        toast.error(lang === "ar" ? "الكمية المطلوبة غير متوفرة" : "Requested quantity not available", {
+          position: "bottom-right",
+          autoClose: 2000,
+        });
+      } else {
+        toast.error(lang === "ar" ? "فشل إضافة المنتج إلى السلة" : "Failed to add product to cart", {
+          position: "bottom-right",
+          autoClose: 2000,
+        });
+      }
     } finally {
       setIsBuyingNow(false);
     }
@@ -168,8 +184,8 @@ export default function Ptoductdetails({
               <Star
                 key={star}
                 className={`w-[18px] h-[18px] md:w-[22px] md:h-[22px] ${star <= product.average_rating
-                    ? "fill-[#FC9231] text-[#FC9231]"
-                    : "fill-none text-gray-300"
+                  ? "fill-[#FC9231] text-[#FC9231]"
+                  : "fill-none text-gray-300"
                   }`}
               />
             ))}
@@ -254,8 +270,8 @@ export default function Ptoductdetails({
             onClick={() => !isOutOfStock && setQuantity(Math.max(1, quantity - 1))}
             disabled={isOutOfStock}
             className={`px-3 md:px-4 py-2 h-full transition-colors ${isOutOfStock
-                ? "bg-gray-200 cursor-not-allowed opacity-60"
-                : "bg-gray-200 hover:bg-accent"
+              ? "bg-gray-200 cursor-not-allowed opacity-60"
+              : "bg-gray-200 hover:bg-accent"
               }`}
             aria-label="تقليل الكمية"
           >
@@ -269,8 +285,8 @@ export default function Ptoductdetails({
             onClick={() => !isOutOfStock && setQuantity(quantity + 1)}
             disabled={isOutOfStock}
             className={`px-3 md:px-4 py-2 h-full transition-colors ${isOutOfStock
-                ? "bg-gray-300 cursor-not-allowed opacity-60"
-                : "bg-[#2AA0DC] text-white hover:bg-[#1e8bc0]"
+              ? "bg-gray-300 cursor-not-allowed opacity-60"
+              : "bg-[#2AA0DC] text-white hover:bg-[#1e8bc0]"
               }`}
             aria-label="زيادة الكمية"
           >
@@ -285,14 +301,14 @@ export default function Ptoductdetails({
             variant={isOutOfStock ? "secondary" : "outline"}
             size="lg"
             className={`px-4 md:px-6 w-[180px] md:w-[200px] h-[50px] md:h-[64px] text-xl md:text-[25px] ${isOutOfStock
-                ? "border-gray-300 bg-gray-100 text-gray-500 cursor-not-allowed"
-                : "border-2 border-black bg-transparent hover:bg-gray-50"
+              ? "border-gray-300 bg-gray-100 text-gray-500 cursor-not-allowed"
+              : "border-2 border-black bg-transparent hover:bg-gray-50"
               } disabled:opacity-50`}
           >
             {isAddingToCart
-              ? "جاري الإضافة..."
+              ? (lang === "ar" ? "جاري الإضافة..." : "Adding...")
               : isOutOfStock
-                ? "غير متوفر"
+                ? (lang === "ar" ? "غير متوفر" : "Out of Stock")
                 : t("Addtocart")}
           </Button>
 
@@ -302,14 +318,14 @@ export default function Ptoductdetails({
             variant={isOutOfStock ? "secondary" : "default"}
             size="lg"
             className={`w-[180px] md:w-[200px] h-[50px] md:h-[64px] rounded-[8px] flex items-center justify-center font-[600] text-xl md:text-[25px] ${isOutOfStock
-                ? "bg-gray-400 text-gray-600 cursor-not-allowed"
-                : "bg-[#2AA0DC] hover:bg-[#1e8bc0] text-white"
+              ? "bg-gray-400 text-gray-600 cursor-not-allowed"
+              : "bg-[#2AA0DC] hover:bg-[#1e8bc0] text-white"
               } disabled:opacity-50`}
           >
             {isBuyingNow
-              ? "جاري التوجيه..."
+              ? (lang === "ar" ? "جاري التوجيه..." : "Redirecting...")
               : isOutOfStock
-                ? "غير متوفر"
+                ? (lang === "ar" ? "غير متوفر" : "Out of Stock")
                 : t("Buynow")}
           </Button>
         </div>
