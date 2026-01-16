@@ -189,7 +189,7 @@ export default function LatestOffers() {
                     </p>
                     <Link
                       to={getOfferLink()}
-                      className="inline-block mt-4 px-3 py-1 text-[8px] md:text-[12px] text-white bg-[#F3AC5D] rounded-[6px] hover:bg-[#e79940] transition-all"
+                      className="inline-block w-fit mt-4 px-3 py-1 text-[8px] md:text-[12px] text-white bg-[#F3AC5D] rounded-[6px] hover:bg-[#e79940] transition-all"
                     >
                       {t("ShopNow")}
                     </Link>
@@ -277,7 +277,7 @@ export default function LatestOffers() {
                     </p>
                     <Link
                       to={getOfferLink()}
-                      className="inline-block mt-4 px-3 py-1 text-[8px] md:text-[12px] text-white bg-[#F3AC5D] rounded-[6px] hover:bg-[#e79940] transition-all"
+                      className="inline-block w-fit mt-4 px-3 py-1 text-[8px] md:text-[12px] text-white bg-[#F3AC5D] rounded-[6px] hover:bg-[#e79940] transition-all"
                     >
                       {t("ShopNow")}
                     </Link>
