@@ -7,6 +7,7 @@ import { useCartStore } from "@/store/cartStore/cartStore";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
 import { useFavoritesStore } from "@/store/favoritesStore";
+import { SaudiRiyalIcon } from "@/components/common/SaudiRiyalIcon";
 
 interface ProductCardProps {
   product: Product;
@@ -14,11 +15,11 @@ interface ProductCardProps {
   favourite?: boolean;
   containerstyle?: string;
   imagecard: string;
-  quantity?:string;
+  quantity?: string;
   variations?: { color: string; image: string }[];
 }
 
-export default function ProductCard({ product, imagecard, containerstyle ,quantity }: ProductCardProps) {
+export default function ProductCard({ product, imagecard, containerstyle, quantity }: ProductCardProps) {
   const { t } = useTranslation();
 
   const { addFavorite, removeFavorite, favorites } = useFavoritesStore();
@@ -40,7 +41,7 @@ export default function ProductCard({ product, imagecard, containerstyle ,quanti
   const { lang } = useLangSync();
 
   const hasOptions = Array.isArray(product?.options) && product.options.length > 0;
-  
+
   // الحصول على الـ variant المحدد بناءً على selectedIndex
   const getSelectedVariant = () => {
     if (hasOptions && product?.options?.[selectedIndex]) {
@@ -54,30 +55,30 @@ export default function ProductCard({ product, imagecard, containerstyle ,quanti
   // استخراج الأسعار بشكل آمن
   const extractPrice = (price: any): number => {
     if (!price && price !== 0) return 0;
-    
+
     if (typeof price === 'number') return price;
-    
+
     if (typeof price === 'string') {
       // إزالة أي رموز غير رقمية مثل العملة والفواصل
       const cleanStr = price.replace(/[^\d.-]/g, '').replace(/,/g, '');
       const num = parseFloat(cleanStr);
       return isNaN(num) ? 0 : num;
     }
-    
+
     return 0;
   };
 
   // الحصول على الأسعار من الـ variant المحدد أو المنتج الرئيسي
-  const original = selectedVariant 
+  const original = selectedVariant
     ? extractPrice(selectedVariant.original_price || selectedVariant.price || product?.original_price)
     : extractPrice(product?.original_price || product?.price);
 
-  const final = selectedVariant 
+  const final = selectedVariant
     ? extractPrice(selectedVariant.final_price || selectedVariant.sale_price || product?.final_price)
     : extractPrice(product?.final_price || product?.price);
 
-  const discountPercent = original > 0 && final < original 
-    ? Math.round(((original - final) / original) * 100) 
+  const discountPercent = original > 0 && final < original
+    ? Math.round(((original - final) / original) * 100)
     : 0;
 
   // حالة المخزون بناءً على البيانات الفعلية من الـ API
@@ -88,8 +89,8 @@ export default function ProductCard({ product, imagecard, containerstyle ,quanti
   const isLimited = stockStatus === "limited" && stockQuantity > 0;
 
   // الصورة الحالية - أولوية للصورة من الـ variant المحدد
-  const currentImage = selectedVariant?.images?.[0]?.url 
-    || product.main_image 
+  const currentImage = selectedVariant?.images?.[0]?.url
+    || product.main_image
     || "";
 
   // حالة السلة محلياً
@@ -243,13 +244,13 @@ export default function ProductCard({ product, imagecard, containerstyle ,quanti
       {/* السعر + زر السلة */}
       <div className="flex items-center justify-between mt-[10px] w-full">
         <div className="relative flex md:gap-3">
-          <p className="text-[#211C4D] md:text-[18px] text-[11px] font-[500]">
-            {final?.toLocaleString()} {t("SAR")}
+          <p className="text-[#211C4D] md:text-[18px] text-[11px] font-[500] flex items-center gap-1">
+            {final?.toLocaleString()} <SaudiRiyalIcon className="w-4 h-4" />
           </p>
           {final < original && (
             <div className="relative">
-              <p className="text-[#211C4D] md:text-[18px] text-[11px] font-[500] opacity-60">
-                {original?.toLocaleString()} {t("SAR")}
+              <p className="text-[#211C4D] md:text-[18px] text-[11px] font-[500] opacity-60 flex items-center gap-1">
+                {original?.toLocaleString()} <SaudiRiyalIcon className="w-3.5 h-3.5" />
               </p>
               <svg
                 className="absolute top-2 md:top-3 w-full right-0 z-1"
@@ -273,58 +274,57 @@ export default function ProductCard({ product, imagecard, containerstyle ,quanti
             isOutOfStock
               ? undefined
               : () => {
-                  const hasMultiple = product.options && product.options.length > 1;
-                  const idToSend = hasMultiple ? selectedVariant?.id : product.id;
+                const hasMultiple = product.options && product.options.length > 1;
+                const idToSend = hasMultiple ? selectedVariant?.id : product.id;
 
-                  if (!isInCart) {
-                    addToCart(idToSend, 1, hasMultiple)
-                      .then(() => {
-                        setIsInCart(true);
-                        toast.success(`تم إضافة ${product.name} إلى السلة`, {
-                          position: "bottom-right",
-                          autoClose: 2000,
-                        });
-                      })
-                      .catch((error: any) => {
-                        let errorMessage = "فشلت إضافة المنتج إلى السلة";
-                        if (error?.response?.data?.message) {
-                          const apiMessage = error.response.data.message;
-                          if (apiMessage.includes("out of stock") || apiMessage.includes("نفد المخزون")) {
-                            errorMessage = "عذراً، هذا المنتج نفد من المخزون";
-                          } else if (apiMessage.includes("already in cart")) {
-                            errorMessage = "المنتج موجود مسبقاً في السلة";
-                            setIsInCart(true);
-                          } else {
-                            errorMessage = apiMessage;
-                          }
+                if (!isInCart) {
+                  addToCart(idToSend, 1, hasMultiple)
+                    .then(() => {
+                      setIsInCart(true);
+                      toast.success(`تم إضافة ${product.name} إلى السلة`, {
+                        position: "bottom-right",
+                        autoClose: 2000,
+                      });
+                    })
+                    .catch((error: any) => {
+                      let errorMessage = "فشلت إضافة المنتج إلى السلة";
+                      if (error?.response?.data?.message) {
+                        const apiMessage = error.response.data.message;
+                        if (apiMessage.includes("out of stock") || apiMessage.includes("نفد المخزون")) {
+                          errorMessage = "عذراً، هذا المنتج نفد من المخزون";
+                        } else if (apiMessage.includes("already in cart")) {
+                          errorMessage = "المنتج موجود مسبقاً في السلة";
+                          setIsInCart(true);
+                        } else {
+                          errorMessage = apiMessage;
                         }
-                        toast.error(errorMessage, { position: "bottom-right", autoClose: 3000 });
+                      }
+                      toast.error(errorMessage, { position: "bottom-right", autoClose: 3000 });
+                    });
+                } else {
+                  deleteToCart(idToSend)
+                    .then(() => {
+                      setIsInCart(false);
+                      toast.info(`تم حذف ${product.name} من السلة`, {
+                        position: "bottom-right",
+                        autoClose: 2000,
                       });
-                  } else {
-                    deleteToCart(idToSend)
-                      .then(() => {
-                        setIsInCart(false);
-                        toast.info(`تم حذف ${product.name} من السلة`, {
-                          position: "bottom-right",
-                          autoClose: 2000,
-                        });
-                      })
-                      .catch(() => {
-                        toast.error("فشل حذف المنتج من السلة", {
-                          position: "bottom-right",
-                          autoClose: 3000,
-                        });
+                    })
+                    .catch(() => {
+                      toast.error("فشل حذف المنتج من السلة", {
+                        position: "bottom-right",
+                        autoClose: 3000,
                       });
-                  }
+                    });
                 }
+              }
           }
-          className={`w-[40px] h-[40px] flex items-center justify-center rounded-[8px] transition-all duration-200 ${
-            isOutOfStock
+          className={`w-[40px] h-[40px] flex items-center justify-center rounded-[8px] transition-all duration-200 ${isOutOfStock
               ? "bg-gray-300 cursor-not-allowed opacity-60"
               : isInCart
-              ? "bg-[#211C4D] shadow-[0px_4px_8px_0px_#211C4D4d] hover:shadow-[0px_6px_12px_0px_#211C4D66] cursor-pointer"
-              : "bg-[#EEF1F6] hover:bg-[#dfe3ea] shadow-[0px_2px_4px_0px_#00000020] cursor-pointer"
-          }`}
+                ? "bg-[#211C4D] shadow-[0px_4px_8px_0px_#211C4D4d] hover:shadow-[0px_6px_12px_0px_#211C4D66] cursor-pointer"
+                : "bg-[#EEF1F6] hover:bg-[#dfe3ea] shadow-[0px_2px_4px_0px_#00000020] cursor-pointer"
+            }`}
         >
           {isInCart ? (
             <svg width="18" height="18" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">

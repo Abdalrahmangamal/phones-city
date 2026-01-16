@@ -132,9 +132,8 @@ const Filter: React.FC<FilterProps> = ({
                   onClick={() => handleSortChange(option.id)}
                 >
                   <div
-                    className={`w-6 h-6 border-2 border-gray-300 rounded flex items-center justify-center ${
-                      selectedSort === option.id ? "bg-[#211C4D] border-[#211C4D]" : "bg-white"
-                    }`}
+                    className={`w-6 h-6 border-2 border-gray-300 rounded flex items-center justify-center ${selectedSort === option.id ? "bg-[#211C4D] border-[#211C4D]" : "bg-white"
+                      }`}
                   >
                     {selectedSort === option.id && <div className="w-3.5 h-3.5 bg-white rounded-full"></div>}
                   </div>
@@ -166,9 +165,8 @@ const Filter: React.FC<FilterProps> = ({
                 onClick={() => handleCategoryChange(null)}
               >
                 <div
-                  className={`w-6 h-6 border-2 border-gray-300 rounded flex items-center justify-center ${
-                    selectedCategory === null ? "bg-[#211C4D] border-[#211C4D]" : "bg-white"
-                  }`}
+                  className={`w-6 h-6 border-2 border-gray-300 rounded flex items-center justify-center ${selectedCategory === null ? "bg-[#211C4D] border-[#211C4D]" : "bg-white"
+                    }`}
                 >
                   {selectedCategory === null && <div className="w-3.5 h-3.5 bg-white rounded-full"></div>}
                 </div>
@@ -182,9 +180,8 @@ const Filter: React.FC<FilterProps> = ({
                   onClick={() => handleCategoryChange(category.id)}
                 >
                   <div
-                    className={`w-6 h-6 border-2 border-gray-300 rounded flex items-center justify-center ${
-                      selectedCategory === category.id ? "bg-[#211C4D] border-[#211C4D]" : "bg-white"
-                    }`}
+                    className={`w-6 h-6 border-2 border-gray-300 rounded flex items-center justify-center ${selectedCategory === category.id ? "bg-[#211C4D] border-[#211C4D]" : "bg-white"
+                      }`}
                   >
                     {selectedCategory === category.id && <div className="w-3.5 h-3.5 bg-white rounded-full"></div>}
                   </div>
@@ -252,8 +249,8 @@ const Filter: React.FC<FilterProps> = ({
               </div>
 
               <div className="flex justify-between text-[16px] text-gray-700 font-medium">
-                <span>{minPrice.toLocaleString()} {t("SAR")}</span>
-                <span>{maxPrice.toLocaleString()} {t("SAR")}</span>
+                <span className="flex items-center gap-1">{minPrice.toLocaleString()} <SaudiRiyalIcon className="w-4 h-4" /></span>
+                <span className="flex items-center gap-1">{maxPrice.toLocaleString()} <SaudiRiyalIcon className="w-4 h-4" /></span>
               </div>
             </div>
           )}

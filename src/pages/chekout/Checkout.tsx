@@ -1,7 +1,7 @@
 // Checkout.tsx
 "use client";
 
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
@@ -16,19 +16,20 @@ import { useCartStore } from '@/store/cartStore/cartStore';
 import { useTranslation } from "react-i18next";
 import axiosClient from "@/api/axiosClient";
 import { useAddressStore } from '@/store/profile/indexStore';
-import { Package, Home, ShoppingBag } from "lucide-react"; 
+import { Package, Home, ShoppingBag } from "lucide-react";
+import { SaudiRiyalIcon } from "@/components/common/SaudiRiyalIcon";
 
 export default function CheckoutPage() {
-  
+
   const [activeStep, setActiveStep] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [orderCompleted, setOrderCompleted] = useState(false); 
-  const [orderNumber, setOrderNumber] = useState<string | null>(null); 
+  const [orderCompleted, setOrderCompleted] = useState(false);
+  const [orderNumber, setOrderNumber] = useState<string | null>(null);
   const navigate = useNavigate();
 
   const { items, total, fetchCart, selectedPaymentId, clearCart } = useCartStore();
-  
-  
+
+
 
   const { t, i18n } = useTranslation();
   const isRTL = i18n.language === "ar";
@@ -47,37 +48,37 @@ export default function CheckoutPage() {
   }, [fetchCart, usePoints]);
 
 
-const steps = [
-  {
-    title: t("checkout.steps.orderSummary"),
-    number: order,
-    componunt: (
-      <Checkoutsummary
-        products={items}
-        total={total}
-        usePoints={usePoints}
-        onUsePointsChange={setUsePoints}  
-      />
-    ),
-  },
-  {
-    title: t("checkout.steps.address"),
-    number: step2,
-    componunt: <Checkoutaddress />,
-  },
-  {
-    title: t("checkout.steps.payment"),
-    number: step3,
-    componunt: (
-      <Checkoutpayment 
-        usePoints={usePoints}
-        onUsePointsChange={setUsePoints}  
-      />
-    ),
-  },
-];
+  const steps = [
+    {
+      title: t("checkout.steps.orderSummary"),
+      number: order,
+      componunt: (
+        <Checkoutsummary
+          products={items}
+          total={total}
+          usePoints={usePoints}
+          onUsePointsChange={setUsePoints}
+        />
+      ),
+    },
+    {
+      title: t("checkout.steps.address"),
+      number: step2,
+      componunt: <Checkoutaddress />,
+    },
+    {
+      title: t("checkout.steps.payment"),
+      number: step3,
+      componunt: (
+        <Checkoutpayment
+          usePoints={usePoints}
+          onUsePointsChange={setUsePoints}
+        />
+      ),
+    },
+  ];
 
-  const showCustomToast = (type: 'success' | 'error' | 'info', title: string, message?: string, duration: number = 8000) => {
+  const showCustomToast = (type: 'success' | 'error' | 'info', title: string, message?: React.ReactNode, duration: number = 8000) => {
     const ToastContent = () => (
       <div className={`flex flex-col ${isRTL ? 'text-right' : 'text-left'}`}>
         <div className="font-bold text-lg flex items-center gap-2">
@@ -98,11 +99,11 @@ const steps = [
       pauseOnHover: true,
       draggable: true,
       theme: "light" as const,
-      className: type === 'success' 
+      className: type === 'success'
         ? "!rounded-lg !shadow-xl !border !border-green-200 !bg-gradient-to-r !from-green-50 !to-white"
         : type === 'error'
-        ? "!rounded-lg !shadow-xl !border !border-red-200 !bg-gradient-to-r !from-red-50 !to-white"
-        : "!rounded-lg !shadow-xl !border !border-blue-200 !bg-gradient-to-r !from-blue-50 !to-white",
+          ? "!rounded-lg !shadow-xl !border !border-red-200 !bg-gradient-to-r !from-red-50 !to-white"
+          : "!rounded-lg !shadow-xl !border !border-blue-200 !bg-gradient-to-r !from-blue-50 !to-white",
       bodyClassName: "!p-4",
     };
 
@@ -121,7 +122,7 @@ const steps = [
 
   const handleCompleteOrder = async () => {
     setIsSubmitting(true);
-    
+
     try {
       // التحقق من صحة البيانات
       if (!selectedPaymentId) {
@@ -191,7 +192,7 @@ const steps = [
         note: "",
         discount_code: localStorage.getItem('discount_code') || null,
         delivery_method: currentDeliveryMethod === "pickup" ? "store_pickup" : "home_delivery",
-        use_points: usePoints, 
+        use_points: usePoints,
       };
 
       console.log('Sending order data:', orderData); // Debugging
@@ -231,15 +232,24 @@ const steps = [
       localStorage.removeItem('discount_code');
 
       // عرض toast النجاح مع معلومات النقاط
-      let successMessage = isRTL 
+      let successMessage: React.ReactNode = isRTL
         ? `تم إتمام الطلب رقم ${orderNum} بنجاح`
         : `Order #${orderNum} completed successfully - You can track your orders`;
-      
+
       if (usePoints && response.data.data?.points_discount) {
         const pointsDiscount = response.data.data.points_discount;
-        successMessage += isRTL
-          ? `\nتم خصم ${pointsDiscount} ريال باستخدام النقاط`
-          : `\n${pointsDiscount} SAR deducted using points`;
+        successMessage = (
+          <div className="flex flex-col">
+            <span>{isRTL ? `تم إتمام الطلب رقم ${orderNum} بنجاح` : `Order #${orderNum} completed successfully`}</span>
+            <span className="flex items-center gap-1 mt-1">
+              {isRTL
+                ? `تم خصم ${pointsDiscount}`
+                : `${pointsDiscount} deducted using points`}
+              <SaudiRiyalIcon className="w-3 h-3" />
+              {isRTL ? 'باستخدام النقاط' : ''}
+            </span>
+          </div>
+        );
       }
 
       showCustomToast(
@@ -261,7 +271,7 @@ const steps = [
       }
 
       showCustomToast('error', errorTitle, errorMessage);
-      
+
       console.error('Order submission error:', error);
     } finally {
       setIsSubmitting(false);
@@ -278,13 +288,13 @@ const steps = [
 
 
 
-const handleUsePointsChange = (value: boolean) => {
-  console.log('setUsePoints called with:', value);
-  console.log('Previous value was:', usePoints);
-  setUsePoints(value);
-};
+  const handleUsePointsChange = (value: boolean) => {
+    console.log('setUsePoints called with:', value);
+    console.log('Previous value was:', usePoints);
+    setUsePoints(value);
+  };
 
-// ثم استخدم handleUsePointsChange بدلاً من setUsePoints في steps
+  // ثم استخدم handleUsePointsChange بدلاً من setUsePoints في steps
   const handleGoHome = () => {
     navigate(`/${currentLang}`);
   };
@@ -308,13 +318,13 @@ const handleUsePointsChange = (value: boolean) => {
                   </div>
                 </div>
               </div>
-              
+
               <h1 className="text-3xl font-bold text-gray-900 mb-4">
                 {isRTL ? '🎉 تم تأكيد طلبك!' : '🎉 Order Confirmed!'}
               </h1>
-              
+
               <p className="text-lg text-gray-600 mb-2">
-                {isRTL 
+                {isRTL
                   ? `تم إتمام طلبك بنجاح`
                   : `Your order #${orderNumber} has been confirmed`
                 }
@@ -338,7 +348,7 @@ const handleUsePointsChange = (value: boolean) => {
                   <Home className="w-5 h-5" />
                   {isRTL ? 'العودة للرئيسية' : 'Back to Home'}
                 </Button>
-                
+
                 <Button
                   onClick={handleGoToOrders}
                   className="flex items-center justify-center gap-2 px-8 py-6 text-lg rounded-xl bg-[#F3AC5D] hover:bg-[#e69c4d] text-white"
@@ -367,20 +377,18 @@ const handleUsePointsChange = (value: boolean) => {
                   <div className="flex items-start gap-4">
                     <div className="flex flex-col items-center justify-center">
                       <div
-                        className={`w-[37px] h-[37px] rounded-full flex items-center justify-center font-bold text-lg transition-all ${
-                          activeStep === index
-                            ? "bg-orange-400 text-white"
-                            : activeStep > index
+                        className={`w-[37px] h-[37px] rounded-full flex items-center justify-center font-bold text-lg transition-all ${activeStep === index
+                          ? "bg-orange-400 text-white"
+                          : activeStep > index
                             ? "bg-green-500 text-white"
                             : "bg-[#AEAEAE] text-gray-600"
-                        }`}
+                          }`}
                       >
                         {activeStep > index ? "✓" : <img src={step.number} alt="" className="w-6 h-6" />}
                       </div>
                       <span
-                        className={`mt-2 text-sm font-semibold ${
-                          activeStep === index ? "text-orange-400" : "text-[#939393]"
-                        }`}
+                        className={`mt-2 text-sm font-semibold ${activeStep === index ? "text-orange-400" : "text-[#939393]"
+                          }`}
                       >
                         {step.title}
                       </span>

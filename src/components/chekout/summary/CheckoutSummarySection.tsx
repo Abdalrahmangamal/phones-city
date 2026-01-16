@@ -10,6 +10,7 @@ import emkann from "@/assets/images/emkann.png";
 import madfu from "@/assets/images/madfu.png";
 import mispay_installment from "@/assets/images/mispay_installment 1.png";
 import amwal from "@/assets/images/amwal.png";
+import { SaudiRiyalIcon } from "@/components/common/SaudiRiyalIcon";
 
 interface ShipmentInfo {
   address: string;
@@ -36,7 +37,7 @@ const CheckoutSummarySection: React.FC<CheckoutSummarySectionProps> = ({
 }) => {
   const { items, total, selectedPaymentId, finalTotal: cartFinalTotal } = useCartStore();
   const { t, i18n } = useTranslation();
-  
+
   const [pointsData, setPointsData] = useState<PointsSummary | null>(null);
   const [loadingPoints, setLoadingPoints] = useState(true);
   const [errorPoints, setErrorPoints] = useState<string | null>(null);
@@ -56,67 +57,67 @@ const CheckoutSummarySection: React.FC<CheckoutSummarySectionProps> = ({
     6: amwal,
   };
 
-  console.log('CheckoutSummarySection - Received props:', { 
-  usePoints, 
-  onUsePointsChange: typeof onUsePointsChange 
-});
+  console.log('CheckoutSummarySection - Received props:', {
+    usePoints,
+    onUsePointsChange: typeof onUsePointsChange
+  });
 
   // استخراج بوابات الدفع والبوابة المختارة
   const paymentMethods = (items[0]?.product as any)?.options?.[0]?.payment_methods || [];
   const selectedPayment = paymentMethods.find((p: any) => p.id === selectedPaymentId);
 
   // جلب نقاط المستخدم
-  
-useEffect(() => {
-  const fetchPoints = async () => {
-    try {
-      setLoadingPoints(true);
-      setErrorPoints(null);
 
-      const response = await axiosClient.get("/api/v1/points/summary", {
-        // إضافة headers عشان نتجنب caching لو فيه
-        headers: {
-          'Cache-Control': 'no-cache',
-          'Pragma': 'no-cache',
-        },
-      });
+  useEffect(() => {
+    const fetchPoints = async () => {
+      try {
+        setLoadingPoints(true);
+        setErrorPoints(null);
 
-      if (response.data.status && response.data.data?.summary) {
-        setPointsData(response.data.data.summary);
-      } else {
-        setErrorPoints(t("checkoutSummary.pointsError"));
+        const response = await axiosClient.get("/api/v1/points/summary", {
+          // إضافة headers عشان نتجنب caching لو فيه
+          headers: {
+            'Cache-Control': 'no-cache',
+            'Pragma': 'no-cache',
+          },
+        });
+
+        if (response.data.status && response.data.data?.summary) {
+          setPointsData(response.data.data.summary);
+        } else {
+          setErrorPoints(t("checkoutSummary.pointsError"));
+        }
+      } catch (err: any) {
+        console.error("Error fetching points:", err);
+        setErrorPoints(t("checkoutSummary.pointsError") || "فشل تحميل النقاط");
+      } finally {
+        setLoadingPoints(false);
       }
-    } catch (err: any) {
-      console.error("Error fetching points:", err);
-      setErrorPoints(t("checkoutSummary.pointsError") || "فشل تحميل النقاط");
-    } finally {
-      setLoadingPoints(false);
-    }
-  };
+    };
 
-  fetchPoints();
-}, []); 
+    fetchPoints();
+  }, []);
 
   // تحديد معلومات الشحن
   const getShipmentInfo = (): ShipmentInfo => {
     if (deliveryMethod === "pickup") {
       return {
-        address: isRTL 
-          ? "استلام من المعرض - الموقع الرئيسي" 
+        address: isRTL
+          ? "استلام من المعرض - الموقع الرئيسي"
           : "Pickup from Showroom - Main Location"
       };
     }
-    
+
     if (selectedAddress && deliveryMethod === "delivery") {
       const cityName = isRTL ? selectedAddress.city.name_ar : selectedAddress.city.name_en;
       return {
         address: `${selectedAddress.street_address}, ${cityName}, ${selectedAddress.country}`
       };
     }
-    
+
     return {
-      address: isRTL 
-        ? "ابو بكر الصديق، شبرا، الطائف 26522،" 
+      address: isRTL
+        ? "ابو بكر الصديق، شبرا، الطائف 26522،"
         : "Abu Bakr Al-Siddiq, Shubra, Taif 26522"
     };
   };
@@ -135,22 +136,22 @@ useEffect(() => {
   const taxRate = 0.15; // 15% ضريبة
   const taxableAmount = subtotal - pointsDiscount;
   const tax = Math.round(taxableAmount * taxRate * 100) / 100;
-  
+
   // حساب رسوم الشحن من العنوان المختار
   let shippingCost = 0;
   if (deliveryMethod === "delivery" && selectedAddress) {
     // الحصول على رسوم الشحن من مدينة العنوان المختار
     const shippingFeeStr = selectedAddress.city.shipping_fee;
-    shippingCost = typeof shippingFeeStr === "string" 
+    shippingCost = typeof shippingFeeStr === "string"
       ? parseFloat(shippingFeeStr.replace(/,/g, ""))
-      : typeof shippingFeeStr === "number" 
-        ? shippingFeeStr 
+      : typeof shippingFeeStr === "number"
+        ? shippingFeeStr
         : 0;
   } else if (deliveryMethod === "pickup") {
     // لا توجد رسوم شحن للاستلام من المعرض
     shippingCost = 0;
   }
-console.log("shippingggg",selectedAddress)
+  console.log("shippingggg", selectedAddress)
   // الإجمالي النهائي: يعتمد على cartFinalTotal (يشمل رسوم الدفع) ثم يخصم النقاط ويضيف الشحن والضريبة
   const displayFinalTotal = cartFinalTotal - pointsDiscount + shippingCost + tax;
 
@@ -255,17 +256,17 @@ console.log("shippingggg",selectedAddress)
                       {productName}
                     </p>
                     {quantity > 1 && (
-                      <p className="text-xs text-gray-500" style={{ fontFamily: "Roboto", fontWeight: 400, fontSize: "12px", lineHeight: "16px" }}>
-                        {quantity} × {unitPrice.toLocaleString(isRTL ? "ar-SA" : "en-US")} {t("common.SAR")}
+                      <p className="text-xs text-gray-500 flex items-center gap-1" style={{ fontFamily: "Roboto", fontWeight: 400, fontSize: "12px", lineHeight: "16px" }}>
+                        {quantity} × {unitPrice.toLocaleString(isRTL ? "ar-SA" : "en-US")} <SaudiRiyalIcon className="w-3 h-3" />
                       </p>
                     )}
                   </div>
                 </div>
 
-                <div className="font-medium flex-shrink-0 ml-4" style={{
+                <div className="font-medium flex-shrink-0 ml-4 flex items-center gap-1" style={{
                   fontFamily: "Roboto", fontWeight: 500, fontSize: "16px", lineHeight: "100%", color: "#000000", minWidth: "80px", textAlign: isRTL ? "left" : "right",
                 }}>
-                  {totalPrice.toLocaleString(isRTL ? "ar-SA" : "en-US")} {t("common.SAR")}
+                  {totalPrice.toLocaleString(isRTL ? "ar-SA" : "en-US")} <SaudiRiyalIcon className="w-3.5 h-3.5" />
                 </div>
               </div>
             );
@@ -300,9 +301,9 @@ console.log("shippingggg",selectedAddress)
                 <div className={isRTL ? "text-right" : "text-left"}>
                   <p className="font-semibold text-[#211C4D]">{selectedPayment.name}</p>
                   <p className="text-sm text-gray-600 mt-1">
-                    {selectedPaymentId === 6 
+                    {selectedPaymentId === 6
                       ? (isRTL ? "استخدم 6 دفعات بدون فائدة وتوفير رسوم" : "Use 6 interest-free installments and save fees")
-                      : isRTL 
+                      : isRTL
                         ? `قسم على ${selectedPayment.id === 1 || selectedPayment.id === 2 ? (selectedPayment.id === 1 ? 3 : 4) : 4} دفعات بدون فائدة`
                         : `Split into ${selectedPayment.id === 1 || selectedPayment.id === 2 ? (selectedPayment.id === 1 ? 3 : 4) : 4} interest-free installments`
                     }
@@ -330,22 +331,22 @@ console.log("shippingggg",selectedAddress)
                 {t("checkoutSummary.useAllPoints")}
               </p>
 
-             <label className="relative inline-flex items-center cursor-pointer">
-  <input
-    type="checkbox"
-    checked={usePoints}
-    onChange={(e) => onUsePointsChange(e.target.checked)}
-    className="sr-only peer"
-  />
-  <div
-    className="w-10 h-5 bg-gray-300 peer-focus:outline-none rounded-full
+              <label className="relative inline-flex items-center cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={usePoints}
+                  onChange={(e) => onUsePointsChange(e.target.checked)}
+                  className="sr-only peer"
+                />
+                <div
+                  className="w-10 h-5 bg-gray-300 peer-focus:outline-none rounded-full
                peer peer-checked:bg-blue-500 transition-colors"
-  ></div>
-  <div
-    className="absolute left-0.5 top-0.5 w-4 h-4 bg-white rounded-full
+                ></div>
+                <div
+                  className="absolute left-0.5 top-0.5 w-4 h-4 bg-white rounded-full
                transition-transform peer-checked:translate-x-5"
-  ></div>
-</label>
+                ></div>
+              </label>
 
             </div>
 
@@ -370,10 +371,10 @@ console.log("shippingggg",selectedAddress)
             }}>
               {t("checkoutSummary.subtotal")}
             </p>
-            <p className="font-medium" style={{
+            <p className="font-medium flex items-center gap-1" style={{
               fontFamily: "Roboto", fontWeight: 500, fontSize: "16px", lineHeight: "32px", letterSpacing: "3%", color: "#211C4D", minWidth: "100px", textAlign: isRTL ? "left" : "right",
             }}>
-              {subtotal.toLocaleString(isRTL ? "ar-SA" : "en-US")} {t("common.SAR")}
+              {subtotal.toLocaleString(isRTL ? "ar-SA" : "en-US")} <SaudiRiyalIcon className="w-3.5 h-3.5" />
             </p>
           </div>
 
@@ -387,10 +388,10 @@ console.log("shippingggg",selectedAddress)
                 }}>
                   {t("checkoutSummary.paymentFees", { paymentName: selectedPayment?.name || "" })}
                 </p>
-                <p className="font-medium" style={{
+                <p className="font-medium flex items-center gap-1" style={{
                   fontFamily: "Roboto", fontWeight: 500, fontSize: "16px", lineHeight: "32px", color: "#211C4DB2", minWidth: "100px", textAlign: isRTL ? "left" : "right",
                 }}>
-                  +{paymentProcessingFee.toLocaleString(isRTL ? "ar-SA" : "en-US")} {t("common.SAR")}
+                  +{paymentProcessingFee.toLocaleString(isRTL ? "ar-SA" : "en-US")} <SaudiRiyalIcon className="w-3.5 h-3.5" />
                 </p>
               </div>
             )}
@@ -403,10 +404,10 @@ console.log("shippingggg",selectedAddress)
                 }}>
                   {t("checkoutSummary.pointsDiscount")}
                 </p>
-                <p className="font-medium" style={{
+                <p className="font-medium flex items-center gap-1" style={{
                   fontFamily: "Roboto", fontWeight: 500, fontSize: "16px", lineHeight: "32px", color: "#F3AC5D", minWidth: "100px", textAlign: isRTL ? "left" : "right",
                 }}>
-                  -{pointsDiscount.toLocaleString(isRTL ? "ar-SA" : "en-US")} {t("common.SAR")}
+                  -{pointsDiscount.toLocaleString(isRTL ? "ar-SA" : "en-US")} <SaudiRiyalIcon className="w-3.5 h-3.5" />
                 </p>
               </div>
             )}
@@ -418,10 +419,10 @@ console.log("shippingggg",selectedAddress)
               }}>
                 {t("checkoutSummary.estimatedTax")}
               </p>
-              <p className="font-medium" style={{
+              <p className="font-medium flex items-center gap-1" style={{
                 fontFamily: "Roboto", fontWeight: 500, fontSize: "16px", lineHeight: "32px", color: "#211C4DB2", minWidth: "100px", textAlign: isRTL ? "left" : "right",
               }}>
-                {tax.toLocaleString(isRTL ? "ar-SA" : "en-US")} {t("common.SAR")}
+                {tax.toLocaleString(isRTL ? "ar-SA" : "en-US")} <SaudiRiyalIcon className="w-3.5 h-3.5" />
               </p>
             </div>
 
@@ -435,9 +436,9 @@ console.log("shippingggg",selectedAddress)
               <p className="font-medium" style={{
                 fontFamily: "Roboto", fontWeight: 500, fontSize: "16px", lineHeight: "32px", color: "#211C4DB2", minWidth: "100px", textAlign: isRTL ? "left" : "right",
               }}>
-                {shippingCost === 0 
+                {shippingCost === 0
                   ? (isRTL ? "مجاني" : "Free")
-                  : `${shippingCost.toLocaleString(isRTL ? "ar-SA" : "en-US")} ${t("common.SAR")}`
+                  : <span className="flex items-center gap-1">{shippingCost.toLocaleString(isRTL ? "ar-SA" : "en-US")} <SaudiRiyalIcon className="w-3.5 h-3.5" /></span>
                 }
               </p>
             </div>
@@ -450,10 +451,10 @@ console.log("shippingggg",selectedAddress)
             }}>
               {t("checkoutSummary.total")}
             </p>
-            <p className="font-medium" style={{
+            <p className="font-medium flex items-center gap-1" style={{
               fontFamily: "Roboto", fontWeight: 500, fontSize: "16px", lineHeight: "32px", letterSpacing: "3%", color: "#211C4D", minWidth: "100px", textAlign: isRTL ? "left" : "right",
             }}>
-              {displayFinalTotal.toLocaleString(isRTL ? "ar-SA" : "en-US")} {t("common.SAR")}
+              {displayFinalTotal.toLocaleString(isRTL ? "ar-SA" : "en-US")} <SaudiRiyalIcon className="w-4 h-4" />
             </p>
           </div>
         </div>

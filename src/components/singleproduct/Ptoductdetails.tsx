@@ -8,6 +8,8 @@ import { useCartStore } from "@/store/cartStore/cartStore";
 import { toast } from "react-toastify";
 import { useLangSync } from "@/hooks/useLangSync";
 import { useTranslation } from "react-i18next";
+import { SaudiRiyalIcon } from "@/components/common/SaudiRiyalIcon";
+
 import TamaraWidget from "@/components/public/TamaraWidget";
 
 interface PtoductdetailsProps {
@@ -215,15 +217,15 @@ export default function Ptoductdetails({
                 ? product.final_price
                 : Number(product.final_price || 0).toLocaleString("ar-SA"))
               : "0")}
-          {t("SAR")}
+          <SaudiRiyalIcon className="w-5 h-5 inline-block mx-1" />
         </span>
         {!isOutOfStock && selectedVariant?.original_price &&
           selectedVariant.final_price !== selectedVariant.original_price && (
-            <span className="text-base md:text-lg text-muted-foreground line-through">
+            <span className="text-base md:text-lg text-muted-foreground line-through flex items-center">
               {typeof selectedVariant.original_price === "string"
                 ? selectedVariant.original_price
                 : Number(selectedVariant.original_price || 0).toLocaleString("ar-SA")}
-              {t("SAR")}
+              <SaudiRiyalIcon className="w-3.5 h-3.5 inline-block mx-1" />
             </span>
           )}
       </div>
