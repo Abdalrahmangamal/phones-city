@@ -8,19 +8,20 @@ import { useCartStore } from "@/store/cartStore/cartStore";
 import { toast } from "react-toastify";
 import { useLangSync } from "@/hooks/useLangSync";
 import { useTranslation } from "react-i18next";
+import TamaraWidget from "@/components/public/TamaraWidget";
 
 interface PtoductdetailsProps {
   product: any;
   handleindexchange: (index: number) => void;
   selectedOptionIndex: number;
-  isOutOfStock?: boolean; // إضافة الخاصية الجديدة
+  isOutOfStock?: boolean;
 }
 
 export default function Ptoductdetails({
   product,
   handleindexchange,
   selectedOptionIndex: propSelectedOptionIndex,
-  isOutOfStock = false, // قيمة افتراضية
+  isOutOfStock = false,
 }: PtoductdetailsProps) {
   const { addToCart } = useCartStore();
   const [quantity, setQuantity] = useState(1);
@@ -39,7 +40,6 @@ export default function Ptoductdetails({
     handleindexchange(selectedOptionIndex);
   }, [selectedOptionIndex, handleindexchange]);
 
-  // تحديث الـ index عند تغيير الـ prop
   useEffect(() => {
     if (propSelectedOptionIndex !== undefined) {
       setSelectedOptionIndex(propSelectedOptionIndex);
@@ -48,11 +48,8 @@ export default function Ptoductdetails({
 
   if (!product) return <div>تحميل...</div>;
 
-  // تحديد نوع الخيارات المتاحة
   const hasOptions = product?.options && Array.isArray(product.options) && product.options.length > 0;
-  const hasMultipleOptions = hasOptions && product.options.length > 1;
-  
-  // الحصول على الـ variant المحدد
+
   const selectedVariant = product.options?.[selectedOptionIndex];
 
   const openModal = (modalType: string) => {
@@ -64,7 +61,6 @@ export default function Ptoductdetails({
   };
 
   const handleAddToCart = async () => {
-    // منع الإضافة إذا كان المنتج غير متوفر
     if (isOutOfStock) {
       toast.error("هذا المنتج غير متوفر حالياً", {
         position: "bottom-right",
@@ -85,7 +81,6 @@ export default function Ptoductdetails({
         autoClose: 2000,
       });
 
-      // إعادة تعيين الكمية بعد الإضافة
       setQuantity(1);
     } catch (error) {
       toast.error("فشل إضافة المنتج إلى السلة", {
@@ -98,7 +93,6 @@ export default function Ptoductdetails({
   };
 
   const handleBuyNow = async () => {
-    // منع الشراء إذا كان المنتج غير متوفر
     if (isOutOfStock) {
       toast.error("هذا المنتج غير متوفر حالياً", {
         position: "bottom-right",
@@ -112,7 +106,6 @@ export default function Ptoductdetails({
       const hasMultiple = product.options && product.options.length > 1;
       const idToSend = hasMultiple ? selectedVariant.id : product.id;
 
-      // إضافة المنتج إلى السلة
       await addToCart(idToSend, quantity, hasMultiple);
 
       toast.success(`تم إضافة ${product.name} إلى السلة`, {
@@ -120,7 +113,6 @@ export default function Ptoductdetails({
         autoClose: 2000,
       });
 
-      // التوجيه إلى صفحة checkout
       navigate(`/${lang}/checkout`);
     } catch (error) {
       toast.error("فشل إضافة المنتج إلى السلة", {
@@ -132,7 +124,6 @@ export default function Ptoductdetails({
     }
   };
 
-  // الحصول على بوابات الدفع للـ variant المختار
   const paymentMethodsForSelectedVariant =
     selectedVariant?.payment_methods || [];
 
@@ -140,15 +131,19 @@ export default function Ptoductdetails({
 
   const toggleExpand = () => setExpanded(!expanded);
 
+  // Calculate numeric price for Tamara Widget
+  const currentDisplayPrice = selectedVariant?.final_price ?? product.final_price ?? 0;
+  const widgetPrice = typeof currentDisplayPrice === 'string'
+    ? parseFloat(currentDisplayPrice.replace(/,/g, ''))
+    : Number(currentDisplayPrice);
+
   return (
     <div className="space-y-4 md:space-y-6" dir={lang == "ar" ? "rtl" : "ltr"}>
       <div>
-        {/* Product Name */}
         <h2 className="md:text-base !text-[25px] text-black font-medium mb-1 text-start">
           {product?.name}
         </h2>
 
-        {/* Product Description */}
         <div className="text-start">
           <p
             className={` md:text-xl font-bold text-sm  text-gray-600 leading-relaxed 
@@ -172,11 +167,10 @@ export default function Ptoductdetails({
             {[1, 2, 3, 4, 5].map((star) => (
               <Star
                 key={star}
-                className={`w-[18px] h-[18px] md:w-[22px] md:h-[22px] ${
-                  star <= product.average_rating
+                className={`w-[18px] h-[18px] md:w-[22px] md:h-[22px] ${star <= product.average_rating
                     ? "fill-[#FC9231] text-[#FC9231]"
                     : "fill-none text-gray-300"
-                }`}
+                  }`}
               />
             ))}
           </div>
@@ -185,47 +179,50 @@ export default function Ptoductdetails({
           </span>
         </div>
       </div>
-      
-      {/* حالة المخزون */}
+
       <div className="mt-2">
-        <p className={`text-sm md:text-base font-semibold ${
-          isOutOfStock ? "text-red-600" : "text-green-600"
-        }`}>
+        <p className={`text-sm md:text-base font-semibold ${isOutOfStock ? "text-red-600" : "text-green-600"
+          }`}>
           {isOutOfStock ? "غير متوفر" : "متوفر"}
         </p>
       </div>
-      
-      {/* Price */}
+
       <div className="flex items-baseline gap-2 md:gap-3">
-        <span className={`text-2xl md:text-3xl font-bold ${
-          isOutOfStock ? "text-gray-500" : "text-[#C33104]"
-        }`}>
-          {selectedVariant?.final_price 
+        <span className={`text-2xl md:text-3xl font-bold ${isOutOfStock ? "text-gray-500" : "text-[#C33104]"
+          }`}>
+          {selectedVariant?.final_price
             ? (typeof selectedVariant.final_price === "string"
-                ? selectedVariant.final_price
-                : Number(selectedVariant.final_price || 0).toLocaleString("ar-SA"))
-            : (product.final_price 
-                ? (typeof product.final_price === "string"
-                    ? product.final_price
-                    : Number(product.final_price || 0).toLocaleString("ar-SA"))
-                : "0")}
+              ? selectedVariant.final_price
+              : Number(selectedVariant.final_price || 0).toLocaleString("ar-SA"))
+            : (product.final_price
+              ? (typeof product.final_price === "string"
+                ? product.final_price
+                : Number(product.final_price || 0).toLocaleString("ar-SA"))
+              : "0")}
           {t("SAR")}
         </span>
-        {!isOutOfStock && selectedVariant?.original_price && 
-         selectedVariant.final_price !== selectedVariant.original_price && (
-          <span className="text-base md:text-lg text-muted-foreground line-through">
-            {typeof selectedVariant.original_price === "string"
-              ? selectedVariant.original_price
-              : Number(selectedVariant.original_price || 0).toLocaleString("ar-SA")}
-            {t("SAR")}
-          </span>
-        )}
+        {!isOutOfStock && selectedVariant?.original_price &&
+          selectedVariant.final_price !== selectedVariant.original_price && (
+            <span className="text-base md:text-lg text-muted-foreground line-through">
+              {typeof selectedVariant.original_price === "string"
+                ? selectedVariant.original_price
+                : Number(selectedVariant.original_price || 0).toLocaleString("ar-SA")}
+              {t("SAR")}
+            </span>
+          )}
       </div>
 
-      {/* Payment Options - إخفاء خيارات الدفع إذا كان المنتج غير متوفر */}
-      {!isOutOfStock && paymentMethodsForSelectedVariant.length > 0 && (
+      {!isOutOfStock && (
         <div className="space-y-3 pt-4 md:pt-6">
-          {paymentMethodsForSelectedVariant.map((item: any) => (
+          <div className="mb-4">
+            <TamaraWidget
+              price={widgetPrice}
+              currency="SAR"
+              lang={lang}
+            />
+          </div>
+
+          {paymentMethodsForSelectedVariant.length > 0 && paymentMethodsForSelectedVariant.map((item: any) => (
             <div
               key={item.id}
               className="flex flex-col md:flex-row md:items-center gap-3 p-3 md:h-[72px] h-full rounded-lg border border-[#0000004D]"
@@ -250,83 +247,74 @@ export default function Ptoductdetails({
         </div>
       )}
 
-      {/* Quantity and Add to Cart */}
       <div className="flex flex-col md:flex-row md:justify-between justify-center flex-wrap items-center gap-4 md:gap-0 pt-4">
-        {/* قسم الكمية - معطل إذا كان المنتج غير متوفر */}
-        <div className={`flex items-center justify-between border-2 w-[180px] md:w-[159px] h-[50px] md:h-[62px] rounded-lg overflow-hidden ${
-          isOutOfStock ? "border-gray-300 opacity-60" : "border-border"
-        }`}>
+        <div className={`flex items-center justify-between border-2 w-[180px] md:w-[159px] h-[50px] md:h-[62px] rounded-lg overflow-hidden ${isOutOfStock ? "border-gray-300 opacity-60" : "border-border"
+          }`}>
           <button
             onClick={() => !isOutOfStock && setQuantity(Math.max(1, quantity - 1))}
             disabled={isOutOfStock}
-            className={`px-3 md:px-4 py-2 h-full transition-colors ${
-              isOutOfStock 
-                ? "bg-gray-200 cursor-not-allowed opacity-60" 
+            className={`px-3 md:px-4 py-2 h-full transition-colors ${isOutOfStock
+                ? "bg-gray-200 cursor-not-allowed opacity-60"
                 : "bg-gray-200 hover:bg-accent"
-            }`}
+              }`}
             aria-label="تقليل الكمية"
           >
             <Minus className="w-4 h-4" />
           </button>
-          <span className={`px-4 md:px-6 py-2 border-x-2 border-border font-bold min-w-[40px] md:min-w-[60px] text-center text-sm md:text-base ${
-            isOutOfStock ? "opacity-60" : ""
-          }`}>
+          <span className={`px-4 md:px-6 py-2 border-x-2 border-border font-bold min-w-[40px] md:min-w-[60px] text-center text-sm md:text-base ${isOutOfStock ? "opacity-60" : ""
+            }`}>
             {quantity}
           </span>
           <button
             onClick={() => !isOutOfStock && setQuantity(quantity + 1)}
             disabled={isOutOfStock}
-            className={`px-3 md:px-4 py-2 h-full transition-colors ${
-              isOutOfStock
+            className={`px-3 md:px-4 py-2 h-full transition-colors ${isOutOfStock
                 ? "bg-gray-300 cursor-not-allowed opacity-60"
                 : "bg-[#2AA0DC] text-white hover:bg-[#1e8bc0]"
-            }`}
+              }`}
             aria-label="زيادة الكمية"
           >
             <Plus className="w-4 h-4" />
           </button>
         </div>
-        
-        {/* أزرار الإضافة إلى السلة والشراء - معطلة إذا كان المنتج غير متوفر */}
+
         <div className="flex flex-col md:flex-row gap-3 md:gap-4">
           <Button
             onClick={handleAddToCart}
             disabled={isAddingToCart || isBuyingNow || isOutOfStock}
             variant={isOutOfStock ? "secondary" : "outline"}
             size="lg"
-            className={`px-4 md:px-6 w-[180px] md:w-[200px] h-[50px] md:h-[64px] text-xl md:text-[25px] ${
-              isOutOfStock
+            className={`px-4 md:px-6 w-[180px] md:w-[200px] h-[50px] md:h-[64px] text-xl md:text-[25px] ${isOutOfStock
                 ? "border-gray-300 bg-gray-100 text-gray-500 cursor-not-allowed"
                 : "border-2 border-black bg-transparent hover:bg-gray-50"
-            } disabled:opacity-50`}
+              } disabled:opacity-50`}
           >
-            {isAddingToCart 
-              ? "جاري الإضافة..." 
-              : isOutOfStock 
-                ? "غير متوفر" 
+            {isAddingToCart
+              ? "جاري الإضافة..."
+              : isOutOfStock
+                ? "غير متوفر"
                 : t("Addtocart")}
           </Button>
-          
+
           <Button
             onClick={handleBuyNow}
             disabled={isAddingToCart || isBuyingNow || isOutOfStock}
             variant={isOutOfStock ? "secondary" : "default"}
             size="lg"
-            className={`w-[180px] md:w-[200px] h-[50px] md:h-[64px] rounded-[8px] flex items-center justify-center font-[600] text-xl md:text-[25px] ${
-              isOutOfStock
+            className={`w-[180px] md:w-[200px] h-[50px] md:h-[64px] rounded-[8px] flex items-center justify-center font-[600] text-xl md:text-[25px] ${isOutOfStock
                 ? "bg-gray-400 text-gray-600 cursor-not-allowed"
                 : "bg-[#2AA0DC] hover:bg-[#1e8bc0] text-white"
-            } disabled:opacity-50`}
+              } disabled:opacity-50`}
           >
-            {isBuyingNow 
-              ? "جاري التوجيه..." 
-              : isOutOfStock 
-                ? "غير متوفر" 
+            {isBuyingNow
+              ? "جاري التوجيه..."
+              : isOutOfStock
+                ? "غير متوفر"
                 : t("Buynow")}
           </Button>
         </div>
       </div>
-      
+
       <TabbyModal
         isOpen={isTabbyModalOpen}
         onClose={() => setIsTabbyModalOpen(false)}
