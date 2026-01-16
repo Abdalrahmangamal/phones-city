@@ -131,9 +131,26 @@ useEffect(() => {
 
   const pointsDiscount = usePoints ? Math.min(subtotal, availableValue) : 0;
 
-  const tax = 0;
-  const shippingCost = 140;
-
+  // حساب الضريبة: نسبة 15% من السعر الفرعي بعد خصم النقاط (VAT)
+  const taxRate = 0.15; // 15% ضريبة
+  const taxableAmount = subtotal - pointsDiscount;
+  const tax = Math.round(taxableAmount * taxRate * 100) / 100;
+  
+  // حساب رسوم الشحن من العنوان المختار
+  let shippingCost = 0;
+  if (deliveryMethod === "delivery" && selectedAddress) {
+    // الحصول على رسوم الشحن من مدينة العنوان المختار
+    const shippingFeeStr = selectedAddress.city.shipping_fee;
+    shippingCost = typeof shippingFeeStr === "string" 
+      ? parseFloat(shippingFeeStr.replace(/,/g, ""))
+      : typeof shippingFeeStr === "number" 
+        ? shippingFeeStr 
+        : 0;
+  } else if (deliveryMethod === "pickup") {
+    // لا توجد رسوم شحن للاستلام من المعرض
+    shippingCost = 0;
+  }
+console.log("shippingggg",selectedAddress)
   // الإجمالي النهائي: يعتمد على cartFinalTotal (يشمل رسوم الدفع) ثم يخصم النقاط ويضيف الشحن والضريبة
   const displayFinalTotal = cartFinalTotal - pointsDiscount + shippingCost + tax;
 
@@ -418,7 +435,10 @@ useEffect(() => {
               <p className="font-medium" style={{
                 fontFamily: "Roboto", fontWeight: 500, fontSize: "16px", lineHeight: "32px", color: "#211C4DB2", minWidth: "100px", textAlign: isRTL ? "left" : "right",
               }}>
-                {shippingCost.toLocaleString(isRTL ? "ar-SA" : "en-US")} {t("common.SAR")}
+                {shippingCost === 0 
+                  ? (isRTL ? "مجاني" : "Free")
+                  : `${shippingCost.toLocaleString(isRTL ? "ar-SA" : "en-US")} ${t("common.SAR")}`
+                }
               </p>
             </div>
           </div>
