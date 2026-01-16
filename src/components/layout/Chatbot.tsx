@@ -83,14 +83,13 @@ export default function Chatbot() {
                     const rawUrl = btn.buttonValue || '';
                     let isInternal = false;
                     let href = rawUrl;
-                    if (rawUrl.includes('/product/')) {
-                      const parts = rawUrl.split('/product/');
-                      if (parts.length > 1) {
-                        const pathSegments = window.location.pathname.split('/');
-                        const currentLang = (pathSegments[1] === 'en' || pathSegments[1] === 'ar') ? pathSegments[1] : 'ar';
-                        href = `/${currentLang}/singleproduct/${parts[1]}`;
-                        isInternal = true;
-                      }
+                    const productMatch = rawUrl.match(/\/products?\/(.+)$/);
+                    if (productMatch) {
+                      const slug = productMatch[1].replace(/\/$/, "");
+                      const pathSegments = window.location.pathname.split('/');
+                      const currentLang = (pathSegments[1] === 'en' || pathSegments[1] === 'ar') ? pathSegments[1] : 'ar';
+                      href = `/${currentLang}/singleproduct/${slug}`;
+                      isInternal = true;
                     }
                     const classes = "text-xs bg-[#2F2C79] text-white py-2 px-3 rounded-lg hover:bg-[#27246a] transition text-center font-medium shadow-sm transition-transform active:scale-95 block";
                     if (isInternal) return <Link key={btnIdx} to={href} className={classes}>{btn.text || "عرض التفاصيل"}</Link>;
