@@ -6,7 +6,7 @@ import Ptoductdetails from "@/components/singleproduct/Ptoductdetails";
 import Informationproduct from "@/components/singleproduct/Informationproduct";
 import FeaturedHeroSection from "@/components/home/FeaturedHeroSection";
 import Loader from '@/components/Loader';
-import Bestseller from "@/components/home/Bestseller"; 
+import Bestseller from "@/components/home/Bestseller";
 import { useParams } from "react-router";
 import { useProductsStore } from '@/store/productsStore';
 import { useEffect, useState } from "react";
@@ -17,12 +17,12 @@ import { Link } from "react-router-dom";
 
 export default function ProductPage() {
   const { id } = useParams();
-  const { 
-    fetchProductbyid, 
-    response, 
+  const {
+    fetchProductbyid,
+    response,
     loading,
-    fetchBestSellers,        
-    bestSellerProducts,      
+    fetchBestSellers,
+    bestSellerProducts,
     loading: productsLoading
   } = useProductsStore();
 
@@ -54,10 +54,10 @@ export default function ProductPage() {
   const isLoading = isInitialLoad && !response;
 
   // الحصول على المنتج
-  const product = response && typeof response === 'object' && 'id' in response 
-    ? response 
-    : Array.isArray(response) && response.length > 0 
-      ? response[0] 
+  const product = response && typeof response === 'object' && 'id' in response
+    ? response
+    : Array.isArray(response) && response.length > 0
+      ? response[0]
       : null;
 
   // إذا كان المنتج غير موجود بعد التحميل
@@ -83,7 +83,7 @@ export default function ProductPage() {
   }
 
   const hasOptions = product?.options && Array.isArray(product.options) && product.options.length > 0;
-  
+
   // تحديد إذا كان المنتج غير متوفر
   const isOutOfStock = (() => {
     try {
@@ -131,9 +131,11 @@ export default function ProductPage() {
         <main className="py-8">
           {/* Product Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12 border-[1px] border-gray-200 rounded-[12px] p-4 shadow-xl mt-12 md:mt-0">
-            <Gallery 
+            <Gallery
               images={
-                hasOptions && product.options[selectedOptionIndex]?.images
+                hasOptions &&
+                  product.options[selectedOptionIndex]?.images &&
+                  product.options[selectedOptionIndex].images.length > 0
                   ? product.options[selectedOptionIndex].images
                   : (product.images || [])
               }
@@ -153,18 +155,18 @@ export default function ProductPage() {
               }
               isOutOfStock={isOutOfStock} // تمرير حالة المخزون
             />
-            
-            <Ptoductdetails 
-              product={product} 
+
+            <Ptoductdetails
+              product={product}
               handleindexchange={handleOptionChange}
               selectedOptionIndex={selectedOptionIndex}
               isOutOfStock={isOutOfStock} // تمرير حالة المخزون هنا أيضاً
             />
           </div>
-          
+
           {/* Product Information */}
           <Informationproduct product={product} />
-          
+
           {/* Featured Hero Section */}
           {!pageLoading && page && (
             <FeaturedHeroSection

@@ -198,6 +198,43 @@ export default function Ptoductdetails({
         </div>
       </div>
 
+      {
+        hasOptions && (
+          <div className="mt-4">
+            <p className="text-sm font-medium text-gray-700 mb-2 text-start">
+              {t("Option")}:
+            </p>
+            <div className="flex items-center gap-3 flex-wrap justify-start">
+              {product.options.map((variant: any, index: number) => (
+                <button
+                  key={index}
+                  onClick={() => setSelectedOptionIndex(index)}
+                  className={`
+                  flex items-center justify-center 
+                  transition border-2 text-sm font-medium
+                  ${variant.type === "size"
+                      ? "min-w-[50px] h-[30px] px-3 rounded-md bg-white text-[#211C4D]"
+                      : "w-[30px] h-[30px] rounded-full"
+                    }
+                  ${index === selectedOptionIndex
+                      ? "border-[#211C4D] scale-110 ring-1 ring-offset-2 ring-[#211C4D]"
+                      : "border-gray-300 hover:border-gray-400"
+                    }
+                `}
+                  style={{
+                    backgroundColor: variant.type === "color" ? variant.value : "#fff",
+                  }}
+                  title={`Select ${variant.value}`}
+                  aria-label={`Select ${variant.value}`}
+                >
+                  {variant.type === "size" ? variant.value : ""}
+                </button>
+              ))}
+            </div>
+          </div>
+        )
+      }
+
       <div className="mt-2">
         <p className={`text-sm md:text-base font-semibold ${isOutOfStock ? "text-red-600" : "text-green-600"
           }`}>
@@ -230,40 +267,42 @@ export default function Ptoductdetails({
           )}
       </div>
 
-      {!isOutOfStock && (
-        <div className="space-y-3 pt-4 md:pt-6">
-          <div className="mb-4">
-            <TamaraWidget
-              price={widgetPrice}
-              currency="SAR"
-              lang={lang}
-            />
-          </div>
-
-          {paymentMethodsForSelectedVariant.length > 0 && paymentMethodsForSelectedVariant.map((item: any) => (
-            <div
-              key={item.id}
-              className="flex flex-col md:flex-row md:items-center gap-3 p-3 md:h-[72px] h-full rounded-lg border border-[#0000004D]"
-            >
-              <div className="flex-1">
-                <p className="text-xs md:text-[16px] font-[600] text-start text-[#211C4D]">
-                  {item.name}
-                  <span className="ml-2 text-[#C33104] font-bold">
-                    {item.total_price}
-                  </span>
-                </p>
-              </div>
-              <div className="px-3 py-1 md:px-4 md:py-1 rounded text-sm font-bold text-card">
-                <img
-                  src={item.image}
-                  className="w-[80px] h-[60px] object-contain"
-                  alt={item.name}
-                />
-              </div>
+      {
+        !isOutOfStock && (
+          <div className="space-y-3 pt-4 md:pt-6">
+            <div className="mb-4">
+              <TamaraWidget
+                price={widgetPrice}
+                currency="SAR"
+                lang={lang}
+              />
             </div>
-          ))}
-        </div>
-      )}
+
+            {paymentMethodsForSelectedVariant.length > 0 && paymentMethodsForSelectedVariant.map((item: any) => (
+              <div
+                key={item.id}
+                className="flex flex-col md:flex-row md:items-center gap-3 p-3 md:h-[72px] h-full rounded-lg border border-[#0000004D]"
+              >
+                <div className="flex-1">
+                  <p className="text-xs md:text-[16px] font-[600] text-start text-[#211C4D]">
+                    {item.name}
+                    <span className="ml-2 text-[#C33104] font-bold">
+                      {item.total_price}
+                    </span>
+                  </p>
+                </div>
+                <div className="px-3 py-1 md:px-4 md:py-1 rounded text-sm font-bold text-card">
+                  <img
+                    src={item.image}
+                    className="w-[80px] h-[60px] object-contain"
+                    alt={item.name}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        )
+      }
 
       <div className="flex flex-col md:flex-row md:justify-between justify-center flex-wrap items-center gap-4 md:gap-0 pt-4">
         <div className={`flex items-center justify-between border-2 w-[180px] md:w-[159px] h-[50px] md:h-[62px] rounded-lg overflow-hidden ${isOutOfStock ? "border-gray-300 opacity-60" : "border-border"
@@ -341,6 +380,6 @@ export default function Ptoductdetails({
         isOpen={isTamaraModalOpen}
         onClose={() => setIsTamaraModalOpen(false)}
       />
-    </div>
+    </div >
   );
 }
