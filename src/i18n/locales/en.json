@@ -85,7 +85,7 @@
   "Description": "Description",
   "Additionalinformation": "Additional information",
   "YourMessage": "Your Message",
-  "SAR": "SAR",
+  "SAR": "⃁",
   "Buynow": "Buy now",
   "Addtocart": "Add to cart",
   "Aboutthisproduct": "About this product",
@@ -326,7 +326,7 @@
     "phone": "Phone"
   },
   "common": {
-    "SAR": "SAR",
+    "SAR": "⃁",
     "close": "Close",
     "cancel": "Cancel",
     "sending": "Sending...",
@@ -430,16 +430,14 @@
   "ReadMore": "Read More",
   "BlogPostNotFound": "Blog post not found",
   "BackToBlog": "Back to Blog",
-  
-    "products": "Products",
-    "BrandProducts": "Brand Products",
-    "showingFilteredProducts": "Showing filtered products",
-    "resetFilters": "Reset Filters",
-    "category": "Category",
-    "sortedBy": "Sorted by",
-    "priceRange": "Price Range",
-    "noProductsInCategory": "No products in this category currently",
-    "noProductsAvailable": "No products available currently",
-    "viewAllProducts": "View All Products"
-  
+  "products": "Products",
+  "BrandProducts": "Brand Products",
+  "showingFilteredProducts": "Showing filtered products",
+  "resetFilters": "Reset Filters",
+  "category": "Category",
+  "sortedBy": "Sorted by",
+  "priceRange": "Price Range",
+  "noProductsInCategory": "No products in this category currently",
+  "noProductsAvailable": "No products available currently",
+  "viewAllProducts": "View All Products"
 }

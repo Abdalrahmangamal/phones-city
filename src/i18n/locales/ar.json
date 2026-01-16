@@ -86,7 +86,7 @@
   "Generalspecifications": "المواصفات العامة",
   "Description": "الوصف",
   "Additionalinformation": "معلومات إضافية",
-  "SAR": "ر.س",
+  "SAR": "⃁",
   "Buynow": "اشتري الآن",
   "Addtocart": "إضافة للسلة",
   "Aboutthisproduct": "  عن هذا المنتج",
@@ -327,7 +327,7 @@
     "phone": "الهاتف"
   },
   "common": {
-    "SAR": "﷼",
+    "SAR": "⃁",
     "close": "إغلاق",
     "cancel": "إلغاء",
     "sending": "جاري الإرسال...",
@@ -430,10 +430,8 @@
   "ReadMore": "اقرأ المزيد",
   "BlogPostNotFound": "المقال غير موجود",
   "BackToBlog": "العودة إلى المدونة",
-  
   "products": "منتجات",
   "BrandProducts": "منتجات العلامات التجارية",
-  
   "showingFilteredProducts": "عرض المنتجات المفلترة",
   "resetFilters": "إعادة تعيين الفلاتر",
   "category": "الفئة",
@@ -442,5 +440,4 @@
   "noProductsInCategory": "لا توجد منتجات في هذه الفئة حاليًا",
   "noProductsAvailable": "لا توجد منتجات متاحة حاليًا",
   "viewAllProducts": "عرض جميع المنتجات"
-  
 }
