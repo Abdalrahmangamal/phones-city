@@ -173,13 +173,13 @@ export default function ProductCard({ product, imagecard, containerstyle, quanti
           {isOutOfStock ? (
             <div className="flex w-full items-center justify-end absolute right-0 top-0 p-1">
               <div className="w-fit px-3 h-[22px] flex items-center justify-center rounded-[4px] bg-[#6B7280] opacity-90">
-                <p className={`text-white text-[13px] font-medium ${quantity}`}>غير متوفر</p>
+                <p className={`text-white text-[13px] font-medium ${quantity}`}>{t("OutOfStock")}</p>
               </div>
             </div>
           ) : isLimited ? (
             <div className="flex w-full items-center justify-end absolute right-0 top-0 p-1">
               <div className="w-fit px-3 h-[22px] flex items-center justify-center rounded-[4px] bg-orange-600">
-                <p className={`text-white text-[13px] font-medium ${quantity}`}>كمية محدودة</p>
+                <p className={`text-white text-[13px] font-medium ${quantity}`}>{t("LimitedQuantity")}</p>
               </div>
             </div>
           ) : discountPercent > 0 ? (
@@ -320,10 +320,10 @@ export default function ProductCard({ product, imagecard, containerstyle, quanti
               }
           }
           className={`w-[40px] h-[40px] flex items-center justify-center rounded-[8px] transition-all duration-200 ${isOutOfStock
-              ? "bg-gray-300 cursor-not-allowed opacity-60"
-              : isInCart
-                ? "bg-[#211C4D] shadow-[0px_4px_8px_0px_#211C4D4d] hover:shadow-[0px_6px_12px_0px_#211C4D66] cursor-pointer"
-                : "bg-[#EEF1F6] hover:bg-[#dfe3ea] shadow-[0px_2px_4px_0px_#00000020] cursor-pointer"
+            ? "bg-gray-300 cursor-not-allowed opacity-60"
+            : isInCart
+              ? "bg-[#211C4D] shadow-[0px_4px_8px_0px_#211C4D4d] hover:shadow-[0px_6px_12px_0px_#211C4D66] cursor-pointer"
+              : "bg-[#EEF1F6] hover:bg-[#dfe3ea] shadow-[0px_2px_4px_0px_#00000020] cursor-pointer"
             }`}
         >
           {isInCart ? (

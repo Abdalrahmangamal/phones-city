@@ -428,5 +428,7 @@
   "priceRange": "نطاق السعر",
   "noProductsInCategory": "لا توجد منتجات في هذه الفئة حاليًا",
   "noProductsAvailable": "لا توجد منتجات متاحة حاليًا",
-  "viewAllProducts": "عرض جميع المنتجات"
+  "viewAllProducts": "عرض جميع المنتجات",
+  "OutOfStock": "غير متوفر",
+  "LimitedQuantity": "كمية محدودة"
 }

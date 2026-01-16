@@ -430,5 +430,7 @@
   "priceRange": "Price Range",
   "noProductsInCategory": "No products in this category currently",
   "noProductsAvailable": "No products available currently",
-  "viewAllProducts": "View All Products"
+  "viewAllProducts": "View All Products",
+  "OutOfStock": "Out of Stock",
+  "LimitedQuantity": "Limited Quantity"
 }
