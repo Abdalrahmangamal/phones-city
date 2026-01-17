@@ -1,5 +1,5 @@
 import { Heart } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface GalleryProps {
   images?: any;
@@ -7,13 +7,18 @@ interface GalleryProps {
   isOutOfStock?: boolean; // إضافة خاصية جديدة
 }
 
-export default function Gallery({ 
-  images = [], 
-  discountPercent = 0, 
-  isOutOfStock = false 
+export default function Gallery({
+  images = [],
+  discountPercent = 0,
+  isOutOfStock = false
 }: GalleryProps) {
   const [selectedImage, setSelectedImage] = useState(0);
   const [isWishlisted, setIsWishlisted] = useState(false);
+
+  // Reset selected image when images prop changes
+  useEffect(() => {
+    setSelectedImage(0);
+  }, [images]);
 
   // Normalization قوي: يقبل أي شكل ممكن للـ images
   const normalizeImages = (input: any): { url: string }[] => {
@@ -56,8 +61,8 @@ export default function Gallery({
   const safeImages = normalizeImages(images);
 
   // لو مفيش صور خالص، نضيف placeholder عشان المعرض ميبقاش فاضي
-  const displayImages = safeImages.length > 0 
-    ? safeImages 
+  const displayImages = safeImages.length > 0
+    ? safeImages
     : [{ url: "/placeholder.svg" }];
 
   console.log("Original images:", images);
@@ -77,18 +82,17 @@ export default function Gallery({
               {Math.round(discountPercent)}%
             </div>
           ) : null}
-          
+
           <button
             onClick={() => setIsWishlisted(!isWishlisted)}
             className="absolute top-2 md:top-4 right-2 md:right-4 p-1 md:p-2 bg-card rounded-full hover:bg-accent transition-colors"
             aria-label={isWishlisted ? "إزالة من المفضلة" : "إضافة إلى المفضلة"}
           >
             <Heart
-              className={`w-4 h-4 md:w-5 md:h-5 ${
-                isWishlisted
-                  ? "fill-destructive text-destructive"
-                  : "text-muted-foreground"
-              }`}
+              className={`w-4 h-4 md:w-5 md:h-5 ${isWishlisted
+                ? "fill-destructive text-destructive"
+                : "text-muted-foreground"
+                }`}
             />
           </button>
           <img
@@ -105,11 +109,10 @@ export default function Gallery({
               <button
                 key={idx}
                 onClick={() => setSelectedImage(idx)}
-                className={`w-16 h-16 md:w-20 md:h-20 rounded-md overflow-hidden border-2 shadow-md transition-all ${
-                  selectedImage === idx
-                    ? "border-primary"
-                    : "border-border hover:border-muted-foreground"
-                }`}
+                className={`w-16 h-16 md:w-20 md:h-20 rounded-md overflow-hidden border-2 shadow-md transition-all ${selectedImage === idx
+                  ? "border-primary"
+                  : "border-border hover:border-muted-foreground"
+                  }`}
                 aria-label={`عرض الصورة ${idx + 1}`}
               >
                 <img

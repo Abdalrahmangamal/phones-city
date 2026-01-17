@@ -69,11 +69,11 @@ export default function Sidebar() {
       text: `${t("Address")}`,
       link: `/${lang}/address`,
     },
-    {
-      icon: <Gift className="w-5 h-5" />,
-      text: `${t("Discounts")}`,
-      link: `/${lang}/discounts`,
-    },
+    // {
+    //   icon: <Gift className="w-5 h-5" />,
+    //   text: `${t("Discounts")}`,
+    //   link: `/${lang}/discounts`,
+    // },
     {
       icon: <Wallet className="w-5 h-5" />,
       text: `${t("wallet")}`,
@@ -133,7 +133,7 @@ export default function Sidebar() {
                 to={`${item.link}`}
                 onClick={() => {
                   if (item.action) item.action();
-                  setOpen(false); 
+                  setOpen(false);
                 }}
                 className="flex items-center justify-end gap-3 text-gray-700 hover:text-[#2AA0DC] cursor-pointer transition-all"
               >

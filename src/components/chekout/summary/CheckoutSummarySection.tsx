@@ -10,6 +10,16 @@ import emkann from "@/assets/images/emkann.png";
 import madfu from "@/assets/images/madfu.png";
 import mispay_installment from "@/assets/images/mispay_installment 1.png";
 import amwal from "@/assets/images/amwal.png";
+import { SaudiRiyalIcon } from "@/components/common/SaudiRiyalIcon";
+
+const paymentLogos: Record<number, any> = {
+  1: tamara,
+  2: tabby,
+  3: madfu,
+  4: mispay_installment,
+  5: emkann,
+  6: amwal,
+};
 
 interface ShipmentInfo {
   address: string;
@@ -29,116 +39,125 @@ interface PointsSummary {
 interface CheckoutSummarySectionProps {
   usePoints: boolean;
   onUsePointsChange: (value: boolean) => void;
+  pointsDiscountAmount: number;
+  onPointsDiscountChange: (value: number) => void;
 }
 const CheckoutSummarySection: React.FC<CheckoutSummarySectionProps> = ({
   usePoints,
   onUsePointsChange,
+  pointsDiscountAmount,
+  onPointsDiscountChange,
 }) => {
-  const { items, total, selectedPaymentId, finalTotal: cartFinalTotal } = useCartStore();
   const { t, i18n } = useTranslation();
-  
-  const [pointsData, setPointsData] = useState<PointsSummary | null>(null);
-  const [loadingPoints, setLoadingPoints] = useState(true);
-  const [errorPoints, setErrorPoints] = useState<string | null>(null);
-
-  // الحصول على العنوان المحدد من الـ store
-  const { getSelectedAddress, deliveryMethod } = useAddressStore();
-  const selectedAddress = getSelectedAddress();
-
   const isRTL = i18n.language === "ar";
 
-  const paymentLogos: Record<number, any> = {
-    1: tamara,
-    2: tabby,
-    3: madfu,
-    4: mispay_installment,
-    5: emkann,
-    6: amwal,
-  };
+  const { items, selectedPaymentId, freeShippingThreshold, updateFinalTotal } = useCartStore();
+  const { addresses, selectedAddressId, deliveryMethod } = useAddressStore();
+  const selectedAddress = addresses.find((addr) => addr.id === selectedAddressId);
 
-  console.log('CheckoutSummarySection - Received props:', { 
-  usePoints, 
-  onUsePointsChange: typeof onUsePointsChange 
-});
+  const [pointsData, setPointsData] = useState<PointsSummary | null>(null);
+  const [loadingPoints, setLoadingPoints] = useState(false);
+  const [errorPoints, setErrorPoints] = useState<string | null>(null);
 
-  // استخراج بوابات الدفع والبوابة المختارة
-  const paymentMethods = (items[0]?.product as any)?.options?.[0]?.payment_methods || [];
-  const selectedPayment = paymentMethods.find((p: any) => p.id === selectedPaymentId);
-
-  // جلب نقاط المستخدم
-  
-useEffect(() => {
-  const fetchPoints = async () => {
-    try {
+  useEffect(() => {
+    const fetchPoints = async () => {
       setLoadingPoints(true);
-      setErrorPoints(null);
+      try {
+        const response = await axiosClient.get("/api/v1/points");
+        if (response.data.status && Array.isArray(response.data.data)) {
+          // Sum available points
+          const availablePoints = response.data.data
+            .filter((p: any) => p.status === 'available')
+            .reduce((sum: number, p: any) => sum + p.points_count, 0);
 
-      const response = await axiosClient.get("/api/v1/points/summary", {
-        // إضافة headers عشان نتجنب caching لو فيه
-        headers: {
-          'Cache-Control': 'no-cache',
-          'Pragma': 'no-cache',
-        },
-      });
-
-      if (response.data.status && response.data.data?.summary) {
-        setPointsData(response.data.data.summary);
-      } else {
-        setErrorPoints(t("checkoutSummary.pointsError"));
+          setPointsData({
+            total_points: availablePoints,
+            available_points: availablePoints,
+            available_points_value: availablePoints.toString(),
+            point_value: "1",
+            used_points: 0,
+            expired_points: 0,
+            expiring_soon_points: 0
+          });
+        }
+      } catch (error) {
+        console.error("Failed to fetch points", error);
+      } finally {
+        setLoadingPoints(false);
       }
-    } catch (err: any) {
-      console.error("Error fetching points:", err);
-      setErrorPoints(t("checkoutSummary.pointsError") || "فشل تحميل النقاط");
-    } finally {
-      setLoadingPoints(false);
-    }
-  };
-
-  fetchPoints();
-}, []); 
-
-  // تحديد معلومات الشحن
-  const getShipmentInfo = (): ShipmentInfo => {
-    if (deliveryMethod === "pickup") {
-      return {
-        address: isRTL 
-          ? "استلام من المعرض - الموقع الرئيسي" 
-          : "Pickup from Showroom - Main Location"
-      };
-    }
-    
-    if (selectedAddress && deliveryMethod === "delivery") {
-      const cityName = isRTL ? selectedAddress.city.name_ar : selectedAddress.city.name_en;
-      return {
-        address: `${selectedAddress.street_address}, ${cityName}, ${selectedAddress.country}`
-      };
-    }
-    
-    return {
-      address: isRTL 
-        ? "ابو بكر الصديق، شبرا، الطائف 26522،" 
-        : "Abu Bakr Al-Siddiq, Shubra, Taif 26522"
     };
+    fetchPoints();
+  }, []);
+
+  // 1. Calculate Subtotal (Exclusive of Tax)
+  const subtotal = items.reduce((acc, item) => acc + (item.subtotal || 0), 0);
+
+  // 2. Calculate Tax (Assuming 15% VAT on the subtotal)
+  const taxRate = 0.15;
+  const tax = subtotal * taxRate;
+
+  // 3. Selected Payment & Fees
+  const selectedPayment = (items[0]?.product as any)?.options?.[0]?.payment_methods?.find((p: any) => p.id === selectedPaymentId);
+
+  let paymentProcessingFee = 0;
+  if (selectedPayment && selectedPayment.processing_fee_amount) {
+    paymentProcessingFee = parseFloat(selectedPayment.processing_fee_amount);
+  }
+
+  const shipmentInfo: ShipmentInfo = {
+    address: selectedAddress ? `${selectedAddress.city.name} - ${selectedAddress.street_address}` : "",
   };
 
-  const shipmentInfo = getShipmentInfo();
-  const subtotal = total || 0;
+  // 4. Calculate Shipping Cost
+  let shippingCost = 0;
+  if (deliveryMethod === "delivery" && selectedAddress) {
+    const shippingFeeStr = selectedAddress.city.shipping_fee;
+    let baseShippingCost = typeof shippingFeeStr === "string"
+      ? parseFloat(shippingFeeStr.replace(/,/g, ""))
+      : typeof shippingFeeStr === "number"
+        ? shippingFeeStr
+        : 0;
 
-  // حساب قيمة النقاط المتاحة كرقم
-  const availableValue = pointsData
-    ? parseFloat(pointsData.available_points_value.replace(/,/g, ""))
-    : 0;
+    if (freeShippingThreshold > 0 && subtotal >= freeShippingThreshold) {
+      shippingCost = 0;
+    } else {
+      shippingCost = baseShippingCost;
+    }
+  } else if (deliveryMethod === "pickup") {
+    shippingCost = 0;
+  }
 
-  const pointsDiscount = usePoints ? Math.min(subtotal, availableValue) : 0;
+  // 5. Calculate max possible discount (cap at subtotal only - not including tax and shipping)
+  // Note: subtotal is the sum of item.subtotal (price before tax)
+  // The displayed subtotal in UI might include tax, so we use the raw subtotal for max discount
+  const maxDiscountAmount = subtotal; // الخصم على سعر المنتجات فقط
+  const maxPointsValue = pointsData ? parseFloat(pointsData.available_points_value) : 0;
 
-  const tax = 0;
-  const shippingCost = 140;
+  // Debug: Log values to understand the calculation
+  console.log('🔍 Points Discount Debug:', {
+    subtotal,
+    maxDiscountAmount,
+    maxPointsValue,
+    pointsDiscountAmount,
+    usePoints,
+    items: items.map(i => ({ subtotal: i.subtotal, quantity: i.quantity }))
+  });
 
-  // الإجمالي النهائي: يعتمد على cartFinalTotal (يشمل رسوم الدفع) ثم يخصم النقاط ويضيف الشحن والضريبة
-  const displayFinalTotal = cartFinalTotal - pointsDiscount + shippingCost + tax;
+  // Points Discount - use custom amount if set, otherwise use max available
+  // But never exceed the subtotal (max 100% discount on products only)
+  let pointsDiscount = 0;
+  if (usePoints && pointsData) {
+    const requestedDiscount = pointsDiscountAmount > 0 ? pointsDiscountAmount : maxPointsValue;
+    pointsDiscount = Math.min(requestedDiscount, maxPointsValue, maxDiscountAmount);
+  }
 
-  // حساب رسوم بوابة الدفع (لعرضها بشكل منفصل)
-  const paymentProcessingFee = cartFinalTotal - subtotal;
+  // 6. Calculate Final Total (guaranteed to be >= 0)
+  const displayFinalTotal = Math.max(0, subtotal + tax + shippingCost + paymentProcessingFee - pointsDiscount);
+
+  // Sync Final Total with Store to prevent issues on Complete Order
+  useEffect(() => {
+    updateFinalTotal(displayFinalTotal, selectedPaymentId);
+  }, [displayFinalTotal, selectedPaymentId, updateFinalTotal]);
 
   // عرض قسم العنوان
   const renderAddressSection = () => {
@@ -238,17 +257,17 @@ useEffect(() => {
                       {productName}
                     </p>
                     {quantity > 1 && (
-                      <p className="text-xs text-gray-500" style={{ fontFamily: "Roboto", fontWeight: 400, fontSize: "12px", lineHeight: "16px" }}>
-                        {quantity} × {unitPrice.toLocaleString(isRTL ? "ar-SA" : "en-US")} {t("common.SAR")}
+                      <p className="text-xs text-gray-500 flex items-center gap-1" style={{ fontFamily: "Roboto", fontWeight: 400, fontSize: "12px", lineHeight: "16px" }}>
+                        {quantity} × {unitPrice.toLocaleString(isRTL ? "ar-SA" : "en-US")} <SaudiRiyalIcon className="w-3 h-3" />
                       </p>
                     )}
                   </div>
                 </div>
 
-                <div className="font-medium flex-shrink-0 ml-4" style={{
+                <div className="font-medium flex-shrink-0 ml-4 flex items-center gap-1" style={{
                   fontFamily: "Roboto", fontWeight: 500, fontSize: "16px", lineHeight: "100%", color: "#000000", minWidth: "80px", textAlign: isRTL ? "left" : "right",
                 }}>
-                  {totalPrice.toLocaleString(isRTL ? "ar-SA" : "en-US")} {t("common.SAR")}
+                  {totalPrice.toLocaleString(isRTL ? "ar-SA" : "en-US")} <SaudiRiyalIcon className="w-3.5 h-3.5" />
                 </div>
               </div>
             );
@@ -283,9 +302,9 @@ useEffect(() => {
                 <div className={isRTL ? "text-right" : "text-left"}>
                   <p className="font-semibold text-[#211C4D]">{selectedPayment.name}</p>
                   <p className="text-sm text-gray-600 mt-1">
-                    {selectedPaymentId === 6 
+                    {selectedPaymentId === 6
                       ? (isRTL ? "استخدم 6 دفعات بدون فائدة وتوفير رسوم" : "Use 6 interest-free installments and save fees")
-                      : isRTL 
+                      : isRTL
                         ? `قسم على ${selectedPayment.id === 1 || selectedPayment.id === 2 ? (selectedPayment.id === 1 ? 3 : 4) : 4} دفعات بدون فائدة`
                         : `Split into ${selectedPayment.id === 1 || selectedPayment.id === 2 ? (selectedPayment.id === 1 ? 3 : 4) : 4} interest-free installments`
                     }
@@ -310,25 +329,30 @@ useEffect(() => {
               <p className="font-bold flex-1" style={{
                 fontFamily: "Roboto", fontWeight: 700, fontSize: "16px", lineHeight: "150%", color: "#424242", textAlign: isRTL ? "right" : "left",
               }}>
-                {t("checkoutSummary.useAllPoints")}
+                {t("checkoutSummary.usePoints")}
               </p>
 
-             <label className="relative inline-flex items-center cursor-pointer">
-  <input
-    type="checkbox"
-    checked={usePoints}
-    onChange={(e) => onUsePointsChange(e.target.checked)}
-    className="sr-only peer"
-  />
-  <div
-    className="w-10 h-5 bg-gray-300 peer-focus:outline-none rounded-full
+              <label className="relative inline-flex items-center cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={usePoints}
+                  onChange={(e) => {
+                    onUsePointsChange(e.target.checked);
+                    if (!e.target.checked) {
+                      onPointsDiscountChange(0);
+                    }
+                  }}
+                  className="sr-only peer"
+                />
+                <div
+                  className="w-10 h-5 bg-gray-300 peer-focus:outline-none rounded-full
                peer peer-checked:bg-blue-500 transition-colors"
-  ></div>
-  <div
-    className="absolute left-0.5 top-0.5 w-4 h-4 bg-white rounded-full
+                ></div>
+                <div
+                  className="absolute left-0.5 top-0.5 w-4 h-4 bg-white rounded-full
                transition-transform peer-checked:translate-x-5"
-  ></div>
-</label>
+                ></div>
+              </label>
 
             </div>
 
@@ -337,12 +361,57 @@ useEffect(() => {
             ) : errorPoints ? (
               <p className="text-sm text-red-500">{errorPoints}</p>
             ) : pointsData ? (
-              <p className="text-sm text-gray-600 mt-2" style={{ textAlign: isRTL ? "right" : "left" }}>
-                {t("checkoutSummary.availablePoints", {
-                  points: pointsData.available_points.toLocaleString(),
-                  value: pointsData.available_points_value,
-                })}
-              </p>
+              <div>
+                <p className="text-sm text-gray-600 mt-2" style={{ textAlign: isRTL ? "right" : "left" }}>
+                  {t("checkoutSummary.availablePoints", {
+                    points: pointsData.available_points.toLocaleString(),
+                    value: pointsData.available_points_value,
+                  })}
+                </p>
+
+                {/* Custom Points Input */}
+                {usePoints && (
+                  <div className="mt-3 p-3 bg-blue-50 rounded-lg border border-blue-200">
+                    <label className="block text-sm font-medium text-gray-700 mb-2" style={{ textAlign: isRTL ? "right" : "left" }}>
+                      {isRTL ? 'حدد عدد النقاط للاستخدام:' : 'Specify points to use:'}
+                    </label>
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="number"
+                        min="0"
+                        max={Math.min(maxPointsValue, maxDiscountAmount)}
+                        value={pointsDiscountAmount || ''}
+                        onChange={(e) => {
+                          const val = parseFloat(e.target.value) || 0;
+                          const maxAllowed = Math.min(maxPointsValue, maxDiscountAmount);
+                          onPointsDiscountChange(Math.min(val, maxAllowed));
+                        }}
+                        placeholder={isRTL ? 'ادخل العدد' : 'Enter amount'}
+                        className="flex-1 h-10 px-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-center"
+                        style={{ direction: 'ltr' }}
+                      />
+                      <button
+                        onClick={() => onPointsDiscountChange(Math.min(maxPointsValue, maxDiscountAmount))}
+                        className="px-3 py-2 bg-blue-500 text-white text-sm rounded-lg hover:bg-blue-600 transition whitespace-nowrap"
+                      >
+                        {isRTL ? 'استخدم الكل' : 'Use All'}
+                      </button>
+                    </div>
+                    <p className="text-xs text-gray-500 mt-2" style={{ textAlign: isRTL ? "right" : "left" }}>
+                      {isRTL
+                        ? `الحد الأقصى للخصم: ${Math.min(maxPointsValue, maxDiscountAmount).toLocaleString()} ريال`
+                        : `Max discount: ${Math.min(maxPointsValue, maxDiscountAmount).toLocaleString()} SAR`}
+                    </p>
+                    {pointsDiscount > 0 && (
+                      <p className="text-sm font-medium text-green-600 mt-2" style={{ textAlign: isRTL ? "right" : "left" }}>
+                        {isRTL
+                          ? `سيتم خصم: ${pointsDiscount.toLocaleString()} ريال`
+                          : `Discount applied: ${pointsDiscount.toLocaleString()} SAR`}
+                      </p>
+                    )}
+                  </div>
+                )}
+              </div>
             ) : null}
           </div>
 
@@ -353,30 +422,30 @@ useEffect(() => {
             }}>
               {t("checkoutSummary.subtotal")}
             </p>
-            <p className="font-medium" style={{
+            <p className="font-medium flex items-center gap-1" style={{
               fontFamily: "Roboto", fontWeight: 500, fontSize: "16px", lineHeight: "32px", letterSpacing: "3%", color: "#211C4D", minWidth: "100px", textAlign: isRTL ? "left" : "right",
             }}>
-              {subtotal.toLocaleString(isRTL ? "ar-SA" : "en-US")} {t("common.SAR")}
+              {subtotal.toLocaleString(isRTL ? "ar-SA" : "en-US")} <SaudiRiyalIcon className="w-3.5 h-3.5" />
             </p>
           </div>
 
           {/* تفاصيل إضافية */}
           <div className="mb-6 space-y-2">
-            {/* رسوم بوابة الدفع */}
-            {paymentProcessingFee > 0 && (
+            {/* رسوم بوابة الدفع - محذوفة من العرض ولكن محسوبة في المجموع النهائي */}
+            {/* {paymentProcessingFee > 0 && (
               <div className="flex justify-between items-center">
                 <p className="font-normal" style={{
                   fontFamily: "Roboto", fontWeight: 400, fontSize: "16px", lineHeight: "32px", color: "#211C4DB2", textAlign: isRTL ? "right" : "left",
                 }}>
                   {t("checkoutSummary.paymentFees", { paymentName: selectedPayment?.name || "" })}
                 </p>
-                <p className="font-medium" style={{
+                <p className="font-medium flex items-center gap-1" style={{
                   fontFamily: "Roboto", fontWeight: 500, fontSize: "16px", lineHeight: "32px", color: "#211C4DB2", minWidth: "100px", textAlign: isRTL ? "left" : "right",
                 }}>
-                  +{paymentProcessingFee.toLocaleString(isRTL ? "ar-SA" : "en-US")} {t("common.SAR")}
+                  +{paymentProcessingFee.toLocaleString(isRTL ? "ar-SA" : "en-US")} <SaudiRiyalIcon className="w-3.5 h-3.5" />
                 </p>
               </div>
-            )}
+            )} */}
 
             {/* خصم النقاط */}
             {usePoints && pointsDiscount > 0 && (
@@ -386,10 +455,10 @@ useEffect(() => {
                 }}>
                   {t("checkoutSummary.pointsDiscount")}
                 </p>
-                <p className="font-medium" style={{
+                <p className="font-medium flex items-center gap-1" style={{
                   fontFamily: "Roboto", fontWeight: 500, fontSize: "16px", lineHeight: "32px", color: "#F3AC5D", minWidth: "100px", textAlign: isRTL ? "left" : "right",
                 }}>
-                  -{pointsDiscount.toLocaleString(isRTL ? "ar-SA" : "en-US")} {t("common.SAR")}
+                  -{pointsDiscount.toLocaleString(isRTL ? "ar-SA" : "en-US")} <SaudiRiyalIcon className="w-3.5 h-3.5" />
                 </p>
               </div>
             )}
@@ -401,10 +470,10 @@ useEffect(() => {
               }}>
                 {t("checkoutSummary.estimatedTax")}
               </p>
-              <p className="font-medium" style={{
+              <p className="font-medium flex items-center gap-1" style={{
                 fontFamily: "Roboto", fontWeight: 500, fontSize: "16px", lineHeight: "32px", color: "#211C4DB2", minWidth: "100px", textAlign: isRTL ? "left" : "right",
               }}>
-                {tax.toLocaleString(isRTL ? "ar-SA" : "en-US")} {t("common.SAR")}
+                {tax.toLocaleString(isRTL ? "ar-SA" : "en-US")} <SaudiRiyalIcon className="w-3.5 h-3.5" />
               </p>
             </div>
 
@@ -418,7 +487,10 @@ useEffect(() => {
               <p className="font-medium" style={{
                 fontFamily: "Roboto", fontWeight: 500, fontSize: "16px", lineHeight: "32px", color: "#211C4DB2", minWidth: "100px", textAlign: isRTL ? "left" : "right",
               }}>
-                {shippingCost.toLocaleString(isRTL ? "ar-SA" : "en-US")} {t("common.SAR")}
+                {shippingCost === 0
+                  ? (isRTL ? "مجاني" : "Free")
+                  : <span className="flex items-center gap-1">{shippingCost.toLocaleString(isRTL ? "ar-SA" : "en-US")} <SaudiRiyalIcon className="w-3.5 h-3.5" /></span>
+                }
               </p>
             </div>
           </div>
@@ -430,10 +502,10 @@ useEffect(() => {
             }}>
               {t("checkoutSummary.total")}
             </p>
-            <p className="font-medium" style={{
+            <p className="font-medium flex items-center gap-1" style={{
               fontFamily: "Roboto", fontWeight: 500, fontSize: "16px", lineHeight: "32px", letterSpacing: "3%", color: "#211C4D", minWidth: "100px", textAlign: isRTL ? "left" : "right",
             }}>
-              {displayFinalTotal.toLocaleString(isRTL ? "ar-SA" : "en-US")} {t("common.SAR")}
+              {displayFinalTotal.toLocaleString(isRTL ? "ar-SA" : "en-US")} <SaudiRiyalIcon className="w-4 h-4" />
             </p>
           </div>
         </div>
@@ -441,5 +513,4 @@ useEffect(() => {
     </div>
   );
 };
-
 export default CheckoutSummarySection;

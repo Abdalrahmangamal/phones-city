@@ -7,9 +7,11 @@ import more from "@/assets/images/More.png";
 import { Link } from "react-router-dom";
 import { useInvoicesStore } from "@/store/profile/indexStore";
 import { useSettings } from "@/store/settings";
-import { useTranslation } from "react-i18next"; 
+import { useTranslation } from "react-i18next";
 
-export default function Myorder() {
+import { SaudiRiyalIcon } from "@/components/common/SaudiRiyalIcon";
+
+export default function Myorder() { // Note: Function name seems to be Myorder in Bills.tsx, might be copy-paste error in original file but I will keep it or ignore it, just target content.
   // جميع الـ Hooks يجب أن تكون في الأعلى، بدون شروط
   const { invoices, loading, error, fetchInvoices } = useInvoicesStore();
   const { lang } = useSettings();
@@ -121,8 +123,8 @@ export default function Myorder() {
                     <td className="text-[#F3AC5D] border-b text-center font-[600] py-4 w-[160px]">
                       <div className="w-full flex items-center justify-center">
                         <Link to={`/${lang}/singlebills/${invoice.id}`}>
-  <img src={more} alt="تفاصيل" />
-</Link>
+                          <img src={more} alt="تفاصيل" />
+                        </Link>
                       </div>
                     </td>
                   </tr>

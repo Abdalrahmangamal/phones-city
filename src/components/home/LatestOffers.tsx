@@ -1,11 +1,11 @@
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
-import svg from "../../assets/images/svg2.png";
-import { useLatestOffersStore } from "../../store/home/latestOffersStore";
-import "../../style.css";
-import Loader from '@/components/Loader';
 import { useTranslation } from "react-i18next";
 import { useLangSync } from "@/hooks/useLangSync";
+import { useLatestOffersStore } from "@/store/home/latestOffersStore";
+import Loader from "@/components/Loader";
+import { SaudiRiyalIcon } from "@/components/common/SaudiRiyalIcon";
+import svg from "@/assets/images/Layer_1.png";
 
 interface Offer {
   id: number;
@@ -16,9 +16,6 @@ interface Offer {
   value: string;
   type: 'amount' | 'percentage';
   image: string;
-  first_related: any | null;
-  products: any[];
-  categories: any[];
 }
 
 export default function LatestOffers() {
@@ -27,26 +24,12 @@ export default function LatestOffers() {
   const { offers, loading, fetchOffers } = useLatestOffersStore();
 
   useEffect(() => {
-    console.log('Fetching offers for language:', lang);
     fetchOffers(lang);
-  }, [lang, fetchOffers]);
+  }, [fetchOffers, lang]);
 
-  useEffect(() => {
-    console.log('Current offers:', offers);
-    console.log('First offer image:', offers[0]?.image);
-  }, [offers]);
-
-  // جلب أول 6 عروض فقط
-  const limitedOffers = offers.slice(0, 6);
-
-  // أول عرض → لابتوب
-  const laptopOffer = limitedOffers[0];
-
-  // ثاني عرض → Gaming
-  const gamingOffer = limitedOffers[1];
-
-  // الباقي → إكسسوارات
-  const accessoryOffers = limitedOffers.slice(2, 6);
+  const laptopOffer = offers[0];
+  const gamingOffer = offers[3];
+  const accessoryOffers = [offers[1], offers[2], offers[4], offers[5]];
 
   const getDiscountText = (offer: Offer | undefined) => {
     if (!offer) return t("SpecialDiscount");
@@ -54,11 +37,14 @@ export default function LatestOffers() {
     if (offer.type === 'percentage') {
       return `${t("Discount")} ${offer.value}%`;
     } else {
-      return `${t("Discount")} ${offer.value} ${t("SAR")}`;
+      return (
+        <span className="flex items-center gap-1 inline-flex">
+          {t("Discount")} {offer.value} <SaudiRiyalIcon className="w-4 h-4" />
+        </span>
+      );
     }
   };
 
-  // جميع الأزرار ستوجه إلى صفحة العروض العامة
   const getOfferLink = () => {
     return `/${lang}/offers`;
   };
@@ -102,10 +88,10 @@ export default function LatestOffers() {
                   }
                 }}
               />
-              
+
               {/* طبقة تظليل لتحسين قراءة النص */}
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent"></div>
-              
+
               <div className="z-[20] absolute flex flex-col bottom-0 justify-center items-center pb-[40px] md:pb-[50px] lg:pb-[100px] text-center w-full">
                 <h1 className="text-white font-[700] text-[32px] md:text-[35px] lg:text-[54px] drop-shadow-lg">
                   {laptopOffer.name_ar || laptopOffer.name_en || t("Laptop")}
@@ -114,7 +100,7 @@ export default function LatestOffers() {
                   {getDiscountText(laptopOffer)}
                 </p>
                 <Link
-                  to={getOfferLink()} 
+                  to={getOfferLink()}
                   className="w-[110px] h-[40px] md:w-[116px] md:h-[42px] text-white mt-[20px] bg-[#F3AC5D] rounded-[8px] flex items-center justify-center gap-2 transition-all duration-300 hover:bg-[#e79940] hover:shadow-[0_8px_20px_rgba(243,172,93,0.5)] hover:scale-105"
                 >
                   {t("ShopNow")}
@@ -145,9 +131,9 @@ export default function LatestOffers() {
                   }
                 }}
               />
-              
+
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent"></div>
-              
+
               <div className="absolute inset-0 flex flex-col items-center justify-center text-center z-20 px-4">
                 <h1 className="text-[23px] font-[700] text-white drop-shadow-lg">
                   {laptopOffer.name_ar || laptopOffer.name_en || t("Laptop")}
@@ -191,9 +177,9 @@ export default function LatestOffers() {
                       }
                     }}
                   />
-                  
+
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent"></div>
-                  
+
                   <div className="absolute inset-0 z-10 px-4 py-3 text-right flex flex-col justify-end">
                     <h1 className="text-[10px] md:text-[15px] lg:text-[20px] font-[700] text-white line-clamp-2 drop-shadow-lg">
                       {offer.name_ar || offer.name_en || t("GameAccessories")}
@@ -202,8 +188,8 @@ export default function LatestOffers() {
                       {getDiscountText(offer)}
                     </p>
                     <Link
-                      to={getOfferLink()} 
-                      className="inline-block mt-4 px-3 py-1 text-[8px] md:text-[12px] text-white bg-[#F3AC5D] rounded-[6px] hover:bg-[#e79940] transition-all"
+                      to={getOfferLink()}
+                      className="inline-block w-fit mt-4 px-3 py-1 text-[8px] md:text-[12px] text-white bg-[#F3AC5D] rounded-[6px] hover:bg-[#e79940] transition-all"
                     >
                       {t("ShopNow")}
                     </Link>
@@ -234,9 +220,9 @@ export default function LatestOffers() {
                     }
                   }}
                 />
-                
+
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent"></div>
-                
+
                 <div className="absolute inset-0 flex flex-col items-center justify-center text-center z-20 px-4">
                   <h1 className="text-[23px] md:text-[40px] lg:text-[56px] font-[700] text-white drop-shadow-lg">
                     {gamingOffer.name_ar || gamingOffer.name_en || t("GamingDevices")}
@@ -279,9 +265,9 @@ export default function LatestOffers() {
                       }
                     }}
                   />
-                  
+
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent"></div>
-                  
+
                   <div className="absolute inset-0 z-10 px-4 py-3 text-right flex flex-col justify-end">
                     <h1 className="text-[10px] md:text-[15px] lg:text-[20px] font-[700] text-white line-clamp-2 drop-shadow-lg">
                       {offer.name_ar || offer.name_en || t("GameAccessories")}
@@ -290,8 +276,8 @@ export default function LatestOffers() {
                       {getDiscountText(offer)}
                     </p>
                     <Link
-                      to={getOfferLink()} 
-                      className="inline-block mt-4 px-3 py-1 text-[8px] md:text-[12px] text-white bg-[#F3AC5D] rounded-[6px] hover:bg-[#e79940] transition-all"
+                      to={getOfferLink()}
+                      className="inline-block w-fit mt-4 px-3 py-1 text-[8px] md:text-[12px] text-white bg-[#F3AC5D] rounded-[6px] hover:bg-[#e79940] transition-all"
                     >
                       {t("ShopNow")}
                     </Link>

@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useCartStore } from '@/store/cartStore/cartStore';
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
+import { SaudiRiyalIcon } from "@/components/common/SaudiRiyalIcon";
 
 export default function Basketsummary({ products, total }: any) {
   const { deletefromCart, updateQuantity, items, clearCart, loading } = useCartStore();
@@ -14,10 +15,10 @@ export default function Basketsummary({ products, total }: any) {
 
   // تسجيل البيانات للتصحيح
   console.log("Cart items in Basketsummary:", products);
-  
+
   const handleDeleteAll = async () => {
     if (items.length === 0 || isDeletingAll || loading) return;
-    
+
     if (window.confirm(t("AreYouSureDeleteAll"))) {
       setIsDeletingAll(true);
       try {
@@ -45,12 +46,12 @@ export default function Basketsummary({ products, total }: any) {
     if (item.price !== undefined && item.price !== null) {
       return item.price;
     }
-    
+
     // ثانياً: السعر من الـ variant المحدد
     if (item.variant?.final_price !== undefined && item.variant?.final_price !== null) {
       return item.variant.final_price;
     }
-    
+
     // ثالثاً: السعر من المنتج الرئيسي
     const product = item.product || item;
     return product?.final_price || product?.price || 0;
@@ -60,13 +61,13 @@ export default function Basketsummary({ products, total }: any) {
   const getItemDisplayName = (item: any) => {
     const product = item.product || item;
     const baseName = product?.name || t("Product");
-    
+
     // إضافة تفاصيل الـ variant إذا كانت موجودة
     if (item.variant?.name || item.variant?.value) {
       const variantName = item.variant.name || item.variant.value;
       return `${baseName} - ${variantName}`;
     }
-    
+
     return baseName;
   };
 
@@ -76,7 +77,7 @@ export default function Basketsummary({ products, total }: any) {
     if (item.variant?.images?.[0]?.url) {
       return item.variant.images[0].url;
     }
-    
+
     // ثانياً: الصورة من المنتج
     const product = item.product || item;
     return product?.images?.[0]?.url || product?.main_image || "";
@@ -89,7 +90,7 @@ export default function Basketsummary({ products, total }: any) {
         <h1 className={`text-[24px] font-[600] text-[#211C4D] ${isRTL ? "text-right" : "text-left"}`}>
           {t("CartSummary")}
         </h1>
-        
+
         {products.length > 0 && (
           <Button
             variant="outline"
@@ -189,16 +190,16 @@ export default function Basketsummary({ products, total }: any) {
 
                 {/* السعر */}
                 <div className="flex items-center gap-3 min-w-max">
-                  <span className="font-bold text-[14px] md:text-lg text-[#211C4D]">
+                  <span className="font-bold text-[14px] md:text-lg text-[#211C4D] flex items-center gap-1">
                     {typeof itemPrice === "string"
                       ? itemPrice
-                      : Number(itemPrice).toLocaleString(isRTL ? "ar-SA" : "en-US")} {t("SAR")}
+                      : Number(itemPrice).toLocaleString(isRTL ? "ar-SA" : "en-US")} <SaudiRiyalIcon className="w-4 h-4" />
                   </span>
                   {quantity > 1 && (
-                    <span className="text-xs text-gray-500">
-                      = {typeof itemPrice === "string" 
+                    <span className="text-xs text-gray-500 flex items-center gap-1">
+                      = {typeof itemPrice === "string"
                         ? (parseFloat(itemPrice.replace(/[^\d.-]/g, '')) * quantity).toLocaleString(isRTL ? "ar-SA" : "en-US")
-                        : (itemPrice * quantity).toLocaleString(isRTL ? "ar-SA" : "en-US")} {t("SAR")}
+                        : (itemPrice * quantity).toLocaleString(isRTL ? "ar-SA" : "en-US")} <SaudiRiyalIcon className="w-3 h-3" />
                     </span>
                   )}
                 </div>
@@ -223,8 +224,8 @@ export default function Basketsummary({ products, total }: any) {
       {products.length === 0 && (
         <div className="text-center py-12">
           <p className="text-muted-foreground text-lg">{t("EmptyCart")}</p>
-          <Button 
-            variant="outline" 
+          <Button
+            variant="outline"
             className="mt-4"
             onClick={() => window.location.href = '/'}
           >

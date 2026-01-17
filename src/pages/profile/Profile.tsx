@@ -32,7 +32,7 @@ export default function Profile() {
   });
   const [isEditing, setIsEditing] = useState(false);
   const [originalData, setOriginalData] = useState({ ...formData });
-  
+
   // States لتغيير كلمة المرور
   const [passwordForm, setPasswordForm] = useState({
     password: "",
@@ -76,29 +76,29 @@ export default function Profile() {
 
   const handleSaveAll = async () => {
     console.log('💾 حفظ جميع التعديلات:', formData);
-    
+
     // تجهيز البيانات للإرسال
     const updateData: any = {};
-    
+
     // إذا تغير الاسم الأول أو الأخير، نرسل name كامل
-    if (formData.firstName !== originalData.firstName || 
-        formData.lastName !== originalData.lastName) {
+    if (formData.firstName !== originalData.firstName ||
+      formData.lastName !== originalData.lastName) {
       updateData.name = `${formData.firstName} ${formData.lastName}`.trim();
     }
-    
+
     // إضافة الحقول الأخرى إذا تغيرت
     if (formData.phone !== originalData.phone) {
       updateData.phone = formData.phone;
     }
-    
+
     if (formData.email !== originalData.email) {
       updateData.email = formData.email;
     }
-    
+
     if (formData.address !== originalData.address) {
       updateData.address = formData.address;
     }
-    
+
     // إذا كان هناك أي تغيير
     if (Object.keys(updateData).length > 0) {
       try {
@@ -120,10 +120,10 @@ export default function Profile() {
 
   const hasChanges = () => {
     return formData.firstName !== originalData.firstName ||
-           formData.lastName !== originalData.lastName ||
-           formData.phone !== originalData.phone ||
-           formData.email !== originalData.email ||
-           formData.address !== originalData.address;
+      formData.lastName !== originalData.lastName ||
+      formData.phone !== originalData.phone ||
+      formData.email !== originalData.email ||
+      formData.address !== originalData.address;
   };
 
   // دالة لتغيير كلمة المرور
@@ -133,40 +133,40 @@ export default function Profile() {
       setPasswordError("الرجاء ملء جميع الحقول");
       return;
     }
-    
+
     if (passwordForm.password.length < 6) {
       setPasswordError("كلمة المرور الجديدة يجب أن تكون 6 أحرف على الأقل");
       return;
     }
-    
+
     if (passwordForm.password !== passwordForm.password_confirmation) {
       setPasswordError("كلمة المرور الجديدة غير متطابقة");
       return;
     }
-    
+
     setIsChangingPassword(true);
     setPasswordError("");
     setPasswordSuccess("");
-    
+
     try {
       console.log("🔐 جاري تغيير كلمة المرور:", passwordForm);
-      
+
       const response = await axiosClient.put("/api/v1/profile", {
         password: passwordForm.password,
         password_confirmation: passwordForm.password_confirmation
       });
-      
+
       console.log("✅ استجابة تغيير كلمة المرور:", response.data);
-      
+
       if (response.data.status) {
         setPasswordSuccess("تم تغيير كلمة المرور بنجاح!");
-        
+
         // إعادة تعيين النموذج
         setPasswordForm({
           password: "",
           password_confirmation: ""
         });
-        
+
         // إخفاء النموذج بعد 2 ثانية
         setTimeout(() => {
           setShowPasswordForm(false);
@@ -177,9 +177,9 @@ export default function Profile() {
       }
     } catch (error: any) {
       console.error("❌ خطأ في تغيير كلمة المرور:", error);
-      
+
       let errorMessage = "حدث خطأ أثناء تغيير كلمة المرور";
-      
+
       if (error.response?.status === 422) {
         const errors = error.response.data?.errors;
         if (errors?.password) {
@@ -192,7 +192,7 @@ export default function Profile() {
       } else if (error.response?.data?.message) {
         errorMessage = error.response.data.message;
       }
-      
+
       setPasswordError(errorMessage);
     } finally {
       setIsChangingPassword(false);
@@ -216,7 +216,7 @@ export default function Profile() {
         <div className="flex justify-center items-center h-screen">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
-            <p className="text-[#211C4DCC] mt-4">جاري تحميل بيانات الملف الشخصي...</p>
+            <p className="text-[#211C4DCC] mt-4">{lang === 'ar' ? 'جاري تحميل بيانات الملف الشخصي...' : 'Loading profile data...'}</p>
           </div>
         </div>
       </Layout>
@@ -229,7 +229,7 @@ export default function Profile() {
         <div className="flex justify-center items-center h-screen">
           <div className="text-center">
             <p className="text-red-500 text-lg mb-4">❌ خطأ: {error}</p>
-            <button 
+            <button
               onClick={fetchProfile}
               className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
             >
@@ -250,7 +250,7 @@ export default function Profile() {
             <p className="text-[#211C4DCC] text-[16px] font-[500]">
               {t("PersonalData")}
             </p>
-            
+
             {/* زر الحفظ إذا كان في وضع التعديل */}
             {isEditing && hasChanges() && (
               <div className="flex gap-3">
@@ -272,7 +272,7 @@ export default function Profile() {
               </div>
             )}
           </div>
-          
+
           {/* مؤشر التعديل */}
           {isEditing && hasChanges() && (
             <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg flex items-center gap-2">
@@ -284,7 +284,7 @@ export default function Profile() {
               </p>
             </div>
           )}
-          
+
           <div className="grid mt-11 gap-[20px] md:grid-cols-2 grid-cols-1">
             {/* First Name */}
             <div>
@@ -295,7 +295,7 @@ export default function Profile() {
                 )}
               </label>
               <div className="relative">
-                <input 
+                <input
                   type="text"
                   value={formData.firstName}
                   onChange={(e) => handleInputChange('firstName', e.target.value)}
@@ -315,7 +315,7 @@ export default function Profile() {
                 )}
               </label>
               <div className="relative">
-                <input 
+                <input
                   type="text"
                   value={formData.lastName}
                   onChange={(e) => handleInputChange('lastName', e.target.value)}
@@ -335,7 +335,7 @@ export default function Profile() {
                 )}
               </label>
               <div className="relative">
-                <input 
+                <input
                   type="text"
                   value={formData.phone}
                   onChange={(e) => handleInputChange('phone', e.target.value)}
@@ -355,7 +355,7 @@ export default function Profile() {
                 )}
               </label>
               <div className="relative">
-                <input 
+                <input
                   type="email"
                   value={formData.email}
                   onChange={(e) => handleInputChange('email', e.target.value)}
@@ -376,7 +376,7 @@ export default function Profile() {
                 )}
               </label>
               <div className="relative">
-                <input 
+                <input
                   type="text"
                   value={formData.address}
                   onChange={(e) => handleInputChange('address', e.target.value)}
@@ -393,14 +393,14 @@ export default function Profile() {
                 {t("UserPassword")}
               </label>
               <div className="relative">
-                <input 
+                <input
                   type="password"
                   value="***********"
                   readOnly
                   className="w-full h-[48px] px-[40px] rounded-[8px] border border-[#939393] bg-gray-100 cursor-default"
                 />
                 <img src={key} className="absolute start-3 top-3 w-5 h-5" alt="key" />
-                
+
                 {/* زر التعديل */}
                 <button
                   onClick={() => setShowPasswordForm(true)}
@@ -420,7 +420,7 @@ export default function Profile() {
               </div>
             </div>
           </div>
-          
+
           {/* أزرار الحفظ في الأسفل */}
           {isEditing && hasChanges() && (
             <div className="mt-8 p-6 bg-white border border-gray-200 rounded-lg shadow-sm">
@@ -449,7 +449,7 @@ export default function Profile() {
               </div>
             </div>
           )}
-          
+
           {/* Modal لتغيير كلمة المرور */}
           {showPasswordForm && (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
@@ -469,7 +469,7 @@ export default function Profile() {
                     </svg>
                   </button>
                 </div>
-                
+
                 {/* الرسائل */}
                 <div className="px-6 pt-4">
                   {passwordError && (
@@ -480,7 +480,7 @@ export default function Profile() {
                       <p className="text-red-700 text-sm">{passwordError}</p>
                     </div>
                   )}
-                  
+
                   {passwordSuccess && (
                     <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg flex items-start gap-3">
                       <svg className="w-5 h-5 text-green-600 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -493,7 +493,7 @@ export default function Profile() {
                     </div>
                   )}
                 </div>
-                
+
                 {/* النموذج */}
                 <div className="p-6">
                   <div className="space-y-4">
@@ -507,7 +507,7 @@ export default function Profile() {
                         <input
                           type="password"
                           value={passwordForm.password}
-                          onChange={(e) => setPasswordForm(prev => ({...prev, password: e.target.value}))}
+                          onChange={(e) => setPasswordForm(prev => ({ ...prev, password: e.target.value }))}
                           className="w-full h-[48px] px-4 pr-12 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition"
                           placeholder={t("NewPasswordPlaceholder")}
                           disabled={isChangingPassword}
@@ -519,7 +519,7 @@ export default function Profile() {
                         </div>
                       </div>
                     </div>
-                    
+
                     {/* تأكيد كلمة المرور الجديدة */}
                     <div>
                       <label className="block text-gray-700 text-sm font-medium mb-2">
@@ -530,7 +530,7 @@ export default function Profile() {
                         <input
                           type="password"
                           value={passwordForm.password_confirmation}
-                          onChange={(e) => setPasswordForm(prev => ({...prev, password_confirmation: e.target.value}))}
+                          onChange={(e) => setPasswordForm(prev => ({ ...prev, password_confirmation: e.target.value }))}
                           className="w-full h-[48px] px-4 pr-12 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition"
                           placeholder={t("ConfirmNewPasswordPlaceholder")}
                           disabled={isChangingPassword}
@@ -542,7 +542,7 @@ export default function Profile() {
                         </div>
                       </div>
                     </div>
-                    
+
                     {/* نصائح الأمان */}
                     <div className="p-3 bg-blue-50 rounded-lg border border-blue-100">
                       <h4 className="text-sm font-medium text-blue-700 mb-2">{t("PasswordTipsTitle")}</h4>
@@ -553,7 +553,7 @@ export default function Profile() {
                       </ul>
                     </div>
                   </div>
-                  
+
                   {/* الأزرار */}
                   <div className="mt-6 flex gap-3">
                     <button
@@ -587,7 +587,7 @@ export default function Profile() {
               </div>
             </div>
           )}
-          
+
           {/* Show loader while fetching banner data */}
           {pageLoading && <Loader />}
           {/* Display banner when data is loaded */}
@@ -595,18 +595,18 @@ export default function Profile() {
 
           <div className="mt-6 mb-4">
 
-              {!pageLoading && page && (
+            {!pageLoading && page && (
               <FeaturedHeroSection
                 title={page.title || ""}
                 description={page.short_description || ""}
-                buttonText="تسوق الآن"
+                buttonText={lang === 'ar' ? "تسوق الآن" : "Shop Now"}
                 buttonLink="/offers"
                 backgroundImage={page.banner || ""}
               />
             )}
-                    
+
           </div>
-          
+
         </div>
       </div>
     </Layout>

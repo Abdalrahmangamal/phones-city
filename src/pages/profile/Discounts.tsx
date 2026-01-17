@@ -9,7 +9,7 @@ import { useLangSync } from "@/hooks/useLangSync";
 export default function Discounts() {
   const { t } = useTranslation();
   const { lang } = useLangSync();
-  
+
   // Get state and actions from the store
   const {
     discounts,
@@ -85,7 +85,7 @@ export default function Discounts() {
                 <h2 className="text-[#211C4D] text-[20px] font-[600]">
                   {t("Discounts")}
                 </h2>
-                
+
                 {!loading && (
                   <button
                     onClick={handleRefresh}
@@ -169,7 +169,15 @@ export default function Discounts() {
                               </li>
                               <li>
                                 {item.conditions ||
-                                  (lang === 'ar' ? "التركيبات: احصل على خصم 20% عند إنفاق أكثر من 169.00 رس، أو احصل على خصم 15% عند إنفاق أكثر من 89.00 رس." : "Installments: Get a 20% discount when spending more than 169.00 SAR, or get a 15% discount when spending more than 89.00 SAR.")}
+                                  (lang === 'ar' ? (
+                                    <span>
+                                      التركيبات: احصل على خصم 20% عند إنفاق أكثر من 169.00 <SaudiRiyalIcon className="w-3 h-3 inline" />، أو احصل على خصم 15% عند إنفاق أكثر من 89.00 <SaudiRiyalIcon className="w-3 h-3 inline" />.
+                                    </span>
+                                  ) : (
+                                    <span>
+                                      Installments: Get a 20% discount when spending more than 169.00 <SaudiRiyalIcon className="w-3 h-3 inline" />, or get a 15% discount when spending more than 89.00 <SaudiRiyalIcon className="w-3 h-3 inline" />.
+                                    </span>
+                                  ))}
                               </li>
                             </ul>
                           </div>
@@ -188,11 +196,11 @@ export default function Discounts() {
                       >
                         {lang === 'ar' ? "السابق" : "Previous"}
                       </button>
-                      
+
                       <span className="text-gray-600">
                         {lang === 'ar' ? `الصفحة ${pagination.current_page} من ${pagination.last_page}` : `Page ${pagination.current_page} of ${pagination.last_page}`}
                       </span>
-                      
+
                       <button
                         onClick={handleNextPage}
                         disabled={pagination.current_page === pagination.last_page || loading}

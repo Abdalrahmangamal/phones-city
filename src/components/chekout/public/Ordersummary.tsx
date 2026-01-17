@@ -1,9 +1,9 @@
 // Ordersummary.tsx
 "use client";
 
-import { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useCartStore } from "@/store/cartStore/cartStore";
-import { Input } from "@/components/ui/input";
+
 import { useTranslation } from "react-i18next";
 
 import tamara from "@/assets/images/tamara.png";
@@ -22,23 +22,25 @@ const paymentLogos: Record<number, any> = {
   6: amwal,
 };
 
+import { SaudiRiyalIcon } from "@/components/common/SaudiRiyalIcon";
+
 // تحديث نصوص التسويق لتدعم اللغة الإنجليزية
-const paymentMarketingTexts: Record<number, (amount: string, isRTL: boolean) => string> = {
-  1: (a, isRTL) => isRTL 
-    ? `قسم الفاتورة بـ 3 دفعات بدون فائدة ${a} ريال بعد الخصم. موافقة فورية لعملائنا الكاملين`
-    : `Split invoice into 3 interest-free installments ${a} SAR after discount. Instant approval for our premium customers`,
+const paymentMarketingTexts: Record<number, (amount: string, isRTL: boolean) => React.ReactNode> = {
+  1: (a, isRTL) => isRTL
+    ? <span>قسم الفاتورة بـ 3 دفعات بدون فائدة {a} <SaudiRiyalIcon className="w-3 h-3 inline pb-0.5" /> بعد الخصم. موافقة فورية لعملائنا الكاملين</span>
+    : <span>Split invoice into 3 interest-free installments {a} <SaudiRiyalIcon className="w-3 h-3 inline pb-0.5" /> after discount. Instant approval for our premium customers</span>,
   2: (a, isRTL) => isRTL
-    ? `قسم الفاتورة بـ 4 دفعات بدون فائدة ${a} ريال بعد الخصم. موافقة فورية لعملائنا الكاملين`
-    : `Split invoice into 4 interest-free installments ${a} SAR after discount. Instant approval for our premium customers`,
+    ? <span>قسم الفاتورة بـ 4 دفعات بدون فائدة {a} <SaudiRiyalIcon className="w-3 h-3 inline pb-0.5" /> بعد الخصم. موافقة فورية لعملائنا الكاملين</span>
+    : <span>Split invoice into 4 interest-free installments {a} <SaudiRiyalIcon className="w-3 h-3 inline pb-0.5" /> after discount. Instant approval for our premium customers</span>,
   3: (a, isRTL) => isRTL
-    ? `4 دفعات بدون فائدة ${a} ريال بعد الخصم. وتوفير رسوم إضافية لعملائنا الكاملين`
-    : `4 interest-free installments ${a} SAR after discount. Save additional fees for our premium customers`,
+    ? <span>4 دفعات بدون فائدة {a} <SaudiRiyalIcon className="w-3 h-3 inline pb-0.5" /> بعد الخصم. وتوفير رسوم إضافية لعملائنا الكاملين</span>
+    : <span>4 interest-free installments {a} <SaudiRiyalIcon className="w-3 h-3 inline pb-0.5" /> after discount. Save additional fees for our premium customers</span>,
   4: (a, isRTL) => isRTL
-    ? `4 دفعات بدون فائدة ${a} ريال بعد الخصم. وتوفير رسوم إضافية لعملائنا الكاملين`
-    : `4 interest-free installments ${a} SAR after discount. Save additional fees for our premium customers`,
+    ? <span>4 دفعات بدون فائدة {a} <SaudiRiyalIcon className="w-3 h-3 inline pb-0.5" /> بعد الخصم. وتوفير رسوم إضافية لعملائنا الكاملين</span>
+    : <span>4 interest-free installments {a} <SaudiRiyalIcon className="w-3 h-3 inline pb-0.5" /> after discount. Save additional fees for our premium customers</span>,
   5: (a, isRTL) => isRTL
-    ? `4 دفعات بدون فائدة ${a} ريال بعد الخصم. وتوفير رسوم إضافية لعملائنا الكاملين`
-    : `4 interest-free installments ${a} SAR after discount. Save additional fees for our premium customers`,
+    ? <span>4 دفعات بدون فائدة {a} <SaudiRiyalIcon className="w-3 h-3 inline pb-0.5" /> بعد الخصم. وتوفير رسوم إضافية لعملائنا الكاملين</span>
+    : <span>4 interest-free installments {a} <SaudiRiyalIcon className="w-3 h-3 inline pb-0.5" /> after discount. Save additional fees for our premium customers</span>,
   6: (a, isRTL) => isRTL
     ? "استخدم 6 دفعات بدون فائدة وتوفير رسوم. لعملائنا الكاملين"
     : "Use 6 interest-free installments and save fees. For our premium customers",
@@ -46,33 +48,40 @@ const paymentMarketingTexts: Record<number, (amount: string, isRTL: boolean) => 
 
 interface OrderSummaryProps {
   onTotalUpdate?: (total: number) => void;
+  usePoints?: boolean;
+  onUsePointsChange?: (value: boolean) => void;
+  pointsDiscountAmount?: number;
+  onPointsDiscountChange?: (value: number) => void;
 }
 
-export default function OrderSummary({ onTotalUpdate }: OrderSummaryProps) {
-  const { 
-    items, 
-    total, 
-    loading, 
+export default function OrderSummary({
+  onTotalUpdate,
+  usePoints,
+  onUsePointsChange,
+  pointsDiscountAmount,
+  onPointsDiscountChange
+}: OrderSummaryProps) {
+  const {
+    items,
+
+    loading,
     fetchCart,
-    finalTotal: storeFinalTotal,
-    selectedPaymentId: storeSelectedPaymentId,
-    updateFinalTotal 
+    selectedPaymentId, // Directly use selectedPaymentId from store
+    updateFinalTotal
   } = useCartStore();
-  
+
   const { t, i18n } = useTranslation();
   const currentLang = i18n.language;
   const isRTL = currentLang === 'ar';
-  
-  const [promoCode, setPromoCode] = useState("");
-  const { selectedPaymentId } = useCartStore();
-  
+
 
   useEffect(() => {
     if (items.length === 0 && !loading) fetchCart();
   }, [items.length, loading, fetchCart]);
 
-  const subtotal = total || 0;
-  
+  // Calculate subtotal from item subtotals (price before tax)
+  const subtotal = items.reduce((acc, item) => acc + (item.subtotal || 0), 0);
+
   let calculatedFinalTotal = subtotal; // تم إزالة shipping
   let processingFee = 0;
   let selectedPaymentName = "";
@@ -88,7 +97,7 @@ export default function OrderSummary({ onTotalUpdate }: OrderSummaryProps) {
     }
   }
 
-  
+
 
   useEffect(() => {
     updateFinalTotal(calculatedFinalTotal, selectedPaymentId);
@@ -97,25 +106,22 @@ export default function OrderSummary({ onTotalUpdate }: OrderSummaryProps) {
     }
   }, [calculatedFinalTotal, selectedPaymentId, updateFinalTotal, onTotalUpdate]);
 
-  useEffect(() => {
-    if (storeSelectedPaymentId !== selectedPaymentId) {
-      setSelectedPaymentId(storeSelectedPaymentId);
-    }
-  }, [storeSelectedPaymentId]);
+  // Removed broken useEffect trying to sync selectedPaymentId
+
 
   const handlePaymentSelect = (paymentId: number) => {
-  const selected = paymentMethods.find((p: any) => p.id === paymentId);
-  if (selected) {
-    const processingFee = parseFloat(selected.processing_fee_amount || "0");
-    const newFinalTotal = subtotal + processingFee;
+    const selected = paymentMethods.find((p: any) => p.id === paymentId);
+    if (selected) {
+      const processingFee = parseFloat(selected.processing_fee_amount || "0");
+      const newFinalTotal = subtotal + processingFee;
 
-    // تحديث الـ store مرة واحدة فقط
-    updateFinalTotal(newFinalTotal, paymentId);
-  } else {
-    // لو المستخدم اختار "إلغاء" أو بدون رسوم
-    updateFinalTotal(subtotal, null);
-  }
-};
+      // تحديث الـ store مرة واحدة فقط
+      updateFinalTotal(newFinalTotal, paymentId);
+    } else {
+      // لو المستخدم اختار "إلغاء" أو بدون رسوم
+      updateFinalTotal(subtotal, null);
+    }
+  };
 
   const paymentProviders = paymentMethods.map((p: any) => {
     const amount = parseFloat(p.total_price).toLocaleString(isRTL ? "ar-SA" : "en-US");
@@ -125,8 +131,8 @@ export default function OrderSummary({ onTotalUpdate }: OrderSummaryProps) {
         ? textFn("", isRTL)
         : textFn(amount, isRTL)
       : isRTL
-        ? `${p.name} • ${amount} ﷼`
-        : `${p.name} • ${amount} SAR`;
+        ? <span className="flex items-center gap-1">{p.name} • {amount} <SaudiRiyalIcon className="w-3 h-3" /></span>
+        : <span className="flex items-center gap-1">{p.name} • {amount} <SaudiRiyalIcon className="w-3 h-3" /></span>;
 
     return {
       id: p.id,
@@ -181,15 +187,16 @@ export default function OrderSummary({ onTotalUpdate }: OrderSummaryProps) {
       <div className="mb-6 space-y-3 text-sm">
         <div className={`flex justify-between ${isRTL ? 'flex-row-reverse' : 'flex-row'}`}>
           <span className="text-gray-600">{t("Subtotal")}</span>
-          <span className="font-semibold">{subtotal.toLocaleString(isRTL ? "ar-SA" : "en-US")} {t("SAR")}</span>
+          <span className="font-semibold flex items-center gap-1">{subtotal.toLocaleString(isRTL ? "ar-SA" : "en-US")} <SaudiRiyalIcon className="w-3.5 h-3.5" /></span>
         </div>
 
-        {processingFee > 0 && (
+        {/* رسوم بوابة الدفع - محذوفة من العرض ولكن محسوبة في المجموع النهائي */}
+        {/* {processingFee > 0 && (
           <div className={`flex justify-between text-gray-700 ${isRTL ? 'flex-row-reverse' : 'flex-row'}`}>
             <span>{t("PaymentFees", { paymentName: selectedPaymentName })}</span>
-            <span>+{processingFee.toLocaleString(isRTL ? "ar-SA" : "en-US")} {t("SAR")}</span>
+            <span className="flex items-center gap-1">+{processingFee.toLocaleString(isRTL ? "ar-SA" : "en-US")} <SaudiRiyalIcon className="w-3.5 h-3.5" /></span>
           </div>
-        )}
+        )} */}
 
         {/* <div className={`border-t pt-3 flex justify-between text-lg font-bold ${isRTL ? 'flex-row-reverse' : 'flex-row'}`}>
           <span>{t("FinalTotal")}</span>
@@ -204,11 +211,10 @@ export default function OrderSummary({ onTotalUpdate }: OrderSummaryProps) {
           <div
             key={provider.id}
             onClick={() => handlePaymentSelect(provider.id)}
-            className={`flex items-center gap-4 rounded-lg border p-4 cursor-pointer transition-all ${
-              selectedPaymentId === provider.id
-                ? "border-blue-500 bg-blue-50"
-                : "border-gray-200 hover:border-gray-400"
-            }`}
+            className={`flex items-center gap-4 rounded-lg border p-4 cursor-pointer transition-all ${selectedPaymentId === provider.id
+              ? "border-blue-500 bg-blue-50"
+              : "border-gray-200 hover:border-gray-400"
+              }`}
             dir={isRTL ? "rtl" : "ltr"}
           >
             <input

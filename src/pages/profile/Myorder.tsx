@@ -10,6 +10,8 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { useLangSync } from "@/hooks/useLangSync";
 
+import { SaudiRiyalIcon } from "@/components/common/SaudiRiyalIcon";
+
 // وظيفة مساعدة لتنسيق التاريخ
 const formatDate = (dateString: string, locale: string) => {
   const date = new Date(dateString);
@@ -180,9 +182,17 @@ export default function Myorder() {
                         <span className="text-xs text-gray-400">-</span>
                       )}
                     </td>
-                    <td className="py-4 px-4 text-sm">{item.price.toFixed(2)} {t('SAR')}</td>
+                    <td className="py-4 px-4 text-sm">
+                      <div className="flex items-center gap-1">
+                        {item.price.toFixed(2)} <SaudiRiyalIcon className="w-3.5 h-3.5" />
+                      </div>
+                    </td>
                     <td className="py-4 px-4 text-sm text-center">{item.quantity}</td>
-                    <td className="py-4 px-4 text-sm font-bold text-[#211C4D]">{item.total.toFixed(2)} {t('SAR')}</td>
+                    <td className="py-4 px-4 text-sm font-bold text-[#211C4D]">
+                      <div className="flex items-center gap-1">
+                        {item.total.toFixed(2)} <SaudiRiyalIcon className="w-3.5 h-3.5" />
+                      </div>
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -202,29 +212,29 @@ export default function Myorder() {
               <div className="text-right space-y-2">
                 <div className="flex justify-between gap-8">
                   <span className="text-gray-500">{t('Subtotal')}</span>
-                  <span>{order.subtotal.toFixed(2)} {t('SAR')}</span>
+                  <span className="flex items-center gap-1">{order.subtotal.toFixed(2)} <SaudiRiyalIcon className="w-3.5 h-3.5" /></span>
                 </div>
                 {order.shipping > 0 && (
                   <div className="flex justify-between gap-8">
                     <span className="text-gray-500">{t('Shipping')}</span>
-                    <span>{order.shipping.toFixed(2)} {t('SAR')}</span>
+                    <span className="flex items-center gap-1">{order.shipping.toFixed(2)} <SaudiRiyalIcon className="w-3.5 h-3.5" /></span>
                   </div>
                 )}
                 {order.tax > 0 && (
                   <div className="flex justify-between gap-8">
                     <span className="text-gray-500">{t('Tax')}</span>
-                    <span>{order.tax.toFixed(2)} {t('SAR')}</span>
+                    <span className="flex items-center gap-1">{order.tax.toFixed(2)} <SaudiRiyalIcon className="w-3.5 h-3.5" /></span>
                   </div>
                 )}
                 {order.discount > 0 && (
                   <div className="flex justify-between gap-8">
                     <span className="text-gray-500">{t('Discount')}</span>
-                    <span className="text-green-600">-{order.discount.toFixed(2)} {t('SAR')}</span>
+                    <span className="text-green-600 flex items-center gap-1">-{order.discount.toFixed(2)} <SaudiRiyalIcon className="w-3.5 h-3.5" /></span>
                   </div>
                 )}
                 <div className="pt-3 border-t border-gray-200 flex justify-between gap-8">
                   <span className="font-semibold">{t('FinalTotal')}</span>
-                  <span className="text-lg font-bold text-[#211C4D]">{order.total.toFixed(2)} {t('SAR')}</span>
+                  <span className="text-lg font-bold text-[#211C4D] flex items-center gap-1">{order.total.toFixed(2)} <SaudiRiyalIcon className="w-4 h-4" /></span>
                 </div>
               </div>
             </div>
@@ -444,7 +454,7 @@ export default function Myorder() {
                               </td>
 
                               <td className="py-4 px-4">
-                                <span className="text-[#211C4D] font-bold text-sm">{order.total.toFixed(2)} {t('SAR')}</span>
+                                <span className="text-[#211C4D] font-bold text-sm flex items-center gap-1">{order.total.toFixed(2)} <SaudiRiyalIcon className="w-3.5 h-3.5" /></span>
                               </td>
 
                               <td className="py-4 px-4">
