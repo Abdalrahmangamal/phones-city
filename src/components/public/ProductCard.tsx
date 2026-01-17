@@ -319,7 +319,7 @@ export default function ProductCard({ product, imagecard, containerstyle, quanti
                 }
               }
           }
-          className={`w-[40px] h-[40px] flex items-center justify-center rounded-[8px] transition-all duration-200 ${isOutOfStock
+          className={`w-[20px] h-[20px] md:w-[40px] md:h-[40px] flex items-center justify-center rounded-[8px] transition-all duration-200 ${isOutOfStock
             ? "bg-gray-300 cursor-not-allowed opacity-60"
             : isInCart
               ? "bg-[#211C4D] shadow-[0px_4px_8px_0px_#211C4D4d] hover:shadow-[0px_6px_12px_0px_#211C4D66] cursor-pointer"
@@ -327,11 +327,11 @@ export default function ProductCard({ product, imagecard, containerstyle, quanti
             }`}
         >
           {isInCart ? (
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+            <svg width="18" height="18" className="w-[12px] md:w-[20px]" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
               <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zm10 0c-1.1 0-1.99.9-1.99 2S15.9 22 17 22s2-.9 2-2-.9-2-2-2zM7.16 14l-.94-2h11.53c.75 0 1.41-.41 1.75-1.03l3.58-6.49A.996.996 0 0018.76 3H5.21l-.94-2H1v2h2l3.6 7.59-1.35 2.44C5.09 13.37 5 13.68 5 14a2 2 0 002 2h12v-2H7.42c-.14 0-.25-.11-.26-.25L7.16 14z" />
             </svg>
           ) : (
-            <svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg width="16" height="17" className="w-[12px] md:w-[20px]" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
               <g clipPath="url(#clip0_2531_3183)">
                 <path
                   fillRule="evenodd"
