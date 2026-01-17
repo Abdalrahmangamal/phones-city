@@ -10,6 +10,7 @@ interface ResetPasswordProps {
   email: string;
   code: string;
   onClose: () => void;
+  onSuccess?: () => void;
 }
 
 export default function ResetPasswordModal({
@@ -17,17 +18,26 @@ export default function ResetPasswordModal({
   email,
   code,
   onClose,
+  onSuccess,
 }: ResetPasswordProps) {
   const [open, setOpen] = useState(false);
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
   const [showPass, setShowPass] = useState(false);
   const [showPassConfirm, setShowPassConfirm] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
   const { resetPassword, loading } = useAuthStore();
 
   useEffect(() => {
     setOpen(isopen);
+    if (!isopen) {
+      setPassword("");
+      setPasswordConfirm("");
+      setErrorMessage("");
+      setSuccessMessage("");
+    }
   }, [isopen]);
 
   const handleClose = () => {
@@ -41,8 +51,13 @@ export default function ResetPasswordModal({
     password === passwordConfirm;
 
   const handleSubmit = async () => {
-    if (!passwordsMatch) return;
+    if (!passwordsMatch) {
+      setErrorMessage("كلمتا المرور غير متطابقتين أو أقل من 6 أحرف");
+      return;
+    }
 
+    setErrorMessage("");
+    
     const payload = {
       email,
       code: typeof code === "string" ? code.trim() : code,
@@ -55,11 +70,26 @@ export default function ResetPasswordModal({
     try {
       const res = await resetPassword(payload);
       console.log("ResetPasswordModal: reset response ->", res);
+      
       if (res?.status === true) {
-        handleClose();
+        setSuccessMessage("تم تغيير كلمة المرور بنجاح!");
+        
+        if (onSuccess) {
+          setTimeout(() => {
+            onSuccess();
+            handleClose();
+          }, 1500);
+        } else {
+          setTimeout(() => {
+            handleClose();
+          }, 1500);
+        }
+      } else {
+        setErrorMessage(res?.message || "فشل إعادة تعيين كلمة المرور. حاول مرة أخرى.");
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error("ResetPasswordModal: reset error ->", err);
+      setErrorMessage("حدث خطأ أثناء إعادة تعيين كلمة المرور. حاول مرة أخرى.");
     }
   };
 
@@ -74,13 +104,13 @@ export default function ResetPasswordModal({
           sx: {
             width: "600px",
             maxWidth: "90%",
-            height: "420px",
+            height: "480px",
             borderRadius: "16px",
           },
         }}
       >
-        <div className="w-full h-full flex items-center flex-col justify-around">
-          <DialogTitle>
+        <div className="w-full h-full flex items-center flex-col justify-around p-6">
+          <DialogTitle className="w-full">
             <p className="text-[#211C4D] text-center font-[600] text-[32px]">
               إعادة تعيين كلمة المرور
             </p>
@@ -89,62 +119,81 @@ export default function ResetPasswordModal({
             </p>
           </DialogTitle>
 
-          <div dir="ltr" className="w-full px-15 space-y-4">
-            <div>
-              <label className="block mb-2 text-[18px] font-[500] text-[#211C4DB2]">
-                كلمة المرور الجديدة
-              </label>
-              <div className="relative">
-                <input
-                  type={showPass ? "text" : "password"}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="********"
-                  className="w-full p-3 border rounded-lg h-[50px] outline-none focus:ring-2 focus:ring-[#0B60B0]"
-                />
-                <span
-                  onClick={() => setShowPass(!showPass)}
-                  className="absolute left-3 top-3 cursor-pointer text-gray-500"
-                >
-                  {showPass ? <EyeOff size={20} /> : <Eye size={20} />}
-                </span>
-              </div>
+          {successMessage ? (
+            <div className="text-center py-10">
+              <div className="text-6xl text-green-500 mb-4">✓</div>
+              <p className="text-xl font-medium text-green-700">
+                {successMessage}
+              </p>
+              <p className="text-gray-600 mt-2">جاري إعادة توجيهك...</p>
             </div>
+          ) : (
+            <>
+              <div dir="ltr" className="w-full space-y-4">
+                <div>
+                  <label className="block mb-2 text-[18px] font-[500] text-[#211C4DB2]">
+                    كلمة المرور الجديدة
+                  </label>
+                  <div className="relative">
+                    <input
+                      type={showPass ? "text" : "password"}
+                      value={password}
+                      onChange={(e) => {
+                        setPassword(e.target.value);
+                        setErrorMessage("");
+                      }}
+                      placeholder="********"
+                      className="w-full p-3 border rounded-lg h-[50px] outline-none focus:ring-2 focus:ring-[#0B60B0]"
+                    />
+                    <span
+                      onClick={() => setShowPass(!showPass)}
+                      className="absolute left-3 top-3 cursor-pointer text-gray-500"
+                    >
+                      {showPass ? <EyeOff size={20} /> : <Eye size={20} />}
+                    </span>
+                  </div>
+                </div>
 
-            <div>
-              <label className="block mb-2 text-[18px] font-[500] text-[#211C4DB2]">
-                تأكيد كلمة المرور
-              </label>
-              <div className="relative">
-                <input
-                  type={showPassConfirm ? "text" : "password"}
-                  value={passwordConfirm}
-                  onChange={(e) => setPasswordConfirm(e.target.value)}
-                  placeholder="********"
-                  className="w-full p-3 border rounded-lg h-[50px] outline-none focus:ring-2 focus:ring-[#0B60B0]"
-                />
-                <span
-                  onClick={() => setShowPassConfirm(!showPassConfirm)}
-                  className="absolute left-3 top-3 cursor-pointer text-gray-500"
-                >
-                  {showPassConfirm ? <EyeOff size={20} /> : <Eye size={20} />}
-                </span>
+                <div>
+                  <label className="block mb-2 text-[18px] font-[500] text-[#211C4DB2]">
+                    تأكيد كلمة المرور
+                  </label>
+                  <div className="relative">
+                    <input
+                      type={showPassConfirm ? "text" : "password"}
+                      value={passwordConfirm}
+                      onChange={(e) => {
+                        setPasswordConfirm(e.target.value);
+                        setErrorMessage("");
+                      }}
+                      placeholder="********"
+                      className="w-full p-3 border rounded-lg h-[50px] outline-none focus:ring-2 focus:ring-[#0B60B0]"
+                    />
+                    <span
+                      onClick={() => setShowPassConfirm(!showPassConfirm)}
+                      className="absolute left-3 top-3 cursor-pointer text-gray-500"
+                    >
+                      {showPassConfirm ? <EyeOff size={20} /> : <Eye size={20} />}
+                    </span>
+                  </div>
+                </div>
+
+                {errorMessage && (
+                  <div className="w-full bg-red-50 border border-red-200 rounded p-3 mt-2">
+                    <p className="text-red-600 text-center text-sm">{errorMessage}</p>
+                  </div>
+                )}
               </div>
-              {!passwordsMatch && passwordConfirm.length > 0 && (
-                <p className="text-red-500 text-sm mt-1">
-                  كلمتا المرور غير متطابقتين أو أقل من 6 أحرف
-                </p>
-              )}
-            </div>
-          </div>
 
-          <button
-            onClick={handleSubmit}
-            disabled={!passwordsMatch}
-            className="bg-[#2AA0DC] w-[380px] h-[52px] my-3 rounded-[32px] text-[20px] text-white disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            تأكيد كلمة المرور
-          </button>
+              <button
+                onClick={handleSubmit}
+                disabled={!passwordsMatch || loading}
+                className="bg-[#2AA0DC] w-full max-w-[380px] h-[52px] my-3 rounded-[32px] text-[20px] text-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#1e8ec9] transition-colors"
+              >
+                {loading ? "جاري التغيير..." : "تأكيد كلمة المرور"}
+              </button>
+            </>
+          )}
         </div>
       </Dialog>
     </>
