@@ -12,6 +12,15 @@ import mispay_installment from "@/assets/images/mispay_installment 1.png";
 import amwal from "@/assets/images/amwal.png";
 import { SaudiRiyalIcon } from "@/components/common/SaudiRiyalIcon";
 
+const paymentLogos: Record<number, any> = {
+  1: tamara,
+  2: tabby,
+  3: madfu,
+  4: mispay_installment,
+  5: emkann,
+  6: amwal,
+};
+
 interface ShipmentInfo {
   address: string;
 }
@@ -35,128 +44,95 @@ const CheckoutSummarySection: React.FC<CheckoutSummarySectionProps> = ({
   usePoints,
   onUsePointsChange,
 }) => {
-  const { items, total, selectedPaymentId, finalTotal: cartFinalTotal } = useCartStore();
   const { t, i18n } = useTranslation();
-
-  const [pointsData, setPointsData] = useState<PointsSummary | null>(null);
-  const [loadingPoints, setLoadingPoints] = useState(true);
-  const [errorPoints, setErrorPoints] = useState<string | null>(null);
-
-  // الحصول على العنوان المحدد من الـ store
-  const { getSelectedAddress, deliveryMethod } = useAddressStore();
-  const selectedAddress = getSelectedAddress();
-
   const isRTL = i18n.language === "ar";
 
-  const paymentLogos: Record<number, any> = {
-    1: tamara,
-    2: tabby,
-    3: madfu,
-    4: mispay_installment,
-    5: emkann,
-    6: amwal,
-  };
+  const { items, selectedPaymentId, freeShippingThreshold, updateFinalTotal } = useCartStore();
+  const { addresses, selectedAddressId, deliveryMethod } = useAddressStore();
+  const selectedAddress = addresses.find((addr) => addr.id === selectedAddressId);
 
-  console.log('CheckoutSummarySection - Received props:', {
-    usePoints,
-    onUsePointsChange: typeof onUsePointsChange
-  });
-
-  // استخراج بوابات الدفع والبوابة المختارة
-  const paymentMethods = (items[0]?.product as any)?.options?.[0]?.payment_methods || [];
-  const selectedPayment = paymentMethods.find((p: any) => p.id === selectedPaymentId);
-
-  // جلب نقاط المستخدم
+  const [pointsData, setPointsData] = useState<PointsSummary | null>(null);
+  const [loadingPoints, setLoadingPoints] = useState(false);
+  const [errorPoints, setErrorPoints] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchPoints = async () => {
+      setLoadingPoints(true);
       try {
-        setLoadingPoints(true);
-        setErrorPoints(null);
+        const response = await axiosClient.get("/api/v1/points");
+        if (response.data.status && Array.isArray(response.data.data)) {
+          // Sum available points
+          const availablePoints = response.data.data
+            .filter((p: any) => p.status === 'available')
+            .reduce((sum: number, p: any) => sum + p.points_count, 0);
 
-        const response = await axiosClient.get("/api/v1/points/summary", {
-          // إضافة headers عشان نتجنب caching لو فيه
-          headers: {
-            'Cache-Control': 'no-cache',
-            'Pragma': 'no-cache',
-          },
-        });
-
-        if (response.data.status && response.data.data?.summary) {
-          setPointsData(response.data.data.summary);
-        } else {
-          setErrorPoints(t("checkoutSummary.pointsError"));
+          setPointsData({
+            total_points: availablePoints,
+            available_points: availablePoints,
+            available_points_value: availablePoints.toString(),
+            point_value: "1",
+            used_points: 0,
+            expired_points: 0,
+            expiring_soon_points: 0
+          });
         }
-      } catch (err: any) {
-        console.error("Error fetching points:", err);
-        setErrorPoints(t("checkoutSummary.pointsError") || "فشل تحميل النقاط");
+      } catch (error) {
+        console.error("Failed to fetch points", error);
       } finally {
         setLoadingPoints(false);
       }
     };
-
     fetchPoints();
   }, []);
 
-  // تحديد معلومات الشحن
-  const getShipmentInfo = (): ShipmentInfo => {
-    if (deliveryMethod === "pickup") {
-      return {
-        address: isRTL
-          ? "استلام من المعرض - الموقع الرئيسي"
-          : "Pickup from Showroom - Main Location"
-      };
-    }
+  // 1. Calculate Subtotal (Exclusive of Tax)
+  const subtotal = items.reduce((acc, item) => acc + (item.subtotal || 0), 0);
 
-    if (selectedAddress && deliveryMethod === "delivery") {
-      const cityName = isRTL ? selectedAddress.city.name_ar : selectedAddress.city.name_en;
-      return {
-        address: `${selectedAddress.street_address}, ${cityName}, ${selectedAddress.country}`
-      };
-    }
+  // 2. Calculate Tax (Assuming 15% VAT on the subtotal)
+  const taxRate = 0.15;
+  const tax = subtotal * taxRate;
 
-    return {
-      address: isRTL
-        ? "ابو بكر الصديق، شبرا، الطائف 26522،"
-        : "Abu Bakr Al-Siddiq, Shubra, Taif 26522"
-    };
+  // 3. Points Discount
+  const pointsDiscount = usePoints && pointsData ? parseFloat(pointsData.available_points_value) : 0;
+
+  // 4. Selected Payment & Fees
+  const selectedPayment = (items[0]?.product as any)?.options?.[0]?.payment_methods?.find((p: any) => p.id === selectedPaymentId);
+
+  let paymentProcessingFee = 0;
+  if (selectedPayment && selectedPayment.processing_fee_amount) {
+    paymentProcessingFee = parseFloat(selectedPayment.processing_fee_amount);
+  }
+
+  const shipmentInfo: ShipmentInfo = {
+    address: selectedAddress ? `${selectedAddress.city.name} - ${selectedAddress.street_address}` : "",
   };
 
-  const shipmentInfo = getShipmentInfo();
-  const subtotal = total || 0;
-
-  // حساب قيمة النقاط المتاحة كرقم
-  const availableValue = pointsData
-    ? parseFloat(pointsData.available_points_value.replace(/,/g, ""))
-    : 0;
-
-  const pointsDiscount = usePoints ? Math.min(subtotal, availableValue) : 0;
-
-  // حساب الضريبة: نسبة 15% من السعر الفرعي بعد خصم النقاط (VAT)
-  const taxRate = 0.15; // 15% ضريبة
-  const taxableAmount = subtotal - pointsDiscount;
-  const tax = Math.round(taxableAmount * taxRate * 100) / 100;
-
-  // حساب رسوم الشحن من العنوان المختار
+  // 5. Calculate Shipping Cost
   let shippingCost = 0;
   if (deliveryMethod === "delivery" && selectedAddress) {
-    // الحصول على رسوم الشحن من مدينة العنوان المختار
     const shippingFeeStr = selectedAddress.city.shipping_fee;
-    shippingCost = typeof shippingFeeStr === "string"
+    let baseShippingCost = typeof shippingFeeStr === "string"
       ? parseFloat(shippingFeeStr.replace(/,/g, ""))
       : typeof shippingFeeStr === "number"
         ? shippingFeeStr
         : 0;
+
+    if (freeShippingThreshold > 0 && subtotal >= freeShippingThreshold) {
+      shippingCost = 0;
+    } else {
+      shippingCost = baseShippingCost;
+    }
   } else if (deliveryMethod === "pickup") {
-    // لا توجد رسوم شحن للاستلام من المعرض
     shippingCost = 0;
   }
-  console.log("shippingggg", selectedAddress)
-  // الإجمالي النهائي: يعتمد على cartFinalTotal (يشمل رسوم الدفع) ثم يخصم النقاط ويضيف الشحن والضريبة
-  const displayFinalTotal = cartFinalTotal - pointsDiscount + shippingCost + tax;
 
-  // حساب رسوم بوابة الدفع (لعرضها بشكل منفصل)
-  const paymentProcessingFee = cartFinalTotal - subtotal;
+  // 6. Calculate Final Total
+  const displayFinalTotal = subtotal + tax + shippingCost + paymentProcessingFee - pointsDiscount;
+
+  // Sync Final Total with Store to prevent issues on Complete Order
+  useEffect(() => {
+    updateFinalTotal(displayFinalTotal, selectedPaymentId);
+  }, [displayFinalTotal, selectedPaymentId, updateFinalTotal]);
 
   // عرض قسم العنوان
   const renderAddressSection = () => {
@@ -462,5 +438,4 @@ const CheckoutSummarySection: React.FC<CheckoutSummarySectionProps> = ({
     </div>
   );
 };
-
 export default CheckoutSummarySection;

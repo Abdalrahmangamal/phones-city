@@ -1,9 +1,9 @@
 // Ordersummary.tsx
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useCartStore } from "@/store/cartStore/cartStore";
-import { Input } from "@/components/ui/input";
+
 import { useTranslation } from "react-i18next";
 
 import tamara from "@/assets/images/tamara.png";
@@ -53,7 +53,7 @@ interface OrderSummaryProps {
 export default function OrderSummary({ onTotalUpdate }: OrderSummaryProps) {
   const {
     items,
-    total,
+
     loading,
     fetchCart,
     selectedPaymentId, // Directly use selectedPaymentId from store
@@ -69,7 +69,8 @@ export default function OrderSummary({ onTotalUpdate }: OrderSummaryProps) {
     if (items.length === 0 && !loading) fetchCart();
   }, [items.length, loading, fetchCart]);
 
-  const subtotal = total || 0;
+  // Calculate subtotal from item subtotals (price before tax)
+  const subtotal = items.reduce((acc, item) => acc + (item.subtotal || 0), 0);
 
   let calculatedFinalTotal = subtotal; // تم إزالة shipping
   let processingFee = 0;

@@ -387,7 +387,7 @@ export default function CheckoutPage() {
                         {activeStep > index ? "✓" : <img src={step.number} alt="" className="w-6 h-6" />}
                       </div>
                       <span
-                        className={`mt-2 text-sm font-semibold ${activeStep === index ? "text-orange-400" : "text-[#939393]"
+                        className={`mt-2 text-sm font-semibold text-center ${activeStep === index ? "text-orange-400" : "text-[#939393]"
                           }`}
                       >
                         {step.title}

@@ -27,10 +27,10 @@ interface CartCategory {
 }
 
 interface CartItem {
-  id: number;              
+  id: number;
   product: CartProduct;
   category: CartCategory;
-  quantity: number;       
+  quantity: number;
   price: string;
   subtotal: number;
 }
@@ -42,6 +42,7 @@ interface CartState {
   items: CartItem[];
   finalTotal: number;
   selectedPaymentId: number | null;
+  freeShippingThreshold: number;
   fetchCart: () => Promise<void>;
   addToCart: (id: number, quantity: number, isOption: boolean) => Promise<void>;
   deleteToCart: (productId: number) => Promise<void>;
@@ -61,6 +62,8 @@ export const useCartStore = create<CartState>((set, get) => ({
   finalTotal: 0,
   selectedPaymentId: null,
 
+  freeShippingThreshold: 0,
+
   // ----------------- GET CART ------------------
   fetchCart: async () => {
     try {
@@ -75,11 +78,21 @@ export const useCartStore = create<CartState>((set, get) => ({
       const newItems = res?.data?.data?.items || [];
       const newTotal = res?.data?.data?.total || 0;
 
+      // استخراج حد الشحن المجاني من الملخص
+      const summary = res?.data?.data?.summary;
+      let newFreeShippingThreshold = 0;
+
+      if (summary && summary.free_shipping_threshold) {
+        const thresholdStr = String(summary.free_shipping_threshold).replace(/,/g, "");
+        newFreeShippingThreshold = parseFloat(thresholdStr) || 0;
+      }
+
       const { items, total } = get();
 
       if (
         JSON.stringify(items) === JSON.stringify(newItems) &&
-        total === newTotal
+        total === newTotal &&
+        get().freeShippingThreshold === newFreeShippingThreshold
       ) {
         return;
       }
@@ -87,6 +100,7 @@ export const useCartStore = create<CartState>((set, get) => ({
       set({
         items: newItems,
         total: newTotal,
+        freeShippingThreshold: newFreeShippingThreshold,
         loading: false,
       });
     } catch (err) {
@@ -229,7 +243,7 @@ export const useCartStore = create<CartState>((set, get) => ({
     try {
       set({ loading: true, error: null });
       const token = localStorage.getItem("token");
-      
+
       if (!token) {
         set({ error: "No authentication token found", loading: false });
         return;
@@ -242,16 +256,16 @@ export const useCartStore = create<CartState>((set, get) => ({
           Accept: "application/json",
         },
       });
-      
+
       // تحديث الحالة المحلية مباشرة
-      set({ 
-        items: [], 
-        total: 0, 
-        finalTotal: 0, 
+      set({
+        items: [],
+        total: 0,
+        finalTotal: 0,
         selectedPaymentId: null,
-        loading: false 
+        loading: false
       });
-      
+
     } catch (error: any) {
       console.error("Clear cart error:", error?.response?.data || error.message);
       set({
