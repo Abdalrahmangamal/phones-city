@@ -39,10 +39,14 @@ interface PointsSummary {
 interface CheckoutSummarySectionProps {
   usePoints: boolean;
   onUsePointsChange: (value: boolean) => void;
+  pointsDiscountAmount: number;
+  onPointsDiscountChange: (value: number) => void;
 }
 const CheckoutSummarySection: React.FC<CheckoutSummarySectionProps> = ({
   usePoints,
   onUsePointsChange,
+  pointsDiscountAmount,
+  onPointsDiscountChange,
 }) => {
   const { t, i18n } = useTranslation();
   const isRTL = i18n.language === "ar";
@@ -92,10 +96,7 @@ const CheckoutSummarySection: React.FC<CheckoutSummarySectionProps> = ({
   const taxRate = 0.15;
   const tax = subtotal * taxRate;
 
-  // 3. Points Discount
-  const pointsDiscount = usePoints && pointsData ? parseFloat(pointsData.available_points_value) : 0;
-
-  // 4. Selected Payment & Fees
+  // 3. Selected Payment & Fees
   const selectedPayment = (items[0]?.product as any)?.options?.[0]?.payment_methods?.find((p: any) => p.id === selectedPaymentId);
 
   let paymentProcessingFee = 0;
@@ -107,7 +108,7 @@ const CheckoutSummarySection: React.FC<CheckoutSummarySectionProps> = ({
     address: selectedAddress ? `${selectedAddress.city.name} - ${selectedAddress.street_address}` : "",
   };
 
-  // 5. Calculate Shipping Cost
+  // 4. Calculate Shipping Cost
   let shippingCost = 0;
   if (deliveryMethod === "delivery" && selectedAddress) {
     const shippingFeeStr = selectedAddress.city.shipping_fee;
@@ -126,8 +127,32 @@ const CheckoutSummarySection: React.FC<CheckoutSummarySectionProps> = ({
     shippingCost = 0;
   }
 
-  // 6. Calculate Final Total
-  const displayFinalTotal = subtotal + tax + shippingCost + paymentProcessingFee - pointsDiscount;
+  // 5. Calculate max possible discount (cap at subtotal only - not including tax and shipping)
+  // Note: subtotal is the sum of item.subtotal (price before tax)
+  // The displayed subtotal in UI might include tax, so we use the raw subtotal for max discount
+  const maxDiscountAmount = subtotal; // الخصم على سعر المنتجات فقط
+  const maxPointsValue = pointsData ? parseFloat(pointsData.available_points_value) : 0;
+
+  // Debug: Log values to understand the calculation
+  console.log('🔍 Points Discount Debug:', {
+    subtotal,
+    maxDiscountAmount,
+    maxPointsValue,
+    pointsDiscountAmount,
+    usePoints,
+    items: items.map(i => ({ subtotal: i.subtotal, quantity: i.quantity }))
+  });
+
+  // Points Discount - use custom amount if set, otherwise use max available
+  // But never exceed the subtotal (max 100% discount on products only)
+  let pointsDiscount = 0;
+  if (usePoints && pointsData) {
+    const requestedDiscount = pointsDiscountAmount > 0 ? pointsDiscountAmount : maxPointsValue;
+    pointsDiscount = Math.min(requestedDiscount, maxPointsValue, maxDiscountAmount);
+  }
+
+  // 6. Calculate Final Total (guaranteed to be >= 0)
+  const displayFinalTotal = Math.max(0, subtotal + tax + shippingCost + paymentProcessingFee - pointsDiscount);
 
   // Sync Final Total with Store to prevent issues on Complete Order
   useEffect(() => {
@@ -304,14 +329,19 @@ const CheckoutSummarySection: React.FC<CheckoutSummarySectionProps> = ({
               <p className="font-bold flex-1" style={{
                 fontFamily: "Roboto", fontWeight: 700, fontSize: "16px", lineHeight: "150%", color: "#424242", textAlign: isRTL ? "right" : "left",
               }}>
-                {t("checkoutSummary.useAllPoints")}
+                {t("checkoutSummary.usePoints")}
               </p>
 
               <label className="relative inline-flex items-center cursor-pointer">
                 <input
                   type="checkbox"
                   checked={usePoints}
-                  onChange={(e) => onUsePointsChange(e.target.checked)}
+                  onChange={(e) => {
+                    onUsePointsChange(e.target.checked);
+                    if (!e.target.checked) {
+                      onPointsDiscountChange(0);
+                    }
+                  }}
                   className="sr-only peer"
                 />
                 <div
@@ -331,12 +361,57 @@ const CheckoutSummarySection: React.FC<CheckoutSummarySectionProps> = ({
             ) : errorPoints ? (
               <p className="text-sm text-red-500">{errorPoints}</p>
             ) : pointsData ? (
-              <p className="text-sm text-gray-600 mt-2" style={{ textAlign: isRTL ? "right" : "left" }}>
-                {t("checkoutSummary.availablePoints", {
-                  points: pointsData.available_points.toLocaleString(),
-                  value: pointsData.available_points_value,
-                })}
-              </p>
+              <div>
+                <p className="text-sm text-gray-600 mt-2" style={{ textAlign: isRTL ? "right" : "left" }}>
+                  {t("checkoutSummary.availablePoints", {
+                    points: pointsData.available_points.toLocaleString(),
+                    value: pointsData.available_points_value,
+                  })}
+                </p>
+
+                {/* Custom Points Input */}
+                {usePoints && (
+                  <div className="mt-3 p-3 bg-blue-50 rounded-lg border border-blue-200">
+                    <label className="block text-sm font-medium text-gray-700 mb-2" style={{ textAlign: isRTL ? "right" : "left" }}>
+                      {isRTL ? 'حدد عدد النقاط للاستخدام:' : 'Specify points to use:'}
+                    </label>
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="number"
+                        min="0"
+                        max={Math.min(maxPointsValue, maxDiscountAmount)}
+                        value={pointsDiscountAmount || ''}
+                        onChange={(e) => {
+                          const val = parseFloat(e.target.value) || 0;
+                          const maxAllowed = Math.min(maxPointsValue, maxDiscountAmount);
+                          onPointsDiscountChange(Math.min(val, maxAllowed));
+                        }}
+                        placeholder={isRTL ? 'ادخل العدد' : 'Enter amount'}
+                        className="flex-1 h-10 px-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-center"
+                        style={{ direction: 'ltr' }}
+                      />
+                      <button
+                        onClick={() => onPointsDiscountChange(Math.min(maxPointsValue, maxDiscountAmount))}
+                        className="px-3 py-2 bg-blue-500 text-white text-sm rounded-lg hover:bg-blue-600 transition whitespace-nowrap"
+                      >
+                        {isRTL ? 'استخدم الكل' : 'Use All'}
+                      </button>
+                    </div>
+                    <p className="text-xs text-gray-500 mt-2" style={{ textAlign: isRTL ? "right" : "left" }}>
+                      {isRTL
+                        ? `الحد الأقصى للخصم: ${Math.min(maxPointsValue, maxDiscountAmount).toLocaleString()} ريال`
+                        : `Max discount: ${Math.min(maxPointsValue, maxDiscountAmount).toLocaleString()} SAR`}
+                    </p>
+                    {pointsDiscount > 0 && (
+                      <p className="text-sm font-medium text-green-600 mt-2" style={{ textAlign: isRTL ? "right" : "left" }}>
+                        {isRTL
+                          ? `سيتم خصم: ${pointsDiscount.toLocaleString()} ريال`
+                          : `Discount applied: ${pointsDiscount.toLocaleString()} SAR`}
+                      </p>
+                    )}
+                  </div>
+                )}
+              </div>
             ) : null}
           </div>
 
@@ -356,8 +431,8 @@ const CheckoutSummarySection: React.FC<CheckoutSummarySectionProps> = ({
 
           {/* تفاصيل إضافية */}
           <div className="mb-6 space-y-2">
-            {/* رسوم بوابة الدفع */}
-            {paymentProcessingFee > 0 && (
+            {/* رسوم بوابة الدفع - محذوفة من العرض ولكن محسوبة في المجموع النهائي */}
+            {/* {paymentProcessingFee > 0 && (
               <div className="flex justify-between items-center">
                 <p className="font-normal" style={{
                   fontFamily: "Roboto", fontWeight: 400, fontSize: "16px", lineHeight: "32px", color: "#211C4DB2", textAlign: isRTL ? "right" : "left",
@@ -370,7 +445,7 @@ const CheckoutSummarySection: React.FC<CheckoutSummarySectionProps> = ({
                   +{paymentProcessingFee.toLocaleString(isRTL ? "ar-SA" : "en-US")} <SaudiRiyalIcon className="w-3.5 h-3.5" />
                 </p>
               </div>
-            )}
+            )} */}
 
             {/* خصم النقاط */}
             {usePoints && pointsDiscount > 0 && (

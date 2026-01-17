@@ -48,9 +48,19 @@ const paymentMarketingTexts: Record<number, (amount: string, isRTL: boolean) => 
 
 interface OrderSummaryProps {
   onTotalUpdate?: (total: number) => void;
+  usePoints?: boolean;
+  onUsePointsChange?: (value: boolean) => void;
+  pointsDiscountAmount?: number;
+  onPointsDiscountChange?: (value: number) => void;
 }
 
-export default function OrderSummary({ onTotalUpdate }: OrderSummaryProps) {
+export default function OrderSummary({
+  onTotalUpdate,
+  usePoints,
+  onUsePointsChange,
+  pointsDiscountAmount,
+  onPointsDiscountChange
+}: OrderSummaryProps) {
   const {
     items,
 
@@ -180,12 +190,13 @@ export default function OrderSummary({ onTotalUpdate }: OrderSummaryProps) {
           <span className="font-semibold flex items-center gap-1">{subtotal.toLocaleString(isRTL ? "ar-SA" : "en-US")} <SaudiRiyalIcon className="w-3.5 h-3.5" /></span>
         </div>
 
-        {processingFee > 0 && (
+        {/* رسوم بوابة الدفع - محذوفة من العرض ولكن محسوبة في المجموع النهائي */}
+        {/* {processingFee > 0 && (
           <div className={`flex justify-between text-gray-700 ${isRTL ? 'flex-row-reverse' : 'flex-row'}`}>
             <span>{t("PaymentFees", { paymentName: selectedPaymentName })}</span>
             <span className="flex items-center gap-1">+{processingFee.toLocaleString(isRTL ? "ar-SA" : "en-US")} <SaudiRiyalIcon className="w-3.5 h-3.5" /></span>
           </div>
-        )}
+        )} */}
 
         {/* <div className={`border-t pt-3 flex justify-between text-lg font-bold ${isRTL ? 'flex-row-reverse' : 'flex-row'}`}>
           <span>{t("FinalTotal")}</span>

@@ -35,6 +35,7 @@ export default function CheckoutPage() {
   const isRTL = i18n.language === "ar";
   const currentLang = i18n.language;
   const [usePoints, setUsePoints] = useState(false);
+  const [pointsDiscountAmount, setPointsDiscountAmount] = useState<number>(0);
   const {
     selectedAddressId,
     getSelectedAddress,
@@ -58,6 +59,8 @@ export default function CheckoutPage() {
           total={total}
           usePoints={usePoints}
           onUsePointsChange={setUsePoints}
+          pointsDiscountAmount={pointsDiscountAmount}
+          onPointsDiscountChange={setPointsDiscountAmount}
         />
       ),
     },
@@ -73,6 +76,8 @@ export default function CheckoutPage() {
         <Checkoutpayment
           usePoints={usePoints}
           onUsePointsChange={setUsePoints}
+          pointsDiscountAmount={pointsDiscountAmount}
+          onPointsDiscountChange={setPointsDiscountAmount}
         />
       ),
     },
@@ -192,7 +197,8 @@ export default function CheckoutPage() {
         note: "",
         discount_code: localStorage.getItem('discount_code') || null,
         delivery_method: currentDeliveryMethod === "pickup" ? "store_pickup" : "home_delivery",
-        use_points: usePoints,
+        use_point: usePoints,
+        points_discount: usePoints ? pointsDiscountAmount : 0,
       };
 
       console.log('Sending order data:', orderData); // Debugging
