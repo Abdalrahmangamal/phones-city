@@ -124,26 +124,28 @@ const Notifications = () => {
 
             {/* Action Buttons */}
             {notifications.length > 0 && (
-              <div className="flex gap-2">
-                <button
-                  onClick={handleMarkAllAsRead}
-                  disabled={isLoading || notifications.filter(n => !n.read_at).length === 0}
-                  className="px-4 py-2 text-sm bg-green-100 text-green-700 border border-green-300 rounded-lg hover:bg-green-200 disabled:opacity-50 disabled:cursor-not-allowed transition flex items-center gap-2"
-                >
-                  <CheckCircle size={16} />
-                  {t("MarkAllAsRead")}
-                </button>
-                
-                <button
-                  onClick={handleClearAllNotifications}
-                  disabled={isLoading}
-                  className="px-4 py-2 text-sm bg-red-100 text-red-700 border border-red-300 rounded-lg hover:bg-red-200 disabled:opacity-50 disabled:cursor-not-allowed transition flex items-center gap-2"
-                >
-                  <XCircle size={16} />
-                  {t("ClearAll")}
-                </button>
-              </div>
-            )}
+  <div className="flex gap-1 sm:gap-2">
+    <button
+      onClick={handleMarkAllAsRead}
+      disabled={isLoading || notifications.filter(n => !n.read_at).length === 0}
+      className="p-2 sm:px-4 sm:py-2 text-sm bg-green-100 text-green-700 border border-green-300 rounded-lg hover:bg-green-200 disabled:opacity-50 disabled:cursor-not-allowed transition flex items-center gap-2"
+      title={t("MarkAllAsRead")}
+    >
+      <CheckCircle size={16} />
+      <span className="hidden sm:inline">{t("MarkAllAsRead")}</span>
+    </button>
+    
+    <button
+      onClick={handleClearAllNotifications}
+      disabled={isLoading}
+      className="p-2 sm:px-4 sm:py-2 text-sm bg-red-100 text-red-700 border border-red-300 rounded-lg hover:bg-red-200 disabled:opacity-50 disabled:cursor-not-allowed transition flex items-center gap-2"
+      title={t("ClearAll")}
+    >
+      <XCircle size={16} />
+      <span className="hidden sm:inline">{t("ClearAll")}</span>
+    </button>
+  </div>
+)}
           </div>
 
           {/* Loading State */}

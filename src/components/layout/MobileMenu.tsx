@@ -48,6 +48,7 @@ export default function MobileMenu({
     { link: `/${lang}/Contact`, name: `${t("Contactus")}` },
     { link: `/${lang}/profile`, name: `${t("Profile")}` },
     { link: `/${lang}/favourite`, name: `${t("favourite")}` },
+    { link: `/${lang}/notifications`, name: `${t("Notifications")}` },
   ];
 
   // Map category icons based on category names

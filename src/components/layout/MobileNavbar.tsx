@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { ShoppingCart, Globe, Menu, Search } from "lucide-react";
+import { ShoppingCart, Globe, Menu, Search, Bell } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useLangSync } from "@/hooks/useLangSync";
 import { useTranslation } from "react-i18next";
@@ -10,9 +10,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Badge } from "@/components/ui/badge";
 
-// أضف استيراد store السلة
+// استيراد stores
 import { useCartStore } from "@/store/cartStore/cartStore";
+import { useNotifications } from "@/store/notifications/notificationStore";
 
 interface MobileNavbarProps {
   onMenuToggle: () => void;
@@ -32,11 +34,12 @@ export default function MobileNavbar({
   const [showLang, setShowLang] = useState(false);
   const token = localStorage.getItem("token");
 
-  // جلب بيانات السلة من الـ store
+  // جلب بيانات السلة
   const { items: cartItems } = useCartStore();
-  
-  // حساب العدد الحقيقي للمنتجات في السلة
   const cartQuantity = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+
+  // جلب بيانات الإشعارات
+  const { unreadCount } = useNotifications();
 
   const handleSearchClick = () => {
     console.log("Search button clicked");
@@ -47,6 +50,11 @@ export default function MobileNavbar({
     }
   };
 
+  // دالة للانتقال إلى صفحة الإشعارات
+  const handleNotificationClick = () => {
+    window.location.href = `/${lang}/notifications`;
+  };
+
   // 🔥 ضبط setShowLang عند فتح/إغلاق قائمة اللغة
   const handleLangTrigger = () => {
     setShowLang(!showLang);
@@ -55,9 +63,9 @@ export default function MobileNavbar({
   return (
     <div className="fixed top-0 left-0 right-0 bg-[#211C4DDE] backdrop-blur-md border-b border-[#FFFFFF20] z-50 h-[70px] px-4">
       <div className="flex items-center justify-between h-full">
-        {/* زر الأقسام - استخدم onSectionToggle مباشرة */}
+        {/* زر الأقسام */}
         <button
-          onClick={onSectionToggle}  
+          onClick={onSectionToggle}
           className="flex items-center gap-2 text-white"
         >
           <Menu className="w-6 h-6" />
@@ -117,7 +125,23 @@ export default function MobileNavbar({
             <Search className="w-5 h-5 text-[#E0E5EB]" />
           </button>
 
-          {/* سلة الشراء - محدث */}
+          {/* زر الإشعارات - جديد */}
+          <button
+            onClick={handleNotificationClick}
+            className="relative flex items-center justify-center w-10 h-10 rounded-full bg-[#333D4C] hover:bg-[#3a4657] transition-colors"
+            aria-label={t("Notifications")}
+          >
+            <Bell className="w-5 h-5 text-[#E0E5EB]" />
+            
+            {/* عداد الإشعارات غير المقروءة */}
+            {unreadCount > 0 && (
+              <span className="absolute -top-2 -right-2 min-w-[18px] h-[18px] px-1 rounded-full border-2 border-[#211C4D] bg-[#F3AC5D] flex items-center justify-center text-[10px] text-white font-bold">
+                {unreadCount > 99 ? "99+" : unreadCount}
+              </span>
+            )}
+          </button>
+
+          {/* سلة الشراء */}
           <Link
             to={`/${lang}/checkout`}
             className="relative flex items-center justify-center w-12 h-12 rounded-full bg-[#333D4C]"
