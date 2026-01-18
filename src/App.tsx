@@ -39,6 +39,7 @@ import ScrollToTop from "./components/ScrollToTop";
 import Blog from "./pages/Blog";
 import SingleBlog from "./pages/SingleBlog";
 import Offers from "./pages/products/Offers";
+import Notifications from "./pages/profile/nothification/Notifications"; // أضف هذا الاستيراد
 
 // Language Wrapper Component
 function LangWrapper() {
@@ -79,6 +80,7 @@ function LangWrapper() {
       <Route element={<Protectedroutse />}>
         <Route path="/profile" element={<Profile />} />
         <Route path="/wallet" element={<Wallet />} />
+        <Route path="/notifications" element={<Notifications />} /> {/* أضف هذا المسار المحمي */}
       </Route>
 
       <Route path="/myorder" element={<Myorder />} />
@@ -143,6 +145,7 @@ export default function App() {
           <Route path="/profile" element={<Navigate to={`/${lang}/profile`} replace />} />
           <Route path="/blog" element={<Navigate to={`/${lang}/blog`} replace />} />
           <Route path="/blog/:slug" element={<Navigate to={`/${lang}/blog/:slug`} replace />} />
+          <Route path="/notifications" element={<Navigate to={`/${lang}/notifications`} replace />} /> {/* أضف هذا السطر */}
 
           {/* جميع الروتات التي تدعم اللغة */}
           <Route path="/:lang/*" element={<LangWrapper />} />

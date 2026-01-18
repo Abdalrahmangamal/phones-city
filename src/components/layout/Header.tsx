@@ -1,7 +1,7 @@
 "use client";
 import * as React from "react";
 import logo from "../../assets/images/logo.png";
-import { ShoppingCart, UserRound, Heart, Globe, Search, Smartphone, Watch, Headphones, Laptop, Tablet, Speaker, Cable, Gamepad, Camera, Tv, Printer, HardDrive, Zap, Grid, Cpu, Plug, Router } from "lucide-react";
+import { ShoppingCart, UserRound, Heart, Globe, Search, Bell } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import "../../style.css";
@@ -23,8 +23,9 @@ import { Link, NavLink } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
-// استيراد store السلة الفعلي
+// استيراد stores
 import { useCartStore } from "@/store/cartStore/cartStore"; 
+import { useNotifications } from "@/store/notifications/notificationStore"; // أضف هذا الاستيراد
 
 const baseUrl = import.meta.env.VITE_BASE_URL;
 import MobileMenu from "./MobileMenu";
@@ -42,9 +43,10 @@ interface SuggestionItem {
 export default function Header() {
   const { categories, fetchCategories } = useCategoriesStore();
   const { lang } = useLangSync();
-
   const { t, i18n } = useTranslation();
+  const navigate = useNavigate();
 
+  // States
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
   const [query, setQuery] = useState("");
@@ -52,16 +54,29 @@ export default function Header() {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [suggestionsLoading, setSuggestionsLoading] = useState(false);
   const debounceRef = useRef<number | null>(null);
-  const navigate = useNavigate();
-  
-  //  أضف حالة openSections
   const [openSections, setOpenSections] = useState(false);
 
-  // جلب بيانات السلة من الـ store
-  const { items: cartItems, fetchCart } = useCartStore();
+  // استخدم الـ store للإشعارات بدلاً من useState
+  const { 
+    notifications, 
+    unreadCount, 
+    fetchNotifications 
+  } = useNotifications();
 
-  // حساب إجمالي الكمية (عدد المنتجات في السلة)
+  // استخدم cart store
+  const { items: cartItems, fetchCart } = useCartStore();
   const cartQuantity = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+
+  // تعريف token
+  const token = localStorage.getItem("token");
+  const headerKey = lang;
+
+  // تحديث useEffect للإشعارات لاستخدام الـ store
+  useEffect(() => {
+    if (token) {
+      fetchNotifications();
+    }
+  }, [token, fetchNotifications]);
 
   // جلب الأقسام عند تحميل المكون وعند تغيير اللغة
   useEffect(() => {
@@ -79,9 +94,6 @@ export default function Header() {
     { link: `/${lang}/servces`, name: `${t("Servces")}` },
     { link: `/${lang}/Contact`, name: `${t("Contactus")}` },
   ];
-
-  const token = localStorage.getItem("token");
-  const headerKey = lang;
 
   // Mobile search handler
   const handleMobileSearch = () => {
@@ -159,7 +171,7 @@ export default function Header() {
     }, 300);
   };
 
-  //  دالة للتعامل مع ضغط زر الأقسام في شريط التنقل المتنقل
+  // دالة للتعامل مع ضغط زر الأقسام في شريط التنقل المتنقل
   const handleMobileSectionToggle = () => {
     setIsMenuOpen(true);
     setOpenSections(true); 
@@ -169,6 +181,15 @@ export default function Header() {
   const handleCloseMenu = () => {
     setIsMenuOpen(false);
     setOpenSections(false); 
+  };
+
+  // معالجة تحديث الإشعارات عند النقر
+  const handleNotificationClick = async () => {
+    // إذا كنت تريد تحديث الإشعارات عند النقر على الأيقونة
+    if (token) {
+      await fetchNotifications();
+    }
+    navigate(`/${lang}/notifications`);
   };
 
   return (
@@ -304,6 +325,26 @@ export default function Header() {
                   {t("Login")}
                 </Link>
               )}
+
+              {/* زر الإشعارات */}
+              <button 
+                onClick={handleNotificationClick}
+                className="relative"
+                aria-label="الإشعارات"
+              >
+                <IconButton aria-label="الإشعارات" className="relative">
+                  <Bell className="h-5 w-5 opacity-90" />
+                  {unreadCount > 0 && (
+                    <Badge
+                      variant="destructive"
+                      className="absolute -top-2 -right-2 h-6 w-6 rounded-full p-0 flex items-center justify-center text-xs font-bold bg-red-500"
+                    >
+                      {unreadCount}
+                    </Badge>
+                  )}
+                </IconButton>
+              </button>
+
               <Link to={`/${lang}/favourite`}>
                 <IconButton aria-label="المفضلة">
                   <Heart className="h-5 w-5 opacity-90" />
