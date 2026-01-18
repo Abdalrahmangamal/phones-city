@@ -496,9 +496,8 @@
     "failedToResetPassword": "فشل إعادة تعيين كلمة المرور. حاول مرة أخرى.",
     "errorResetting": "حدث خطأ أثناء إعادة تعيين كلمة المرور. حاول مرة أخرى.",
     "enterNewPasswordSubtitle": "أدخل كلمة المرور الجديدة ثم أكدها"
-  }
+  },
   "LimitedQuantity": "كمية محدودة",
-
   "Notifications": "الإشعارات",
   "unread": "غير مقروء",
   "Menu": "القائمة",
@@ -532,5 +531,4 @@
   "TotalNotifications": "إجمالي الإشعارات",
   "ReadNotifications": "إشعارات مقروءة",
   "LatestNotification": "آخر إشعار"
-
 }

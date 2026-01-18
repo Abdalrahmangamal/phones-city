@@ -499,9 +499,8 @@
     "failedToResetPassword": "Failed to reset password. Please try again.",
     "errorResetting": "Error occurred while resetting password. Please try again.",
     "enterNewPasswordSubtitle": "Enter and confirm your new password"
-  }
+  },
   "LimitedQuantity": "Limited Quantity",
-
   "Notifications": "Notifications",
   "unread": "unread",
   "Menu": "Menu",
@@ -535,5 +534,4 @@
   "TotalNotifications": "Total Notifications",
   "ReadNotifications": "Read Notifications",
   "LatestNotification": "Latest Notification"
-
 }
