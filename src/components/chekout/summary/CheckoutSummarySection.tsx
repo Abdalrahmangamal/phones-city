@@ -209,26 +209,26 @@ const CheckoutSummarySection: React.FC<CheckoutSummarySectionProps> = ({
 
   return (
     <div
-      className="bg-white rounded-lg border border-gray-200 p-8"
+      className="bg-white rounded-lg border border-gray-200 p-4 sm:p-6 md:p-8 w-full max-w-[549px] mx-auto md:mx-0"
       dir={isRTL ? "rtl" : "ltr"}
-      style={{ width: "549px", borderRadius: "10px", borderWidth: "1px", gap: "24px" }}
+      style={{ borderRadius: "10px", borderWidth: "1px", gap: "24px" }}
     >
       {/* العنوان */}
-      <h2 className={`font-semibold ${isRTL ? "text-right" : "text-left"} mb-6`} style={{
-        height: "28px", fontFamily: "Roboto", fontWeight: 600, fontSize: "24px", lineHeight: "100%", color: "#211C4D",
+      <h2 className={`font-semibold ${isRTL ? "text-right" : "text-left"} mb-4 sm:mb-6 text-lg sm:text-xl md:text-2xl`} style={{
+        fontFamily: "Roboto", fontWeight: 600, color: "#211C4D",
       }}>
         {t("checkoutSummary.title")}
       </h2>
 
       {/* المنتجات المختارة */}
-      <div className="mt-6">
-        <h3 className={`font-medium text-gray-800 mb-4 ${isRTL ? "text-right" : "text-left"}`} style={{
-          fontFamily: "Roboto", fontWeight: 500, fontSize: "16px", lineHeight: "16px", color: "#545454",
+      <div className="mt-4 sm:mt-6">
+        <h3 className={`font-medium text-gray-800 mb-3 sm:mb-4 text-sm sm:text-base ${isRTL ? "text-right" : "text-left"}`} style={{
+          fontFamily: "Roboto", fontWeight: 500, color: "#545454",
         }}>
           {t("checkoutSummary.selectedProducts")}
         </h3>
 
-        <div className="space-y-4">
+        <div className="space-y-3 sm:space-y-4">
           {items.map((item: any) => {
             const product = item.product;
             const quantity = item.quantity || 1;
@@ -238,9 +238,9 @@ const CheckoutSummarySection: React.FC<CheckoutSummarySectionProps> = ({
             const totalPrice = unitPrice * quantity;
 
             return (
-              <div key={item.id} className="flex items-center justify-between p-4 rounded-lg bg-[#F6F6F6]" style={{ borderRadius: "13px" }}>
-                <div className={`flex items-center gap-4 ${isRTL ? "flex-row" : "flex-row-reverse"} flex-1`}>
-                  <div className="w-10 h-10 rounded flex items-center justify-center overflow-hidden flex-shrink-0">
+              <div key={item.id} className="flex items-center justify-between p-3 sm:p-4 rounded-lg bg-[#F6F6F6]" style={{ borderRadius: "13px" }}>
+                <div className={`flex items-center gap-2 sm:gap-4 ${isRTL ? "flex-row" : "flex-row-reverse"} flex-1 min-w-0`}>
+                  <div className="w-8 h-8 sm:w-10 sm:h-10 rounded flex items-center justify-center overflow-hidden flex-shrink-0">
                     {product?.images?.[0]?.url || product?.main_image ? (
                       <img src={product?.images?.[0]?.url || product?.main_image} alt={productName} className="w-full h-full object-cover"
                         onError={(e: any) => { e.target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 24 24' fill='%23ccc'%3E%3Cpath d='M0 0h24v24H0z' fill='none'/%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z'/%3E%3C/svg%3E"; }}
@@ -252,22 +252,22 @@ const CheckoutSummarySection: React.FC<CheckoutSummarySectionProps> = ({
                     )}
                   </div>
 
-                  <div className={`${isRTL ? "text-right" : "text-left"} flex-1`}>
-                    <p className="font-semibold line-clamp-1 mb-1" style={{ fontFamily: "Roboto", fontWeight: 600, fontSize: "16px", lineHeight: "20px", color: "#000000" }}>
+                  <div className={`${isRTL ? "text-right" : "text-left"} flex-1 min-w-0`}>
+                    <p className="font-semibold line-clamp-1 mb-1 text-xs sm:text-sm md:text-base" style={{ fontFamily: "Roboto", fontWeight: 600, color: "#000000" }}>
                       {productName}
                     </p>
                     {quantity > 1 && (
-                      <p className="text-xs text-gray-500 flex items-center gap-1" style={{ fontFamily: "Roboto", fontWeight: 400, fontSize: "12px", lineHeight: "16px" }}>
-                        {quantity} × {unitPrice.toLocaleString(isRTL ? "ar-SA" : "en-US")} <SaudiRiyalIcon className="w-3 h-3" />
+                      <p className={`text-xs text-gray-500 flex items-center gap-1 ${isRTL ? 'justify-end' : 'justify-start'}`} style={{ fontFamily: "Roboto", fontWeight: 400, fontSize: "10px", lineHeight: "16px" }}>
+                        {quantity} × {unitPrice.toLocaleString(isRTL ? "ar-SA" : "en-US")} <SaudiRiyalIcon className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
                       </p>
                     )}
                   </div>
                 </div>
 
-                <div className="font-medium flex-shrink-0 ml-4 flex items-center gap-1" style={{
-                  fontFamily: "Roboto", fontWeight: 500, fontSize: "16px", lineHeight: "100%", color: "#000000", minWidth: "80px", textAlign: isRTL ? "left" : "right",
+                <div className={`font-medium flex-shrink-0 flex items-center gap-1 text-xs sm:text-sm md:text-base ${isRTL ? 'mr-2 sm:mr-4' : 'ml-2 sm:ml-4'}`} style={{
+                  fontFamily: "Roboto", fontWeight: 500, color: "#000000", minWidth: "60px", textAlign: isRTL ? "left" : "right",
                 }}>
-                  {totalPrice.toLocaleString(isRTL ? "ar-SA" : "en-US")} <SaudiRiyalIcon className="w-3.5 h-3.5" />
+                  {totalPrice.toLocaleString(isRTL ? "ar-SA" : "en-US")} <SaudiRiyalIcon className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
                 </div>
               </div>
             );
@@ -288,20 +288,20 @@ const CheckoutSummarySection: React.FC<CheckoutSummarySectionProps> = ({
         </div>
 
         {/* بوابة الدفع المختارة */}
-        <div className="mb-6">
-          <h3 className={`font-medium mb-2 ${isRTL ? "text-right" : "text-left"}`} style={{
-            fontFamily: "Roboto", fontWeight: 500, fontSize: "16px", lineHeight: "16px", color: "#545454",
+        <div className="mb-4 sm:mb-6">
+          <h3 className={`font-medium mb-2 text-sm sm:text-base ${isRTL ? "text-right" : "text-left"}`} style={{
+            fontFamily: "Roboto", fontWeight: 500, color: "#545454",
           }}>
             {t("checkoutSummary.paymentMethod")}
           </h3>
 
           {selectedPayment ? (
-            <div className="p-4 rounded-lg bg-gray-50 flex items-center justify-between" style={{ borderRadius: "7px" }}>
-              <div className={`flex items-center gap-4 ${isRTL ? "flex-row-reverse" : "flex-row"}`}>
-                <img src={paymentLogos[selectedPayment.id] || madfu} alt={selectedPayment.name} className="h-10 w-auto" />
-                <div className={isRTL ? "text-right" : "text-left"}>
-                  <p className="font-semibold text-[#211C4D]">{selectedPayment.name}</p>
-                  <p className="text-sm text-gray-600 mt-1">
+            <div className="p-3 sm:p-4 rounded-lg bg-gray-50 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-4" style={{ borderRadius: "7px" }}>
+              <div className={`flex items-center gap-2 sm:gap-4 ${isRTL ? "flex-row-reverse" : "flex-row"} w-full sm:w-auto`}>
+                <img src={paymentLogos[selectedPayment.id] || madfu} alt={selectedPayment.name} className="h-8 sm:h-10 w-auto flex-shrink-0" />
+                <div className={`${isRTL ? "text-right" : "text-left"} flex-1 min-w-0`}>
+                  <p className="font-semibold text-[#211C4D] text-sm sm:text-base">{selectedPayment.name}</p>
+                  <p className="text-xs sm:text-sm text-gray-600 mt-1 line-clamp-2">
                     {selectedPaymentId === 6
                       ? (isRTL ? "استخدم 6 دفعات بدون فائدة وتوفير رسوم" : "Use 6 interest-free installments and save fees")
                       : isRTL
@@ -313,8 +313,8 @@ const CheckoutSummarySection: React.FC<CheckoutSummarySectionProps> = ({
               </div>
             </div>
           ) : (
-            <div className="p-4 rounded-lg bg-yellow-50 border border-yellow-200">
-              <p className={`text-amber-800 ${isRTL ? "text-right" : "text-left"}`}>
+            <div className="p-3 sm:p-4 rounded-lg bg-yellow-50 border border-yellow-200">
+              <p className={`text-amber-800 text-sm sm:text-base ${isRTL ? "text-right" : "text-left"}`}>
                 {t("checkoutSummary.noPaymentSelected")}
               </p>
             </div>
@@ -371,11 +371,11 @@ const CheckoutSummarySection: React.FC<CheckoutSummarySectionProps> = ({
 
                 {/* Custom Points Input */}
                 {usePoints && (
-                  <div className="mt-3 p-3 bg-blue-50 rounded-lg border border-blue-200">
-                    <label className="block text-sm font-medium text-gray-700 mb-2" style={{ textAlign: isRTL ? "right" : "left" }}>
+                  <div className="mt-3 p-2 sm:p-3 bg-blue-50 rounded-lg border border-blue-200">
+                    <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2" style={{ textAlign: isRTL ? "right" : "left" }}>
                       {isRTL ? 'حدد عدد النقاط للاستخدام:' : 'Specify points to use:'}
                     </label>
-                    <div className="flex items-center gap-2">
+                    <div className={`flex items-center gap-2 flex-wrap sm:flex-nowrap ${isRTL ? 'flex-row-reverse' : 'flex-row'}`}>
                       <input
                         type="number"
                         min="0"
@@ -387,12 +387,12 @@ const CheckoutSummarySection: React.FC<CheckoutSummarySectionProps> = ({
                           onPointsDiscountChange(Math.min(val, maxAllowed));
                         }}
                         placeholder={isRTL ? 'ادخل العدد' : 'Enter amount'}
-                        className="flex-1 h-10 px-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-center"
+                        className="flex-1 min-w-[100px] h-10 px-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-center"
                         style={{ direction: 'ltr' }}
                       />
                       <button
                         onClick={() => onPointsDiscountChange(Math.min(maxPointsValue, maxDiscountAmount))}
-                        className="px-3 py-2 bg-blue-500 text-white text-sm rounded-lg hover:bg-blue-600 transition whitespace-nowrap"
+                        className="px-3 py-2 bg-blue-500 text-white text-xs sm:text-sm rounded-lg hover:bg-blue-600 transition whitespace-nowrap w-full sm:w-auto"
                       >
                         {isRTL ? 'استخدم الكل' : 'Use All'}
                       </button>
@@ -403,7 +403,7 @@ const CheckoutSummarySection: React.FC<CheckoutSummarySectionProps> = ({
                         : `Max discount: ${Math.min(maxPointsValue, maxDiscountAmount).toLocaleString()} SAR`}
                     </p>
                     {pointsDiscount > 0 && (
-                      <p className="text-sm font-medium text-green-600 mt-2" style={{ textAlign: isRTL ? "right" : "left" }}>
+                      <p className="text-xs sm:text-sm font-medium text-green-600 mt-2" style={{ textAlign: isRTL ? "right" : "left" }}>
                         {isRTL
                           ? `سيتم خصم: ${pointsDiscount.toLocaleString()} ريال`
                           : `Discount applied: ${pointsDiscount.toLocaleString()} SAR`}
@@ -416,21 +416,21 @@ const CheckoutSummarySection: React.FC<CheckoutSummarySectionProps> = ({
           </div>
 
           {/* المجموع الفرعي */}
-          <div className="flex justify-between items-center mb-4">
-            <p className="font-medium" style={{
-              fontFamily: "Roboto", fontWeight: 500, fontSize: "16px", lineHeight: "24px", letterSpacing: "3%", color: "#211C4D", textAlign: isRTL ? "right" : "left",
+          <div className="flex justify-between items-center mb-3 sm:mb-4">
+            <p className="font-medium text-sm sm:text-base" style={{
+              fontFamily: "Roboto", fontWeight: 500, color: "#211C4D", textAlign: isRTL ? "right" : "left",
             }}>
               {t("checkoutSummary.subtotal")}
             </p>
-            <p className="font-medium flex items-center gap-1" style={{
-              fontFamily: "Roboto", fontWeight: 500, fontSize: "16px", lineHeight: "32px", letterSpacing: "3%", color: "#211C4D", minWidth: "100px", textAlign: isRTL ? "left" : "right",
+            <p className="font-medium flex items-center gap-1 text-sm sm:text-base" style={{
+              fontFamily: "Roboto", fontWeight: 500, color: "#211C4D", minWidth: "70px", textAlign: isRTL ? "left" : "right",
             }}>
-              {subtotal.toLocaleString(isRTL ? "ar-SA" : "en-US")} <SaudiRiyalIcon className="w-3.5 h-3.5" />
+              {subtotal.toLocaleString(isRTL ? "ar-SA" : "en-US")} <SaudiRiyalIcon className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
             </p>
           </div>
 
           {/* تفاصيل إضافية */}
-          <div className="mb-6 space-y-2">
+          <div className="mb-4 sm:mb-6 space-y-2">
             {/* رسوم بوابة الدفع - محذوفة من العرض ولكن محسوبة في المجموع النهائي */}
             {/* {paymentProcessingFee > 0 && (
               <div className="flex justify-between items-center">
@@ -450,62 +450,62 @@ const CheckoutSummarySection: React.FC<CheckoutSummarySectionProps> = ({
             {/* خصم النقاط */}
             {usePoints && pointsDiscount > 0 && (
               <div className="flex justify-between items-center">
-                <p className="font-normal" style={{
-                  fontFamily: "Roboto", fontWeight: 400, fontSize: "16px", lineHeight: "32px", color: "#F3AC5D", textAlign: isRTL ? "right" : "left",
+                <p className="font-normal text-xs sm:text-sm" style={{
+                  fontFamily: "Roboto", fontWeight: 400, color: "#F3AC5D", textAlign: isRTL ? "right" : "left",
                 }}>
                   {t("checkoutSummary.pointsDiscount")}
                 </p>
-                <p className="font-medium flex items-center gap-1" style={{
-                  fontFamily: "Roboto", fontWeight: 500, fontSize: "16px", lineHeight: "32px", color: "#F3AC5D", minWidth: "100px", textAlign: isRTL ? "left" : "right",
+                <p className="font-medium flex items-center gap-1 text-xs sm:text-sm" style={{
+                  fontFamily: "Roboto", fontWeight: 500, color: "#F3AC5D", minWidth: "70px", textAlign: isRTL ? "left" : "right",
                 }}>
-                  -{pointsDiscount.toLocaleString(isRTL ? "ar-SA" : "en-US")} <SaudiRiyalIcon className="w-3.5 h-3.5" />
+                  -{pointsDiscount.toLocaleString(isRTL ? "ar-SA" : "en-US")} <SaudiRiyalIcon className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
                 </p>
               </div>
             )}
 
             {/* الضريبة */}
             <div className="flex justify-between items-center">
-              <p className="font-normal" style={{
-                fontFamily: "Roboto", fontWeight: 400, fontSize: "16px", lineHeight: "32px", color: "#211C4DB2", textAlign: isRTL ? "right" : "left",
+              <p className="font-normal text-xs sm:text-sm" style={{
+                fontFamily: "Roboto", fontWeight: 400, color: "#211C4DB2", textAlign: isRTL ? "right" : "left",
               }}>
                 {t("checkoutSummary.estimatedTax")}
               </p>
-              <p className="font-medium flex items-center gap-1" style={{
-                fontFamily: "Roboto", fontWeight: 500, fontSize: "16px", lineHeight: "32px", color: "#211C4DB2", minWidth: "100px", textAlign: isRTL ? "left" : "right",
+              <p className="font-medium flex items-center gap-1 text-xs sm:text-sm" style={{
+                fontFamily: "Roboto", fontWeight: 500, color: "#211C4DB2", minWidth: "70px", textAlign: isRTL ? "left" : "right",
               }}>
-                {tax.toLocaleString(isRTL ? "ar-SA" : "en-US")} <SaudiRiyalIcon className="w-3.5 h-3.5" />
+                {tax.toLocaleString(isRTL ? "ar-SA" : "en-US")} <SaudiRiyalIcon className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
               </p>
             </div>
 
             {/* الشحن */}
             <div className="flex justify-between items-center">
-              <p className="font-normal" style={{
-                fontFamily: "Roboto", fontWeight: 400, fontSize: "16px", lineHeight: "32px", color: "#211C4DB2", textAlign: isRTL ? "right" : "left",
+              <p className="font-normal text-xs sm:text-sm" style={{
+                fontFamily: "Roboto", fontWeight: 400, color: "#211C4DB2", textAlign: isRTL ? "right" : "left",
               }}>
                 {t("checkoutSummary.shippingCost")}
               </p>
-              <p className="font-medium" style={{
-                fontFamily: "Roboto", fontWeight: 500, fontSize: "16px", lineHeight: "32px", color: "#211C4DB2", minWidth: "100px", textAlign: isRTL ? "left" : "right",
+              <p className="font-medium text-xs sm:text-sm" style={{
+                fontFamily: "Roboto", fontWeight: 500, color: "#211C4DB2", minWidth: "70px", textAlign: isRTL ? "left" : "right",
               }}>
                 {shippingCost === 0
                   ? (isRTL ? "مجاني" : "Free")
-                  : <span className="flex items-center gap-1">{shippingCost.toLocaleString(isRTL ? "ar-SA" : "en-US")} <SaudiRiyalIcon className="w-3.5 h-3.5" /></span>
+                  : <span className="flex items-center gap-1">{shippingCost.toLocaleString(isRTL ? "ar-SA" : "en-US")} <SaudiRiyalIcon className="w-3 h-3 sm:w-3.5 sm:h-3.5" /></span>
                 }
               </p>
             </div>
           </div>
 
           {/* الإجمالي النهائي */}
-          <div className="flex justify-between items-center pt-4 border-t border-gray-200">
-            <p className="font-medium" style={{
-              fontFamily: "Roboto", fontWeight: 500, fontSize: "16px", lineHeight: "24px", letterSpacing: "3%", color: "#211C4D", textAlign: isRTL ? "right" : "left",
+          <div className="flex justify-between items-center pt-3 sm:pt-4 border-t border-gray-200">
+            <p className="font-semibold text-sm sm:text-base" style={{
+              fontFamily: "Roboto", fontWeight: 600, color: "#211C4D", textAlign: isRTL ? "right" : "left",
             }}>
               {t("checkoutSummary.total")}
             </p>
-            <p className="font-medium flex items-center gap-1" style={{
-              fontFamily: "Roboto", fontWeight: 500, fontSize: "16px", lineHeight: "32px", letterSpacing: "3%", color: "#211C4D", minWidth: "100px", textAlign: isRTL ? "left" : "right",
+            <p className="font-semibold flex items-center gap-1 text-sm sm:text-base" style={{
+              fontFamily: "Roboto", fontWeight: 600, color: "#211C4D", minWidth: "70px", textAlign: isRTL ? "left" : "right",
             }}>
-              {displayFinalTotal.toLocaleString(isRTL ? "ar-SA" : "en-US")} <SaudiRiyalIcon className="w-4 h-4" />
+              {displayFinalTotal.toLocaleString(isRTL ? "ar-SA" : "en-US")} <SaudiRiyalIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             </p>
           </div>
         </div>
