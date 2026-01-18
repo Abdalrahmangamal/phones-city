@@ -8,8 +8,9 @@ import bottompattern from "@/assets/images/bottompattern.png";
 import ForgotPasswordFlowModal from "@/components/auth/ForgotPasswordFlowModal";
 import { useForm } from "react-hook-form";
 import type { SubmitHandler } from "react-hook-form";
-import {useAuthStore} from '@/store/useauthstore'
+import { useAuthStore } from '@/store/useauthstore'
 import Loader from "@/components/Loader";
+import { useTranslation } from "react-i18next";
 
 type loginInputs = {
   email: string;
@@ -19,12 +20,15 @@ type loginInputs = {
 export default function Login() {
   const { sendLogin, loading: authLoading } = useAuthStore();
   const navigate = useNavigate();
+  const { t, i18n } = useTranslation();
+  const isRTL = i18n.language === "ar";
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<loginInputs>();
-  
+
   const [showPassword, setShowPassword] = useState(false);
   const [openforgetpassmodal, setopenforgetpassmodal] = useState(false);
   const [loginError, setLoginError] = useState("");
@@ -33,7 +37,7 @@ export default function Login() {
   const onSubmit: SubmitHandler<loginInputs> = async (data, e) => {
     e?.preventDefault();
     setLoginError("");
-    
+
     console.log("Login submitted", data);
 
     const res = await sendLogin(data);
@@ -41,7 +45,7 @@ export default function Login() {
     if (res?.data?.token) {
       navigate("/");
     } else {
-      setLoginError("البريد الإلكتروني أو كلمة المرور غير صحيحة");
+      setLoginError(t("auth.invalidCredentials"));
     }
   };
 
@@ -63,41 +67,41 @@ export default function Login() {
 
   return (
     <>
-      <div>
+      <div dir={isRTL ? "rtl" : "ltr"}>
         <div className="w-full flex relative">
           <img
             src={smalllogo}
-            className="absolute md:right-15 right-2 top-5 z-2"
+            className={`absolute ${isRTL ? 'md:right-15 right-2' : 'md:left-15 left-2'} top-5 z-2`}
             alt=""
           />
-          <img src={toppatern} alt="" className="absolute left-0 z-4 " />
+          <img src={toppatern} alt="" className={`absolute ${isRTL ? 'left-0' : 'right-0 -scale-x-100'} z-4`} />
         </div>
 
         <div className="min-h-screen flex md:mt-[0px] mt-[200px] md:p-0 px-4 z-3 flex-col md:flex-row items-center justify-center gap-20 relative">
-          <div className="bg-white rounded-[20px] md:w-[450px] w-full text-start">
+          <div className={`bg-white rounded-[20px] md:w-[450px] w-full ${isRTL ? 'text-start' : 'text-start'}`}>
             <h2 className="text-[35px] font-[600] text-[#211C4D] mb-2">
-              تسجيل الدخول إلى حسابك
+              {t("auth.loginToAccount")}
             </h2>
             <p className="text-[#B9B8B8] font-[400] text-[16px] md:mb-0 mb-8">
-              برجى تسجيل الدخول إلى حسابك
+              {t("auth.pleaseLogin")}
             </p>
 
             <form
-              className="space-y-5 text-right"
+              className={`space-y-5 ${isRTL ? 'text-right' : 'text-left'}`}
               onSubmit={handleSubmit(onSubmit)}
             >
               {/* البريد الإلكتروني */}
               <div>
                 <label className="block mb-2 md:mb-0 text-[24px] font-[500] text-[#211C4DB2]">
-                  البريد الإلكتروني
+                  {t("auth.email")}
                 </label>
                 <input
                   type="email"
-                  {...register("email", { 
-                    required: "البريد الإلكتروني مطلوب",
+                  {...register("email", {
+                    required: t("auth.emailRequired"),
                     pattern: {
                       value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                      message: "البريد الإلكتروني غير صالح"
+                      message: t("auth.invalidEmail")
                     }
                   })}
                   placeholder="username@gmail.com"
@@ -111,24 +115,24 @@ export default function Login() {
               {/* كلمة المرور */}
               <div>
                 <label className="block mb-2 md:mb-0 text-[24px] font-[500] text-[#211C4DB2]">
-                  كلمة المرور
+                  {t("auth.password")}
                 </label>
                 <div className="relative">
                   <input
                     type={showPassword ? "text" : "password"}
                     placeholder="********"
-                    {...register("password", { 
-                      required: "كلمة المرور مطلوبة",
+                    {...register("password", {
+                      required: t("auth.passwordRequired"),
                       minLength: {
                         value: 6,
-                        message: "كلمة المرور يجب أن تكون 6 أحرف على الأقل"
+                        message: t("auth.passwordMinLength")
                       }
                     })}
-                    className="w-full p-3 border rounded-lg outline-none focus:ring-2 focus:ring-[#0B60B0]"
+                    className={`w-full p-3 border rounded-lg outline-none focus:ring-2 focus:ring-[#0B60B0] ${isRTL ? 'pl-10' : 'pr-10'}`}
                   />
                   <span
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute left-3 top-3 cursor-pointer text-gray-500"
+                    className={`absolute ${isRTL ? 'left-3' : 'right-3'} top-3 cursor-pointer text-gray-500`}
                   >
                     {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                   </span>
@@ -143,7 +147,7 @@ export default function Login() {
                   className="p-0 m-0 bg-transparent hover:bg-transparent focus:ring-0 active:scale-100 border-none shadow-none"
                 >
                   <p className="text-[16px] font-[500] text-[#2AA0DC] mt-2 cursor-pointer hover:underline">
-                    نسيت كلمة المرور؟
+                    {t("auth.forgotPassword")}
                   </p>
                 </div>
               </div>
@@ -161,17 +165,17 @@ export default function Login() {
                 disabled={authLoading}
                 className="w-full bg-[#2AA0DC] text-white py-3 rounded-[32px] font-[500] text-[16px] transition-all duration-300 hover:bg-[#0d8ed2] hover:scale-[1.03] shadow-[0_4px_10px_rgba(42,160,220,0.4)] hover:shadow-[0_6px_14px_rgba(42,160,220,0.6)] disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {authLoading ? "جاري تسجيل الدخول..." : "تسجيل الدخول"}
+                {authLoading ? t("auth.loggingIn") : t("auth.login")}
               </button>
-              
+
               {/* تسجيل جديد */}
               <p className="text-[24px] text-center mt-4 text-[#211C4D]">
-                ليس لديك حساب؟
+                {t("auth.noAccount")}
                 <Link
                   to="/register"
-                  className="text-[#2AA0DC] ml-1 hover:underline"
+                  className={`text-[#2AA0DC] ${isRTL ? 'mr-1' : 'ml-1'} hover:underline`}
                 >
-                  سجل الآن
+                  {t("auth.registerNow")}
                 </Link>
               </p>
             </form>
@@ -186,7 +190,7 @@ export default function Login() {
           <div className="flex items-center justify-center">
             <img src={loginimage} className="scale-[0.9] md:mb-0 mb-60" alt="" />
           </div>
-          <img src={bottompattern} className="absolute bottom-0 right-0" alt="" />
+          <img src={bottompattern} className={`absolute bottom-0 ${isRTL ? 'right-0' : 'left-0 -scale-x-100'}`} alt="" />
         </div>
       </div>
     </>

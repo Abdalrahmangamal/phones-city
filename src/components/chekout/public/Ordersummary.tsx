@@ -147,7 +147,7 @@ export default function OrderSummary({
 
   return (
     <div
-      className="bg-white p-6 border border-[#EBEBEB] md:px-[70px] mt-9 md:mt-0 px-[20px] rounded-[10px]"
+      className="bg-white p-4 sm:p-6 border border-[#EBEBEB] md:px-[70px] mt-6 md:mt-0 px-4 rounded-[10px] w-full"
       dir={isRTL ? "rtl" : "ltr"}
     >
       <h1 className={`mb-6 text-xl font-bold text-blue-500 ${isRTL ? 'text-right' : 'text-left'}`}>

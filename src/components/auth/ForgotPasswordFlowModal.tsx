@@ -1,9 +1,10 @@
 // ForgotPasswordFlowModal.tsx
-import React, { useState } from "react";
+import { useState } from "react";
 import Dialog from "@mui/material/Dialog";
 import { Eye, EyeOff } from "lucide-react";
 import { useAuthStore } from "@/store/useauthstore";
 import Loader from "@/components/Loader";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   isOpen: boolean;
@@ -22,20 +23,21 @@ export default function ForgotPasswordFlowModal({ isOpen, onClose }: Props) {
   const [successMessage, setSuccessMessage] = useState("");
 
   const { forgotpassword, resetPassword, loading } = useAuthStore();
+  const { t, i18n } = useTranslation();
+  const isRTL = i18n.language === "ar";
 
   const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   const isValidCode = code.length === 6;
-  const isValidPassword = password.length >= 6;
   const passwordsMatch = password === passwordConfirm && password.length >= 6;
 
   const handleSendCode = async () => {
     if (!isValidEmail) {
-      setErrorMessage("الرجاء إدخال بريد إلكتروني صالح");
+      setErrorMessage(t("forgotPassword.enterValidEmail"));
       return;
     }
 
     setErrorMessage("");
-    
+
     try {
       const res = await forgotpassword({ email });
       console.log("Forgot Password Response:", res);
@@ -44,23 +46,23 @@ export default function ForgotPasswordFlowModal({ isOpen, onClose }: Props) {
         setStep("code"); // الانتقال إلى نافذة إدخال الكود
         setErrorMessage("");
       } else {
-        setErrorMessage(res?.message || "فشل إرسال الكود، جرب تاني");
+        setErrorMessage(res?.message || t("forgotPassword.failedToSendCode"));
       }
     } catch (err: any) {
       console.error("Forgot Password Error:", err);
-      setErrorMessage(err?.message || "حدث خطأ أثناء الإرسال");
+      setErrorMessage(err?.message || t("forgotPassword.errorSending"));
     }
   };
 
   const handleVerifyCode = () => {
     if (!isValidCode) {
-      setErrorMessage("الرجاء إدخال الكود المكون من 6 أرقام");
+      setErrorMessage(t("forgotPassword.enterValidCode"));
       return;
     }
-    
+
     // التحقق من صحة الكود هنا (يمكنك إضافة API للتحقق)
     console.log("Verifying code:", code);
-    
+
     // إذا كان الكود صحيح، انتقل إلى نافذة كلمة المرور
     setStep("password");
     setErrorMessage("");
@@ -68,12 +70,12 @@ export default function ForgotPasswordFlowModal({ isOpen, onClose }: Props) {
 
   const handleResetPassword = async () => {
     if (!passwordsMatch) {
-      setErrorMessage("كلمتا المرور غير متطابقتين أو أقل من 6 أحرف");
+      setErrorMessage(t("forgotPassword.passwordsNotMatch"));
       return;
     }
 
     setErrorMessage("");
-    
+
     // تجميع جميع البيانات في كائن واحد
     const payload = {
       email,
@@ -87,21 +89,20 @@ export default function ForgotPasswordFlowModal({ isOpen, onClose }: Props) {
     try {
       const res = await resetPassword(payload);
       console.log("Reset Password Response:", res);
-      
+
       if (res?.status === true) {
-        setSuccessMessage("تم تغيير كلمة المرور بنجاح!");
-        
+        setSuccessMessage(t("forgotPassword.passwordChangedSuccess"));
+
         setTimeout(() => {
           handleClose();
-          // يمكنك إضافة إعادة توجيه أو رسالة نجاح هنا
-          alert("تم تغيير كلمة المرور بنجاح! يمكنك الآن تسجيل الدخول.");
+          alert(t("forgotPassword.passwordChangedAlert"));
         }, 1500);
       } else {
-        setErrorMessage(res?.message || "فشل إعادة تعيين كلمة المرور. حاول مرة أخرى.");
+        setErrorMessage(res?.message || t("forgotPassword.failedToResetPassword"));
       }
     } catch (err: any) {
       console.error("Reset Password Error:", err);
-      setErrorMessage("حدث خطأ أثناء إعادة تعيين كلمة المرور. حاول مرة أخرى.");
+      setErrorMessage(t("forgotPassword.errorResetting"));
     }
   };
 
@@ -118,14 +119,13 @@ export default function ForgotPasswordFlowModal({ isOpen, onClose }: Props) {
 
   const handleResendCode = async () => {
     if (!isValidEmail) return;
-    
+
     setErrorMessage("");
     try {
       const res = await forgotpassword({ email });
       if (res?.status === true) {
-        setErrorMessage(""); // مسح أي أخطاء
-        // يمكنك إضافة رسالة نجاح صغيرة هنا
-        alert("تم إعادة إرسال الكود بنجاح!");
+        setErrorMessage("");
+        alert(t("forgotPassword.codeSentSuccess"));
       }
     } catch (err) {
       console.error("Resend error:", err);
@@ -146,10 +146,10 @@ export default function ForgotPasswordFlowModal({ isOpen, onClose }: Props) {
       >
         <div className="p-8 flex flex-col items-center gap-6">
           <h2 className="text-3xl font-bold text-center text-[#211C4D]">
-            نسيت كلمة المرور؟
+            {t("forgotPassword.title")}
           </h2>
           <p className="text-center text-[#211C4DB2]">
-            أدخل بريدك الإلكتروني ليصلك كود إعادة تعيين كلمة المرور
+            {t("forgotPassword.subtitle")}
           </p>
 
           <input
@@ -174,7 +174,7 @@ export default function ForgotPasswordFlowModal({ isOpen, onClose }: Props) {
             disabled={!isValidEmail || loading}
             className="bg-[#2AA0DC] w-full max-w-[340px] h-12 rounded-full text-white disabled:opacity-50 hover:bg-[#1e8ec9] transition-colors"
           >
-            {loading ? "جاري الإرسال..." : "إرسال الكود"}
+            {loading ? t("forgotPassword.sending") : t("forgotPassword.sendCode")}
           </button>
         </div>
       </Dialog>
@@ -189,10 +189,10 @@ export default function ForgotPasswordFlowModal({ isOpen, onClose }: Props) {
       >
         <div className="p-8 flex flex-col items-center gap-6">
           <h2 className="text-3xl font-bold text-center text-[#211C4D]">
-            أدخل كود التحقق
+            {t("forgotPassword.enterVerificationCode")}
           </h2>
           <p className="text-center text-[#211C4DB2]">
-            تم إرسال كود مكون من 6 أرقام إلى بريدك الإلكتروني
+            {t("forgotPassword.codeSentTo")}
             <br />
             <span className="font-semibold">{email}</span>
           </p>
@@ -207,7 +207,7 @@ export default function ForgotPasswordFlowModal({ isOpen, onClose }: Props) {
               setCode(value);
               setErrorMessage("");
             }}
-            placeholder="أدخل 6 أرقام"
+            placeholder={t("forgotPassword.enter6Digits")}
             className="w-full p-3 border rounded-lg h-[60px] outline-none focus:ring-2 focus:ring-[#2AA0DC] text-center text-2xl tracking-widest"
             autoFocus
           />
@@ -223,24 +223,24 @@ export default function ForgotPasswordFlowModal({ isOpen, onClose }: Props) {
               onClick={() => setStep("email")}
               className="bg-gray-200 w-1/2 h-12 rounded-full text-gray-700 hover:bg-gray-300 transition-colors"
             >
-              رجوع
+              {t("forgotPassword.back")}
             </button>
             <button
               onClick={handleVerifyCode}
               disabled={!isValidCode || loading}
               className="bg-[#2AA0DC] w-1/2 h-12 rounded-full text-white disabled:opacity-50 hover:bg-[#1e8ec9] transition-colors"
             >
-              {loading ? "جاري التحقق..." : "تحقق من الكود"}
+              {loading ? t("forgotPassword.verifying") : t("forgotPassword.verifyCode")}
             </button>
           </div>
 
           <p className="text-center text-gray-600 text-sm">
-            لم تستلم الكود؟{' '}
+            {t("forgotPassword.didntReceiveCode")}{' '}
             <button
               onClick={handleResendCode}
               className="text-[#2AA0DC] hover:underline"
             >
-              إعادة إرسال
+              {t("forgotPassword.resend")}
             </button>
           </p>
         </div>
@@ -251,9 +251,9 @@ export default function ForgotPasswordFlowModal({ isOpen, onClose }: Props) {
         open={isOpen && step === "password"}
         onClose={handleClose}
         PaperProps={{
-          sx: { 
-            width: "580px", 
-            maxWidth: "90%", 
+          sx: {
+            width: "580px",
+            maxWidth: "90%",
             borderRadius: "16px",
           },
         }}
@@ -265,21 +265,21 @@ export default function ForgotPasswordFlowModal({ isOpen, onClose }: Props) {
               <p className="text-xl font-medium text-green-700">
                 {successMessage}
               </p>
-              <p className="text-gray-600 mt-2">جاري إعادة توجيهك...</p>
+              <p className="text-gray-600 mt-2">{t("forgotPassword.redirecting")}</p>
             </div>
           ) : (
             <>
               <h2 className="text-3xl font-bold text-center text-[#211C4D]">
-                كلمة المرور الجديدة
+                {t("forgotPassword.newPassword")}
               </h2>
               <p className="text-center text-[#211C4DB2]">
-                أدخل كلمة المرور الجديدة ثم أكدها
+                {t("forgotPassword.enterNewPasswordSubtitle")}
               </p>
 
               {/* حقل كلمة المرور الجديدة */}
               <div className="w-full">
                 <label className="block mb-2 text-[18px] font-[500] text-[#211C4DB2]">
-                  كلمة المرور الجديدة
+                  {t("forgotPassword.newPasswordLabel")}
                 </label>
                 <div className="relative">
                   <input
@@ -289,12 +289,12 @@ export default function ForgotPasswordFlowModal({ isOpen, onClose }: Props) {
                       setPassword(e.target.value);
                       setErrorMessage("");
                     }}
-                    placeholder="أدخل كلمة مرور قوية"
+                    placeholder={t("forgotPassword.enterStrongPassword")}
                     className="w-full p-3 border rounded-lg h-[50px] outline-none focus:ring-2 focus:ring-[#0B60B0]"
                   />
                   <span
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute left-3 top-3 cursor-pointer text-gray-500"
+                    className={`absolute ${isRTL ? 'left-3' : 'right-3'} top-3 cursor-pointer text-gray-500`}
                   >
                     {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                   </span>
@@ -304,7 +304,7 @@ export default function ForgotPasswordFlowModal({ isOpen, onClose }: Props) {
               {/* حقل تأكيد كلمة المرور */}
               <div className="w-full">
                 <label className="block mb-2 text-[18px] font-[500] text-[#211C4DB2]">
-                  تأكيد كلمة المرور
+                  {t("forgotPassword.confirmPassword")}
                 </label>
                 <div className="relative">
                   <input
@@ -314,12 +314,12 @@ export default function ForgotPasswordFlowModal({ isOpen, onClose }: Props) {
                       setPasswordConfirm(e.target.value);
                       setErrorMessage("");
                     }}
-                    placeholder="أعد إدخال كلمة المرور"
+                    placeholder={t("forgotPassword.reEnterPassword")}
                     className="w-full p-3 border rounded-lg h-[50px] outline-none focus:ring-2 focus:ring-[#0B60B0]"
                   />
                   <span
                     onClick={() => setShowPasswordConfirm(!showPasswordConfirm)}
-                    className="absolute left-3 top-3 cursor-pointer text-gray-500"
+                    className={`absolute ${isRTL ? 'left-3' : 'right-3'} top-3 cursor-pointer text-gray-500`}
                   >
                     {showPasswordConfirm ? <EyeOff size={20} /> : <Eye size={20} />}
                   </span>
@@ -337,14 +337,14 @@ export default function ForgotPasswordFlowModal({ isOpen, onClose }: Props) {
                   onClick={() => setStep("code")}
                   className="bg-gray-200 w-1/2 h-12 rounded-full text-gray-700 hover:bg-gray-300 transition-colors"
                 >
-                  رجوع
+                  {t("forgotPassword.back")}
                 </button>
                 <button
                   onClick={handleResetPassword}
                   disabled={!passwordsMatch || loading}
                   className="bg-[#2AA0DC] w-1/2 h-12 rounded-full text-white disabled:opacity-50 hover:bg-[#1e8ec9] transition-colors"
                 >
-                  {loading ? "جاري التغيير..." : "تغيير كلمة المرور"}
+                  {loading ? t("forgotPassword.changing") : t("forgotPassword.changePassword")}
                 </button>
               </div>
             </>

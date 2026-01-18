@@ -17,7 +17,8 @@ import Loader from '@/components/Loader'
 import { useLangSync } from "@/hooks/useLangSync";
 
 export default function Profile() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const isRTL = i18n.language === "ar";
   const { lang } = useLangSync();
   const { profile, isLoading, error, fetchProfile, updateProfile } = useProfileStore();
   const { fetchPage, getPage, isLoading: isPageLoading } = usePageStore();
@@ -130,17 +131,17 @@ export default function Profile() {
   const handleChangePassword = async () => {
     // تحقق من البيانات
     if (!passwordForm.password || !passwordForm.password_confirmation) {
-      setPasswordError("الرجاء ملء جميع الحقول");
+      setPasswordError(t("auth.pleaseFillAllFields"));
       return;
     }
 
     if (passwordForm.password.length < 6) {
-      setPasswordError("كلمة المرور الجديدة يجب أن تكون 6 أحرف على الأقل");
+      setPasswordError(t("auth.newPasswordMinLength"));
       return;
     }
 
     if (passwordForm.password !== passwordForm.password_confirmation) {
-      setPasswordError("كلمة المرور الجديدة غير متطابقة");
+      setPasswordError(t("auth.passwordsDoNotMatch"));
       return;
     }
 
@@ -159,7 +160,7 @@ export default function Profile() {
       console.log("✅ استجابة تغيير كلمة المرور:", response.data);
 
       if (response.data.status) {
-        setPasswordSuccess("تم تغيير كلمة المرور بنجاح!");
+        setPasswordSuccess(t("auth.passwordChangedSuccess"));
 
         // إعادة تعيين النموذج
         setPasswordForm({
@@ -173,12 +174,12 @@ export default function Profile() {
           setPasswordSuccess("");
         }, 2000);
       } else {
-        setPasswordError(response.data.message || "فشل في تغيير كلمة المرور");
+        setPasswordError(response.data.message || t("auth.passwordChangeError"));
       }
     } catch (error: any) {
       console.error("❌ خطأ في تغيير كلمة المرور:", error);
 
-      let errorMessage = "حدث خطأ أثناء تغيير كلمة المرور";
+      let errorMessage = t("auth.passwordChangeError");
 
       if (error.response?.status === 422) {
         const errors = error.response.data?.errors;
@@ -187,7 +188,7 @@ export default function Profile() {
         } else if (errors?.password_confirmation) {
           errorMessage = errors.password_confirmation[0];
         } else {
-          errorMessage = error.response.data?.message || "بيانات غير صالحة";
+          errorMessage = error.response.data?.message || t("auth.invalidData");
         }
       } else if (error.response?.data?.message) {
         errorMessage = error.response.data.message;
@@ -488,7 +489,7 @@ export default function Profile() {
                       </svg>
                       <div>
                         <p className="text-green-700 font-medium">{passwordSuccess}</p>
-                        <p className="text-green-600 text-sm mt-1">سيتم إغلاق النموذج تلقائياً...</p>
+                        <p className="text-green-600 text-sm mt-1">{t("auth.closingFormAuto")}</p>
                       </div>
                     </div>
                   )}
@@ -508,11 +509,11 @@ export default function Profile() {
                           type="password"
                           value={passwordForm.password}
                           onChange={(e) => setPasswordForm(prev => ({ ...prev, password: e.target.value }))}
-                          className="w-full h-[48px] px-4 pr-12 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition"
+                          className={`w-full h-[48px] px-4 ${isRTL ? 'pl-12' : 'pr-12'} rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition`}
                           placeholder={t("NewPasswordPlaceholder")}
                           disabled={isChangingPassword}
                         />
-                        <div className="absolute left-3 top-3.5">
+                        <div className={`absolute ${isRTL ? 'left-3' : 'right-3'} top-3.5`}>
                           <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
                           </svg>
@@ -531,11 +532,11 @@ export default function Profile() {
                           type="password"
                           value={passwordForm.password_confirmation}
                           onChange={(e) => setPasswordForm(prev => ({ ...prev, password_confirmation: e.target.value }))}
-                          className="w-full h-[48px] px-4 pr-12 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition"
+                          className={`w-full h-[48px] px-4 ${isRTL ? 'pl-12' : 'pr-12'} rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition`}
                           placeholder={t("ConfirmNewPasswordPlaceholder")}
                           disabled={isChangingPassword}
                         />
-                        <div className="absolute left-3 top-3.5">
+                        <div className={`absolute ${isRTL ? 'left-3' : 'right-3'} top-3.5`}>
                           <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                           </svg>
