@@ -12,6 +12,7 @@ import emkann from "@/assets/images/emkann.png";
 import madfu from "@/assets/images/madfu.png";
 import mispay_installment from "@/assets/images/mispay_installment 1.png";
 import amwal from "@/assets/images/amwal.png";
+import moyassarlogo from "@/assets/images/moyassarlogo.png";
 
 const paymentLogos: Record<number, any> = {
   1: tamara,
@@ -20,6 +21,7 @@ const paymentLogos: Record<number, any> = {
   4: mispay_installment,
   5: emkann,
   6: amwal,
+  7: moyassarlogo,
 };
 
 import { SaudiRiyalIcon } from "@/components/common/SaudiRiyalIcon";
@@ -231,7 +233,7 @@ export default function OrderSummary({
               <p className={`text-xs text-gray-500 mt-1 ${isRTL ? 'text-right' : 'text-left'}`}>{provider.description}</p>
             </div>
 
-            <img src={provider.logo} alt={provider.name} className="h-10 w-auto" />
+            <img src={provider.logo} alt={provider.name} className="h-10 w-auto max-w-[100px] object-contain" />
           </div>
         ))}
       </div>

@@ -10,6 +10,7 @@ import emkann from "@/assets/images/emkann.png";
 import madfu from "@/assets/images/madfu.png";
 import mispay_installment from "@/assets/images/mispay_installment 1.png";
 import amwal from "@/assets/images/amwal.png";
+import moyassarlogo from "@/assets/images/moyassarlogo.png";
 import { SaudiRiyalIcon } from "@/components/common/SaudiRiyalIcon";
 
 const paymentLogos: Record<number, any> = {
@@ -19,6 +20,7 @@ const paymentLogos: Record<number, any> = {
   4: mispay_installment,
   5: emkann,
   6: amwal,
+  7: moyassarlogo,
 };
 
 interface ShipmentInfo {
@@ -298,7 +300,7 @@ const CheckoutSummarySection: React.FC<CheckoutSummarySectionProps> = ({
           {selectedPayment ? (
             <div className="p-3 sm:p-4 rounded-lg bg-gray-50 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-4" style={{ borderRadius: "7px" }}>
               <div className={`flex items-center gap-2 sm:gap-4 ${isRTL ? "flex-row-reverse" : "flex-row"} w-full sm:w-auto`}>
-                <img src={paymentLogos[selectedPayment.id] || madfu} alt={selectedPayment.name} className="h-8 sm:h-10 w-auto flex-shrink-0" />
+                <img src={paymentLogos[selectedPayment.id] || madfu} alt={selectedPayment.name} className="h-8 sm:h-10 w-auto max-w-[100px] object-contain flex-shrink-0" />
                 <div className={`${isRTL ? "text-right" : "text-left"} flex-1 min-w-0`}>
                   <p className="font-semibold text-[#211C4D] text-sm sm:text-base">{selectedPayment.name}</p>
                   <p className="text-xs sm:text-sm text-gray-600 mt-1 line-clamp-2">
