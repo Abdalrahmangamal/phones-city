@@ -206,6 +206,9 @@ const useAddressStore = create<AddressState>()(
             headers: {
              "Accept-Language": `${lang}`
             },
+            params: {
+              per_page: 1000  // Fetch all cities by setting a high limit
+            }
           });
 
           if (response.data?.status === true) {

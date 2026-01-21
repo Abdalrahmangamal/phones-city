@@ -1,8 +1,10 @@
 // Ordersummary.tsx
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useCartStore } from "@/store/cartStore/cartStore";
+import { Pencil } from "lucide-react";
+import BankTransferModal from "@/components/chekout/payment/BankTransferModal";
 
 import { useTranslation } from "react-i18next";
 
@@ -76,6 +78,11 @@ export default function OrderSummary({
   const currentLang = i18n.language;
   const isRTL = currentLang === 'ar';
 
+  // State للتحويل البنكي المباشر
+  const [isBankTransferModalOpen, setIsBankTransferModalOpen] = useState(false);
+  const [isBankTransferSelected, setIsBankTransferSelected] = useState(false);
+  const BANK_TRANSFER_ID = 999; // ID خاص للتحويل البنكي
+
 
   useEffect(() => {
     if (items.length === 0 && !loading) fetchCart();
@@ -112,6 +119,14 @@ export default function OrderSummary({
 
 
   const handlePaymentSelect = (paymentId: number) => {
+    // إذا كان التحويل البنكي
+    if (paymentId === BANK_TRANSFER_ID) {
+      setIsBankTransferSelected(true);
+      updateFinalTotal(subtotal, BANK_TRANSFER_ID);
+      return;
+    }
+
+    setIsBankTransferSelected(false);
     const selected = paymentMethods.find((p: any) => p.id === paymentId);
     if (selected) {
       const processingFee = parseFloat(selected.processing_fee_amount || "0");
@@ -123,6 +138,12 @@ export default function OrderSummary({
       // لو المستخدم اختار "إلغاء" أو بدون رسوم
       updateFinalTotal(subtotal, null);
     }
+  };
+
+  const handleBankTransferSubmit = async (file: File, bankDetails: any) => {
+    console.log('Bank Transfer Submit:', { file, bankDetails });
+    // TODO: إرسال البيانات للـ Backend
+    // يمكن إضافة الـ API call هنا
   };
 
   const paymentProviders = paymentMethods.map((p: any) => {
@@ -236,7 +257,70 @@ export default function OrderSummary({
             <img src={provider.logo} alt={provider.name} className="h-10 w-auto max-w-[100px] object-contain" />
           </div>
         ))}
+
+        {/* التحويل البنكي المباشر */}
+        <div
+          onClick={() => handlePaymentSelect(BANK_TRANSFER_ID)}
+          className={`flex items-center justify-between gap-4 rounded-lg border p-4 cursor-pointer transition-all ${(selectedPaymentId === BANK_TRANSFER_ID || isBankTransferSelected)
+            ? "border-blue-500 bg-blue-50"
+            : "border-gray-200 hover:border-gray-400"
+            }`}
+          dir={isRTL ? "rtl" : "ltr"}
+          style={{ height: '70px', borderRadius: '8px' }}
+        >
+          <div className="flex items-center gap-4">
+            <input
+              type="radio"
+              name="payment"
+              checked={selectedPaymentId === BANK_TRANSFER_ID || isBankTransferSelected}
+              onChange={() => handlePaymentSelect(BANK_TRANSFER_ID)}
+              className="h-5 w-5 text-blue-600"
+              aria-label={isRTL ? "التحويل البنكي المباشر" : "Direct Bank Transfer"}
+            />
+            <p
+              className="text-base font-normal"
+              style={{ fontFamily: 'Roboto', color: '#211C4D' }}
+            >
+              {isRTL ? "التحويل البنكي المباشر" : "Direct Bank Transfer"}
+            </p>
+          </div>
+
+          <div className="flex items-center gap-2">
+            {/* أيقونة البنك */}
+            <div className="w-[38px] h-[38px] flex items-center justify-center bg-gray-100 rounded-lg">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2L2 7V10H22V7L12 2Z" stroke="#211C4D" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M4 10V20" stroke="#211C4D" strokeWidth="1.5" strokeLinecap="round" />
+                <path d="M9 10V20" stroke="#211C4D" strokeWidth="1.5" strokeLinecap="round" />
+                <path d="M15 10V20" stroke="#211C4D" strokeWidth="1.5" strokeLinecap="round" />
+                <path d="M20 10V20" stroke="#211C4D" strokeWidth="1.5" strokeLinecap="round" />
+                <path d="M2 20H22" stroke="#211C4D" strokeWidth="1.5" strokeLinecap="round" />
+              </svg>
+            </div>
+
+            {/* زر القلم للتعديل */}
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                handlePaymentSelect(BANK_TRANSFER_ID);
+                setIsBankTransferModalOpen(true);
+              }}
+              className="w-6 h-6 flex items-center justify-center hover:bg-gray-200 rounded transition"
+              title={isRTL ? "تعديل معلومات الحساب" : "Edit account info"}
+            >
+              <Pencil className="w-4 h-4" style={{ color: '#211C4D' }} />
+            </button>
+          </div>
+        </div>
       </div>
+
+      {/* Bank Transfer Modal */}
+      <BankTransferModal
+        isOpen={isBankTransferModalOpen}
+        onClose={() => setIsBankTransferModalOpen(false)}
+        totalAmount={calculatedFinalTotal}
+        onSubmit={handleBankTransferSubmit}
+      />
     </div>
   );
 }
