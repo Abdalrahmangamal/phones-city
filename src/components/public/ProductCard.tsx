@@ -172,13 +172,13 @@ export default function ProductCard({ product, imagecard, containerstyle, quanti
           {/* Badge: غير متوفر / كمية محدودة / نسبة الخصم */}
           {isOutOfStock ? (
             <div className="flex w-full items-center justify-end absolute right-0 top-0 p-1">
-              <div className="w-fit px-3 h-[22px] flex items-center justify-center rounded-[4px] bg-[#6B7280] opacity-90">
+              <div className="w-fit px-1 md:px-3 h-[22px] flex items-center justify-center rounded-[4px] bg-[#6B7280] opacity-90">
                 <p className={`text-white text-[13px] font-medium ${quantity}`}>{t("OutOfStock")}</p>
               </div>
             </div>
           ) : isLimited ? (
             <div className="flex w-full items-center justify-end absolute right-0 top-0 p-1">
-              <div className="w-fit px-3 h-[22px] flex items-center justify-center rounded-[4px] bg-orange-600">
+              <div className="w-fit px-1 md:px-3 h-[22px] flex items-center justify-center rounded-[4px] bg-orange-600">
                 <p className={`text-white text-[13px] font-medium ${quantity}`}>{t("LimitedQuantity")}</p>
               </div>
             </div>
@@ -243,17 +243,17 @@ export default function ProductCard({ product, imagecard, containerstyle, quanti
 
       {/* السعر + زر السلة */}
       <div className="flex items-center justify-between mt-[10px] w-full">
-        <div className="relative flex md:gap-3">
-          <p className="text-[#211C4D] md:text-[18px] text-[11px] font-[500] flex items-center gap-1">
-            {final?.toLocaleString()} <SaudiRiyalIcon className="w-4 h-4" />
+        <div className="relative flex gap-2 md:gap-3">
+          <p className="text-[#211C4D] md:text-[18px] text-[7px] font-[500] flex items-center gap-1">
+            {final?.toLocaleString()} <SaudiRiyalIcon className="w-2 h-2 md:w-4 md:h-4" />
           </p>
           {final < original && (
             <div className="relative">
-              <p className="text-[#211C4D] md:text-[18px] text-[11px] font-[500] opacity-60 flex items-center gap-1">
-                {original?.toLocaleString()} <SaudiRiyalIcon className="w-3.5 h-3.5" />
+              <p className="text-[#211C4D] md:text-[18px] text-[7px] font-[500] opacity-60 flex items-center gap-1">
+                {original?.toLocaleString()} <SaudiRiyalIcon className="w-2 h-2 md:w-4 md:h-4" />
               </p>
               <svg
-                className="absolute top-2 md:top-3 w-full right-0 z-1"
+                className="absolute top-1 md:top-3 w-full right-0 z-1"
                 height="5"
                 viewBox="0 0 87 5"
                 fill="none"

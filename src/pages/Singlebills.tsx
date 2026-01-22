@@ -20,6 +20,31 @@ export default function Singlebills() {
     }
   }, [id, fetchInvoiceById]);
 
+  // Calculate tax and subtotal (14% VAT included in price)
+  const calculateTaxAndSubtotal = () => {
+    if (!currentInvoice?.order) {
+      return { subtotal: 0, tax: 0, total: 0 };
+    }
+
+    // السعر الإجمالي للمنتجات (شامل الضريبة) = مجموع أسعار المنتجات
+    const totalPriceWithTax = currentInvoice.order.items.reduce((sum, item) => sum + item.total, 0);
+    
+    // الضريبة = 14% من السعر الإجمالي
+    const taxRate = 0.14;
+    const tax = totalPriceWithTax * taxRate;
+    
+    // المجموع الفرعي = السعر الإجمالي - الضريبة
+    const subtotal = totalPriceWithTax - tax;
+    
+    // الإجمالي النهائي = السعر الإجمالي للمنتجات + الشحن
+    const shipping = currentInvoice.order.shipping || 0;
+    const total = totalPriceWithTax + shipping;
+    
+    return { subtotal, tax, total };
+  };
+
+  const { subtotal, tax, total } = calculateTaxAndSubtotal();
+
   const handlePrint = () => {
     if (!currentInvoice) return;
 
@@ -108,11 +133,11 @@ export default function Singlebills() {
                     <table class="w-[350px]">
                         <tr class="border-b border-gray-200">
                             <td class="p-2 text-sm text-[#7f8c8d] font-medium text-right">المجموع الفرعي</td>
-                            <td class="p-2 text-sm text-left font-semibold text-[#333]">${currentInvoice.order.subtotal?.toLocaleString() || 0} رس</td>
+                            <td class="p-2 text-sm text-left font-semibold text-[#333]">${subtotal.toLocaleString()} رس</td>
                         </tr>
                         <tr class="border-b border-gray-200">
                             <td class="p-2 text-sm text-[#7f8c8d] font-medium text-right">الضريبة</td>
-                            <td class="p-2 text-sm text-left font-semibold text-[#333]">${currentInvoice.order.tax?.toLocaleString() || 0} رس</td>
+                            <td class="p-2 text-sm text-left font-semibold text-[#333]">${tax.toLocaleString()} رس</td>
                         </tr>
                         <tr class="border-b border-gray-200">
                             <td class="p-2 text-sm text-[#7f8c8d] font-medium text-right">الشحن</td>
@@ -120,7 +145,7 @@ export default function Singlebills() {
                         </tr>
                         <tr class="bg-[#2c3e50] text-white text-lg font-bold">
                             <td class="p-3 text-right border-none">الإجمالي</td>
-                            <td class="p-3 text-left border-none">${currentInvoice.order.total?.toLocaleString() || 0} رس</td>
+                            <td class="p-3 text-left border-none">${total.toLocaleString()} رس</td>
                         </tr>
                     </table>
                 </div>
@@ -234,11 +259,11 @@ export default function Singlebills() {
                 <h2 className="text-[24px] font-[500] text-[#211C4D] mb-4">تفاصيل الدفع</h2>
                 <div className="flex items-center justify-between">
                   <p className="text-[16px] font-[500] text-[#211C4D]">المجموع الفرعي</p>
-                  <p className="font-[300] text-[16px] text-[#211C4D]">{currentInvoice.order.subtotal?.toLocaleString() || '0'} رس</p>
+                  <p className="font-[300] text-[16px] text-[#211C4D]">{subtotal.toLocaleString()} رس</p>
                 </div>
                 <div className="flex items-center my-5 justify-between">
                   <p className="text-[16px] font-[500] text-[#211C4D]">الضريبة المقدرة</p>
-                  <p className="font-[300] text-[16px] text-[#211C4D]">{currentInvoice.order.tax?.toLocaleString() || '0'} رس</p>
+                  <p className="font-[300] text-[16px] text-[#211C4D]">{tax.toLocaleString()} رس</p>
                 </div>
                 <div className="flex items-center justify-between">
                   <p className="text-[16px] font-[500] text-[#211C4D]">تكلفة الشحن </p>
@@ -246,7 +271,7 @@ export default function Singlebills() {
                 </div>
                 <div className="flex items-center mt-6 justify-between">
                   <p className="text-[24px] font-[500] text-[#211C4D]">المجموع الاجمالي </p>
-                  <p className="text-[24px] font-[500] text-[#211C4D]">{currentInvoice.order.total?.toLocaleString() || '0'} رس </p>
+                  <p className="text-[24px] font-[500] text-[#211C4D]">{total.toLocaleString()} رس </p>
                 </div>
               </div>
 
@@ -265,7 +290,7 @@ export default function Singlebills() {
                   <p className="text-[16px] font-[500] text-[#211C4D]">
                     المبلغ الإجمالي
                   </p>
-                  <p className="text-[24px] font-[500] text-[#211C4D]">{currentInvoice.order.total?.toLocaleString() || "0"}</p>
+                  <p className="text-[24px] font-[500] text-[#211C4D]">{total.toLocaleString()}</p>
                 </div>
                 <div>
                   <img

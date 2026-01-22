@@ -10,6 +10,7 @@
   "Enter": "Enter",
   "search": "search",
   "Email": "Email",
+  "city_id":"city",
   "Phone": "Phone",
   "Password": "Password",
   "Password_confirmation": "Confirm Password",

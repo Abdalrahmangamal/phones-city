@@ -10,6 +10,7 @@
   "search": "بحث",
   "Email": "البريد الالكتروني",
   "Phone": "رقم الهاتف",
+  "city_id":"المدينة",
   "Password": "الرقم السري",
   "Enter": "ادخل",
   "Password_confirmation": "تأكيد الرقم السري",

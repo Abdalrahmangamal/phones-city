@@ -1,7 +1,8 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { X, Upload } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { SaudiRiyalIcon } from "@/components/common/SaudiRiyalIcon";
+import axiosClient from "@/api/axiosClient";
 
 interface BankTransferModalProps {
     isOpen: boolean;
@@ -15,6 +16,9 @@ interface BankDetails {
     accountHolderName: string;
     iban: string;
     accountNumber: string;
+    swiftCode?: string;
+    branch?: string;
+    bankInstructions?: string;
 }
 
 export default function BankTransferModal({
@@ -32,11 +36,45 @@ export default function BankTransferModal({
         accountHolderName: "",
         iban: "",
         accountNumber: "",
+        swiftCode: "",
+        branch: "",
+        bankInstructions: "",
     });
 
     const [uploadedFile, setUploadedFile] = useState<File | null>(null);
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [loadingBankDetails, setLoadingBankDetails] = useState(false);
+
+    // Fetch bank details from API when modal opens
+    useEffect(() => {
+        if (isOpen) {
+            fetchBankDetails();
+        }
+    }, [isOpen]);
+
+    const fetchBankDetails = async () => {
+        setLoadingBankDetails(true);
+        try {
+            const response = await axiosClient.get("/api/v1/settings/bank/details");
+            if (response.data.status && response.data.data) {
+                const data = response.data.data;
+                setBankDetails({
+                    bankName: data.bank_name || "",
+                    accountHolderName: data.account_holder || "",
+                    iban: data.iban || "",
+                    accountNumber: data.account_number || "",
+                    swiftCode: data.swift_code || "",
+                    branch: data.branch || "",
+                    bankInstructions: data.bank_instructions || "",
+                });
+            }
+        } catch (error) {
+            console.error("Error fetching bank details:", error);
+        } finally {
+            setLoadingBankDetails(false);
+        }
+    };
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -61,11 +99,6 @@ export default function BankTransferModal({
     const handleSubmit = async () => {
         if (!uploadedFile) {
             alert(isRTL ? "يرجى رفع صورة إيصال التحويل" : "Please upload transfer receipt");
-            return;
-        }
-
-        if (!bankDetails.bankName || !bankDetails.accountHolderName || !bankDetails.iban || !bankDetails.accountNumber) {
-            alert(isRTL ? "يرجى ملء جميع البيانات" : "Please fill all fields");
             return;
         }
 
@@ -107,110 +140,173 @@ export default function BankTransferModal({
 
                 {/* Content */}
                 <div className="p-6 space-y-6">
-                    {/* Form Fields */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        {/* اسم البنك */}
-                        <div className="space-y-2">
-                            <label
-                                className="block font-semibold text-base"
-                                style={{ color: "#211C4D", fontFamily: "Roboto" }}
-                            >
-                                {isRTL ? "اسم البنك" : "Bank Name"}
-                            </label>
-                            <input
-                                type="text"
-                                value={bankDetails.bankName}
-                                onChange={(e) =>
-                                    setBankDetails({ ...bankDetails, bankName: e.target.value })
-                                }
-                                placeholder={isRTL ? "البنك السعودي" : "Saudi Bank"}
-                                className="w-full h-14 px-4 border border-gray-300 rounded-lg text-base"
-                                style={{
-                                    fontFamily: "Roboto",
-                                    color: "rgba(33, 28, 77, 0.8)",
-                                    textAlign: isRTL ? "right" : "left",
-                                }}
-                            />
+                    {loadingBankDetails ? (
+                        <div className="flex items-center justify-center py-8">
+                            <p className="text-base" style={{ color: "#211C4D", fontFamily: "Roboto" }}>
+                                {isRTL ? "جاري تحميل بيانات الحساب البنكي..." : "Loading bank details..."}
+                            </p>
                         </div>
+                    ) : (
+                        <>
+                            {/* Bank Details Display */}
+                            <div className="space-y-4">
+                                <h3
+                                    className="font-semibold text-lg"
+                                    style={{ color: "#211C4D", fontFamily: "Roboto" }}
+                                >
+                                    {isRTL ? "معلومات الحساب البنكي" : "Bank Account Details"}
+                                </h3>
+                                
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    {/* اسم البنك */}
+                                    <div className="space-y-2">
+                                        <label
+                                            className="block font-semibold text-base"
+                                            style={{ color: "#211C4D", fontFamily: "Roboto" }}
+                                        >
+                                            {isRTL ? "اسم البنك" : "Bank Name"}
+                                        </label>
+                                        <div
+                                            className="w-full min-h-[56px] px-4 py-3 border border-gray-300 rounded-lg text-base bg-gray-50 flex items-center"
+                                            style={{
+                                                fontFamily: "Roboto",
+                                                color: "rgba(33, 28, 77, 0.8)",
+                                                textAlign: isRTL ? "right" : "left",
+                                            }}
+                                        >
+                                            {bankDetails.bankName || (isRTL ? "غير متوفر" : "Not available")}
+                                        </div>
+                                    </div>
 
-                        {/* اسم صاحب الحساب */}
-                        <div className="space-y-2">
-                            <label
-                                className="block font-semibold text-base"
-                                style={{ color: "#211C4D", fontFamily: "Roboto" }}
-                            >
-                                {isRTL ? "اسم صاحب الحساب" : "Account Holder Name"}
-                            </label>
-                            <input
-                                type="text"
-                                value={bankDetails.accountHolderName}
-                                onChange={(e) =>
-                                    setBankDetails({
-                                        ...bankDetails,
-                                        accountHolderName: e.target.value,
-                                    })
-                                }
-                                placeholder={isRTL ? "محمد أحمد" : "Mohammed Ahmed"}
-                                className="w-full h-14 px-4 border border-gray-300 rounded-lg text-base"
-                                style={{
-                                    fontFamily: "Roboto",
-                                    color: "rgba(33, 28, 77, 0.8)",
-                                    textAlign: isRTL ? "right" : "left",
-                                }}
-                            />
-                        </div>
+                                    {/* اسم صاحب الحساب */}
+                                    <div className="space-y-2">
+                                        <label
+                                            className="block font-semibold text-base"
+                                            style={{ color: "#211C4D", fontFamily: "Roboto" }}
+                                        >
+                                            {isRTL ? "اسم صاحب الحساب" : "Account Holder Name"}
+                                        </label>
+                                        <div
+                                            className="w-full min-h-[56px] px-4 py-3 border border-gray-300 rounded-lg text-base bg-gray-50 flex items-center"
+                                            style={{
+                                                fontFamily: "Roboto",
+                                                color: "rgba(33, 28, 77, 0.8)",
+                                                textAlign: isRTL ? "right" : "left",
+                                            }}
+                                        >
+                                            {bankDetails.accountHolderName || (isRTL ? "غير متوفر" : "Not available")}
+                                        </div>
+                                    </div>
 
-                        {/* رقم الآيبان */}
-                        <div className="space-y-2">
-                            <label
-                                className="block font-semibold text-base"
-                                style={{ color: "#211C4D", fontFamily: "Roboto" }}
-                            >
-                                {isRTL ? "رقم الآيبان (IBAN)" : "IBAN Number"}
-                            </label>
-                            <input
-                                type="text"
-                                value={bankDetails.iban}
-                                onChange={(e) =>
-                                    setBankDetails({ ...bankDetails, iban: e.target.value })
-                                }
-                                placeholder="SA4420000000123456789"
-                                className="w-full h-14 px-4 border border-gray-300 rounded-lg text-base"
-                                style={{
-                                    fontFamily: "Roboto",
-                                    color: "rgba(33, 28, 77, 0.8)",
-                                    textAlign: isRTL ? "right" : "left",
-                                }}
-                            />
-                        </div>
+                                    {/* رقم الآيبان */}
+                                    <div className="space-y-2">
+                                        <label
+                                            className="block font-semibold text-base"
+                                            style={{ color: "#211C4D", fontFamily: "Roboto" }}
+                                        >
+                                            {isRTL ? "رقم الآيبان (IBAN)" : "IBAN Number"}
+                                        </label>
+                                        <div
+                                            className="w-full min-h-[56px] px-4 py-3 border border-gray-300 rounded-lg text-base bg-gray-50 flex items-center"
+                                            style={{
+                                                fontFamily: "Roboto",
+                                                color: "rgba(33, 28, 77, 0.8)",
+                                                textAlign: isRTL ? "right" : "left",
+                                            }}
+                                        >
+                                            {bankDetails.iban || (isRTL ? "غير متوفر" : "Not available")}
+                                        </div>
+                                    </div>
 
-                        {/* رقم الحساب */}
-                        <div className="space-y-2">
-                            <label
-                                className="block font-semibold text-base"
-                                style={{ color: "#211C4D", fontFamily: "Roboto" }}
-                            >
-                                {isRTL ? "رقم الحساب" : "Account Number"}
-                            </label>
-                            <input
-                                type="text"
-                                value={bankDetails.accountNumber}
-                                onChange={(e) =>
-                                    setBankDetails({
-                                        ...bankDetails,
-                                        accountNumber: e.target.value,
-                                    })
-                                }
-                                placeholder="1234567890123456"
-                                className="w-full h-14 px-4 border border-gray-300 rounded-lg text-base"
-                                style={{
-                                    fontFamily: "Roboto",
-                                    color: "rgba(33, 28, 77, 0.8)",
-                                    textAlign: isRTL ? "right" : "left",
-                                }}
-                            />
-                        </div>
-                    </div>
+                                    {/* رقم الحساب */}
+                                    <div className="space-y-2">
+                                        <label
+                                            className="block font-semibold text-base"
+                                            style={{ color: "#211C4D", fontFamily: "Roboto" }}
+                                        >
+                                            {isRTL ? "رقم الحساب" : "Account Number"}
+                                        </label>
+                                        <div
+                                            className="w-full min-h-[56px] px-4 py-3 border border-gray-300 rounded-lg text-base bg-gray-50 flex items-center"
+                                            style={{
+                                                fontFamily: "Roboto",
+                                                color: "rgba(33, 28, 77, 0.8)",
+                                                textAlign: isRTL ? "right" : "left",
+                                            }}
+                                        >
+                                            {bankDetails.accountNumber || (isRTL ? "غير متوفر" : "Not available")}
+                                        </div>
+                                    </div>
+
+                                    {/* Swift Code */}
+                                    {bankDetails.swiftCode && (
+                                        <div className="space-y-2">
+                                            <label
+                                                className="block font-semibold text-base"
+                                                style={{ color: "#211C4D", fontFamily: "Roboto" }}
+                                            >
+                                                {isRTL ? "رمز Swift" : "Swift Code"}
+                                            </label>
+                                            <div
+                                                className="w-full min-h-[56px] px-4 py-3 border border-gray-300 rounded-lg text-base bg-gray-50 flex items-center"
+                                                style={{
+                                                    fontFamily: "Roboto",
+                                                    color: "rgba(33, 28, 77, 0.8)",
+                                                    textAlign: isRTL ? "right" : "left",
+                                                }}
+                                            >
+                                                {bankDetails.swiftCode}
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {/* Branch */}
+                                    {bankDetails.branch && (
+                                        <div className="space-y-2">
+                                            <label
+                                                className="block font-semibold text-base"
+                                                style={{ color: "#211C4D", fontFamily: "Roboto" }}
+                                            >
+                                                {isRTL ? "الفرع" : "Branch"}
+                                            </label>
+                                            <div
+                                                className="w-full min-h-[56px] px-4 py-3 border border-gray-300 rounded-lg text-base bg-gray-50 flex items-center"
+                                                style={{
+                                                    fontFamily: "Roboto",
+                                                    color: "rgba(33, 28, 77, 0.8)",
+                                                    textAlign: isRTL ? "right" : "left",
+                                                }}
+                                            >
+                                                {bankDetails.branch}
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* Bank Instructions */}
+                                {bankDetails.bankInstructions && (
+                                    <div className="space-y-2">
+                                        <label
+                                            className="block font-semibold text-base"
+                                            style={{ color: "#211C4D", fontFamily: "Roboto" }}
+                                        >
+                                            {isRTL ? "تعليمات البنك" : "Bank Instructions"}
+                                        </label>
+                                        <div
+                                            className="w-full min-h-[80px] px-4 py-3 border border-gray-300 rounded-lg text-base bg-gray-50"
+                                            style={{
+                                                fontFamily: "Roboto",
+                                                color: "rgba(33, 28, 77, 0.8)",
+                                                textAlign: isRTL ? "right" : "left",
+                                            }}
+                                        >
+                                            {bankDetails.bankInstructions}
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        </>
+                    )}
 
                     {/* تأكيد العملية */}
                     <p

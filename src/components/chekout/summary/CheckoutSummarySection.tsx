@@ -91,12 +91,14 @@ const CheckoutSummarySection: React.FC<CheckoutSummarySectionProps> = ({
     fetchPoints();
   }, []);
 
-  // 1. Calculate Subtotal (Exclusive of Tax)
-  const subtotal = items.reduce((acc, item) => acc + (item.subtotal || 0), 0);
+  // 1. Calculate Total Price (including tax) - هذا هو السعر المعروض
+  const totalPriceWithTax = items.reduce((acc, item) => acc + (item.subtotal || 0), 0);
 
-  // 2. Calculate Tax (Assuming 15% VAT on the subtotal)
-  const taxRate = 0.15;
-  const tax = subtotal * taxRate;
+  // 2. Calculate Tax and Subtotal (14% VAT from total price)
+  // مثال: إذا كان السعر المعروض 100، الضريبة = 14% من 100 = 14، المجموع الفرعي = 100 - 14 = 86
+  const taxRate = 0.14; // 14%
+  const tax = totalPriceWithTax * taxRate; // الضريبة = 14% من السعر الإجمالي
+  const subtotal = totalPriceWithTax - tax; // المجموع الفرعي = السعر الإجمالي - الضريبة
 
   // 3. Selected Payment & Fees
   const selectedPayment = (items[0]?.product as any)?.options?.[0]?.payment_methods?.find((p: any) => p.id === selectedPaymentId);
@@ -120,7 +122,8 @@ const CheckoutSummarySection: React.FC<CheckoutSummarySectionProps> = ({
         ? shippingFeeStr
         : 0;
 
-    if (freeShippingThreshold > 0 && subtotal >= freeShippingThreshold) {
+    // Compare with total price (including tax) for free shipping threshold
+    if (freeShippingThreshold > 0 && totalPriceWithTax >= freeShippingThreshold) {
       shippingCost = 0;
     } else {
       shippingCost = baseShippingCost;
@@ -129,15 +132,15 @@ const CheckoutSummarySection: React.FC<CheckoutSummarySectionProps> = ({
     shippingCost = 0;
   }
 
-  // 5. Calculate max possible discount (cap at subtotal only - not including tax and shipping)
-  // Note: subtotal is the sum of item.subtotal (price before tax)
-  // The displayed subtotal in UI might include tax, so we use the raw subtotal for max discount
-  const maxDiscountAmount = subtotal; // الخصم على سعر المنتجات فقط
+  // 5. Calculate max possible discount (cap at total price including tax)
+  const maxDiscountAmount = totalPriceWithTax; // الخصم على السعر الإجمالي (شامل الضريبة)
   const maxPointsValue = pointsData ? parseFloat(pointsData.available_points_value) : 0;
 
   // Debug: Log values to understand the calculation
   console.log('🔍 Points Discount Debug:', {
+    totalPriceWithTax,
     subtotal,
+    tax,
     maxDiscountAmount,
     maxPointsValue,
     pointsDiscountAmount,
@@ -154,7 +157,8 @@ const CheckoutSummarySection: React.FC<CheckoutSummarySectionProps> = ({
   }
 
   // 6. Calculate Final Total (guaranteed to be >= 0)
-  const displayFinalTotal = Math.max(0, subtotal + tax + shippingCost + paymentProcessingFee - pointsDiscount);
+  // Tax is already included in totalPriceWithTax, so we don't add it again
+  const displayFinalTotal = Math.max(0, totalPriceWithTax + shippingCost + paymentProcessingFee - pointsDiscount);
 
   // Sync Final Total with Store to prevent issues on Complete Order
   useEffect(() => {

@@ -43,6 +43,7 @@ export default function Myorder() {
 
   useEffect(() => {
     fetchOrders();
+    console.log("ordeeer",orders)
   }, [fetchOrders]);
 
   const getFilteredOrders = () => {
