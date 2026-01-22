@@ -96,7 +96,7 @@ const CheckoutSummarySection: React.FC<CheckoutSummarySectionProps> = ({
 
   // 2. Calculate Tax and Subtotal (14% VAT from total price)
   // مثال: إذا كان السعر المعروض 100، الضريبة = 14% من 100 = 14، المجموع الفرعي = 100 - 14 = 86
-  const taxRate = 0.14; // 14%
+  const taxRate = 0.15; // 15%
   const tax = totalPriceWithTax * taxRate; // الضريبة = 14% من السعر الإجمالي
   const subtotal = totalPriceWithTax - tax; // المجموع الفرعي = السعر الإجمالي - الضريبة
 

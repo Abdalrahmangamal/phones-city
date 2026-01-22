@@ -28,18 +28,18 @@ export default function Singlebills() {
 
     // السعر الإجمالي للمنتجات (شامل الضريبة) = مجموع أسعار المنتجات
     const totalPriceWithTax = currentInvoice.order.items.reduce((sum, item) => sum + item.total, 0);
-    
+
     // الضريبة = 14% من السعر الإجمالي
-    const taxRate = 0.14;
+    const taxRate = 0.15;
     const tax = totalPriceWithTax * taxRate;
-    
+
     // المجموع الفرعي = السعر الإجمالي - الضريبة
     const subtotal = totalPriceWithTax - tax;
-    
+
     // الإجمالي النهائي = السعر الإجمالي للمنتجات + الشحن
     const shipping = currentInvoice.order.shipping || 0;
     const total = totalPriceWithTax + shipping;
-    
+
     return { subtotal, tax, total };
   };
 
@@ -99,7 +99,7 @@ export default function Singlebills() {
                     <!-- Placeholders for Ship To if needed later -->
                      <div class="flex-1 min-w-[200px]">
                         <h3 class="text-[#2c3e50] text-base font-bold mb-3 uppercase border-b border-gray-100 pb-1">العميل</h3>
-                        <p class="text-sm text-[#555] my-1"><strong>الاسم:</strong> ${currentInvoice.user?.name || 'عميل'}</p>
+                        <p class="text-sm text-[#555] my-1"><strong>الاسم:</strong> ${currentInvoice.order.location?.first_name || ''} ${currentInvoice.order.location?.last_name || 'عميل'}</p>
                     </div>
                 </div>
 
