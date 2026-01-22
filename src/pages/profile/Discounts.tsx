@@ -5,6 +5,7 @@ import content_copy from "@/assets/images/content_copy.png";
 import { useTranslation } from "react-i18next";
 import { useDiscountStore } from "@/store/profile/discountsStore";
 import { useLangSync } from "@/hooks/useLangSync";
+import { SaudiRiyalIcon } from "@/components/common/SaudiRiyalIcon";
 
 export default function Discounts() {
   const { t } = useTranslation();

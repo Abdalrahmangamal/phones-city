@@ -96,18 +96,6 @@ export default function ProductCard({ product, imagecard, containerstyle, quanti
   // حالة السلة محلياً
   const [isInCart, setIsInCart] = useState((product as any)?.in_cart || false);
 
-  // إضافة console.log للتصحيح
-  useEffect(() => {
-    console.log('ProductCard Debug:');
-    console.log('- Selected index:', selectedIndex);
-    console.log('- Has options:', hasOptions);
-    console.log('- Product options:', product?.options);
-    console.log('- Selected variant:', selectedVariant);
-    console.log('- Original price:', original);
-    console.log('- Final price:', final);
-    console.log('- Discount percent:', discountPercent);
-  }, [selectedIndex, product, selectedVariant]);
-
   return (
     <div
       key={product.id}
@@ -135,13 +123,13 @@ export default function ProductCard({ product, imagecard, containerstyle, quanti
               if (!prev) {
                 addFavorite(product.id).catch(() => {
                   setLocalFavorite(prev);
-                  toast.error("فشل إضافة للمفضلة. حاول مرة أخرى.");
+                  toast.error(t("toast.favorites.addFailed"));
                 });
               } else {
                 const favId = favItem?.id || (product as any)?.favorite_id;
                 removeFavorite(favId || product.id).catch(() => {
                   setLocalFavorite(prev);
-                  toast.error("فشل إزالة من المفضلة. حاول مرة أخرى.");
+                  toast.error(t("toast.favorites.removeFailed"));
                 });
               }
             }}
@@ -281,19 +269,19 @@ export default function ProductCard({ product, imagecard, containerstyle, quanti
                   addToCart(idToSend, 1, hasMultiple)
                     .then(() => {
                       setIsInCart(true);
-                      toast.success(`تم إضافة ${product.name} إلى السلة`, {
+                      toast.success(t("toast.cart.added", { name: product.name }), {
                         position: "bottom-right",
                         autoClose: 2000,
                       });
                     })
                     .catch((error: any) => {
-                      let errorMessage = "فشلت إضافة المنتج إلى السلة";
+                      let errorMessage = t("product.addToCartFailed");
                       if (error?.response?.data?.message) {
                         const apiMessage = error.response.data.message;
                         if (apiMessage.includes("out of stock") || apiMessage.includes("نفد المخزون")) {
-                          errorMessage = "عذراً، هذا المنتج نفد من المخزون";
+                          errorMessage = t("product.outOfStock");
                         } else if (apiMessage.includes("already in cart")) {
-                          errorMessage = "المنتج موجود مسبقاً في السلة";
+                          errorMessage = t("product.alreadyInCart");
                           setIsInCart(true);
                         } else {
                           errorMessage = apiMessage;
@@ -305,13 +293,13 @@ export default function ProductCard({ product, imagecard, containerstyle, quanti
                   deleteToCart(idToSend)
                     .then(() => {
                       setIsInCart(false);
-                      toast.info(`تم حذف ${product.name} من السلة`, {
+                      toast.info(t("toast.cart.removed", { name: product.name }), {
                         position: "bottom-right",
                         autoClose: 2000,
                       });
                     })
                     .catch(() => {
-                      toast.error("فشل حذف المنتج من السلة", {
+                      toast.error(t("toast.cart.removeFailed"), {
                         position: "bottom-right",
                         autoClose: 3000,
                       });

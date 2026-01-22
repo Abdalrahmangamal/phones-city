@@ -1,0 +1,702 @@
+[
+  {
+    "id": "TC001",
+    "title": "User Registration with Valid Data",
+    "description": "Verify that a new user can successfully register with valid input data including username, email, and password.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to the registration page"
+      },
+      {
+        "type": "action",
+        "description": "Enter valid username, email, and password"
+      },
+      {
+        "type": "action",
+        "description": "Submit the registration form"
+      },
+      {
+        "type": "assertion",
+        "description": "Check that registration is successful and user is redirected appropriately"
+      }
+    ]
+  },
+  {
+    "id": "TC002",
+    "title": "User Registration with Missing Fields",
+    "description": "Verify registration fails with appropriate error messages when required fields are missing.",
+    "category": "error handling",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to the registration page"
+      },
+      {
+        "type": "action",
+        "description": "Leave required fields empty"
+      },
+      {
+        "type": "action",
+        "description": "Submit the registration form"
+      },
+      {
+        "type": "assertion",
+        "description": "Check that registration fails and errors are displayed for missing fields"
+      }
+    ]
+  },
+  {
+    "id": "TC003",
+    "title": "User Login with Correct Credentials",
+    "description": "Verify that a registered user can log in using valid email and password.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to the login page"
+      },
+      {
+        "type": "action",
+        "description": "Enter valid email and password"
+      },
+      {
+        "type": "action",
+        "description": "Click the login button"
+      },
+      {
+        "type": "assertion",
+        "description": "Check that login is successful and user is redirected to home page"
+      }
+    ]
+  },
+  {
+    "id": "TC004",
+    "title": "User Login with Invalid Credentials",
+    "description": "Verify that login fails with invalid email or password and appropriate error messages are displayed.",
+    "category": "error handling",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to the login page"
+      },
+      {
+        "type": "action",
+        "description": "Enter invalid email and/or password"
+      },
+      {
+        "type": "action",
+        "description": "Click the login button"
+      },
+      {
+        "type": "assertion",
+        "description": "Check that login fails and error message is shown"
+      }
+    ]
+  },
+  {
+    "id": "TC005",
+    "title": "OTP Verification Flow",
+    "description": "Verify OTP can be sent and validated during registration and login flows.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Initiate registration/login that requires OTP verification"
+      },
+      {
+        "type": "action",
+        "description": "Receive OTP code"
+      },
+      {
+        "type": "action",
+        "description": "Enter correct OTP code in OTP verification form"
+      },
+      {
+        "type": "assertion",
+        "description": "Check that OTP verification succeeds and user can proceed"
+      }
+    ]
+  },
+  {
+    "id": "TC006",
+    "title": "OTP Verification with Incorrect Code",
+    "description": "Verify the system rejects incorrect OTP codes and shows an error message.",
+    "category": "error handling",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Initiate OTP verification process"
+      },
+      {
+        "type": "action",
+        "description": "Enter incorrect OTP code"
+      },
+      {
+        "type": "action",
+        "description": "Submit the OTP form"
+      },
+      {
+        "type": "assertion",
+        "description": "Check that verification fails with an appropriate error message"
+      }
+    ]
+  },
+  {
+    "id": "TC007",
+    "title": "Password Recovery Flow",
+    "description": "Verify the forgot password process allows user to reset password securely.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to forgot password page"
+      },
+      {
+        "type": "action",
+        "description": "Enter registered email address"
+      },
+      {
+        "type": "action",
+        "description": "Submit request to receive password recovery email or OTP"
+      },
+      {
+        "type": "action",
+        "description": "Complete password reset process with valid token or OTP"
+      },
+      {
+        "type": "assertion",
+        "description": "Check that password is reset successfully and user can log in with new password"
+      }
+    ]
+  },
+  {
+    "id": "TC008",
+    "title": "Password Recovery with Unregistered Email",
+    "description": "Verify error is displayed when attempting password recovery with an unregistered email.",
+    "category": "error handling",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to forgot password page"
+      },
+      {
+        "type": "action",
+        "description": "Enter unregistered email address"
+      },
+      {
+        "type": "action",
+        "description": "Submit password recovery request"
+      },
+      {
+        "type": "assertion",
+        "description": "Check that appropriate error message is shown indicating email not found"
+      }
+    ]
+  },
+  {
+    "id": "TC009",
+    "title": "Browse Products by Category",
+    "description": "Verify that users can browse the products filtered by specific categories.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to the product categories page"
+      },
+      {
+        "type": "action",
+        "description": "Select a category from the list"
+      },
+      {
+        "type": "assertion",
+        "description": "Check that only products belonging to the selected category are displayed"
+      }
+    ]
+  },
+  {
+    "id": "TC010",
+    "title": "Product Search Functionality",
+    "description": "Verify the search input returns relevant products matching the query keywords.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Enter a product name or keyword in the search bar"
+      },
+      {
+        "type": "action",
+        "description": "Submit the search query"
+      },
+      {
+        "type": "assertion",
+        "description": "Check that search results contain relevant products matching the query"
+      }
+    ]
+  },
+  {
+    "id": "TC011",
+    "title": "Product Search with No Results",
+    "description": "Verify the system handles searches returning no products gracefully.",
+    "category": "error handling",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Enter a random string or non-existent product name in the search bar"
+      },
+      {
+        "type": "action",
+        "description": "Submit the search query"
+      },
+      {
+        "type": "assertion",
+        "description": "Check that an informative 'no results found' message is displayed"
+      }
+    ]
+  },
+  {
+    "id": "TC012",
+    "title": "Apply Product Filters",
+    "description": "Verify that applying multiple filters such as brand, price range, and features correctly updates product listings.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to product listing page"
+      },
+      {
+        "type": "action",
+        "description": "Select multiple filters (e.g., brand, price range)"
+      },
+      {
+        "type": "action",
+        "description": "Confirm filter application"
+      },
+      {
+        "type": "assertion",
+        "description": "Check that displayed products match all selected filter criteria"
+      }
+    ]
+  },
+  {
+    "id": "TC013",
+    "title": "View Product Details",
+    "description": "Verify that clicking on a product navigates to the product details page displaying all relevant information and reviews.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "From product listing, select a product"
+      },
+      {
+        "type": "assertion",
+        "description": "Check product details page displays product images, description, specifications, price, and user reviews"
+      }
+    ]
+  },
+  {
+    "id": "TC014",
+    "title": "Add Product to Shopping Cart",
+    "description": "Verify that a user can add a product to the shopping cart from product details or listing pages.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to a product page or listing"
+      },
+      {
+        "type": "action",
+        "description": "Click 'Add to Cart' button"
+      },
+      {
+        "type": "assertion",
+        "description": "Check that the product is added to the cart and cart count updates accordingly"
+      }
+    ]
+  },
+  {
+    "id": "TC015",
+    "title": "Update Product Quantity in Cart",
+    "description": "Verify that users can change the quantity of a product in the shopping cart and the total price updates accordingly.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Open shopping cart"
+      },
+      {
+        "type": "action",
+        "description": "Adjust quantity of a product"
+      },
+      {
+        "type": "assertion",
+        "description": "Check that product quantity updates and total price is recalculated correctly"
+      }
+    ]
+  },
+  {
+    "id": "TC016",
+    "title": "Remove Product from Cart",
+    "description": "Verify users can remove a product from the shopping cart and the cart updates correctly.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Open shopping cart"
+      },
+      {
+        "type": "action",
+        "description": "Click remove/delete button for a product"
+      },
+      {
+        "type": "assertion",
+        "description": "Check that product is removed from the cart and cart content updates"
+      }
+    ]
+  },
+  {
+    "id": "TC017",
+    "title": "Checkout with Valid Address and Payment",
+    "description": "Verify that a user can successfully complete the checkout process by selecting a shipping address, applying discounts, choosing a payment method, and placing an order.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to checkout page with items in cart"
+      },
+      {
+        "type": "action",
+        "description": "Select or add a valid shipping address"
+      },
+      {
+        "type": "action",
+        "description": "Apply a valid discount or promo code"
+      },
+      {
+        "type": "action",
+        "description": "Select payment method"
+      },
+      {
+        "type": "action",
+        "description": "Confirm and place the order"
+      },
+      {
+        "type": "assertion",
+        "description": "Check that order is submitted successfully and confirmation page is shown"
+      }
+    ]
+  },
+  {
+    "id": "TC018",
+    "title": "Checkout with Invalid Discount Code",
+    "description": "Verify that applying an invalid or expired promo code during checkout results in appropriate error feedback and the code is not accepted.",
+    "category": "error handling",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to checkout page with items in cart"
+      },
+      {
+        "type": "action",
+        "description": "Enter an invalid or expired discount code"
+      },
+      {
+        "type": "action",
+        "description": "Attempt to apply the discount code"
+      },
+      {
+        "type": "assertion",
+        "description": "Check that the discount code is rejected and an error message is displayed"
+      }
+    ]
+  },
+  {
+    "id": "TC019",
+    "title": "Manage User Profile Information",
+    "description": "Verify a logged-in user can view and update their profile information successfully.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Log in to user account"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to profile management page"
+      },
+      {
+        "type": "action",
+        "description": "Edit profile fields such as name, email, and phone number"
+      },
+      {
+        "type": "action",
+        "description": "Save changes"
+      },
+      {
+        "type": "assertion",
+        "description": "Check that profile data updates are reflected correctly"
+      }
+    ]
+  },
+  {
+    "id": "TC020",
+    "title": "Add, Edit, and Delete Shipping Addresses",
+    "description": "Verify user can add new shipping addresses, edit existing ones, and delete addresses from their profile.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Log in and navigate to address management page"
+      },
+      {
+        "type": "action",
+        "description": "Add a new address with valid details"
+      },
+      {
+        "type": "assertion",
+        "description": "Check new address is added and listed"
+      },
+      {
+        "type": "action",
+        "description": "Edit an existing address details"
+      },
+      {
+        "type": "assertion",
+        "description": "Check address updates are saved"
+      },
+      {
+        "type": "action",
+        "description": "Delete an existing address"
+      },
+      {
+        "type": "assertion",
+        "description": "Check address is removed from the list"
+      }
+    ]
+  },
+  {
+    "id": "TC021",
+    "title": "View Order History and Details",
+    "description": "Verify users can view their past orders with order details and status.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Log in and navigate to order history page"
+      },
+      {
+        "type": "assertion",
+        "description": "Check that all past orders are listed with status and details"
+      },
+      {
+        "type": "action",
+        "description": "Select an individual order to view details"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify order details including products, prices, shipping info, and status are displayed correctly"
+      }
+    ]
+  },
+  {
+    "id": "TC022",
+    "title": "Add and Remove Favorite Products",
+    "description": "Verify users can add products to their favorites list and remove them as needed.",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Log in and navigate to a product page"
+      },
+      {
+        "type": "action",
+        "description": "Click 'Add to Favorites' button"
+      },
+      {
+        "type": "assertion",
+        "description": "Check that product appears in user's favorites list"
+      },
+      {
+        "type": "action",
+        "description": "Remove product from favorites"
+      },
+      {
+        "type": "assertion",
+        "description": "Check that product is no longer listed in favorites"
+      }
+    ]
+  },
+  {
+    "id": "TC023",
+    "title": "Submit and View Product Reviews",
+    "description": "Verify that a logged-in user can submit a product review with rating and comment and can view reviews on product pages.",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Log in and navigate to a product's detail page"
+      },
+      {
+        "type": "action",
+        "description": "Submit a review with rating and text comment"
+      },
+      {
+        "type": "assertion",
+        "description": "Check that submitted review appears on the product page with correct data"
+      }
+    ]
+  },
+  {
+    "id": "TC024",
+    "title": "Internationalization Language Toggle",
+    "description": "Verify that user can switch between English and Arabic languages and the content updates accordingly.",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Locate and use the language toggle control"
+      },
+      {
+        "type": "action",
+        "description": "Switch to Arabic language"
+      },
+      {
+        "type": "assertion",
+        "description": "Check the entire page content updates to Arabic with proper RTL layout"
+      },
+      {
+        "type": "action",
+        "description": "Switch back to English language"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify content changes back to English correctly"
+      }
+    ]
+  },
+  {
+    "id": "TC025",
+    "title": "Access Customer Support FAQ and Policies",
+    "description": "Verify that the FAQ, terms & policies, and payment/return plans pages load and display accurate content.",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to FAQ page"
+      },
+      {
+        "type": "assertion",
+        "description": "Check FAQ questions and answers are displayed properly"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to Terms & Policies page"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify all policies content loads and is readable"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to Return and Payment Plans page"
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm that return policies and payment plans details are shown accurately"
+      }
+    ]
+  },
+  {
+    "id": "TC026",
+    "title": "Use AI Chatbot for Customer Assistance",
+    "description": "Verify the AI chatbot widget loads and responds to typical customer queries correctly.",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Open chatbot interface"
+      },
+      {
+        "type": "action",
+        "description": "Type a common customer query (e.g., 'What is your return policy?')"
+      },
+      {
+        "type": "assertion",
+        "description": "Check that chatbot returns a relevant and accurate response"
+      }
+    ]
+  },
+  {
+    "id": "TC027",
+    "title": "Load Dynamic Home Page Content",
+    "description": "Verify the home page loads banners, sliders, promotional content, categories, and highlighted products correctly.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to the home page"
+      },
+      {
+        "type": "assertion",
+        "description": "Check that all banners and sliders load without errors"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify categories and promotional contents are shown and are clickable"
+      },
+      {
+        "type": "assertion",
+        "description": "Ensure highlighted products appear in dedicated sections"
+      }
+    ]
+  },
+  {
+    "id": "TC028",
+    "title": "Validate Responsive UI Components",
+    "description": "Verify key UI components such as buttons, dialogs, tabs, and forms are accessible and render correctly across various screen sizes and devices.",
+    "category": "ui",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Load common pages containing UI components"
+      },
+      {
+        "type": "assertion",
+        "description": "Check UI components adjust layout visually and retain functionality on desktop, tablet, and mobile views"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify accessible roles, labels, and keyboard navigation works"
+      }
+    ]
+  }
+]

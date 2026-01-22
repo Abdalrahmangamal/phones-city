@@ -12,19 +12,19 @@ import { SaudiRiyalIcon } from "@/components/common/SaudiRiyalIcon";
 
 import TamaraWidget from "@/components/public/TamaraWidget";
 
-interface PtoductdetailsProps {
+interface ProductdetailsProps {
   product: any;
   handleindexchange: (index: number) => void;
   selectedOptionIndex: number;
   isOutOfStock?: boolean;
 }
 
-export default function Ptoductdetails({
+export default function Productdetails({
   product,
   handleindexchange,
   selectedOptionIndex: propSelectedOptionIndex,
   isOutOfStock = false,
-}: PtoductdetailsProps) {
+}: ProductdetailsProps) {
   const { addToCart } = useCartStore();
   const [quantity, setQuantity] = useState(1);
   const [isTabbyModalOpen, setIsTabbyModalOpen] = useState(false);
@@ -78,7 +78,7 @@ export default function Ptoductdetails({
 
       await addToCart(idToSend, quantity, hasMultiple);
 
-      toast.success(`تم إضافة ${product.name} إلى السلة`, {
+      toast.success(t("product.addedToCart", { name: product.name }), {
         position: "bottom-right",
         autoClose: 2000,
       });
@@ -87,12 +87,12 @@ export default function Ptoductdetails({
     } catch (error: any) {
       const errorMessage = error?.response?.data?.message;
       if (errorMessage === "Insufficient stock") {
-        toast.error(lang === "ar" ? "الكمية المطلوبة غير متوفرة" : "Requested quantity not available", {
+        toast.error(t("product.insufficientStock"), {
           position: "bottom-right",
           autoClose: 2000,
         });
       } else {
-        toast.error(lang === "ar" ? "فشل إضافة المنتج إلى السلة" : "Failed to add product to cart", {
+        toast.error(t("product.addToCartFailed"), {
           position: "bottom-right",
           autoClose: 2000,
         });
@@ -118,7 +118,7 @@ export default function Ptoductdetails({
 
       await addToCart(idToSend, quantity, hasMultiple);
 
-      toast.success(`تم إضافة ${product.name} إلى السلة`, {
+      toast.success(t("product.addedToCart", { name: product.name }), {
         position: "bottom-right",
         autoClose: 2000,
       });
@@ -127,12 +127,12 @@ export default function Ptoductdetails({
     } catch (error: any) {
       const errorMessage = error?.response?.data?.message;
       if (errorMessage === "Insufficient stock") {
-        toast.error(lang === "ar" ? "الكمية المطلوبة غير متوفرة" : "Requested quantity not available", {
+        toast.error(t("product.insufficientStock"), {
           position: "bottom-right",
           autoClose: 2000,
         });
       } else {
-        toast.error(lang === "ar" ? "فشل إضافة المنتج إلى السلة" : "Failed to add product to cart", {
+        toast.error(t("product.addToCartFailed"), {
           position: "bottom-right",
           autoClose: 2000,
         });

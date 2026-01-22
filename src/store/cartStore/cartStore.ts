@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import axios from "axios";
+import axiosClient from "@/api/axiosClient";
 
 interface CartProduct {
   id: number;
@@ -52,8 +52,6 @@ interface CartState {
   clearCart: () => Promise<void>;
 }
 
-const baseUrl = import.meta.env.VITE_BASE_URL;
-
 export const useCartStore = create<CartState>((set, get) => ({
   loading: false,
   error: null,
@@ -64,13 +62,10 @@ export const useCartStore = create<CartState>((set, get) => ({
 
   freeShippingThreshold: 0,
 
-  // ----------------- GET CART ------------------
   fetchCart: async () => {
     try {
-      const token = localStorage.getItem("token");
-      const res = await axios.get(`${baseUrl}api/v1/cart`, {
+      const res = await axiosClient.get(`api/v1/cart`, {
         headers: {
-          Authorization: `Bearer ${token}`,
           Accept: "application/json",
         },
       });
@@ -113,7 +108,6 @@ export const useCartStore = create<CartState>((set, get) => ({
     try {
       const token = localStorage.getItem("token");
       if (!token) {
-        console.warn("No token found");
         return;
       }
 
@@ -121,13 +115,12 @@ export const useCartStore = create<CartState>((set, get) => ({
         ? { product_option_id: id, quantity }
         : { product_id: id, quantity };
 
-      await axios.post(
-        `${baseUrl}api/v1/cart`,
+      await axiosClient.post(
+        `api/v1/cart`,
         {},
         {
           params,
           headers: {
-            Authorization: `Bearer ${token}`,
             Accept: "application/json",
           },
         }
@@ -135,30 +128,24 @@ export const useCartStore = create<CartState>((set, get) => ({
 
       await get().fetchCart();
     } catch (error: any) {
-      console.error("Add to cart error:", error?.response?.data || error.message);
       throw error; // <--- إضافة هذا لرفض الـ Promise وتنفيذ .catch
     }
   },
 
-  // ----------------- DELETE (باستخدام product_id) ------------------
   deleteToCart: async (productId: number) => {
     try {
-      const token = localStorage.getItem("token");
       set({ loading: true, error: null });
 
-      const res = await axios.delete(`${baseUrl}api/v1/cart/product`, {
+      await axiosClient.delete(`api/v1/cart/product`, {
         params: { product_id: productId },
         headers: {
-          Authorization: `Bearer ${token}`,
           Accept: "application/json",
         },
       });
 
-      console.log("remove from cart:", res.data);
       await get().fetchCart(); // تحديث السلة بعد الحذف
       set({ loading: false });
     } catch (err: any) {
-      console.log("remove error:", err?.response);
       set({
         error: err?.response?.data?.message || "Failed to remove from cart",
         loading: false,
@@ -167,24 +154,19 @@ export const useCartStore = create<CartState>((set, get) => ({
     }
   },
 
-  // ----------------- DELETE (باستخدام cart_item_id) ------------------
   deletefromCart: async (cartItemId: number) => {
     try {
-      const token = localStorage.getItem("token");
       set({ loading: true, error: null });
 
-      const res = await axios.delete(`${baseUrl}api/v1/cart/${cartItemId}`, {
+      await axiosClient.delete(`api/v1/cart/${cartItemId}`, {
         headers: {
-          Authorization: `Bearer ${token}`,
           Accept: "application/json",
         },
       });
 
-      console.log("Removed from cart:", res.data);
       await get().fetchCart(); // تحديث كامل بدلاً من الفلترة المحلية
       set({ loading: false });
     } catch (err: any) {
-      console.log("Remove error:", err?.response);
       set({
         error: err?.response?.data?.message || "Failed to remove from cart",
         loading: false,
@@ -205,16 +187,14 @@ export const useCartStore = create<CartState>((set, get) => ({
 
       const token = localStorage.getItem("token");
       if (!token) {
-        console.warn("No token found");
         return;
       }
 
-      await axios.put(
-        `${baseUrl}api/v1/cart/${cartItemId}`,
+      await axiosClient.put(
+        `api/v1/cart/${cartItemId}`,
         { quantity: newQuantity },
         {
           headers: {
-            Authorization: `Bearer ${token}`,
             Accept: "application/json",
             "Content-Type": "application/json",
           },
@@ -224,7 +204,6 @@ export const useCartStore = create<CartState>((set, get) => ({
       await get().fetchCart();
       set({ loading: false });
     } catch (error: any) {
-      console.error("Update quantity error:", error?.response?.data || error.message);
       set({
         error: error?.response?.data?.message || "فشل تحديث الكمية",
         loading: false,
@@ -250,9 +229,8 @@ export const useCartStore = create<CartState>((set, get) => ({
       }
 
       // استخدام الـ endpoint الخاص بحذف الكل
-      await axios.delete(`${baseUrl}api/v1/cart`, {
+      await axiosClient.delete(`api/v1/cart`, {
         headers: {
-          Authorization: `Bearer ${token}`,
           Accept: "application/json",
         },
       });
@@ -267,7 +245,6 @@ export const useCartStore = create<CartState>((set, get) => ({
       });
 
     } catch (error: any) {
-      console.error("Clear cart error:", error?.response?.data || error.message);
       set({
         error: error?.response?.data?.message || "فشل حذف السلة",
         loading: false,

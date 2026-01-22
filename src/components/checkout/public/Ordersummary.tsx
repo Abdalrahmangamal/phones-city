@@ -4,7 +4,7 @@
 import React, { useEffect, useState } from "react";
 import { useCartStore } from "@/store/cartStore/cartStore";
 import { Pencil } from "lucide-react";
-import BankTransferModal from "@/components/chekout/payment/BankTransferModal";
+import BankTransferModal from "@/components/checkout/payment/BankTransferModal";
 
 import { useTranslation } from "react-i18next";
 

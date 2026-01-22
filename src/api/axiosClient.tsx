@@ -3,6 +3,7 @@ const baseUrl = import.meta.env.VITE_BASE_URL;
 
 const axiosClient = axios.create({
   baseURL: baseUrl,
+  timeout: 30000, // 30 seconds timeout
   headers: {
     "Content-Type": "application/json",
   },
@@ -22,6 +23,15 @@ axiosClient.interceptors.request.use(
 axiosClient.interceptors.response.use(
   (response) => response,
   (error) => {
+    // Handle 401 Unauthorized - redirect to login
+    if (error.response?.status === 401) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('userData');
+      // Only redirect if not already on login page
+      if (!window.location.pathname.includes('/login')) {
+        window.location.href = '/login';
+      }
+    }
     return Promise.reject(error);
   }
 );

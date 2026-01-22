@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import axios from "axios";
+import axiosClient from "@/api/axiosClient";
 import type { Product } from "@/types/index";
 
 // تحديث الـ interface لإضافة المعلمات المفقودة
@@ -31,8 +31,6 @@ interface PageState {
   fetchProductbyid: (id: string, lang: string, params?: productsParams) => Promise<void>;
 }
 
-const baseUrl = import.meta.env.VITE_BASE_URL;
-
 export const useProductsStore = create<PageState>((set) => ({
   loading: false,
   error: null,
@@ -41,33 +39,22 @@ export const useProductsStore = create<PageState>((set) => ({
   fetchProducts: async (params: productsParams = {}, lang?: string) => {
     try {
       set({ loading: true, error: null });
-      const token = localStorage.getItem("token");
-
-      console.log("Fetching products with params:", params);
-      console.log("Full URL:", `${baseUrl}api/v1/products`);
 
       // تنظيف المعلمات - إزالة القيم undefined
-      const cleanedParams: Record<string, any> = {};
+      const cleanedParams: Record<string, unknown> = {};
       Object.keys(params).forEach(key => {
         if (params[key as keyof productsParams] !== undefined && params[key as keyof productsParams] !== null) {
           cleanedParams[key] = params[key as keyof productsParams];
         }
       });
 
-      console.log("Cleaned params:", cleanedParams);
-
-      const res = await axios.get(`${baseUrl}api/v1/products`, {
+      const res = await axiosClient.get(`api/v1/products`, {
         params: cleanedParams,
         headers: {
-          Authorization: `Bearer ${token}`,
           "Accept-Language": `${lang || "ar"}`,
           Accept: "application/json",
         },
       });
-
-      console.log("Full API Response:", res.data);
-      console.log("Products data:", res.data.data);
-      console.log("Total products in response:", Array.isArray(res.data.data) ? res.data.data.length : 0);
 
       set({
         response: res.data.data,
@@ -76,10 +63,10 @@ export const useProductsStore = create<PageState>((set) => ({
 
       // إرجاع البيانات لاستخدامها في Home.tsx
       return res.data.data;
-    } catch (err: any) {
-      console.error("API Error:", err.response || err);
+    } catch (err: unknown) {
+      const error = err as { response?: { data?: { message?: string } } };
       set({
-        error: err?.response?.data?.message || "Something went wrong",
+        error: error?.response?.data?.message || "Something went wrong",
         loading: false,
       });
       throw err;
@@ -91,13 +78,12 @@ export const useProductsStore = create<PageState>((set) => ({
     try {
       set({ loading: true });
 
-      const res = await axios.get(`${baseUrl}api/v1/products`, {
+      const res = await axiosClient.get(`api/v1/products`, {
         params: { has_offer: 1, per_page: 15, page },
         headers: { "Accept-Language": lang },
       });
 
-      // Debug: log the response so we can inspect where pagination meta lives
-      console.log("fetchOffers response:", res.data);
+
 
       // Normalize pagination meta from common shapes (meta, pagination, pager...)
       const rawMeta = res.data.meta || res.data.pagination || res.data.pager || null;
@@ -143,7 +129,7 @@ export const useProductsStore = create<PageState>((set) => ({
     try {
       set({ loading: true });
 
-      const res = await axios.get(`${baseUrl}api/v1/products`, {
+      const res = await axiosClient.get(`api/v1/products`, {
         params: { best_seller: true, per_page: 10 },
         headers: { "Accept-Language": lang },
       });
@@ -164,14 +150,14 @@ export const useProductsStore = create<PageState>((set) => ({
     try {
       set({ loading: true, error: null });
 
-      const res = await axios.get(`${baseUrl}api/v1/products/${id}`, {
+      const res = await axiosClient.get(`api/v1/products/${id}`, {
         params,
         headers: {
           "Accept-Language": `${lang}`,
         },
       });
 
-      console.log("ZUSTAND RESPONSE:", res.data.data);
+
 
       set({
         response: res.data.data,

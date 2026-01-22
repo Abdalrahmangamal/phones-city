@@ -31,7 +31,7 @@ import Trademarkscategory from "./pages/Trademarkscategory";
 import Singleproduct from "./pages/products/Singleproduct";
 import SearchResults from "./pages/products/SearchResults";
 import CategorySingle from "./pages/products/CategorySingle";
-import Checkout from "./pages/chekout/Checkout";
+import Checkout from "./pages/checkout/Checkout";
 import Protectedroutse from "./store/protectedroutse";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";

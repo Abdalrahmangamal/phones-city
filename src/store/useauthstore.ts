@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import axios from "axios";
+import axiosClient from "@/api/axiosClient";
 
 interface ResetPasswordTypes {
   email: string;
@@ -39,29 +39,34 @@ interface AuthState {
   sendLogin: (data: Logintypes) => Promise<any>;
   forgotpassword: (data: ForgotPasswordTypes) => Promise<any>;
   resetPassword: (data: ResetPasswordTypes) => Promise<any>;
-  verifyResetCode: (data: VerifyCodetypes) => Promise<any>; // إضافة جديدة
+  verifyResetCode: (data: VerifyCodetypes) => Promise<any>;
+  logout: () => void; // دالة تسجيل الخروج
 }
-
-const baseUrl = import.meta.env.VITE_BASE_URL;
 
 export const useAuthStore = create<AuthState>((set) => ({
   loading: false,
   error: null,
 
+  // دالة تسجيل الخروج
+  logout: () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('userData');
+    localStorage.removeItem('resetPasswordEmail');
+    window.location.href = '/login';
+  },
+
   sendRegisterData: async (data) => {
     try {
       set({ loading: true, error: null });
-      const res = await axios.post(`${baseUrl}api/v1/auth/register`, data, {
+      const res = await axiosClient.post(`api/v1/auth/register`, data, {
         headers: {
-          "Content-Type": "application/json",
           Accept: "application/json",
           "Accept-Language": "ar",
         },
       });
-      console.log(res.data);
       try {
         localStorage.setItem("userData", JSON.stringify(res.data));
-      } catch (e) {}
+      } catch (e) { }
       set({ error: null });
       return res.data;
     } catch (err: any) {
@@ -72,7 +77,7 @@ export const useAuthStore = create<AuthState>((set) => ({
         err?.message ??
         "Error";
       set({ loading: false, error: serverErrors });
-      console.log("Register error:", serverErrors);
+      // Error logged for debugging
       return null;
     } finally {
       set({ loading: false });
@@ -82,24 +87,21 @@ export const useAuthStore = create<AuthState>((set) => ({
   sendVerifyCode: async (data, purpose = "register") => {
     try {
       set({ loading: true, error: null });
-      
+
       // تحديد endpoint بناءً على الغرض
-      let endpoint = `${baseUrl}api/v1/auth/verify-code`;
+      let endpoint = `api/v1/auth/verify-code`;
       if (purpose === "reset") {
-        endpoint = `${baseUrl}api/v1/auth/verify-reset-code`;
+        endpoint = `api/v1/auth/verify-reset-code`;
       }
-      
-      console.log(`Calling endpoint: ${endpoint} for purpose: ${purpose}`);
-      
-      const res = await axios.post(endpoint, data, {
+
+      const res = await axiosClient.post(endpoint, data, {
         headers: {
-          "Content-Type": "application/json",
           Accept: "application/json",
           "Accept-Language": "ar",
         },
       });
-      
-      console.log("VERIFY-CODE RESPONSE:", res.data);
+
+
 
       const api = res.data;
 
@@ -110,14 +112,14 @@ export const useAuthStore = create<AuthState>((set) => ({
           if (token) {
             try {
               localStorage.setItem("token", token);
-            } catch (e) {}
+            } catch (e) { }
           }
 
           const user = api?.data?.user ?? api?.data ?? null;
           if (user) {
             try {
               localStorage.setItem("userData", JSON.stringify(user));
-            } catch (e) {}
+            } catch (e) { }
           }
         }
         // في حالة إعادة تعيين كلمة المرور → لا نحفظ أي توكن أو بيانات
@@ -133,7 +135,7 @@ export const useAuthStore = create<AuthState>((set) => ({
         err?.message ??
         "Error";
       set({ loading: false, error: serverErrors });
-      console.log("Verify Code error:", serverErrors);
+      // Error logged for debugging
       return null;
     } finally {
       set({ loading: false });
@@ -144,16 +146,15 @@ export const useAuthStore = create<AuthState>((set) => ({
   verifyResetCode: async (data) => {
     try {
       set({ loading: true, error: null });
-      
-      const res = await axios.post(`${baseUrl}api/v1/auth/verify-reset-code`, data, {
+
+      const res = await axiosClient.post(`api/v1/auth/verify-reset-code`, data, {
         headers: {
-          "Content-Type": "application/json",
           Accept: "application/json",
           "Accept-Language": "ar",
         },
       });
-      
-      console.log("VERIFY-RESET-CODE RESPONSE:", res.data);
+
+
       set({ error: null });
       return res.data;
     } catch (err: any) {
@@ -164,8 +165,8 @@ export const useAuthStore = create<AuthState>((set) => ({
         err?.message ??
         "Error";
       set({ loading: false, error: serverErrors });
-      console.log("Verify Reset Code error:", serverErrors);
-      
+      // Error logged for debugging
+
       // إرجاع بيانات الخطأ بشكل منظم
       return {
         status: false,
@@ -181,9 +182,8 @@ export const useAuthStore = create<AuthState>((set) => ({
     try {
       set({ loading: true });
 
-      const res = await axios.post(`${baseUrl}api/v1/auth/login`, data, {
+      const res = await axiosClient.post(`api/v1/auth/login`, data, {
         headers: {
-          "Content-Type": "application/json",
           Accept: "application/json",
           "Accept-Language": "en",
         },
@@ -197,7 +197,7 @@ export const useAuthStore = create<AuthState>((set) => ({
 
       return res.data;
     } catch (err) {
-      console.log(err);
+      // Login error handled
       return null;
     } finally {
       set({ loading: false });
@@ -207,26 +207,24 @@ export const useAuthStore = create<AuthState>((set) => ({
   forgotpassword: async (data) => {
     try {
       set({ loading: true, error: null });
-      const res = await axios.post(`${baseUrl}api/v1/auth/forgot-password`, data, {
+      const res = await axiosClient.post(`api/v1/auth/forgot-password`, data, {
         headers: {
-          "Content-Type": "application/json",
           Accept: "application/json",
           "Accept-Language": "en",
         },
       });
 
-      console.log("FORGOT-PASSWORD RESPONSE:", res.data);
-      
+
+
       // حفظ الإيميل مؤقتاً في localStorage
       if (res.data?.status === true) {
         localStorage.setItem('resetPasswordEmail', data.email);
       }
-      
+
       return res.data;
     } catch (err: any) {
       set({ loading: false });
-      console.log(err);
-      
+
       // إرجاع بيانات الخطأ بشكل منظم
       return {
         status: false,
@@ -241,24 +239,23 @@ export const useAuthStore = create<AuthState>((set) => ({
   resetPassword: async (data) => {
     try {
       set({ loading: true, error: null });
-      const res = await axios.post(`${baseUrl}api/v1/auth/reset-password`, data, {
+      const res = await axiosClient.post(`api/v1/auth/reset-password`, data, {
         headers: {
-          "Content-Type": "application/json",
           Accept: "application/json",
           "Accept-Language": "ar",
         },
       });
 
-      console.log("RESET-PASSWORD RESPONSE:", res.data);
-      
+
+
       // تنظيف الإيميل المخزن بعد نجاح العملية
       if (res.data?.status === true) {
         localStorage.removeItem('resetPasswordEmail');
       }
-      
+
       return res.data;
     } catch (err: any) {
-      console.log("Reset Password Error:", err.response?.data || err.message);
+      // Reset password error handled
 
       return {
         status: false,

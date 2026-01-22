@@ -10,7 +10,7 @@
   "Enter": "Enter",
   "search": "search",
   "Email": "Email",
-  "city_id":"city",
+  "city_id": "city",
   "Phone": "Phone",
   "Password": "Password",
   "Password_confirmation": "Confirm Password",
@@ -89,6 +89,12 @@
   "SAR": "SAR",
   "Buynow": "Buy now",
   "Addtocart": "Add to cart",
+  "product": {
+    "outOfStock": "This product is currently out of stock",
+    "addedToCart": "{{name}} added to cart",
+    "insufficientStock": "Requested quantity not available",
+    "addToCartFailed": "Failed to add product to cart"
+  },
   "Aboutthisproduct": "About this product",
   "Chooseyourcolor": "Choose your color",
   "Submit": "Submit",
@@ -534,5 +540,28 @@
   "Delete": "Delete",
   "TotalNotifications": "Total Notifications",
   "ReadNotifications": "Read Notifications",
-  "LatestNotification": "Latest Notification"
+  "LatestNotification": "Latest Notification",
+  "toast": {
+    "review": {
+      "success": "Your review has been added successfully! Thanks for your rating 🌟",
+      "loginRequired": "Please login first",
+      "notPurchased": "You cannot review this product because you haven't purchased it",
+      "alreadyReviewed": "You have already reviewed this product",
+      "failed": "Failed to submit review"
+    },
+    "favorites": {
+      "addFailed": "Failed to add to favorites. Please try again.",
+      "removeFailed": "Failed to remove from favorites. Please try again."
+    },
+    "cart": {
+      "added": "{{name}} added to cart",
+      "removed": "{{name}} removed from cart",
+      "removeFailed": "Failed to remove product from cart"
+    },
+    "address": {
+      "addedSuccess": "Address added successfully",
+      "updatedSuccess": "Address updated successfully",
+      "deletedSuccess": "Address deleted successfully"
+    }
+  }
 }

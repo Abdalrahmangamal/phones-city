@@ -2,7 +2,7 @@
 
 import Layout from "@/components/layout/layout";
 import Gallery from "@/components/singleproduct/Gallery";
-import Ptoductdetails from "@/components/singleproduct/Ptoductdetails";
+import Productdetails from "@/components/singleproduct/Productdetails";
 import Informationproduct from "@/components/singleproduct/Informationproduct";
 import FeaturedHeroSection from "@/components/home/FeaturedHeroSection";
 import Loader from '@/components/Loader';
@@ -156,7 +156,7 @@ export default function ProductPage() {
               isOutOfStock={isOutOfStock} // تمرير حالة المخزون
             />
 
-            <Ptoductdetails
+            <Productdetails
               product={product}
               handleindexchange={handleOptionChange}
               selectedOptionIndex={selectedOptionIndex}

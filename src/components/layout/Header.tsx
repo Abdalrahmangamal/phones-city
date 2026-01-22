@@ -24,7 +24,7 @@ import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
 // استيراد stores
-import { useCartStore } from "@/store/cartStore/cartStore"; 
+import { useCartStore } from "@/store/cartStore/cartStore";
 import { useNotifications } from "@/store/notifications/notificationStore"; // أضف هذا الاستيراد
 
 const baseUrl = import.meta.env.VITE_BASE_URL;
@@ -57,10 +57,10 @@ export default function Header() {
   const [openSections, setOpenSections] = useState(false);
 
   // استخدم الـ store للإشعارات بدلاً من useState
-  const { 
-    notifications, 
-    unreadCount, 
-    fetchNotifications 
+  const {
+    notifications,
+    unreadCount,
+    fetchNotifications
   } = useNotifications();
 
   // استخدم cart store
@@ -174,13 +174,13 @@ export default function Header() {
   // دالة للتعامل مع ضغط زر الأقسام في شريط التنقل المتنقل
   const handleMobileSectionToggle = () => {
     setIsMenuOpen(true);
-    setOpenSections(true); 
+    setOpenSections(true);
   };
 
   // دالة للتعامل مع إغلاق القائمة
   const handleCloseMenu = () => {
     setIsMenuOpen(false);
-    setOpenSections(false); 
+    setOpenSections(false);
   };
 
   // معالجة تحديث الإشعارات عند النقر
@@ -197,7 +197,7 @@ export default function Header() {
       {/* Desktop Header */}
       <header
         key={headerKey}
-        dir="rtl"
+        dir={lang === "ar" ? "rtl" : "ltr"}
         className="w-full border-b items-center justify-center h-[170px] hidden md:flex border-white/10 bg-[#211a44] text-white"
       >
         <div className="flex flex-col w-full h-[170px] justify-around lg:px-[90px] px-2 pt-20 md:pt-0">
@@ -327,7 +327,7 @@ export default function Header() {
               )}
 
               {/* زر الإشعارات */}
-              <button 
+              <button
                 onClick={handleNotificationClick}
                 className="relative"
                 aria-label="الإشعارات"
@@ -520,17 +520,17 @@ export default function Header() {
 
       {/* Mobile Header */}
       <div className="md:hidden">
-        
+
         <MobileMenu
           isOpen={isMenuOpen}
-          onClose={handleCloseMenu}  
+          onClose={handleCloseMenu}
           openSections={openSections}
           setOpenSections={setOpenSections}
         />
 
         <MobileNavbar
           onMenuToggle={() => setIsMenuOpen(!isMenuOpen)}
-          onSectionToggle={handleMobileSectionToggle} 
+          onSectionToggle={handleMobileSectionToggle}
           isMenuOpen={isMenuOpen}
           onSearchToggle={() => setIsMobileSearchOpen(true)}
         />
