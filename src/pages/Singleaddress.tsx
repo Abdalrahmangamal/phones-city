@@ -19,6 +19,7 @@ interface AddressFormData {
   city_id: string;
   postal_code: string;
   additional_number?: string;
+  national_address: string; // العنوان الوطني - مطلوب
   country: string;
   // Short National Address
   short_national_address?: string;
@@ -84,6 +85,7 @@ export default function Singleaddress() {
         district: data.district,
         postal_code: data.postal_code,
         additional_number: data.additional_number || null,
+        national_address: data.national_address, // العنوان الوطني - مطلوب
         city_id: data.city_id,
         country: data.country,
         phone: data.phone,

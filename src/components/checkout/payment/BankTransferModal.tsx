@@ -8,7 +8,9 @@ interface BankTransferModalProps {
     isOpen: boolean;
     onClose: () => void;
     totalAmount: number;
+    orderId?: number | string | null; // معرف الطلب لرفع إثبات الدفع
     onSubmit: (file: File, bankDetails: BankDetails) => void;
+    onUploadSuccess?: () => void; // callback بعد نجاح الرفع
 }
 
 interface BankDetails {
@@ -25,7 +27,9 @@ export default function BankTransferModal({
     isOpen,
     onClose,
     totalAmount,
+    orderId,
     onSubmit,
+    onUploadSuccess,
 }: BankTransferModalProps) {
     const { i18n } = useTranslation();
     const isRTL = i18n.language === "ar";
@@ -104,10 +108,39 @@ export default function BankTransferModal({
 
         setIsSubmitting(true);
         try {
+            // إذا كان لدينا orderId، نرفع الصورة مباشرة للـ API
+            if (orderId) {
+                const formData = new FormData();
+                formData.append('payment_proof', uploadedFile);
+
+                const response = await axiosClient.post(
+                    `/api/v1/orders/${orderId}/payment/upload-proof`,
+                    formData,
+                    {
+                        headers: {
+                            'Content-Type': 'multipart/form-data',
+                        },
+                    }
+                );
+
+                if (response.data.status || response.status === 200 || response.status === 201) {
+                    alert(isRTL ? "تم رفع إثبات الدفع بنجاح!" : "Payment proof uploaded successfully!");
+                    if (onUploadSuccess) {
+                        onUploadSuccess();
+                    }
+                    onClose();
+                    return;
+                }
+            }
+
+            // fallback للـ onSubmit القديمة
             await onSubmit(uploadedFile, bankDetails);
             onClose();
-        } catch (error) {
+        } catch (error: any) {
             console.error("Error submitting bank transfer:", error);
+            const errorMessage = error.response?.data?.message ||
+                (isRTL ? "حدث خطأ أثناء رفع إثبات الدفع" : "Error uploading payment proof");
+            alert(errorMessage);
         } finally {
             setIsSubmitting(false);
         }
@@ -156,7 +189,7 @@ export default function BankTransferModal({
                                 >
                                     {isRTL ? "معلومات الحساب البنكي" : "Bank Account Details"}
                                 </h3>
-                                
+
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     {/* اسم البنك */}
                                     <div className="space-y-2">

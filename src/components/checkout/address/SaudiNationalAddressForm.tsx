@@ -268,6 +268,39 @@ export default function SaudiNationalAddressForm({
                     )}
                 </div>
 
+                {/* National Address */}
+                <div>
+                    <label className={labelClass}>
+                        <MapPin className="w-4 h-4 text-[#F3AC5D]" />
+                        {isRTL ? "العنوان الوطني" : "National Address"}
+                        <span className={requiredBadge}>*</span>
+                    </label>
+                    <input
+                        type="text"
+                        placeholder={isRTL ? "أدخل العنوان الوطني (مثال: RKKA1234)" : "Enter National Address (e.g., RKKA1234)"}
+                        className={`${inputBaseClass} ${errors.national_address ? inputErrorClass : inputValidClass
+                            }`}
+                        {...register("national_address", {
+                            required: isRTL ? "العنوان الوطني مطلوب" : "National address is required",
+                            minLength: {
+                                value: 4,
+                                message: isRTL ? "العنوان الوطني يجب أن يكون 4 أحرف على الأقل" : "National address must be at least 4 characters",
+                            },
+                        })}
+                    />
+                    {errors.national_address && (
+                        <p className={errorClass}>
+                            <span className="text-red-500">⚠</span>
+                            {errors.national_address.message}
+                        </p>
+                    )}
+                    <p className="mt-1 text-gray-500 text-xs">
+                        {isRTL
+                            ? "يمكنك الحصول على العنوان الوطني من موقع العنوان الوطني السعودي"
+                            : "You can get your national address from Saudi National Address website"}
+                    </p>
+                </div>
+
                 {/* Country (Fixed) */}
                 <div>
                     <label className={labelClass}>

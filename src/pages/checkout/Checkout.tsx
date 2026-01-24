@@ -17,6 +17,7 @@ import { useTranslation } from "react-i18next";
 import axiosClient from "@/api/axiosClient";
 import { useAddressStore } from '@/store/profile/indexStore';
 import { Package, Home, ShoppingBag } from "lucide-react";
+import BankTransferModal from "@/components/checkout/payment/BankTransferModal";
 import { SaudiRiyalIcon } from "@/components/common/SaudiRiyalIcon";
 
 export default function CheckoutPage() {
@@ -25,6 +26,9 @@ export default function CheckoutPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [orderCompleted, setOrderCompleted] = useState(false);
   const [orderNumber, setOrderNumber] = useState<string | null>(null);
+  const [orderId, setOrderId] = useState<number | null>(null); // لرفع إثبات الدفع
+  const [showBankTransferModal, setShowBankTransferModal] = useState(false); // مودال التحويل البنكي
+  const BANK_TRANSFER_ID = 999; // ID التحويل البنكي
   const navigate = useNavigate();
 
   const { items, total, fetchCart, selectedPaymentId, clearCart } = useCartStore();
@@ -227,7 +231,19 @@ export default function CheckoutPage() {
 
       // حفظ رقم الطلب وتحديث الحالة للحالات التي لا تحتاج تحويل
       const orderNum = response.data.order_number || response.data.id;
+      const orderIdFromResponse = response.data.data?.id || response.data.id || response.data.order_id;
+
       setOrderNumber(orderNum);
+      setOrderId(orderIdFromResponse);
+
+      // التحقق إذا كانت طريقة الدفع هي التحويل البنكي
+      if (Number(selectedPaymentId) === BANK_TRANSFER_ID) {
+        // فتح مودال رفع إثبات الدفع
+        setShowBankTransferModal(true);
+        toast.dismiss(loadingToast);
+        return;
+      }
+
       setOrderCompleted(true);
 
       // تنظيف السلة
@@ -452,6 +468,43 @@ export default function CheckoutPage() {
           </div>
         </div>
       </div>
+
+      {/* Bank Transfer Payment Proof Modal */}
+      <BankTransferModal
+        isOpen={showBankTransferModal}
+        onClose={() => {
+          setShowBankTransferModal(false);
+          // إذا أغلق المستخدم المودال بدون رفع الصورة، نظهر له رسالة
+          showCustomToast(
+            'info',
+            isRTL ? 'تنبيه' : 'Notice',
+            isRTL
+              ? 'يمكنك رفع إثبات الدفع لاحقًا من صفحة طلباتي'
+              : 'You can upload payment proof later from My Orders page'
+          );
+          setOrderCompleted(true);
+          if (clearCart) {
+            clearCart();
+          }
+        }}
+        totalAmount={total}
+        orderId={orderId}
+        onSubmit={async () => { }}
+        onUploadSuccess={() => {
+          showCustomToast(
+            'success',
+            isRTL ? 'تم بنجاح!' : 'Success!',
+            isRTL
+              ? `تم رفع إثبات الدفع للطلب رقم ${orderNumber} بنجاح`
+              : `Payment proof for order #${orderNumber} uploaded successfully`
+          );
+          setShowBankTransferModal(false);
+          setOrderCompleted(true);
+          if (clearCart) {
+            clearCart();
+          }
+        }}
+      />
     </Layout>
   );
 }

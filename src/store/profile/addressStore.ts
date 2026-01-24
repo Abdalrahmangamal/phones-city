@@ -38,6 +38,7 @@ export interface Address {
   postal_code?: string;          // الرمز البريدي (5 أرقام)
   additional_number?: string;    // الرقم الإضافي (4 أرقام، اختياري)
   short_national_address?: string; // العنوان الوطني المختصر (8 خانات، اختياري)
+  national_address?: string;     // العنوان الوطني
   phone: string;
   email: string;
   label: string | null;
@@ -58,6 +59,7 @@ export interface AddAddressInput {
   postal_code?: string;
   additional_number?: string | null;
   short_national_address?: string; // العنوان الوطني المختصر
+  national_address: string; // العنوان الوطني - مطلوب
   phone: string;
   email: string;
   label?: string | null;
