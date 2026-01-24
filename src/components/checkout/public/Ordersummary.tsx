@@ -78,7 +78,7 @@ export default function OrderSummary({
   // State للتحويل البنكي المباشر
   const [isBankTransferModalOpen, setIsBankTransferModalOpen] = useState(false);
   const [isBankTransferSelected, setIsBankTransferSelected] = useState(false);
-  const BANK_TRANSFER_ID = 999; // ID خاص للتحويل البنكي
+  const BANK_TRANSFER_ID = 8; // ID التحويل البنكي الحقيقي من الـ API
 
 
   useEffect(() => {
@@ -143,24 +143,27 @@ export default function OrderSummary({
     // يمكن إضافة الـ API call هنا
   };
 
-  const paymentProviders = paymentMethods.map((p: any) => {
-    const amount = parseFloat(p.total_price).toLocaleString(isRTL ? "ar-SA" : "en-US");
-    const textFn = paymentMarketingTexts[p.id];
-    const description = textFn
-      ? p.id === 6
-        ? textFn("", isRTL)
-        : textFn(amount, isRTL)
-      : isRTL
-        ? <span className="flex items-center gap-1">{p.name} • {amount} <SaudiRiyalIcon className="w-3 h-3" /></span>
-        : <span className="flex items-center gap-1">{p.name} • {amount} <SaudiRiyalIcon className="w-3 h-3" /></span>;
+  // استثناء التحويل البنكي من القائمة العادية لأنه له قسم خاص
+  const paymentProviders = paymentMethods
+    .filter((p: any) => p.id !== BANK_TRANSFER_ID)
+    .map((p: any) => {
+      const amount = parseFloat(p.total_price).toLocaleString(isRTL ? "ar-SA" : "en-US");
+      const textFn = paymentMarketingTexts[p.id];
+      const description = textFn
+        ? p.id === 6
+          ? textFn("", isRTL)
+          : textFn(amount, isRTL)
+        : isRTL
+          ? <span className="flex items-center gap-1">{p.name} • {amount} <SaudiRiyalIcon className="w-3 h-3" /></span>
+          : <span className="flex items-center gap-1">{p.name} • {amount} <SaudiRiyalIcon className="w-3 h-3" /></span>;
 
-    return {
-      id: p.id,
-      name: p.name,
-      logo: paymentLogos[p.id] || madfu,
-      description,
-    };
-  });
+      return {
+        id: p.id,
+        name: p.name,
+        logo: paymentLogos[p.id] || madfu,
+        description,
+      };
+    });
 
   if (loading) return <div className="p-10 text-center" dir={isRTL ? "rtl" : "ltr"}>{t("LoadingOrderSummary")}</div>;
   if (items.length === 0) return <div className="p-10 text-center text-gray-500" dir={isRTL ? "rtl" : "ltr"}>{t("NoItemsInCart")}</div>;

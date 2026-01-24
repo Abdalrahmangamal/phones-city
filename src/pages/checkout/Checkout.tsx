@@ -28,7 +28,7 @@ export default function CheckoutPage() {
   const [orderNumber, setOrderNumber] = useState<string | null>(null);
   const [orderId, setOrderId] = useState<number | null>(null); // لرفع إثبات الدفع
   const [showBankTransferModal, setShowBankTransferModal] = useState(false); // مودال التحويل البنكي
-  const BANK_TRANSFER_ID = 999; // ID التحويل البنكي
+  const BANK_TRANSFER_ID = 8; // ID التحويل البنكي الحقيقي من الـ API
   const navigate = useNavigate();
 
   const { items, total, fetchCart, selectedPaymentId, clearCart } = useCartStore();
@@ -195,7 +195,7 @@ export default function CheckoutPage() {
       );
 
       // بناء بيانات الطلب مع إضافة use_points
-      const orderData = {
+      const orderRequestData = {
         ...(currentDeliveryMethod === "delivery" && { location_id: selectedAddressId }),
         payment_method_id: parseInt(selectedPaymentId),
         note: "",
@@ -205,10 +205,10 @@ export default function CheckoutPage() {
         points_discount: usePoints ? pointsDiscountAmount : 0,
       };
 
-      console.log('Sending order data:', orderData); // Debugging
+      console.log('Sending order data:', orderRequestData); // Debugging
 
       // إرسال الطلب
-      const response = await axiosClient.post('/api/v1/orders', orderData);
+      const response = await axiosClient.post('/api/v1/orders', orderRequestData);
 
       // إغلاق toast التحميل
       toast.dismiss(loadingToast);
@@ -230,8 +230,15 @@ export default function CheckoutPage() {
       }
 
       // حفظ رقم الطلب وتحديث الحالة للحالات التي لا تحتاج تحويل
-      const orderNum = response.data.order_number || response.data.id;
-      const orderIdFromResponse = response.data.data?.id || response.data.id || response.data.order_id;
+      const orderData = response.data.data?.order || response.data.data || response.data;
+      const orderNum = orderData?.order_number || response.data.order_number || response.data.id;
+      const orderIdFromResponse = orderData?.id || response.data.data?.id || response.data.id || response.data.order_id;
+
+      console.log('=== Order Created ===');
+      console.log('Full Response:', response.data);
+      console.log('Order Data:', orderData);
+      console.log('Order Number:', orderNum);
+      console.log('Order ID:', orderIdFromResponse);
 
       setOrderNumber(orderNum);
       setOrderId(orderIdFromResponse);

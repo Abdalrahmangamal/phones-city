@@ -109,9 +109,15 @@ export default function BankTransferModal({
         setIsSubmitting(true);
         try {
             // إذا كان لدينا orderId، نرفع الصورة مباشرة للـ API
+            console.log('=== Upload Payment Proof ===');
+            console.log('orderId:', orderId);
+            console.log('uploadedFile:', uploadedFile);
+
             if (orderId) {
                 const formData = new FormData();
                 formData.append('payment_proof', uploadedFile);
+
+                console.log('Sending request to:', `/api/v1/orders/${orderId}/payment/upload-proof`);
 
                 const response = await axiosClient.post(
                     `/api/v1/orders/${orderId}/payment/upload-proof`,
@@ -123,6 +129,10 @@ export default function BankTransferModal({
                     }
                 );
 
+                console.log('Upload Response:', response);
+                console.log('Response Status:', response.status);
+                console.log('Response Data:', response.data);
+
                 if (response.data.status || response.status === 200 || response.status === 201) {
                     alert(isRTL ? "تم رفع إثبات الدفع بنجاح!" : "Payment proof uploaded successfully!");
                     if (onUploadSuccess) {
@@ -131,6 +141,8 @@ export default function BankTransferModal({
                     onClose();
                     return;
                 }
+            } else {
+                console.log('No orderId available - cannot upload to API');
             }
 
             // fallback للـ onSubmit القديمة
