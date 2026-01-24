@@ -250,7 +250,7 @@ export default function Singleaddress() {
               </label>
               <input
                 type="text"
-                placeholder={t("National Address")}
+                placeholder="IADG6838"
                 className={`w-full bg-[#F6F6F6] rounded-[4px] px-4 py-3 text-[#211C4D] focus:outline-none ${
                   errors.national_address
                     ? "border border-red-500"
