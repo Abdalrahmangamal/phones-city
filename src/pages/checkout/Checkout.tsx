@@ -27,6 +27,8 @@ export default function CheckoutPage() {
   const [orderCompleted, setOrderCompleted] = useState(false);
   const [orderNumber, setOrderNumber] = useState<string | null>(null);
   const [orderId, setOrderId] = useState<number | null>(null); // لرفع إثبات الدفع
+  const [uploadUrl, setUploadUrl] = useState<string | null>(null); // URL لرفع إثبات الدفع
+  const [bankAccountDetails, setBankAccountDetails] = useState<any>(null); // بيانات الحساب البنكي
   const [showBankTransferModal, setShowBankTransferModal] = useState(false); // مودال التحويل البنكي
   const BANK_TRANSFER_ID = 8; // ID التحويل البنكي الحقيقي من الـ API
   const navigate = useNavigate();
@@ -243,8 +245,21 @@ export default function CheckoutPage() {
       setOrderNumber(orderNum);
       setOrderId(orderIdFromResponse);
 
-      // التحقق إذا كانت طريقة الدفع هي التحويل البنكي
-      if (Number(selectedPaymentId) === BANK_TRANSFER_ID) {
+      // التحقق إذا كانت طريقة الدفع هي التحويل البنكي أو تحتاج رفع إثبات دفع
+      const requiresProofUpload = paymentData?.requires_proof_upload || false;
+
+      if (Number(selectedPaymentId) === BANK_TRANSFER_ID || requiresProofUpload) {
+        // حفظ بيانات التحويل البنكي من الـ API
+        const apiUploadUrl = paymentData?.upload_url || null;
+        const apiBankDetails = paymentData?.bank_account_details || null;
+
+        console.log('=== Bank Transfer Details ===');
+        console.log('Upload URL:', apiUploadUrl);
+        console.log('Bank Account Details:', apiBankDetails);
+
+        setUploadUrl(apiUploadUrl);
+        setBankAccountDetails(apiBankDetails);
+
         // فتح مودال رفع إثبات الدفع
         setShowBankTransferModal(true);
         toast.dismiss(loadingToast);
@@ -496,6 +511,7 @@ export default function CheckoutPage() {
         }}
         totalAmount={total}
         orderId={orderId}
+        uploadUrl={uploadUrl}
         onSubmit={async () => { }}
         onUploadSuccess={() => {
           showCustomToast(

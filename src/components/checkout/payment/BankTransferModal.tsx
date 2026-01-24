@@ -9,6 +9,7 @@ interface BankTransferModalProps {
     onClose: () => void;
     totalAmount: number;
     orderId?: number | string | null; // معرف الطلب لرفع إثبات الدفع
+    uploadUrl?: string | null; // URL الرفع القادم من الـ API
     onSubmit: (file: File, bankDetails: BankDetails) => void;
     onUploadSuccess?: () => void; // callback بعد نجاح الرفع
 }
@@ -28,6 +29,7 @@ export default function BankTransferModal({
     onClose,
     totalAmount,
     orderId,
+    uploadUrl,
     onSubmit,
     onUploadSuccess,
 }: BankTransferModalProps) {
@@ -108,19 +110,23 @@ export default function BankTransferModal({
 
         setIsSubmitting(true);
         try {
-            // إذا كان لدينا orderId، نرفع الصورة مباشرة للـ API
+            // تحديد الـ URL للرفع - نستخدم uploadUrl من الـ API إذا كان متوفرًا
+            const finalUploadUrl = uploadUrl || (orderId ? `/api/v1/orders/${orderId}/payment/upload-proof` : null);
+
             console.log('=== Upload Payment Proof ===');
+            console.log('uploadUrl from API:', uploadUrl);
             console.log('orderId:', orderId);
+            console.log('Final Upload URL:', finalUploadUrl);
             console.log('uploadedFile:', uploadedFile);
 
-            if (orderId) {
+            if (finalUploadUrl) {
                 const formData = new FormData();
                 formData.append('payment_proof', uploadedFile);
 
-                console.log('Sending request to:', `/api/v1/orders/${orderId}/payment/upload-proof`);
+                console.log('Sending request to:', finalUploadUrl);
 
                 const response = await axiosClient.post(
-                    `/api/v1/orders/${orderId}/payment/upload-proof`,
+                    finalUploadUrl,
                     formData,
                     {
                         headers: {
@@ -142,7 +148,7 @@ export default function BankTransferModal({
                     return;
                 }
             } else {
-                console.log('No orderId available - cannot upload to API');
+                console.log('No upload URL available - cannot upload to API');
             }
 
             // fallback للـ onSubmit القديمة
