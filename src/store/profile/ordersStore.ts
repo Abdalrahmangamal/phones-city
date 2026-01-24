@@ -85,6 +85,7 @@ export interface Order {
   points_discount: number;
   total: number;
   status: string;
+  payment_status: string; // حالة الدفع
   items: OrderItem[];
   invoice: Invoice;
   created_at: string;
@@ -112,7 +113,7 @@ interface OrdersState {
   loading: boolean;
   error: string | null;
   pagination: Pagination | null;
-  
+
   // Actions
   fetchOrders: () => Promise<void>;
   fetchOrdersByStatus: (status: string) => Promise<void>;
@@ -138,18 +139,18 @@ const useOrdersStore = create<OrdersState>()(
         try {
           const response = await axiosClient.get<OrdersResponse>('/api/v1/orders');
           if (response.data.status) {
-            set({ 
-              orders: response.data.data, 
+            set({
+              orders: response.data.data,
               pagination: response.data.pagination,
-              loading: false 
+              loading: false
             });
           } else {
             set({ error: response.data.message, loading: false });
           }
         } catch (error: any) {
-          set({ 
-            error: error.response?.data?.message || 'فشل في جلب الطلبات', 
-            loading: false 
+          set({
+            error: error.response?.data?.message || 'فشل في جلب الطلبات',
+            loading: false
           });
         }
       },
@@ -161,18 +162,18 @@ const useOrdersStore = create<OrdersState>()(
             params: { status }
           });
           if (response.data.status) {
-            set({ 
-              orders: response.data.data, 
+            set({
+              orders: response.data.data,
               pagination: response.data.pagination,
-              loading: false 
+              loading: false
             });
           } else {
             set({ error: response.data.message, loading: false });
           }
         } catch (error: any) {
-          set({ 
-            error: error.response?.data?.message || 'فشل في جلب الطلبات', 
-            loading: false 
+          set({
+            error: error.response?.data?.message || 'فشل في جلب الطلبات',
+            loading: false
           });
         }
       },
@@ -204,9 +205,9 @@ const useOrdersStore = create<OrdersState>()(
             set({ error: response.data.message, loading: false });
           }
         } catch (error: any) {
-          set({ 
-            error: error.response?.data?.message || 'فشل في إلغاء الطلب', 
-            loading: false 
+          set({
+            error: error.response?.data?.message || 'فشل في إلغاء الطلب',
+            loading: false
           });
         }
       },
@@ -217,8 +218,8 @@ const useOrdersStore = create<OrdersState>()(
       clearOrders: () => set({ orders: [], pagination: null, error: null }),
     }),
     {
-      name: 'orders-storage', 
-      partialize: (state) => ({ orders: state.orders }), 
+      name: 'orders-storage',
+      partialize: (state) => ({ orders: state.orders }),
     }
   )
 );

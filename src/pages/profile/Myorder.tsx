@@ -43,7 +43,7 @@ export default function Myorder() {
 
   useEffect(() => {
     fetchOrders();
-    console.log("ordeeer",orders)
+    console.log("ordeeer", orders)
   }, [fetchOrders]);
 
   const getFilteredOrders = () => {
@@ -88,6 +88,21 @@ export default function Myorder() {
     };
 
     return statusMap[status] || { text: status, color: '#211C4D', bgColor: '#F5F5F5' };
+  };
+
+  // وظيفة مساعدة لترجمة حالة الدفع
+  const getPaymentStatusText = (paymentStatus: string) => {
+    const statusMap: Record<string, { text: string; color: string; bgColor: string }> = {
+      'paid': { text: lang === 'ar' ? 'مدفوع' : 'Paid', color: '#34A853', bgColor: '#F0FFF4' },
+      'pending': { text: lang === 'ar' ? 'قيد الانتظار' : 'Pending', color: '#F3AC5D', bgColor: '#FFF9F0' },
+      'awaiting_review': { text: lang === 'ar' ? 'بانتظار المراجعة' : 'Awaiting Review', color: '#9B51E0', bgColor: '#F9F5FF' },
+      'awaiting_payment': { text: lang === 'ar' ? 'بانتظار الدفع' : 'Awaiting Payment', color: '#F3AC5D', bgColor: '#FFF9F0' },
+      'failed': { text: lang === 'ar' ? 'فشل الدفع' : 'Failed', color: '#E50000', bgColor: '#FFF0F0' },
+      'refunded': { text: lang === 'ar' ? 'مسترد' : 'Refunded', color: '#4A90E2', bgColor: '#EFF6FF' },
+      'cancelled': { text: lang === 'ar' ? 'ملغي' : 'Cancelled', color: '#E50000', bgColor: '#FFF0F0' },
+    };
+
+    return statusMap[paymentStatus] || { text: paymentStatus || '-', color: '#211C4D', bgColor: '#F5F5F5' };
   };
 
   // مكون التفاصيل المشترك
@@ -406,6 +421,9 @@ export default function Myorder() {
                           <th className="py-4 px-4 text-right min-w-[120px]">
                             <span className="text-[#211C4D] text-sm font-semibold">{t('OrderStatus')}</span>
                           </th>
+                          <th className="py-4 px-4 text-right min-w-[120px]">
+                            <span className="text-[#211C4D] text-sm font-semibold">{lang === 'ar' ? 'حالة الدفع' : 'Payment Status'}</span>
+                          </th>
                           <th className="py-4 px-4 text-right min-w-[100px]">
                             <span className="text-[#211C4D] text-sm font-semibold">{t('Actions')}</span>
                           </th>
@@ -468,6 +486,17 @@ export default function Myorder() {
                                 </span>
                               </td>
 
+                              {/* حالة الدفع */}
+                              <td className="py-4 px-4">
+                                <span
+                                  className="px-3 py-1.5 rounded-full text-xs font-semibold inline-flex items-center gap-1.5 whitespace-nowrap"
+                                  style={{ color: getPaymentStatusText(order.payment_status).color, backgroundColor: getPaymentStatusText(order.payment_status).bgColor }}
+                                >
+                                  <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: getPaymentStatusText(order.payment_status).color }} />
+                                  {getPaymentStatusText(order.payment_status).text}
+                                </span>
+                              </td>
+
                               <td className="py-4 px-4">
                                 <button
                                   onClick={(e) => {
@@ -490,7 +519,7 @@ export default function Myorder() {
 
                             {!isMobile && expandedOrderId === order.id && (
                               <tr>
-                                <td colSpan={6} className="bg-gray-50 p-0">
+                                <td colSpan={7} className="bg-gray-50 p-0">
                                   <OrderDetailsContent order={order} />
                                 </td>
                               </tr>
