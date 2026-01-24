@@ -63,11 +63,21 @@ export default function Chooseaddress() {
   };
 
   const formatAddressForDisplay = (address: AddressType) => {
+    // Build display string with national address components
+    const streetParts = [];
+    if (address.building_number) streetParts.push(address.building_number);
+    if (address.street_name) streetParts.push(address.street_name);
+    if (address.street_address && !address.street_name) streetParts.push(address.street_address);
+
+    const districtParts = [];
+    if (address.district) districtParts.push(address.district);
+    if (address.postal_code) districtParts.push(address.postal_code);
+
     return {
       id: address.id.toString(),
       label: address.label || (isRTL ? "عنوان" : "Address"),
-      street: address.street_address,
-      area: `${address.city.name}, ${address.country}`,
+      street: streetParts.join(" - ") || address.street_address,
+      area: `${districtParts.length > 0 ? districtParts.join(" - ") + " - " : ""}${address.city.name}, ${address.country}`,
       phone: address.phone,
       isSelected: address.id === selectedAddressId,
     };

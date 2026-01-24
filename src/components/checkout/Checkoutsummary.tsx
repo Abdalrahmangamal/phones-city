@@ -10,7 +10,7 @@ interface CheckoutsummaryProps {
   onPointsDiscountChange: (value: number) => void;
 }
 
-export default function Cheackoutsummary({
+export default function Checkoutsummary({
   products,
   total,
   usePoints,

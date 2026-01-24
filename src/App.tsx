@@ -53,52 +53,52 @@ function LangWrapper() {
 
   return (
     <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/about" element={<About />} />
-      <Route path="/servces" element={<Servces />} />
-      <Route path="/contact" element={<Contact />} />
+      <Route path="" element={<Home />} />
+      <Route path="about" element={<About />} />
+      <Route path="servces" element={<Servces />} />
+      <Route path="contact" element={<Contact />} />
 
       {/* صفحة قائمة جميع العروض */}
-      <Route path="/offers" element={<Offers />} />
+      <Route path="offers" element={<Offers />} />
 
-      <Route path="/SpecialOffersPage" element={<SpecialOffersPage />} />
+      <Route path="SpecialOffersPage" element={<SpecialOffersPage />} />
 
       {/* صفحة تفاصيل عرض فردي - الجديدة */}
       {/* <Route path="offer/:slugOrId" element={<OfferDetails />} /> */}
 
-      <Route path="/search" element={<SearchResults />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
-      <Route path="/product-details" element={<ProductDetails />} />
-      <Route path="/return-policy" element={<ReturnPolicy />} />
-      <Route path="/warranty-policy" element={<WarrantyPolicy />} />
-      <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
-      <Route path="/about-quara" element={<AboutQuara />} />
-      <Route path="/about-mora" element={<AboutMora />} />
+      <Route path="search" element={<SearchResults />} />
+      <Route path="login" element={<Login />} />
+      <Route path="register" element={<Register />} />
+      <Route path="product-details" element={<ProductDetails />} />
+      <Route path="return-policy" element={<ReturnPolicy />} />
+      <Route path="warranty-policy" element={<WarrantyPolicy />} />
+      <Route path="terms-and-conditions" element={<TermsAndConditions />} />
+      <Route path="about-quara" element={<AboutQuara />} />
+      <Route path="about-mora" element={<AboutMora />} />
 
       {/* Protected Routes */}
       <Route element={<Protectedroutse />}>
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/wallet" element={<Wallet />} />
-        <Route path="/notifications" element={<Notifications />} /> {/* أضف هذا المسار المحمي */}
+        <Route path="profile" element={<Profile />} />
+        <Route path="wallet" element={<Wallet />} />
+        <Route path="notifications" element={<Notifications />} /> {/* أضف هذا المسار المحمي */}
       </Route>
 
-      <Route path="/myorder" element={<Myorder />} />
-      <Route path="/bills" element={<Bills />} />
-      <Route path="/singlebills" element={<Navigate to={`/${lang}/bills`} replace />} />
-      <Route path="/singlebills/:id" element={<Singlebills />} />
-      <Route path="/address" element={<Address />} />
-      <Route path="/singleaddress" element={<Singleaddress />} />
-      <Route path="/discounts" element={<Discounts />} />
-      <Route path="/favourite" element={<Favourite />} />
-      <Route path="/trademarks/:id" element={<Trademarks />} />
-      <Route path="/BestSellerPage" element={<BestSellerPage />} />
-      <Route path="/trademarkscategory" element={<Trademarkscategory />} />
-      <Route path="/singleproduct/:id" element={<Singleproduct />} />
-      <Route path="/checkout" element={<Checkout />} />
-      <Route path="/categorySingle/:id/:productmain?" element={<CategorySingle />} />
-      <Route path="/blog" element={<Blog />} />
-      <Route path="/blog/:slug" element={<SingleBlog />} />
+      <Route path="myorder" element={<Myorder />} />
+      <Route path="bills" element={<Bills />} />
+      <Route path="singlebills" element={<Navigate to={`../bills`} replace />} />
+      <Route path="singlebills/:id" element={<Singlebills />} />
+      <Route path="address" element={<Address />} />
+      <Route path="singleaddress" element={<Singleaddress />} />
+      <Route path="discounts" element={<Discounts />} />
+      <Route path="favourite" element={<Favourite />} />
+      <Route path="trademarks/:id" element={<Trademarks />} />
+      <Route path="BestSellerPage" element={<BestSellerPage />} />
+      <Route path="trademarkscategory" element={<Trademarkscategory />} />
+      <Route path="singleproduct/:id" element={<Singleproduct />} />
+      <Route path="checkout" element={<Checkout />} />
+      <Route path="categorySingle/:id/:productmain?" element={<CategorySingle />} />
+      <Route path="blog" element={<Blog />} />
+      <Route path="blog/:slug" element={<SingleBlog />} />
     </Routes>
   );
 }

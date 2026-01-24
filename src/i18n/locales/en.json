@@ -563,5 +563,59 @@
       "updatedSuccess": "Address updated successfully",
       "deletedSuccess": "Address deleted successfully"
     }
+  },
+  "saudiNationalAddress": {
+    "title": "Saudi National Address",
+    "buildingNumber": "Building Number",
+    "streetName": "Street Name",
+    "district": "District",
+    "postalCode": "Postal Code",
+    "additionalNumber": "Additional Number",
+    "country": "Country",
+    "saudiArabia": "Saudi Arabia",
+    "optional": "Optional",
+    "required": "Required",
+    "deliveryNote": "National Address is required for correct delivery within Saudi Arabia",
+    "placeholders": {
+      "buildingNumber": "e.g., 1234",
+      "streetName": "e.g., King Abdulaziz Street",
+      "district": "e.g., Al Nakheel",
+      "postalCode": "e.g., 12345",
+      "additionalNumber": "e.g., 1234"
+    },
+    "validation": {
+      "buildingNumberRequired": "Building number is required and must contain numbers only",
+      "buildingNumberDigitsOnly": "Building number must contain only digits",
+      "streetNameRequired": "Street name is required",
+      "streetNameMinLength": "Street name must be at least 2 characters",
+      "noPOBox": "P.O Box is not allowed. Please enter a National Address",
+      "districtRequired": "District is required",
+      "districtMinLength": "District must be at least 2 characters",
+      "postalCodeRequired": "Postal code is required",
+      "postalCodeFormat": "Postal code must be exactly 5 digits",
+      "additionalNumberFormat": "Additional number must be exactly 4 digits",
+      "invalidAddress": "Please enter a valid National Address for delivery"
+    }
+  },
+  "shortNationalAddress": {
+    "title": "Short National Address",
+    "label": "Enter Short Address",
+    "description": "8-character National Address code",
+    "optional": "Optional",
+    "tooltip": {
+      "title": "Short Address Requirements",
+      "rule1": "Short address consists of 8 characters",
+      "rule2": "First 4 characters are uppercase letters (A-Z)",
+      "rule3": "Last 4 characters are digits only (0-9)",
+      "rule4": "No spaces or special characters allowed",
+      "example": "Example"
+    },
+    "validation": {
+      "invalidFormat": "Short National Address must be 4 uppercase letters followed by 4 digits",
+      "example": "Valid example: RRRD2929",
+      "valid": "✓ Short address is valid"
+    },
+    "note": "This code is used as an additional reference for the address and is not relied upon alone for shipping.",
+    "noteOptional": "This field is optional and does not prevent order completion if left empty."
   }
 }

@@ -31,10 +31,36 @@ export interface Address {
     shipping_fee: string;
   };
   street_address: string;
+  // Saudi National Address Fields
+  building_number?: string;      // رقم المبنى
+  street_name?: string;          // اسم الشارع
+  district?: string;             // اسم الحي
+  postal_code?: string;          // الرمز البريدي (5 أرقام)
+  additional_number?: string;    // الرقم الإضافي (4 أرقام، اختياري)
+  short_national_address?: string; // العنوان الوطني المختصر (8 خانات، اختياري)
   phone: string;
   email: string;
   label: string | null;
   created_at: string;
+}
+
+// Input type for creating/updating address (doesn't require full city object)
+export interface AddAddressInput {
+  first_name: string;
+  last_name: string;
+  country: string;
+  city_id: string;
+  street_address: string;
+  // Saudi National Address Fields
+  building_number?: string;
+  street_name?: string;
+  district?: string;
+  postal_code?: string;
+  additional_number?: string | null;
+  short_national_address?: string; // العنوان الوطني المختصر
+  phone: string;
+  email: string;
+  label?: string | null;
 }
 
 interface AddressState {
@@ -45,7 +71,7 @@ interface AddressState {
   error: string | null;
   cities: City[];
   citiesLoading: boolean;
-  citiesError: string|null;
+  citiesError: string | null;
   // Actions
   setAddresses: (addresses: Address[]) => void;
   setSelectedAddressId: (id: number | null) => void;
@@ -54,12 +80,10 @@ interface AddressState {
   setError: (error: string | null) => void;
 
   // Async Actions
-  fetchCities: (lang:string) => Promise<void>;
+  fetchCities: (lang: string) => Promise<void>;
 
   fetchAddresses: () => Promise<void>;
-  addAddress: (
-    addressData: Omit<Address, "id" | "created_at">
-  ) => Promise<void>;
+  addAddress: (addressData: AddAddressInput) => Promise<void>;
   updateAddress: (id: number, addressData: Partial<Address>) => Promise<void>;
   deleteAddress: (id: number) => Promise<void>;
   selectAddress: (id: number) => void;
@@ -198,13 +222,13 @@ const useAddressStore = create<AddressState>()(
         const { addresses } = get();
         return addresses.find((addr) => addr.id === id);
       },
-      fetchCities: async (lang:string) => {
+      fetchCities: async (lang: string) => {
         set({ citiesLoading: true, citiesError: null });
 
         try {
-          const response = await axiosClient.get("/api/v1/cities",{
+          const response = await axiosClient.get("/api/v1/cities", {
             headers: {
-             "Accept-Language": `${lang}`
+              "Accept-Language": `${lang}`
             },
             params: {
               per_page: 1000  // Fetch all cities by setting a high limit
