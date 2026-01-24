@@ -73,11 +73,17 @@ export default function Chooseaddress() {
     if (address.district) districtParts.push(address.district);
     if (address.postal_code) districtParts.push(address.postal_code);
 
+    // Safe access to city name with fallback
+    const cityName = address.city?.name || "";
+    const areaString = districtParts.length > 0
+      ? `${districtParts.join(" - ")} - ${cityName}, ${address.country}`
+      : `${cityName}, ${address.country}`;
+
     return {
       id: address.id.toString(),
       label: address.label || (isRTL ? "عنوان" : "Address"),
       street: streetParts.join(" - ") || address.street_address,
-      area: `${districtParts.length > 0 ? districtParts.join(" - ") + " - " : ""}${address.city.name}, ${address.country}`,
+      area: areaString.replace(/^, |, $/g, '').replace(/^- |- $/g, ''),
       phone: address.phone,
       isSelected: address.id === selectedAddressId,
     };

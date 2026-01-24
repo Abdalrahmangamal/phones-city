@@ -1,6 +1,5 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { UseFormRegister, FieldErrors, UseFormWatch, UseFormSetValue } from "react-hook-form";
 import { MapPin, Building2, Home, Navigation, Hash, Mail } from "lucide-react";
 
 interface City {
@@ -9,10 +8,10 @@ interface City {
 }
 
 interface SaudiNationalAddressFormProps {
-    register: UseFormRegister<any>;
-    errors: FieldErrors<any>;
-    watch?: UseFormWatch<any>;
-    setValue?: UseFormSetValue<any>;
+    register: any;
+    errors: any;
+    watch?: any;
+    setValue?: any;
     cities: City[];
     isLoading?: boolean;
 }
@@ -26,7 +25,6 @@ const PO_BOX_PATTERN = /p\.?\s*o\.?\s*box|صندوق\s*بريد|ص\.?\s*ب\.?/i;
 export default function SaudiNationalAddressForm({
     register,
     errors,
-    watch,
     setValue,
     cities,
     isLoading = false,
@@ -103,7 +101,7 @@ export default function SaudiNationalAddressForm({
                     {errors.building_number && (
                         <p className={errorClass}>
                             <span className="text-red-500">⚠</span>
-                            {errors.building_number.message as string}
+                            {errors.building_number.message}
                         </p>
                     )}
                 </div>
@@ -132,7 +130,7 @@ export default function SaudiNationalAddressForm({
                     {errors.street_name && (
                         <p className={errorClass}>
                             <span className="text-red-500">⚠</span>
-                            {errors.street_name.message as string}
+                            {errors.street_name.message}
                         </p>
                     )}
                 </div>
@@ -161,7 +159,7 @@ export default function SaudiNationalAddressForm({
                     {errors.district && (
                         <p className={errorClass}>
                             <span className="text-red-500">⚠</span>
-                            {errors.district.message as string}
+                            {errors.district.message}
                         </p>
                     )}
                 </div>
@@ -181,7 +179,7 @@ export default function SaudiNationalAddressForm({
                                     } ${isRTL ? "pr-4 pl-10" : "pl-4 pr-10"}`}
                                 {...register("city_id", {
                                     required: t("City is required"),
-                                    validate: (value) => value !== "" || t("Please select a city"),
+                                    validate: (value: string) => value !== "" || t("Please select a city"),
                                 })}
                                 disabled={isLoading}
                             >
@@ -205,7 +203,7 @@ export default function SaudiNationalAddressForm({
                         {errors.city_id && (
                             <p className={errorClass}>
                                 <span className="text-red-500">⚠</span>
-                                {errors.city_id.message as string}
+                                {errors.city_id.message}
                             </p>
                         )}
                     </div>
@@ -235,7 +233,7 @@ export default function SaudiNationalAddressForm({
                         {errors.postal_code && (
                             <p className={errorClass}>
                                 <span className="text-red-500">⚠</span>
-                                {errors.postal_code.message as string}
+                                {errors.postal_code.message}
                             </p>
                         )}
                     </div>
@@ -265,7 +263,7 @@ export default function SaudiNationalAddressForm({
                     {errors.additional_number && (
                         <p className={errorClass}>
                             <span className="text-red-500">⚠</span>
-                            {errors.additional_number.message as string}
+                            {errors.additional_number.message}
                         </p>
                     )}
                 </div>

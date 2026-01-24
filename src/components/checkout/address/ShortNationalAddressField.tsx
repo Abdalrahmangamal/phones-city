@@ -1,13 +1,12 @@
-import React, { useState, useRef } from "react";
+import { useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { UseFormRegister, FieldErrors, UseFormSetValue, UseFormWatch } from "react-hook-form";
 import { MapPin, Info, Check, X } from "lucide-react";
 
 interface ShortNationalAddressFieldProps {
-    register: UseFormRegister<any>;
-    errors: FieldErrors<any>;
-    setValue?: UseFormSetValue<any>;
-    watch?: UseFormWatch<any>;
+    register: any;
+    errors: any;
+    setValue?: any;
+    watch?: any;
 }
 
 // Regex pattern for Short National Address: 4 uppercase letters + 4 digits
@@ -17,7 +16,6 @@ export default function ShortNationalAddressField({
     register,
     errors,
     setValue,
-    watch,
 }: ShortNationalAddressFieldProps) {
     const { t, i18n } = useTranslation();
     const isRTL = i18n.language === "ar";
@@ -196,7 +194,7 @@ export default function ShortNationalAddressField({
                         className={`w-full bg-[#F6F6F6] rounded-lg px-4 py-4 text-[#211C4D] text-xl font-mono tracking-[0.3em] text-center uppercase focus:outline-none focus:ring-2 transition-all duration-200 ${getInputBorderClass()} ${isRTL ? "pr-12" : "pl-12"}`}
                         style={{ letterSpacing: "0.3em" }}
                         {...register("short_national_address", {
-                            validate: (value) => {
+                            validate: (value: string) => {
                                 if (!value || value.length === 0) return true; // Optional field
                                 if (!SHORT_ADDRESS_PATTERN.test(value)) {
                                     return t("shortNationalAddress.validation.invalidFormat");
@@ -240,7 +238,7 @@ export default function ShortNationalAddressField({
                     <div className="mt-2 p-3 bg-red-50 rounded-lg border border-red-200">
                         <p className="text-red-600 text-sm flex items-center gap-2">
                             <span>⚠</span>
-                            {errors.short_national_address?.message as string || t("shortNationalAddress.validation.invalidFormat")}
+                            {errors.short_national_address?.message || t("shortNationalAddress.validation.invalidFormat")}
                         </p>
                         <p className="text-red-500 text-xs mt-1">
                             {t("shortNationalAddress.validation.example")}
