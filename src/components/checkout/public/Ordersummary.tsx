@@ -12,7 +12,7 @@ import tamara from "@/assets/images/tamara.png";
 import tabby from "@/assets/images/tabby 1.png";
 import emkann from "@/assets/images/emkann.png";
 import madfu from "@/assets/images/madfu.png";
-import mispay_installment from "@/assets/images/mispay_installment 1.png";
+
 import amwal from "@/assets/images/amwal.png";
 import moyassarlogo from "@/assets/images/moyassarlogo.png";
 
@@ -20,7 +20,6 @@ const paymentLogos: Record<number, any> = {
   1: tamara,
   2: tabby,
   3: madfu,
-  4: mispay_installment,
   5: emkann,
   6: amwal,
   7: moyassarlogo,
@@ -39,9 +38,7 @@ const paymentMarketingTexts: Record<number, (amount: string, isRTL: boolean) => 
   3: (a, isRTL) => isRTL
     ? <span>4 دفعات بدون فائدة {a} <SaudiRiyalIcon className="w-3 h-3 inline pb-0.5" /> بعد الخصم. وتوفير رسوم إضافية لعملائنا الكاملين</span>
     : <span>4 interest-free installments {a} <SaudiRiyalIcon className="w-3 h-3 inline pb-0.5" /> after discount. Save additional fees for our premium customers</span>,
-  4: (a, isRTL) => isRTL
-    ? <span>4 دفعات بدون فائدة {a} <SaudiRiyalIcon className="w-3 h-3 inline pb-0.5" /> بعد الخصم. وتوفير رسوم إضافية لعملائنا الكاملين</span>
-    : <span>4 interest-free installments {a} <SaudiRiyalIcon className="w-3 h-3 inline pb-0.5" /> after discount. Save additional fees for our premium customers</span>,
+
   5: (a, isRTL) => isRTL
     ? <span>4 دفعات بدون فائدة {a} <SaudiRiyalIcon className="w-3 h-3 inline pb-0.5" /> بعد الخصم. وتوفير رسوم إضافية لعملائنا الكاملين</span>
     : <span>4 interest-free installments {a} <SaudiRiyalIcon className="w-3 h-3 inline pb-0.5" /> after discount. Save additional fees for our premium customers</span>,
