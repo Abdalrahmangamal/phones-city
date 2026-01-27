@@ -1,4 +1,10 @@
 {
+  "maintenance": {
+    "title": "Site Under Maintenance",
+    "message": "We are currently making improvements to our site. We will be back soon!",
+    "subtitle": "Thank you for your patience",
+    "followUs": "Follow us on social media"
+  },
   "Home": "Home",
   "About": "About",
   "Offers": "Offers",

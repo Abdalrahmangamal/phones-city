@@ -1,12 +1,16 @@
 // App.tsx
+import { useEffect } from "react";
 import { BrowserRouter, Routes, Route, Navigate, useParams } from "react-router-dom";
 import { useSettings } from "@/store/settings";
+import { useMaintenanceStore } from "@/store/maintenanceStore";
 import i18n from "@/i18n";
 import Home from "@/pages/Home";
 import About from "@/pages/about";
 import Servces from "@/pages/Servces";
 import Contact from "@/pages/Contact";
 import SpecialOffersPage from "./pages/products/SpecialOffersPage"; // الصفحة الفعلية لقائمة العروض
+import MaintenancePage from "./pages/MaintenancePage";
+import Loader from "./components/Loader";
 
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
@@ -105,6 +109,22 @@ function LangWrapper() {
 
 export default function App() {
   const { lang } = useSettings();
+  const { isMaintenanceMode, loading, checkMaintenanceStatus } = useMaintenanceStore();
+
+  // Check maintenance status on app mount
+  useEffect(() => {
+    checkMaintenanceStatus();
+  }, [checkMaintenanceStatus]);
+
+  // Show loader while checking maintenance status
+  if (loading) {
+    return <Loader />;
+  }
+
+  // Show maintenance page if maintenance mode is active
+  if (isMaintenanceMode) {
+    return <MaintenancePage />;
+  }
 
   return (
     <div className="flex flex-col min-h-screen relative">
