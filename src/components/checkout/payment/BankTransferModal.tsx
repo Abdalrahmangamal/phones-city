@@ -92,13 +92,19 @@ export default function BankTransferModal({
             }
 
             // Check file type
-            if (!["image/jpeg", "image/jpg", "image/png"].includes(file.type)) {
-                alert(isRTL ? "يجب أن يكون الملف بصيغة JPG, JPEG أو PNG" : "File must be JPG, JPEG or PNG");
+            const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "application/pdf"];
+            if (!allowedTypes.includes(file.type)) {
+                alert(isRTL ? "يجب أن يكون الملف بصيغة JPG, JPEG, PNG أو PDF" : "File must be JPG, JPEG, PNG or PDF");
                 return;
             }
 
             setUploadedFile(file);
-            setPreviewUrl(URL.createObjectURL(file));
+            // Only create preview URL for images, not PDFs
+            if (file.type.startsWith('image/')) {
+                setPreviewUrl(URL.createObjectURL(file));
+            } else {
+                setPreviewUrl(null);
+            }
         }
     };
 
@@ -410,7 +416,7 @@ export default function BankTransferModal({
                             <input
                                 ref={fileInputRef}
                                 type="file"
-                                accept=".jpg,.jpeg,.png"
+                                accept=".jpg,.jpeg,.png,.pdf"
                                 onChange={handleFileChange}
                                 className="hidden"
                             />
@@ -433,6 +439,23 @@ export default function BankTransferModal({
                                         <X className="w-4 h-4" />
                                     </button>
                                 </div>
+                            ) : uploadedFile && uploadedFile.type === 'application/pdf' ? (
+                                <div className="relative w-full h-full p-4 flex flex-col items-center justify-center">
+                                    <svg className="w-16 h-16 text-red-500 mb-2" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M6,4H13V9H18V20H6V4M8,12V14H16V12H8M8,16V18H13V16H8Z" />
+                                    </svg>
+                                    <p className="text-sm font-medium text-gray-700">{uploadedFile.name}</p>
+                                    <button
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            setUploadedFile(null);
+                                            setPreviewUrl(null);
+                                        }}
+                                        className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full hover:bg-red-600"
+                                    >
+                                        <X className="w-4 h-4" />
+                                    </button>
+                                </div>
                             ) : (
                                 <div className="flex flex-col items-center gap-3">
                                     <Upload className="w-16 h-12" style={{ color: "#F3AC5D" }} />
@@ -441,8 +464,8 @@ export default function BankTransferModal({
                                         style={{ color: "#211C4D", fontFamily: "Roboto" }}
                                     >
                                         {isRTL
-                                            ? "اضغط لرفع ملف (JPG, JPEG, PNG)"
-                                            : "Click to upload file (JPG, JPEG, PNG)"}
+                                            ? "اضغط لرفع ملف (JPG, JPEG, PNG, PDF)"
+                                            : "Click to upload file (JPG, JPEG, PNG, PDF)"}
                                     </p>
                                     <p
                                         className="text-xs"
