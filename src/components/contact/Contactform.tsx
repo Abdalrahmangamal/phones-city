@@ -8,14 +8,14 @@ const baseUrl = import.meta.env.VITE_BASE_URL;
 export default function Contactform() {
   const { t } = useTranslation();
   const { lang } = useLangSync();
-  
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     phone: "",
     message: "",
   });
-  
+
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -56,7 +56,7 @@ export default function Contactform() {
 
       console.log("Ticket submitted successfully:", response.data);
       setSuccessMessage("تم إرسال التذكرة بنجاح!");
-      
+
       // Reset form
       setFormData({
         name: "",
@@ -173,7 +173,7 @@ export default function Contactform() {
             </h3>
           </div>
           <p className="text-[#000000] font-[400] mt-[30px] text-[16px] mb-2">
-           {t("Weareavailable24hoursaday7daysaweek")}
+            {t("Weareavailable24hoursaday7daysaweek")}
           </p>
           <p className="text-[#000000] font-[400] text-[16px] mb-4">
             {t("PhoneNumber")}: +2222222222
@@ -202,7 +202,7 @@ export default function Contactform() {
             </h3>
           </div>
           <p className="text-black font-[400] mt-[30px] text-[16px] mb-1">
-           {t("Fillouttheformandwewillcontactyouwithin24hours")}
+            {t("Fillouttheformandwewillcontactyouwithin24hours")}
           </p>
           <div className="flex items-center gap-2 mt-[20px]">
             <p className="text-black font-[400] text-[16px]">
@@ -212,6 +212,41 @@ export default function Contactform() {
               PHONECITY@gmail.com
             </p>
           </div>
+
+          {/* WhatsApp Section */}
+          <hr className="h-[1px] my-[35px] bg-black text-black" />
+          <div className="flex items-center gap-3 mb-4">
+            <svg
+              width="40"
+              height="40"
+              viewBox="0 0 40 40"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <rect width="40" height="40" rx="20" fill="#F3AC5D" />
+              <path
+                d="M20 10C14.48 10 10 14.48 10 20C10 21.85 10.5 23.55 11.36 25.02L10.05 29.95L15.12 28.67C16.55 29.45 18.22 29.9 20 29.9C25.52 29.9 30 25.42 30 19.9C30 14.48 25.52 10 20 10ZM25.9 23.95C25.68 24.55 24.75 25.07 24.1 25.2C23.65 25.28 23.05 25.35 21.15 24.55C18.75 23.55 17.2 21.1 17.08 20.92C16.95 20.75 16 19.5 16 18.2C16 16.9 16.68 16.27 16.95 15.97C17.18 15.72 17.55 15.6 17.9 15.6C18.02 15.6 18.12 15.6 18.22 15.62C18.5 15.62 18.68 15.67 18.88 16.12C19.1 16.62 19.62 17.92 19.68 18.05C19.75 18.17 19.8 18.32 19.7 18.5C19.62 18.67 19.55 18.77 19.42 18.92C19.3 19.07 19.18 19.17 19.05 19.32C18.93 19.45 18.8 19.6 18.95 19.85C19.1 20.1 19.62 20.95 20.38 21.62C21.35 22.5 22.15 22.77 22.4 22.88C22.65 22.98 22.8 22.95 22.95 22.78C23.1 22.6 23.58 22.05 23.75 21.77C23.92 21.5 24.1 21.55 24.35 21.62C24.6 21.7 25.9 22.35 26.15 22.47C26.4 22.6 26.55 22.65 26.62 22.75C26.7 22.9 26.7 23.42 25.9 23.95Z"
+                fill="white"
+              />
+            </svg>
+            <h3 className="font-[500] text-[black] text-[24px]">
+              {lang === "ar" ? "واتساب" : "WhatsApp"}
+            </h3>
+          </div>
+          <p className="text-black font-[400] mt-[10px] text-[16px] mb-4">
+            {lang === "ar" ? "تواصل معنا مباشرة عبر واتساب" : "Contact us directly via WhatsApp"}
+          </p>
+          <a
+            href="https://wa.me/966501108846"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 bg-[#F3AC5D] text-white px-6 py-3 rounded-[16px] font-[500] text-[16px] transition-all duration-300 ease-in-out hover:bg-[#e29b4a] hover:scale-[1.05] focus:ring-4 focus:ring-[#F3AC5D]/50"
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2C6.48 2 2 6.48 2 12C2 13.85 2.5 15.55 3.36 17.02L2.05 21.95L7.12 20.67C8.55 21.45 10.22 21.9 12 21.9C17.52 21.9 22 17.42 22 11.9C22 6.48 17.52 2 12 2ZM17.9 15.95C17.68 16.55 16.75 17.07 16.1 17.2C15.65 17.28 15.05 17.35 13.15 16.55C10.75 15.55 9.2 13.1 9.08 12.92C8.95 12.75 8 11.5 8 10.2C8 8.9 8.68 8.27 8.95 7.97C9.18 7.72 9.55 7.6 9.9 7.6C10.02 7.6 10.12 7.6 10.22 7.62C10.5 7.62 10.68 7.67 10.88 8.12C11.1 8.62 11.62 9.92 11.68 10.05C11.75 10.17 11.8 10.32 11.7 10.5C11.62 10.67 11.55 10.77 11.42 10.92C11.3 11.07 11.18 11.17 11.05 11.32C10.93 11.45 10.8 11.6 10.95 11.85C11.1 12.1 11.62 12.95 12.38 13.62C13.35 14.5 14.15 14.77 14.4 14.88C14.65 14.98 14.8 14.95 14.95 14.78C15.1 14.6 15.58 14.05 15.75 13.77C15.92 13.5 16.1 13.55 16.35 13.62C16.6 13.7 17.9 14.35 18.15 14.47C18.4 14.6 18.55 14.65 18.62 14.75C18.7 14.9 18.7 15.42 17.9 15.95Z" />
+            </svg>
+            {lang === "ar" ? "راسلنا" : "Message Us"}
+          </a>
         </div>
       </div>
     </div>
