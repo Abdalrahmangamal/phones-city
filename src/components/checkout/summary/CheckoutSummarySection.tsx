@@ -243,12 +243,15 @@ const CheckoutSummarySection: React.FC<CheckoutSummarySectionProps> = ({
             const unitPrice = typeof productPrice === "string" ? parseFloat(productPrice.replace(/,/g, "")) : productPrice;
             const totalPrice = unitPrice * quantity;
 
+            // استخدام main_image أولاً لأنها الصورة الصحيحة للمنتج
+            const productImage = product?.main_image || product?.images?.[0]?.url || null;
+
             return (
-              <div key={item.id} className="flex items-center justify-between p-3 sm:p-4 rounded-lg bg-[#F6F6F6]" style={{ borderRadius: "13px" }}>
+              <div key={`cart-item-${item.id}-${product?.id || ''}`} className="flex items-center justify-between p-3 sm:p-4 rounded-lg bg-[#F6F6F6]" style={{ borderRadius: "13px" }}>
                 <div className={`flex items-center gap-2 sm:gap-4 ${isRTL ? "flex-row" : "flex-row-reverse"} flex-1 min-w-0`}>
                   <div className="w-8 h-8 sm:w-10 sm:h-10 rounded flex items-center justify-center overflow-hidden flex-shrink-0">
-                    {product?.images?.[0]?.url || product?.main_image ? (
-                      <img src={product?.images?.[0]?.url || product?.main_image} alt={productName} className="w-full h-full object-cover"
+                    {productImage ? (
+                      <img src={productImage} alt={productName} className="w-full h-full object-cover"
                         onError={(e: any) => { e.target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 24 24' fill='%23ccc'%3E%3Cpath d='M0 0h24v24H0z' fill='none'/%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z'/%3E%3C/svg%3E"; }}
                       />
                     ) : (

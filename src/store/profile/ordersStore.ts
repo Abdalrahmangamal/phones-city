@@ -186,7 +186,10 @@ const useOrdersStore = create<OrdersState>()(
       getOrdersByStatus: (status: string) => {
         const { orders } = get();
         if (status === 'total') return orders;
-        return orders.filter(order => order.status === status);
+        // استخدام مقارنة case-insensitive لضمان مطابقة الحالات
+        return orders.filter(order =>
+          order.status?.toLowerCase() === status.toLowerCase()
+        );
       },
 
       cancelOrder: async (orderId: number) => {

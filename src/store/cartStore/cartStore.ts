@@ -16,6 +16,8 @@ interface CartProduct {
   discount_amount: string;
   quantity: number;
   stock_status: string;
+  main_image?: string;
+  images?: { url: string }[];
 }
 
 interface CartCategory {

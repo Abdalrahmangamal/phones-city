@@ -58,9 +58,9 @@ export default function Myorder() {
 
   const orderCounts = {
     total: orders.length,
-    Delivering: getOrdersByStatus('Delivery is in progress').length,
-    completed: getOrdersByStatus('completed').length,
-    Cancelled: getOrdersByStatus('cancelled').length,
+    Delivering: orders.filter(o => o.status?.toLowerCase() === 'delivery is in progress').length,
+    completed: orders.filter(o => o.status?.toLowerCase() === 'completed').length,
+    Cancelled: orders.filter(o => o.status?.toLowerCase() === 'cancelled').length,
   };
 
   const toggleOrderDetails = (order: any) => {
@@ -81,13 +81,15 @@ export default function Myorder() {
   const getStatusText = (status: string) => {
     const statusMap: Record<string, { text: string; color: string; bgColor: string }> = {
       'pending': { text: t('Pending'), color: '#F3AC5D', bgColor: '#FFF9F0' },
-      'Delivery is in progress': { text: t('InProgress'), color: '#4A90E2', bgColor: '#EFF6FF' },
+      'delivery is in progress': { text: t('InProgress'), color: '#4A90E2', bgColor: '#EFF6FF' },
       'completed': { text: t('Completed'), color: '#34A853', bgColor: '#F0FFF4' },
       'cancelled': { text: t('Cancelled'), color: '#E50000', bgColor: '#FFF0F0' },
       'processing': { text: t('Processing'), color: '#9B51E0', bgColor: '#F9F5FF' },
     };
 
-    return statusMap[status] || { text: status, color: '#211C4D', bgColor: '#F5F5F5' };
+    // استخدام lowercase للمقارنة
+    const normalizedStatus = status?.toLowerCase() || '';
+    return statusMap[normalizedStatus] || { text: status, color: '#211C4D', bgColor: '#F5F5F5' };
   };
 
   // وظيفة مساعدة لترجمة حالة الدفع
@@ -102,7 +104,9 @@ export default function Myorder() {
       'cancelled': { text: lang === 'ar' ? 'ملغي' : 'Cancelled', color: '#E50000', bgColor: '#FFF0F0' },
     };
 
-    return statusMap[paymentStatus] || { text: paymentStatus || '-', color: '#211C4D', bgColor: '#F5F5F5' };
+    // استخدام lowercase للمقارنة
+    const normalizedStatus = paymentStatus?.toLowerCase() || '';
+    return statusMap[normalizedStatus] || { text: paymentStatus || '-', color: '#211C4D', bgColor: '#F5F5F5' };
   };
 
   // مكون التفاصيل المشترك
