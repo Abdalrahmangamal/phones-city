@@ -12,7 +12,7 @@ import AppDownloadSection from "@/components/home/AppDownloadSection";
 import CertificationBadgesSection from "@/components/home/CertificationBadgesSection";
 import Loader from "@/components/Loader";
 import SpecialOffersSection from "@/components/home/SpecialOffersSection";
-import HomePopup from "@/components/home/HomePopup"; 
+import HomePopup from "@/components/home/HomePopup";
 import BestSellersSection from "@/components/home/BestSellersSection";
 
 
@@ -30,11 +30,11 @@ import { usePopupStore } from '@/store/popupStore'; // Added popup store
 
 const NewHome = () => {
   const [isLoading, setIsLoading] = useState(false);
-  
+
   const { fetchHomePage, data } = useHomePageStore();
   const { lang } = useLangSync();
   const { isShowing, showPopup, hidePopup } = usePopupStore(); // Use popup store
-  
+
   useEffect(() => {
     fetchHomePage(lang);
     console.log(lang)
@@ -44,7 +44,7 @@ const NewHome = () => {
   useEffect(() => {
     // Reset popup state when component mounts (homepage is visited)
     usePopupStore.getState().resetPopup();
-    
+
     const popupTimer = setTimeout(() => {
       // Check if popup has already been shown
       if (!usePopupStore.getState().hasShown) {
@@ -60,10 +60,12 @@ const NewHome = () => {
 
   // All stores
   const {
-    fetchOffers,  
+    fetchOffers,
     fetchBestSellers,
+    fetchNewArrivals,
     offersProducts,
     bestSellerProducts,
+    newArrivalsProducts,
     response: productsResponse,
     loading: productsLoading,
   } = useProductsStore();
@@ -73,7 +75,7 @@ const NewHome = () => {
   const { fetchCategories, categories } = useCategoriesStore();
   const { fetchFeatures, getFeaturesByLanguage } = useFeaturesStore();
 
- 
+
   // Fetch all data in one place
   useEffect(() => {
     const loadAllData = async () => {
@@ -86,6 +88,9 @@ const NewHome = () => {
 
           // Best sellers products
           fetchBestSellers(lang),
+
+          // New arrivals products
+          fetchNewArrivals(lang),
 
           // Hero sliders
           fetchSliders(lang),
@@ -110,7 +115,7 @@ const NewHome = () => {
     };
 
     loadAllData();
-  }, [lang]); 
+  }, [lang]);
 
   // Helper to safely get products array
   const getProductsArray = () => {
@@ -139,7 +144,7 @@ const NewHome = () => {
     <Layout>
       {/* Show the popup if showPopup is true */}
       {isShowing && <HomePopup onClose={() => hidePopup()} sliders={sliders} />}
-      
+
       <div className="min-h-screen bg-gray-50 w-full flex flex-col">
         <main className="w-full">
           <HeroSection sliders={sliders} />
@@ -147,15 +152,20 @@ const NewHome = () => {
           <InstallmentSection title={data?.offer_text} />
           <ProductCategoriesSection />
           <LatestOffers />
-          <SpecialOffersSection 
-            title="SpecialOffersForYou"    
-            products={offersProducts} 
+          <SpecialOffersSection
+            title="SpecialOffersForYou"
+            products={offersProducts || []}
             link="offers"
           />
-          <SpecialOffersSection 
-            title="BestSellers"    
-            products={bestSellerProducts} 
+          <SpecialOffersSection
+            title="BestSellers"
+            products={bestSellerProducts || []}
             link="BestSellerPage"
+          />
+          <SpecialOffersSection
+            title="NewArrivals"
+            products={newArrivalsProducts || []}
+            link="new-arrivals"
           />
           {/* <SpecialOffersSection 
             title="SpecialOffersForYou"    
@@ -163,16 +173,16 @@ const NewHome = () => {
             link="offers"
           /> */}
 
-         
+
           <TestimonialsSection />
           <FrameSection features={langFeatures} />
           <CertificationBadgesSection certificates={certificates || []} />
           <Parttner />
-          <AppDownloadSection 
-          key={lang}
-            title={data?.app_title } 
-            description={data?.app_description } 
-            image={data?.app_main_image }  
+          <AppDownloadSection
+            key={lang}
+            title={data?.app_title}
+            description={data?.app_description}
+            image={data?.app_main_image}
           />
         </main>
       </div>

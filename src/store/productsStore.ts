@@ -24,9 +24,11 @@ interface PageState {
   response: Product | Product[] | null;
   bestSellerProducts?: Product[];
   offersProducts?: Product[];
+  newArrivalsProducts?: Product[];
   offersMeta?: any; // pagination metadata from backend (current_page, last_page, total...)
   fetchBestSellers: (lang: string) => Promise<void>;
   fetchOffers: (lang: string, page?: number) => Promise<void>;
+  fetchNewArrivals: (lang: string) => Promise<void>;
   fetchProducts: (params?: productsParams, lang?: string) => Promise<void>;
   fetchProductbyid: (id: string, lang: string, params?: productsParams) => Promise<void>;
 }
@@ -136,6 +138,26 @@ export const useProductsStore = create<PageState>((set) => ({
 
       set({
         bestSellerProducts: res.data.data,
+        loading: false,
+      });
+    } catch (err: any) {
+      set({
+        error: err?.response?.data?.message,
+        loading: false,
+      });
+    }
+  },
+
+  fetchNewArrivals: async (lang: string) => {
+    try {
+      set({ loading: true });
+
+      const res = await axiosClient.get(`api/v1/products/new-arrivals`, {
+        headers: { "Accept-Language": lang },
+      });
+
+      set({
+        newArrivalsProducts: res.data.data,
         loading: false,
       });
     } catch (err: any) {
