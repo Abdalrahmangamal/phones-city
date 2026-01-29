@@ -1,6 +1,6 @@
 
 import { create } from "zustand";
-import axios from "axios";
+import axiosClient from "@/api/axiosClient";
 
 interface PageData {
   id: number;
@@ -13,7 +13,7 @@ interface PageData {
 }
 
 interface PageState {
-  pages: Record<string, PageData>; 
+  pages: Record<string, PageData>;
   loading: Record<string, boolean>;
   error: string | null;
 
@@ -22,7 +22,7 @@ interface PageState {
   isLoading: (slug: string, lang: string) => boolean;
 }
 
-const baseUrl = import.meta.env.VITE_BASE_URL;
+
 
 export const usePageStore = create<PageState>((set, get) => ({
   pages: {},
@@ -31,7 +31,7 @@ export const usePageStore = create<PageState>((set, get) => ({
 
   fetchPage: async (slug: string, lang: string) => {
     const key = `${slug}-${lang}`;
-    
+
     // إذا كانت الصفحة محملة بالفعل أو قيد التحميل، لا تعيد جلبها
     if (get().pages[key] || get().loading[key]) return;
 
@@ -41,7 +41,11 @@ export const usePageStore = create<PageState>((set, get) => ({
         error: null,
       }));
 
-      const res = await axios.get(`${baseUrl}api/v1/pages/${slug}`, {
+      // Log token status for debugging
+      const token = localStorage.getItem("token");
+      console.log(`📄 Page Request (${slug}) - Token:`, token ? "✅ Token found" : "❌ No token (guest user)");
+
+      const res = await axiosClient.get(`api/v1/pages/${slug}`, {
         headers: {
           "Accept-Language": `${lang}`,
         },

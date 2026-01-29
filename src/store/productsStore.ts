@@ -172,10 +172,15 @@ export const useProductsStore = create<PageState>((set) => ({
     try {
       set({ loading: true, error: null });
 
+      // Get user token to track product views
+      const token = localStorage.getItem("token");
+      console.log("📦 Product View Request - Token:", token ? "✅ Token found" : "❌ No token (guest user)");
+
       const res = await axiosClient.get(`api/v1/products/${id}`, {
         params,
         headers: {
           "Accept-Language": `${lang}`,
+          ...(token && { Authorization: `Bearer ${token}` }),
         },
       });
 
