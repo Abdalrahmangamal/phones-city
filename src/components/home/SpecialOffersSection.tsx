@@ -32,6 +32,9 @@ const SpecialOffersSection: React.FC<SpecialOffersSectionProps> = ({
   const { t } = useTranslation();
   const [shouldAllowSlide, setShouldAllowSlide] = useState(true);
 
+  // إنشاء unique ID لكل slider بناءً على title لمنع التزامن
+  const sliderId = title.replace(/\s+/g, '-').toLowerCase();
+
   // حالة التحميل
   if (isLoading) {
     return (
@@ -195,8 +198,8 @@ const SpecialOffersSection: React.FC<SpecialOffersSectionProps> = ({
             Autoplay
           ]}
           navigation={{
-            nextEl: '.special-offers-next',
-            prevEl: '.special-offers-prev',
+            nextEl: `.special-offers-next-${sliderId}`,
+            prevEl: `.special-offers-prev-${sliderId}`,
             enabled: shouldAllowSlide,
           }}
           loop={shouldAllowSlide && products.length > slidesPerView}
@@ -274,12 +277,12 @@ const SpecialOffersSection: React.FC<SpecialOffersSectionProps> = ({
         {/* أزرار التنقل - نفس موقع BestSellers */}
         {shouldAllowSlide && products.length > 1 && (
           <>
-            <div className={`special-offers-prev ${!shouldAllowSlide ? 'opacity-50 cursor-not-allowed' : ''}`}>
+            <div className={`special-offers-prev-${sliderId} special-offers-prev ${!shouldAllowSlide ? 'opacity-50 cursor-not-allowed' : ''}`}>
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
                 <path d="M15 18l-6-6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </div>
-            <div className={`special-offers-next ${!shouldAllowSlide ? 'opacity-50 cursor-not-allowed' : ''}`}>
+            <div className={`special-offers-next-${sliderId} special-offers-next ${!shouldAllowSlide ? 'opacity-50 cursor-not-allowed' : ''}`}>
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
                 <path d="M9 18l6-6-6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
