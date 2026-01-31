@@ -139,7 +139,7 @@ export default function MaintenancePage() {
                     </p>
                     <div className="flex justify-center gap-4">
                         <a
-                            href="https://facebook.com"
+                            href="https://www.facebook.com/share/14PAhVuoWz7/"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-blue-600 hover:scale-110 transition-all duration-300"
@@ -147,7 +147,7 @@ export default function MaintenancePage() {
                             <FacebookIcon />
                         </a>
                         <a
-                            href="https://twitter.com"
+                            href="https://x.com/AlhwatfMdy43074"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-gray-800 hover:scale-110 transition-all duration-300"
@@ -155,7 +155,7 @@ export default function MaintenancePage() {
                             <TwitterIcon />
                         </a>
                         <a
-                            href="https://instagram.com"
+                            href="https://www.instagram.com/cityphone.sa?igsh=cnVoeGpncWF0Mjc5"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-gradient-to-br hover:from-purple-600 hover:to-pink-500 hover:scale-110 transition-all duration-300"
@@ -163,12 +163,20 @@ export default function MaintenancePage() {
                             <InstagramIcon />
                         </a>
                         <a
-                            href="https://snapchat.com"
+                            href="https://www.snapchat.com/add/madinat6100?share_id=qzDj5oOT5kM&locale=ar-SA"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-yellow-400 hover:text-black hover:scale-110 transition-all duration-300"
                         >
                             <SnapchatIcon />
+                        </a>
+                        <a
+                            href="https://www.tiktok.com/@madinatalhawatif?_r=1&_t=ZS-92MSlSSc6D2"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-black hover:scale-110 transition-all duration-300"
+                        >
+                            <TikTokIcon />
                         </a>
                     </div>
                 </div>
