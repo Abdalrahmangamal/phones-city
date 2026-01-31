@@ -29,6 +29,12 @@ const SnapchatIcon = () => (
     </svg>
 );
 
+const TikTokIcon = () => (
+    <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z" />
+    </svg>
+);
+
 // Animated Gear Icon
 const AnimatedGearIcon = () => (
     <div className="relative w-32 h-32 mx-auto mb-8">
@@ -139,7 +145,7 @@ export default function MaintenancePage() {
                     </p>
                     <div className="flex justify-center gap-4">
                         <a
-                            href="https://facebook.com"
+                            href="https://www.facebook.com/share/14PAhVuoWz7/"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-blue-600 hover:scale-110 transition-all duration-300"
@@ -147,7 +153,7 @@ export default function MaintenancePage() {
                             <FacebookIcon />
                         </a>
                         <a
-                            href="https://twitter.com"
+                            href="https://x.com/AlhwatfMdy43074"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-gray-800 hover:scale-110 transition-all duration-300"
@@ -155,7 +161,7 @@ export default function MaintenancePage() {
                             <TwitterIcon />
                         </a>
                         <a
-                            href="https://instagram.com"
+                            href="https://www.instagram.com/cityphone.sa?igsh=cnVoeGpncWF0Mjc5"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-gradient-to-br hover:from-purple-600 hover:to-pink-500 hover:scale-110 transition-all duration-300"
@@ -163,12 +169,20 @@ export default function MaintenancePage() {
                             <InstagramIcon />
                         </a>
                         <a
-                            href="https://snapchat.com"
+                            href="https://www.snapchat.com/add/madinat6100?share_id=qzDj5oOT5kM&locale=ar-SA"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-yellow-400 hover:text-black hover:scale-110 transition-all duration-300"
                         >
                             <SnapchatIcon />
+                        </a>
+                        <a
+                            href="https://www.tiktok.com/@madinatalhawatif?_r=1&_t=ZS-92MSlSSc6D2"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-black hover:scale-110 transition-all duration-300"
+                        >
+                            <TikTokIcon />
                         </a>
                     </div>
                 </div>
