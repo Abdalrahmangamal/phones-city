@@ -96,6 +96,13 @@ export default function ProductCard({ product, imagecard, containerstyle, quanti
   // حالة السلة محلياً
   const [isInCart, setIsInCart] = useState((product as any)?.in_cart || false);
 
+  // إعادة تعيين حالة السلة عند تغيير الـ variant المحدد
+  useEffect(() => {
+    // عند تغيير الـ variant، نعيد تعيين حالة السلة
+    // لأن الـ variant الجديد قد لا يكون موجود في السلة
+    setIsInCart(false);
+  }, [selectedIndex]);
+
   return (
     <div
       key={product.id}
