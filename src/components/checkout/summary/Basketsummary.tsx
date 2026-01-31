@@ -121,7 +121,7 @@ export default function Basketsummary({ products, total }: any) {
           const quantity = item?.quantity || 1;
           const itemPrice = getItemPrice(item);
           const itemName = getItemDisplayName(item);
-          const imageUrl = getItemImage(item);
+          const imageUrl = item.product_option?.images?.[0]?.url || getItemImage(item);
           const variantInfo = item.variant ? `(${item.variant.name || item.variant.value})` : '';
 
           return (
