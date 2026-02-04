@@ -120,23 +120,30 @@ export default function Chatbot() {
   return (
     <>
       {!isOpen && (
-        <img
-          src={botGif}
-          alt="Chat Bot"
-          onClick={() => setIsOpen(!isOpen)}
-          className={`fixed z-[500] w-[200px] h-[180px] bottom-[-20px] ${isEn ? 'left-[-20px]' : 'right-[-20px]'} cursor-pointer transition-transform duration-300 hover:scale-110`}
-        />
-      )}
+  <img
+    src={botGif}
+    alt="Chat Bot"
+    onClick={() => setIsOpen(!isOpen)}
+    className={`fixed z-[500] 
+      w-[160px] h-[140px] md:w-[200px] md:h-[180px] 
+      bottom-[-15px] md:bottom-[-20px]
+      ${isEn ? 'right-[-15px] md:right-[-20px]' : 'left-[-15px] md:left-[-20px]'} 
+      cursor-pointer transition-transform duration-300 hover:scale-110`}
+  />
+)}
 
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, y: 20, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            className={`fixed bottom-28 ${isEn ? 'left-6' : 'right-6'} z-50 w-[360px] h-[550px] bg-white rounded-2xl shadow-2xl flex flex-col border border-gray-100 overflow-hidden font-sans`}
-            style={{ direction: isEn ? 'ltr' : 'rtl' }}
-          >
+      initial={{ opacity: 0, y: 20, scale: 0.95 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      exit={{ opacity: 0, y: 20, scale: 0.95 }}
+      className={`fixed bottom-24 md:bottom-28 
+        ${isEn ? 'right-4 md:right-6' : 'left-4 md:left-6'} 
+        z-50 w-[90vw] max-w-[360px] h-[75vh] max-h-[550px] 
+        bg-white rounded-2xl shadow-2xl flex flex-col border border-gray-100 overflow-hidden font-sans`}
+      style={{ direction: isEn ? 'ltr' : 'rtl' }}
+    >
             <div className="bg-[#2F2C79] text-white p-4 flex items-center justify-between shadow-md z-10">
               <div className="flex items-center gap-3">
                 <div className="relative">
