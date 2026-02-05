@@ -30,6 +30,7 @@ import { useNotifications } from "@/store/notifications/notificationStore"; // Ø
 const baseUrl = import.meta.env.VITE_BASE_URL;
 import MobileMenu from "./MobileMenu";
 import MobileNavbar from "./MobileNavbar";
+import { getCategoryIcon } from "@/utils/categoryIcons";
 
 interface SuggestionItem {
   id: number;
@@ -480,6 +481,9 @@ export default function Header() {
                       return (
                         <DropdownMenuItem key={category.id} asChild>
                           <Link to={`/${lang}/categorySingle/${category.slug}/products`} className="flex items-center gap-2 cursor-pointer">
+                            <span className="text-gray-500">
+                              {getCategoryIcon(category.name, category.slug)}
+                            </span>
                             {category.name}
                           </Link>
                         </DropdownMenuItem>
@@ -489,6 +493,9 @@ export default function Header() {
                     return (
                       <DropdownMenuSub key={category.id}>
                         <DropdownMenuSubTrigger className="flex items-center gap-2 cursor-pointer">
+                          <span className="text-gray-500">
+                            {getCategoryIcon(category.name, category.slug)}
+                          </span>
                           {category.name}
                         </DropdownMenuSubTrigger>
 
@@ -501,7 +508,10 @@ export default function Header() {
                             </DropdownMenuItem>
                             {category.children.map((child: any) => (
                               <DropdownMenuItem key={child.id} asChild>
-                                <Link to={`/${lang}/categorySingle/${child.slug}/products`}>
+                                <Link to={`/${lang}/categorySingle/${child.slug}/products`} className="flex items-center gap-2">
+                                  <span className="text-gray-400">
+                                    {getCategoryIcon(child.name, child.slug)}
+                                  </span>
                                   {child.name}
                                 </Link>
                               </DropdownMenuItem>

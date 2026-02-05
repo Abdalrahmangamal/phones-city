@@ -1,11 +1,13 @@
 "use client";
-import { ChevronDown, Monitor, Smartphone, Tablet, Camera, X, Globe } from "lucide-react";
+import { ChevronDown, X, Globe } from "lucide-react";
 import { Link } from "react-router-dom";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 import { useTranslation } from "react-i18next";
 import { useLangSync } from "@/hooks/useLangSync";
 import React, { useEffect } from "react";
 import { useCategoriesStore } from "@/store/categories/useCategoriesStore";
+
+import { getCategoryIcon } from "@/utils/categoryIcons";
 
 export default function MobileMenu({
   isOpen,
@@ -24,7 +26,7 @@ export default function MobileMenu({
   const [open] = React.useState(false);
   const { categories, fetchCategories } = useCategoriesStore();
 
-  
+
   useEffect(() => {
     if (isOpen && lang) {
       fetchCategories(lang);
@@ -32,7 +34,7 @@ export default function MobileMenu({
     }
   }, [isOpen, lang, fetchCategories]);
 
-  
+
   useEffect(() => {
     if (isOpen && openSections) {
       // لا حاجة لفعل أي شيء، openSections يتم استخدامه في render
@@ -51,20 +53,7 @@ export default function MobileMenu({
     { link: `/${lang}/notifications`, name: `${t("Notifications")}` },
   ];
 
-  // Map category icons based on category names
-  const getCategoryIcon = (categoryName: string) => {
-    if (categoryName.includes("لابتوب") || categoryName.includes("Laptop")) {
-      return <Monitor className="w-5 h-5 text-gray-700" />;
-    } else if (categoryName.includes("الهواتف") || categoryName.includes("Phone")) {
-      return <Smartphone className="w-5 h-5 text-gray-700" />;
-    } else if (categoryName.includes("لوحية") || categoryName.includes("Tablet")) {
-      return <Tablet className="w-5 h-5 text-gray-700" />;
-    } else {
-      return <Camera className="w-5 h-5 text-gray-700" />;
-    }
-  };
-
-  const handleCategoryClick = (categoryId: string, categorySlug: string, hasChildren: boolean, e: React.MouseEvent) => {
+  const handleCategoryClick = (categoryId: string, _categorySlug: string, hasChildren: boolean, e: React.MouseEvent) => {
     if (hasChildren) {
       // إذا كان للقسم أقسام فرعية، نفتح/نغلق القائمة الفرعية فقط
       e.preventDefault();
@@ -86,9 +75,8 @@ export default function MobileMenu({
 
       {/* القائمة */}
       <div
-        className={`absolute right-0 top-0 h-full w-[80%] max-w-sm bg-white shadow-xl transform transition-transform duration-300 ease-in-out ${
-          isOpen ? "translate-x-0" : "translate-x-full"
-        }`}
+        className={`absolute right-0 top-0 h-full w-[80%] max-w-sm bg-white shadow-xl transform transition-transform duration-300 ease-in-out ${isOpen ? "translate-x-0" : "translate-x-full"
+          }`}
       >
         {/* Header */}
         <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200">
@@ -115,26 +103,27 @@ export default function MobileMenu({
                   {t("Loading categories...")}
                 </div>
               ) : (
-                categories.map((cat) => {
+                categories.map((cat: any) => {
                   const hasChildren = cat.children && cat.children.length > 0;
-                  
+
                   return (
                     <div key={cat.id}>
                       {/* رابط القسم الرئيسي */}
-                      <Link 
+                      <Link
                         to={hasChildren ? "#" : `/${lang}/categorySingle/${cat.slug}/products`}
                         onClick={(e) => handleCategoryClick(cat.id.toString(), cat.slug, hasChildren, e)}
                         className="flex items-center justify-between w-full px-3 py-2 text-gray-800 hover:bg-gray-50 rounded-lg"
                       >
                         <div className="flex items-center gap-2">
-                          {getCategoryIcon(cat.name)}
+                          <span className="text-gray-600">
+                            {getCategoryIcon(cat.name, cat.slug)}
+                          </span>
                           <span>{cat.name}</span>
                         </div>
                         {hasChildren && (
                           <ChevronDown
-                            className={`w-4 h-4 transition-transform ${
-                              openCategory === cat.id.toString() ? "rotate-180" : ""
-                            }`}
+                            className={`w-4 h-4 transition-transform ${openCategory === cat.id.toString() ? "rotate-180" : ""
+                              }`}
                           />
                         )}
                       </Link>
@@ -144,24 +133,29 @@ export default function MobileMenu({
                         <ul className="mr-6 mt-1 border-r-2 border-[#F3AC5D] pr-2 space-y-1">
                           {/* رابط للقسم الرئيسي نفسه (عرض جميع المنتجات) */}
                           <li>
-                            <Link 
-                              to={`/${lang}/categorySingle/${cat.slug}/products`} 
+                            <Link
+                              to={`/${lang}/categorySingle/${cat.slug}/products`}
                               className="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg font-semibold"
                               onClick={onClose}
                             >
                               {t("View all")} {cat.name}
                             </Link>
                           </li>
-                          
+
                           {/* الأقسام الفرعية */}
                           {cat.children.map((sub: any) => (
                             <li key={sub.id}>
-                              <Link 
-                                to={`/${lang}/categorySingle/${sub.slug}/products`} 
+                              <Link
+                                to={`/${lang}/categorySingle/${sub.slug}/products`}
                                 className="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg"
                                 onClick={onClose}
                               >
-                                {sub.name}
+                                <div className="flex items-center gap-2">
+                                  <span className="text-gray-500 scale-90">
+                                    {getCategoryIcon(sub.name, sub.slug)}
+                                  </span>
+                                  {sub.name}
+                                </div>
                               </Link>
                             </li>
                           ))}
@@ -179,9 +173,9 @@ export default function MobileMenu({
         <div className="px-4 py-3">
           <nav className="space-y-2">
             {navitem.map((link) => (
-              <Link 
-                key={link.link} 
-                to={link.link} 
+              <Link
+                key={link.link}
+                to={link.link}
                 className="block px-4 py-2 text-black hover:bg-gray-100 rounded-lg"
                 onClick={onClose}
               >
