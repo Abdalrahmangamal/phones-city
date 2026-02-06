@@ -12,6 +12,7 @@ interface BankTransferModalProps {
     uploadUrl?: string | null; // URL الرفع القادم من الـ API
     onSubmit: (file: File, bankDetails: BankDetails) => void;
     onUploadSuccess?: () => void; // callback بعد نجاح الرفع
+    onCreateOrder?: () => Promise<{ orderId: number | string; uploadUrl?: string } | null>; // ⭐ إنشاء الطلب أولاً
 }
 
 interface BankDetails {
@@ -32,6 +33,7 @@ export default function BankTransferModal({
     uploadUrl,
     onSubmit,
     onUploadSuccess,
+    onCreateOrder,
 }: BankTransferModalProps) {
     const { i18n } = useTranslation();
     const isRTL = i18n.language === "ar";
@@ -116,12 +118,28 @@ export default function BankTransferModal({
 
         setIsSubmitting(true);
         try {
+            let currentOrderId = orderId;
+            let currentUploadUrl = uploadUrl;
+
+            // ⭐ إذا لم يكن هناك orderId، نقوم بإنشاء الطلب أولاً
+            if (!currentOrderId && onCreateOrder) {
+                console.log('=== Creating Order First ===');
+                const orderResult = await onCreateOrder();
+                if (!orderResult) {
+                    // فشل إنشاء الطلب
+                    setIsSubmitting(false);
+                    return;
+                }
+                currentOrderId = orderResult.orderId;
+                currentUploadUrl = orderResult.uploadUrl;
+                console.log('Order created:', currentOrderId);
+            }
+
             // تحديد الـ URL للرفع - نستخدم uploadUrl من الـ API إذا كان متوفرًا
-            const finalUploadUrl = uploadUrl || (orderId ? `/api/v1/orders/${orderId}/payment/upload-proof` : null);
+            const finalUploadUrl = currentUploadUrl || (currentOrderId ? `/api/v1/orders/${currentOrderId}/payment/upload-proof` : null);
 
             console.log('=== Upload Payment Proof ===');
-            console.log('uploadUrl from API:', uploadUrl);
-            console.log('orderId:', orderId);
+            console.log('orderId:', currentOrderId);
             console.log('Final Upload URL:', finalUploadUrl);
             console.log('uploadedFile:', uploadedFile);
 

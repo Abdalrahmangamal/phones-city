@@ -172,7 +172,7 @@ export default function Offers() {
   return (
     <Layout>
       <div>
-        <NewHeroSection sliders={sliders} />
+        <NewHeroSection sliders={sliders} showButton={false} />
 
         <BannerSection images={data?.main_images || []} />
 

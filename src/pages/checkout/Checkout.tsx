@@ -171,6 +171,13 @@ export default function CheckoutPage() {
         }
       }
 
+      // ⭐ للتحويل البنكي: نفتح المودال أولاً بدون إنشاء الطلب
+      if (Number(selectedPaymentId) === BANK_TRANSFER_ID) {
+        setShowBankTransferModal(true);
+        setIsSubmitting(false);
+        return; // لا ننشئ الطلب الآن - سينشأ عند الضغط على "دفع الآن" في المودال
+      }
+
       // إظهار toast للتحميل
       const loadingToast = toast.info(
         <div className={`flex items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
@@ -338,6 +345,24 @@ export default function CheckoutPage() {
     setUsePoints(value);
   };
 
+  // Step validation logic
+  const isStepValid = (): boolean => {
+    switch (activeStep) {
+      case 0: // Order Summary - must have items in cart
+        return items.length > 0;
+      case 1: // Address - must have address selected (unless pickup)
+        const currentDelivery = deliveryMethod || "delivery";
+        if (currentDelivery === "pickup") {
+          return true; // No address needed for pickup
+        }
+        return selectedAddressId !== null && selectedAddressId !== undefined;
+      case 2: // Payment - must have payment method selected
+        return selectedPaymentId !== null && selectedPaymentId !== undefined && selectedPaymentId !== "";
+      default:
+        return true;
+    }
+  };
+
   // ثم استخدم handleUsePointsChange بدلاً من setUsePoints في steps
   const handleGoHome = () => {
     navigate(`/${currentLang}`);
@@ -468,7 +493,7 @@ export default function CheckoutPage() {
             <Button
               className="md:w-[400px] w-full h-[56px] bg-gradient-to-r from-[#F3AC5D] to-[#FF7B54] rounded-[16px] flex items-center justify-center text-[24px] text-white hover:from-[#FF7B54] hover:to-[#F3AC5D] transition-all shadow-lg hover:shadow-xl disabled:opacity-70 disabled:cursor-not-allowed"
               onClick={handleNextOrComplete}
-              disabled={isSubmitting}
+              disabled={isSubmitting || !isStepValid()}
             >
               {isSubmitting ? (
                 <span className="flex items-center gap-2">
@@ -495,24 +520,58 @@ export default function CheckoutPage() {
       <BankTransferModal
         isOpen={showBankTransferModal}
         onClose={() => {
+          // ⭐ فقط نغلق المودال - لا ننشئ الطلب ولا نمسح السلة
           setShowBankTransferModal(false);
-          // إذا أغلق المستخدم المودال بدون رفع الصورة، نظهر له رسالة
-          showCustomToast(
-            'info',
-            isRTL ? 'تنبيه' : 'Notice',
-            isRTL
-              ? 'يمكنك رفع إثبات الدفع لاحقًا من صفحة طلباتي'
-              : 'You can upload payment proof later from My Orders page'
-          );
-          setOrderCompleted(true);
-          if (clearCart) {
-            clearCart();
-          }
         }}
         totalAmount={total}
         orderId={orderId}
         uploadUrl={uploadUrl}
         onSubmit={async () => { }}
+        onCreateOrder={async () => {
+          // ⭐ إنشاء الطلب عند الضغط على "دفع الآن" في المودال
+          try {
+            const currentDeliveryMethod = deliveryMethod || "delivery";
+
+            const orderRequestData = {
+              ...(currentDeliveryMethod === "delivery" && { location_id: selectedAddressId }),
+              payment_method_id: parseInt(selectedPaymentId as string),
+              note: "",
+              discount_code: localStorage.getItem('discount_code') || null,
+              delivery_method: currentDeliveryMethod === "pickup" ? "store_pickup" : "home_delivery",
+              use_point: usePoints,
+              points_discount: usePoints ? pointsDiscountAmount : 0,
+            };
+
+            console.log('=== Creating Order from Modal ===');
+            console.log('Order Request Data:', orderRequestData);
+
+            const response = await axiosClient.post('/api/v1/orders', orderRequestData);
+
+            const orderData = response.data.data?.order || response.data.data || response.data;
+            const orderNum = orderData?.order_number || response.data.order_number || response.data.id;
+            const orderIdFromResponse = orderData?.id || response.data.data?.id || response.data.id || response.data.order_id;
+            const paymentData = response.data?.payment || response.data?.data?.payment;
+            const apiUploadUrl = paymentData?.upload_url || null;
+
+            console.log('Order Created:', orderIdFromResponse);
+            console.log('Upload URL:', apiUploadUrl);
+
+            setOrderNumber(orderNum);
+            setOrderId(orderIdFromResponse);
+            setUploadUrl(apiUploadUrl);
+
+            return {
+              orderId: orderIdFromResponse,
+              uploadUrl: apiUploadUrl
+            };
+          } catch (error: any) {
+            console.error('Error creating order:', error);
+            const errorMessage = error.response?.data?.message ||
+              (isRTL ? 'فشل في إنشاء الطلب' : 'Failed to create order');
+            showCustomToast('error', isRTL ? 'خطأ' : 'Error', errorMessage);
+            return null;
+          }
+        }}
         onUploadSuccess={() => {
           showCustomToast(
             'success',
@@ -526,6 +585,7 @@ export default function CheckoutPage() {
           if (clearCart) {
             clearCart();
           }
+          localStorage.removeItem('discount_code');
         }}
       />
     </Layout>

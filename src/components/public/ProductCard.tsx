@@ -237,7 +237,7 @@ export default function ProductCard({ product, imagecard, containerstyle, quanti
       </div>
 
       {/* السعر + زر السلة */}
-      <div className="flex items-center justify-between mt-[10px] w-full">
+      <div className="flex items-center justify-between mt-auto pt-[10px] w-full">
         <div className="relative flex gap-2 md:gap-3">
           <p className="text-[#211C4D] md:text-[18px] text-[7px] font-[500] flex items-center gap-1">
             {final?.toLocaleString()} <SaudiRiyalIcon className="w-2 h-2 md:w-4 md:h-4" />

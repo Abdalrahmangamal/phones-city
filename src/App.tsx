@@ -55,6 +55,13 @@ function LangWrapper() {
     return <Navigate to={`/${lang}/`} replace />;
   }
 
+  // Sync Global State with URL
+  useEffect(() => {
+    if (urlLang && (urlLang === "ar" || urlLang === "en") && i18n.language !== urlLang) {
+      i18n.changeLanguage(urlLang);
+    }
+  }, [urlLang]);
+
   return (
     <Routes>
       <Route path="" element={<Home />} />
