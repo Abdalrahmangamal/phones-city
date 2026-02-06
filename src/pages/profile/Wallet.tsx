@@ -2,7 +2,6 @@ import Layout from "@/components/layout/layout";
 import Sidebar from "@/components/layout/Sidebar";
 import "@/style.css";
 import macbook from "@/assets/images/macbook.png";
-import warning from "@/assets/images/warning.png";
 import { useTranslation } from "react-i18next";
 import { useState, useEffect } from "react";
 import axiosClient from "@/api/axiosClient";
@@ -156,7 +155,7 @@ export default function Wallet() {
     }
   };
 
-  
+
 
   return (
     <div>
@@ -184,10 +183,6 @@ export default function Wallet() {
               <p className="text-[#211C4D] font-[600]">{totalPoints} {t("TotalPoints")}</p>
             </div>
 
-            <div className="w-full justify-between md:h-[60px] h-full px-7 mt-[20px] p-5 bg-[#F3AC5D73] flex items-center rounded-[8px]">
-              <p className="text-[#211C4DCC] text-[24px] font-[500]">{t("AlertMessage")}</p>
-              <img src={warning} alt="Warning" className="w-8 h-8" />
-            </div>
 
             <div className="overflow-x-auto w-[100vw] md:w-[60vw] lg:w-full xl:w-[883px] md:px-0 px-[20px]">
               {isLoading ? (
@@ -203,7 +198,7 @@ export default function Wallet() {
                       onClick={handleRetry}
                       className="mt-4 px-6 py-2 bg-[#211C4D] text-white rounded-md hover:bg-[#211C4DCC]"
                     >
-                      {t("Refresh") || "Refresh"}
+                      {t("wallet.refresh")}
                     </button>
                   )}
                 </div>
@@ -277,8 +272,8 @@ export default function Wallet() {
                                 alt={item.product.name}
                                 className="w-[75px] h-[76px] object-contain rounded-md"
                               />
-                              <div className={`flex-1 ${isRTL ? 'pr-3 text-right' : 'pl-3 text-left'}`}>
-                                <p className="font-[600] text-[14px] text-[#211C4D] truncate max-w-[150px]">
+                              <div className={`flex-1 min-w-0 ${isRTL ? 'pr-3 text-right' : 'pl-3 text-left'}`}>
+                                <p className="font-[600] text-[14px] text-[#211C4D] line-clamp-2 break-words">
                                   {item.product.name}
                                 </p>
                               </div>

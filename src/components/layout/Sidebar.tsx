@@ -90,7 +90,7 @@ export default function Sidebar() {
     // },
     {
       icon: <Wallet className="w-5 h-5" />,
-      text: `${t("wallet")}`,
+      text: `${t("wallet.title")}`,
       link: `/${lang}/wallet`,
     },
     {
@@ -153,7 +153,7 @@ export default function Sidebar() {
                   }
                   setOpen(false);
                 }}
-                className={({ isActive }) => 
+                className={({ isActive }) =>
                   `flex items-center justify-between w-full text-gray-700 hover:text-[#2AA0DC] cursor-pointer transition-all p-2 rounded-md hover:bg-gray-50
                   ${isActive ? "bg-blue-50 text-[#2AA0DC] border-r-4 border-[#2AA0DC]" : ""}`
                 }
@@ -164,11 +164,11 @@ export default function Sidebar() {
                   </div>
                   <span className="text-[14px] font-medium">{item.text}</span>
                 </div>
-                
+
                 {/* Badge للإشعارات غير المقروءة */}
                 {item.badge !== null && item.badge !== undefined && (
-                  <Badge 
-                    variant="destructive" 
+                  <Badge
+                    variant="destructive"
                     className="h-5 min-w-5 rounded-full p-0 flex items-center justify-center text-[10px] font-bold bg-red-500"
                   >
                     {item.badge}

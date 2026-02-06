@@ -33,7 +33,10 @@
   "Address": "Address",
   "Discounts": "Discounts",
   "Logout": "Log out",
-  "wallet": "Wallet",
+  "wallet": {
+    "title": "Wallet",
+    "refresh": "Refresh"
+  },
   "Addanewtitle": "Add a new title",
   "Favoriteproducts": "Favorite products",
   "PersonalData": "Personal Information",

@@ -33,7 +33,10 @@
   "Address": "العنوان",
   "Discounts": "خصومات",
   "Logout": "تسجيل الخروج",
-  "wallet": "المحفظة",
+  "wallet": {
+    "title": "المحفظة",
+    "refresh": "تحديث"
+  },
   "Addanewtitle": "إضافة عنوان جديد",
   "Favoriteproducts": "المنتجات المفضله",
   "PersonalData": "البيانات الشخصية",
