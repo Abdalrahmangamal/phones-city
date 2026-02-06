@@ -23,6 +23,8 @@ export interface Product {
     discount_amount: string;
   } | null;
 
+  slug: string;
+  price?: string;
   options: {
     id: number;
     type: string; // "color", ...
@@ -30,6 +32,10 @@ export interface Product {
     sku?: string;
     original_price: string;
     final_price: string;
+    price?: string;
+    sale_price?: string;
+    quantity?: number;
+    stock_status?: string;
     images: { id: number; url: string }[];
   }[];
 
@@ -38,6 +44,8 @@ export interface Product {
   quantity?: number;
   points?: number;
   product_mark?: string;
+  average_rating?: number;
+  reviews_count?: number;
 }
 
 // types.ts

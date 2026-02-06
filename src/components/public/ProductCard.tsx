@@ -115,6 +115,7 @@ export default function ProductCard({ product, imagecard, containerstyle, quanti
             src={currentImage}
             className={`md:!w-[220px] h-[160px] w-[160px] object-contain ${imagecard} md:!h-[220px]`}
             alt={product.name}
+            loading="eager"
           />
         </Link>
 
@@ -202,6 +203,9 @@ export default function ProductCard({ product, imagecard, containerstyle, quanti
               <button
                 key={index}
                 onClick={() => setSelectedIndex(index)}
+                onMouseEnter={() => {
+                  if (variant.type === "color") setSelectedIndex(index);
+                }}
                 className={`
                   flex items-center justify-center 
                   transition border-2 text-[10px]
@@ -271,6 +275,8 @@ export default function ProductCard({ product, imagecard, containerstyle, quanti
               : () => {
                 const hasMultiple = product.options && product.options.length > 1;
                 const idToSend = hasMultiple ? selectedVariant?.id : product.id;
+
+                if (!idToSend) return;
 
                 if (!isInCart) {
                   addToCart(idToSend, 1, hasMultiple)
