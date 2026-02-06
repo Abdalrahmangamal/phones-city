@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { ChevronDown, Grid } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { SaudiRiyalIcon } from "@/components/common/SaudiRiyalIcon";
 
 interface FilterProps {
   onSortChange: (sortOption: string) => void;
