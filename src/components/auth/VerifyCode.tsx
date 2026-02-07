@@ -126,7 +126,9 @@ const VerifyCode: React.FC<VerifyProps> = ({
 
         {!showSuccess ? (
           <>
-            <MuiOtpInput value={otp} length={6} onChange={setOtp} />
+            <div dir="ltr" className="flex justify-center w-full">
+              <MuiOtpInput value={otp} length={6} onChange={setOtp} />
+            </div>
 
             {errorMessage && (
               <div className="w-full max-w-[400px] bg-red-50 border border-red-200 rounded-lg p-3">

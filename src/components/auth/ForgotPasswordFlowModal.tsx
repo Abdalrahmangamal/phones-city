@@ -210,6 +210,7 @@ export default function ForgotPasswordFlowModal({ isOpen, onClose }: Props) {
             placeholder={t("forgotPassword.enter6Digits")}
             className="w-full p-3 border rounded-lg h-[60px] outline-none focus:ring-2 focus:ring-[#2AA0DC] text-center text-2xl tracking-widest"
             autoFocus
+            dir="ltr"
           />
 
           {errorMessage && (
