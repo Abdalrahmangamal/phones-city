@@ -5,6 +5,7 @@ import { Eye, EyeOff } from "lucide-react";
 import { useAuthStore } from "@/store/useauthstore";
 import Loader from "@/components/Loader";
 import { useTranslation } from "react-i18next";
+import { MuiOtpInput } from "mui-one-time-password-input";
 
 interface Props {
   isOpen: boolean;
@@ -197,21 +198,18 @@ export default function ForgotPasswordFlowModal({ isOpen, onClose }: Props) {
             <span className="font-semibold">{email}</span>
           </p>
 
-          {/* حقل إدخال الكود */}
-          <input
-            type="text"
-            value={code}
-            onChange={(e) => {
-              // السماح فقط بالأرقام
-              const value = e.target.value.replace(/\D/g, '').slice(0, 6);
-              setCode(value);
-              setErrorMessage("");
-            }}
-            placeholder={t("forgotPassword.enter6Digits")}
-            className="w-full p-3 border rounded-lg h-[60px] outline-none focus:ring-2 focus:ring-[#2AA0DC] text-center text-2xl tracking-widest"
-            autoFocus
-            dir="ltr"
-          />
+          {/* حقل إدخال الكود - 6 خانات منفصلة */}
+          <div dir="ltr" className="flex justify-center w-full">
+            <MuiOtpInput
+              value={code}
+              length={6}
+              onChange={(value) => {
+                setCode(value);
+                setErrorMessage("");
+              }}
+              autoFocus
+            />
+          </div>
 
           {errorMessage && (
             <div className="w-full bg-red-50 border border-red-200 rounded p-3">
