@@ -76,12 +76,25 @@
 /* منع التمرير (scroll) في السلايدر */
 .special-offers-swiper .swiper {
   overflow: hidden !important;
-  touch-action: pan-y; 
+  touch-action: pan-y;
 }
 
 .special-offers-swiper .swiper-wrapper {
-  overscroll-behavior-x: contain; 
+  overscroll-behavior-x: contain;
   -webkit-overflow-scrolling: auto;
+  align-items: stretch;
+}
+
+.special-offers-swiper .swiper-slide {
+  height: auto;
+}
+
+.special-offers-swiper .swiper-slide>div {
+  height: 100%;
+}
+
+.special-offers-swiper .swiper-slide>div>div {
+  height: 100%;
 }
 
 /* عندما لا يكون هناك حاجة للتمرير */
@@ -90,21 +103,22 @@
 }
 
 .special-offers-swiper.no-scroll .swiper-wrapper {
-  justify-content: center; 
+  justify-content: center;
 }
 
 /* تحسين الشاشات الصغيرة */
 @media (max-width: 768px) {
+
   .special-offers-prev,
   .special-offers-next {
     width: 32px;
     height: 32px;
   }
-  
+
   .special-offers-prev {
     left: -10px;
   }
-  
+
   .special-offers-next {
     right: -10px;
   }

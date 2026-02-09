@@ -106,7 +106,7 @@ export default function ProductCard({ product, imagecard, containerstyle, quanti
   return (
     <div
       key={product.id}
-      className={`${containerstyle} max-w-[350px] md:!w-[250px] xl:!w-[320px] col-span-1 bg-white w-full min-h-[350px] md:min-h-[400px] rounded-[16px] p-[15px] shadow-[0px_4px_4px_0px_#00000040] flex flex-col hover:shadow-[0px_8px_12px_0px_#00000050] transition-shadow duration-300`}
+      className={`${containerstyle} max-w-[350px] md:!w-[250px] xl:!w-[320px] col-span-1 bg-white w-full rounded-[16px] p-[15px] shadow-[0px_4px_4px_0px_#00000040] flex flex-col hover:shadow-[0px_8px_12px_0px_#00000050] transition-shadow duration-300`}
     >
       {/* الصورة */}
       <div className="flex items-center justify-center pt-7 md:pt-0 relative">
@@ -195,49 +195,54 @@ export default function ProductCard({ product, imagecard, containerstyle, quanti
         </h2>
       </Link>
 
-      <div className="flex items-center justify-between flex-wrap">
-        {/* الألوان / المقاسات */}
-        {product?.options?.length > 1 && (
-          <div className="flex items-center gap-[7px] flex-wrap mt-[10px] justify-start">
-            {product.options.map((variant, index) => (
-              <button
-                key={index}
-                onClick={() => setSelectedIndex(index)}
-                onMouseEnter={() => {
-                  if (variant.type === "color") setSelectedIndex(index);
-                }}
-                className={`
-                  flex items-center justify-center 
-                  transition border-2 text-[10px]
-                  ${variant.type === "size"
-                    ? "min-w-[40px] h-[22px] px-2 rounded-md bg-white text-[#211C4D]"
-                    : "w-[18px] h-[18px] rounded-full"
-                  }
-                  ${index === selectedIndex ? "border-[#211C4D] scale-110" : "border-gray-300"}
-                `}
-                style={{
-                  backgroundColor: variant.type === "color" ? variant.value : "#fff",
-                }}
-                title={`Select ${variant.value}`}
-              >
-                {variant.type === "size" ? variant.value : ""}
-              </button>
-            ))}
-          </div>
-        )}
 
-        {/* التقييم */}
-        <div className="flex mt-[10px] items-center justify-start gap-0">
-          <Rating defaultValue={product.average_rating} className="pointer-events-none">
-            {Array.from({ length: 5 }).map((_, index) => (
-              <RatingButton
-                key={index}
-                className="text-yellow-500 [&>svg]:w-3 [&>svg]:h-3 md:[&>svg]:h-5 md:[&>svg]:w-5"
-              />
-            ))}
-          </Rating>
-          <p className="text-[#9CA3AF] text-[10px] md:!w-[15px]">({product.reviews_count})</p>
+      {/* الألوان / المقاسات */}
+      {product?.options?.length > 1 && (
+        <div className="flex items-center gap-[7px] flex-wrap mt-[10px] justify-start max-h-[50px] overflow-hidden">
+          {product.options.slice(0, 6).map((variant, index) => (
+            <button
+              key={index}
+              onClick={() => setSelectedIndex(index)}
+              onMouseEnter={() => {
+                if (variant.type === "color") setSelectedIndex(index);
+              }}
+              className={`
+                flex items-center justify-center 
+                transition border-2 text-[10px]
+                ${variant.type === "size"
+                  ? "min-w-[40px] h-[22px] px-2 rounded-md bg-white text-[#211C4D]"
+                  : "w-[18px] h-[18px] rounded-full"
+                }
+                ${index === selectedIndex ? "border-[#211C4D] scale-110" : "border-gray-300"}
+              `}
+              style={{
+                backgroundColor: variant.type === "color" ? variant.value : "#fff",
+              }}
+              title={`Select ${variant.value}`}
+            >
+              {variant.type === "size" ? variant.value : ""}
+            </button>
+          ))}
+          {product.options.length > 6 && (
+            <span className="text-[10px] text-gray-500">+{product.options.length - 6}</span>
+          )}
         </div>
+      )}
+
+      {/* Spacer لملء المساحة */}
+      <div className="flex-1" />
+
+      {/* التقييم - دايماً فوق السعر */}
+      <div className="flex items-center justify-start gap-0">
+        <Rating defaultValue={product.average_rating} className="pointer-events-none">
+          {Array.from({ length: 5 }).map((_, index) => (
+            <RatingButton
+              key={index}
+              className="text-yellow-500 [&>svg]:w-3 [&>svg]:h-3 md:[&>svg]:h-5 md:[&>svg]:w-5"
+            />
+          ))}
+        </Rating>
+        <p className="text-[#9CA3AF] text-[10px] md:!w-[15px]">({product.reviews_count})</p>
       </div>
 
       {/* السعر + زر السلة */}

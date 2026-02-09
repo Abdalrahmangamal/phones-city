@@ -3,6 +3,23 @@
   position: relative;
 }
 
+/* توحيد ارتفاع الكروت */
+.best-sellers-swiper .swiper-wrapper {
+  align-items: stretch;
+}
+
+.best-sellers-swiper .swiper-slide {
+  height: auto;
+}
+
+.best-sellers-swiper .swiper-slide>div {
+  height: 100%;
+}
+
+.best-sellers-swiper .swiper-slide>div>div {
+  height: 100%;
+}
+
 .best-sellers-prev,
 .best-sellers-next {
   position: absolute;
@@ -64,11 +81,11 @@
 /* منع التمرير (scroll) في السلايدر */
 .best-sellers-swiper .swiper {
   overflow: hidden !important;
-  touch-action: pan-y; 
+  touch-action: pan-y;
 }
 
 .best-sellers-swiper .swiper-wrapper {
-  overscroll-behavior-x: contain; 
+  overscroll-behavior-x: contain;
   -webkit-overflow-scrolling: auto;
 }
 
@@ -78,21 +95,22 @@
 }
 
 .best-sellers-swiper.no-scroll .swiper-wrapper {
-  justify-content: center; 
+  justify-content: center;
 }
 
 /* تحسين الشاشات الصغيرة */
 @media (max-width: 768px) {
+
   .best-sellers-prev,
   .best-sellers-next {
     width: 32px;
     height: 32px;
   }
-  
+
   .best-sellers-prev {
     left: -10px;
   }
-  
+
   .best-sellers-next {
     right: -10px;
   }
