@@ -10,6 +10,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow: hidden;
 }
 
 .swiper-slide img {
@@ -72,7 +73,7 @@
       .lucide-chevron-right{
         rotate: 180deg;
       }
-
+      
       .navactive{
     background-color: #FFFFFF1A !important;
     padding: 9px 24px !important;
@@ -82,7 +83,7 @@
       @keyframes rotate-glow {
   0% {
     transform: rotate(0deg);
-  }
+      }
   100% {
     transform: rotate(360deg);
   }
