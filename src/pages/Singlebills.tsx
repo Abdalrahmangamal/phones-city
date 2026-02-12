@@ -299,7 +299,8 @@ export default function Singlebills() {
       // Wait for fonts/images to load (basic delay or checks)
       await new Promise(resolve => setTimeout(resolve, 500));
 
-      const fileName = `فاتورة-${currentInvoice.invoice_number}.pdf`;
+      // Use English filename to avoid encoding issues
+      const fileName = `Invoice-${currentInvoice.invoice_number}.pdf`;
 
       // Generate PDF blob using correct html2pdf.js API chain from the iframe body
       const pdfBlob: Blob = await html2pdf()
