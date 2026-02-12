@@ -80,7 +80,6 @@ export default function LatestOffers() {
                 className="absolute inset-0 w-full h-full object-cover"
                 alt={laptopOffer.name_ar || laptopOffer.name_en || t("Laptop")}
                 onError={(e) => {
-                  // إذا فشل تحميل الصورة، استخدم خلفية بديلة
                   (e.target as HTMLImageElement).style.display = 'none';
                   const parent = (e.target as HTMLImageElement).parentElement;
                   if (parent) {
@@ -108,8 +107,12 @@ export default function LatestOffers() {
               </div>
             </>
           ) : (
-            <div className="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 rounded-[16px] flex items-center justify-center">
-              <p className="text-gray-500">{t("NoLaptopOffers")}</p>
+            <div className="w-full h-full bg-gray-100 flex items-center justify-center">
+              <img
+                src={lang === 'ar' ? '/src/assets/images/coming-soon-ar.svg' : '/src/assets/images/coming-soon-en.svg'}
+                alt={t("ComingSoon")}
+                className="w-full h-full object-cover"
+              />
             </div>
           )}
         </div>
@@ -150,8 +153,12 @@ export default function LatestOffers() {
               </div>
             </>
           ) : (
-            <div className="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
-              <p className="text-gray-500">{t("NoOffers")}</p>
+            <div className="w-full h-full bg-gray-100 flex items-center justify-center">
+              <img
+                src={lang === 'ar' ? '/src/assets/images/coming-soon-ar.svg' : '/src/assets/images/coming-soon-en.svg'}
+                alt={t("ComingSoon")}
+                className="w-full h-full object-cover"
+              />
             </div>
           )}
         </div>
@@ -164,7 +171,6 @@ export default function LatestOffers() {
               const offer = accessoryOffers[index];
               return offer ? (
                 <div key={index} className="w-full h-[120px] md:h-full lg:h-[175px] rounded-[16px] relative overflow-hidden">
-                  {/* صورة العرض الرئيسية فقط */}
                   <img
                     src={offer.image}
                     className="absolute inset-0 w-full h-full object-cover"
@@ -196,8 +202,12 @@ export default function LatestOffers() {
                   </div>
                 </div>
               ) : (
-                <div key={index} className="w-full h-[120px] md:h-full lg:h-[175px] rounded-[16px] bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
-                  <p className="text-gray-500">{t("ComingSoon")}</p>
+                <div key={index} className="w-full h-[120px] md:h-full lg:h-[175px] rounded-[16px] bg-gray-100 flex items-center justify-center overflow-hidden">
+                  <img
+                    src={lang === 'ar' ? '/src/assets/images/coming-soon-ar.svg' : '/src/assets/images/coming-soon-en.svg'}
+                    alt={t("ComingSoon")}
+                    className="w-full h-full object-cover"
+                  />
                 </div>
               );
             })}
@@ -207,7 +217,6 @@ export default function LatestOffers() {
           <div className="relative w-full h-[150px] md:h-[200px] lg:h-[250px] rounded-[16px] overflow-hidden">
             {gamingOffer ? (
               <>
-                {/* صورة العرض الرئيسية فقط */}
                 <img
                   src={gamingOffer.image}
                   className="absolute inset-0 w-full h-full object-cover"
@@ -239,8 +248,12 @@ export default function LatestOffers() {
                 </div>
               </>
             ) : (
-              <div className="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
-                <p className="text-gray-500">{t("ComingSoon")}</p>
+              <div className="w-full h-full bg-gray-100 flex items-center justify-center">
+                <img
+                  src={lang === 'ar' ? '/src/assets/images/coming-soon-ar.svg' : '/src/assets/images/coming-soon-en.svg'}
+                  alt={t("ComingSoon")}
+                  className="w-full h-full object-cover"
+                />
               </div>
             )}
           </div>
@@ -252,7 +265,6 @@ export default function LatestOffers() {
               const offer = accessoryOffers[offerIndex];
               return offer ? (
                 <div key={index} className="w-full h-[120px] md:h-full lg:h-[175px] rounded-[16px] relative overflow-hidden">
-                  {/* صورة العرض الرئيسية فقط */}
                   <img
                     src={offer.image}
                     className="absolute inset-0 w-full h-full object-cover"
@@ -284,8 +296,12 @@ export default function LatestOffers() {
                   </div>
                 </div>
               ) : (
-                <div key={index} className="w-full h-[120px] md:h-full lg:h-[175px] rounded-[16px] bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
-                  <p className="text-gray-500">{t("ComingSoon")}</p>
+                <div key={index} className="w-full h-[120px] md:h-full lg:h-[175px] rounded-[16px] bg-gray-100 flex items-center justify-center overflow-hidden">
+                  <img
+                    src={lang === 'ar' ? '/src/assets/images/coming-soon-ar.svg' : '/src/assets/images/coming-soon-en.svg'}
+                    alt={t("ComingSoon")}
+                    className="w-full h-full object-cover"
+                  />
                 </div>
               );
             })}

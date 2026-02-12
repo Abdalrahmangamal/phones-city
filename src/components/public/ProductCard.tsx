@@ -196,38 +196,7 @@ export default function ProductCard({ product, imagecard, containerstyle, quanti
       </Link>
 
 
-      {/* الألوان / المقاسات */}
-      {product?.options?.length > 1 && (
-        <div className="flex items-center gap-[7px] flex-wrap mt-[10px] justify-start max-h-[50px] overflow-hidden">
-          {product.options.slice(0, 6).map((variant, index) => (
-            <button
-              key={index}
-              onClick={() => setSelectedIndex(index)}
-              onMouseEnter={() => {
-                if (variant.type === "color") setSelectedIndex(index);
-              }}
-              className={`
-                flex items-center justify-center 
-                transition border-2 text-[10px]
-                ${variant.type === "size"
-                  ? "min-w-[40px] h-[22px] px-2 rounded-md bg-white text-[#211C4D]"
-                  : "w-[18px] h-[18px] rounded-full"
-                }
-                ${index === selectedIndex ? "border-[#211C4D] scale-110" : "border-gray-300"}
-              `}
-              style={{
-                backgroundColor: variant.type === "color" ? variant.value : "#fff",
-              }}
-              title={`Select ${variant.value}`}
-            >
-              {variant.type === "size" ? variant.value : ""}
-            </button>
-          ))}
-          {product.options.length > 6 && (
-            <span className="text-[10px] text-gray-500">+{product.options.length - 6}</span>
-          )}
-        </div>
-      )}
+
 
       {/* Spacer لملء المساحة */}
       <div className="flex-1" />
