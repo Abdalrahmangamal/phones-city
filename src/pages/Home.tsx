@@ -151,6 +151,7 @@ const NewHome = () => {
           <BannerSection images={data?.main_images || []} />
           <InstallmentSection title={data?.offer_text} />
           <ProductCategoriesSection />
+          <div className="mb-8 md:mb-12 lg:mb-16"></div>
           <LatestOffers />
           <SpecialOffersSection
             title="SpecialOffersForYou"

@@ -3,6 +3,7 @@ import axios from "axios";
 interface Category {
   id: number;
   name: string;
+  slug?: string;
   image?: string | null;
   parent_id?: number | null;
   created_at?: string;
@@ -41,12 +42,12 @@ export const useCategoriesStore = create<CategoriesState>((set) => ({
           Authorization: `Bearer ${token}`,
         },
 
-        
+
       });
-  
-      
-        set({ categories: res.data.data, loading: false });
-      
+
+
+      set({ categories: res.data.data, loading: false });
+
 
       set({ categories: res.data.data, loading: false });
     } catch (err) {
@@ -62,8 +63,7 @@ export const useCategoriesStore = create<CategoriesState>((set) => ({
 
     try {
       const res = await axios.get(
-        `${baseUrl}api/v1/categories/${id}${
-          productsmain ? "/" + productsmain : ""
+        `${baseUrl}api/v1/categories/${id}${productsmain ? "/" + productsmain : ""
         }`,
         {
           headers: {
