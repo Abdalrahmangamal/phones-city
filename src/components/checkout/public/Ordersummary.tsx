@@ -15,6 +15,7 @@ import madfu from "@/assets/images/madfu.png";
 
 import amwal from "@/assets/images/amwal.png";
 import moyassarlogo from "@/assets/images/moyassarlogo.png";
+import footerLogo from "@/assets/images/footer-logo.svg";
 
 const paymentLogos: Record<number, any> = {
   1: tamara,
@@ -314,6 +315,15 @@ export default function OrderSummary({
         </div>
       </div>
 
+      {/* Madfu Notification */}
+      <div className="mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200 flex flex-col items-center text-center gap-3">
+        <img src={footerLogo} alt="Madfu" className="h-8 object-contain" />
+        <p className="text-sm text-gray-600 font-medium leading-relaxed">
+          {t("SoonMadfu")}
+        </p>
+      </div>
+
+
       {/* Bank Transfer Modal */}
       <BankTransferModal
         isOpen={isBankTransferModalOpen}
@@ -321,6 +331,6 @@ export default function OrderSummary({
         totalAmount={calculatedFinalTotal}
         onSubmit={handleBankTransferSubmit}
       />
-    </div>
+    </div >
   );
 }
