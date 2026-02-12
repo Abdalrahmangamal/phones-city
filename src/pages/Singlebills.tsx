@@ -1,11 +1,12 @@
 // Singlebills.tsx
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import Layout from "@/components/layout/layout";
 import Sidebar from "@/components/layout/Sidebar";
 import Topbar from "@/components/public/Topbar";
 import { useInvoicesStore } from "@/store/profile/indexStore";
 import { useLangSync } from "@/hooks/useLangSync";
+import html2pdf from "html2pdf.js";
 
 
 export default function Singlebills() {
@@ -167,6 +168,202 @@ export default function Singlebills() {
     printWindow.document.close();
   };
 
+  const [sharing, setSharing] = useState(false);
+
+  const handleShare = async () => {
+    if (!currentInvoice || sharing) return;
+    setSharing(true);
+
+    try {
+      // Build the same invoice HTML used for printing
+      const invoiceHtml = `
+        <!DOCTYPE html>
+        <html lang="ar" dir="rtl">
+        <head>
+          <meta charset="UTF-8">
+          <style>
+            body { margin: 0; padding: 0; background: white; color: black; font-family: 'Cairo', 'Arial', sans-serif; }
+            * { box-sizing: border-box; }
+          </style>
+          <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+        </head>
+        <body>
+          <div style="direction: rtl; padding: 40px; max-width: 800px; margin: 0 auto;">
+            <!-- Header -->
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 40px; padding-bottom: 20px; border-bottom: 4px solid #2c3e50;">
+              <div style="color: #2c3e50;">
+                <h1 style="font-size: 28px; font-weight: bold; margin-bottom: 8px; margin-top: 0;">City Phones</h1>
+                <p style="font-size: 14px; color: #7f8c8d; margin: 0;">المملكة العربية السعودية</p>
+              </div>
+              <div style="text-align: left;">
+                <h2 style="color: #211C4D; font-size: 32px; font-weight: bold; margin-bottom: 8px; margin-top: 0;">فاتورة</h2>
+                <p style="font-size: 14px; margin: 4px 0; color: #555;"><strong>رقم الفاتورة:</strong> <span style="color: #2c3e50;">${currentInvoice.invoice_number}</span></p>
+                <p style="font-size: 14px; margin: 4px 0; color: #555;"><strong>تاريخ الفاتورة:</strong> <span style="color: #2c3e50;">${currentInvoice.invoice_date}</span></p>
+                <p style="font-size: 14px; margin: 4px 0; color: #555;"><strong>رقم الطلب:</strong> <span style="color: #2c3e50;">${currentInvoice.order_number || '-'}</span></p>
+              </div>
+            </div>
+
+            <!-- Details -->
+            <div style="display: flex; justify-content: space-between; margin-bottom: 40px; gap: 20px; flex-wrap: wrap;">
+              <div style="flex: 1; min-width: 200px;">
+                <h3 style="color: #2c3e50; font-size: 16px; font-weight: bold; margin-bottom: 12px; border-bottom: 1px solid #eee; padding-bottom: 4px; margin-top: 0;">معلومات الطلب</h3>
+                <p style="font-size: 14px; color: #555; margin: 4px 0;"><strong>الحالة:</strong> مكتمل</p>
+                <p style="font-size: 14px; color: #555; margin: 4px 0;"><strong>طريقة الدفع:</strong> ${currentInvoice.order.payment_method?.name_ar || "-"}</p>
+              </div>
+              <div style="flex: 1; min-width: 200px;">
+                <h3 style="color: #2c3e50; font-size: 16px; font-weight: bold; margin-bottom: 12px; border-bottom: 1px solid #eee; padding-bottom: 4px; margin-top: 0;">العميل</h3>
+                <p style="font-size: 14px; color: #555; margin: 4px 0;"><strong>الاسم:</strong> ${currentInvoice.order.location?.first_name || ''} ${currentInvoice.order.location?.last_name || 'عميل'}</p>
+              </div>
+            </div>
+
+            <!-- Items Table -->
+            <table style="width: 100%; border-collapse: collapse; margin-bottom: 32px;">
+              <thead>
+                <tr style="background-color: #211C4D; color: white;">
+                  <th style="padding: 12px; text-align: right; font-size: 14px;">المنتج</th>
+                  <th style="padding: 12px; text-align: right; font-size: 14px;">الكمية</th>
+                  <th style="padding: 12px; text-align: right; font-size: 14px;">السعر</th>
+                  <th style="padding: 12px; text-align: right; font-size: 14px;">الإجمالي</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${currentInvoice.order.items.map(item => `
+                  <tr style="border-bottom: 1px solid #e5e7eb;">
+                    <td style="padding: 12px; font-size: 14px; color: #333;">
+                      <strong>${lang === 'ar' ? (item.product.name_ar || item.product.name) : (item.product.name_en || item.product.name)}</strong>
+                      ${item.product_option ? `<br/><small style="color: #9ca3af;">${item.product_option.value}</small>` : ''}
+                    </td>
+                    <td style="padding: 12px; font-size: 14px; color: #333;">${item.quantity}</td>
+                    <td style="padding: 12px; font-size: 14px; color: #333;">${item.price.toLocaleString()} رس</td>
+                    <td style="padding: 12px; font-size: 14px; color: #333; font-weight: bold;">${item.total.toLocaleString()} رس</td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+
+            <!-- Totals -->
+            <div style="display: flex; justify-content: flex-start; margin-bottom: 40px;">
+              <table style="width: 350px;">
+                <tr style="border-bottom: 1px solid #e5e7eb;">
+                  <td style="padding: 8px; font-size: 14px; color: #7f8c8d; text-align: right;">المجموع الفرعي</td>
+                  <td style="padding: 8px; font-size: 14px; text-align: left; font-weight: 600; color: #333;">${subtotal.toLocaleString()} رس</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #e5e7eb;">
+                  <td style="padding: 8px; font-size: 14px; color: #7f8c8d; text-align: right;">الضريبة</td>
+                  <td style="padding: 8px; font-size: 14px; text-align: left; font-weight: 600; color: #333;">${tax.toLocaleString()} رس</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #e5e7eb;">
+                  <td style="padding: 8px; font-size: 14px; color: #7f8c8d; text-align: right;">الشحن</td>
+                  <td style="padding: 8px; font-size: 14px; text-align: left; font-weight: 600; color: #333;">${currentInvoice.order.shipping?.toLocaleString() || 0} رس</td>
+                </tr>
+                <tr style="background-color: #2c3e50; color: white; font-size: 18px; font-weight: bold;">
+                  <td style="padding: 12px; text-align: right;">الإجمالي</td>
+                  <td style="padding: 12px; text-align: left;">${total.toLocaleString()} رس</td>
+                </tr>
+              </table>
+            </div>
+
+            <!-- Footer -->
+            <div style="text-align: center; padding-top: 20px; border-top: 2px solid #f3f4f6; font-size: 12px; color: #7f8c8d; margin-top: 48px;">
+              <p style="margin-bottom: 4px;">شكراً لتعاملكم معنا!</p>
+              <p>هذه فاتورة إلكترونية صالحة بدون توقيع.</p>
+            </div>
+          </div>
+        </body>
+        </html>
+      `;
+
+      // Verify if html2pdf is available
+      if (typeof html2pdf !== 'function') {
+        throw new Error('مكتبة التصدير غير متوفرة');
+      }
+
+      // Create an isolated iframe to avoid global styles (oklch error in Tailwind v4)
+      const iframe = document.createElement('iframe');
+      iframe.style.position = 'fixed';
+      iframe.style.left = '-10000px';
+      iframe.style.top = '0';
+      iframe.style.width = '1000px'; // Set sufficient width
+      iframe.style.height = '1000px';
+      document.body.appendChild(iframe);
+
+      const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
+      if (!iframeDoc) {
+        throw new Error('فشل في إنشاء إطار للطباعة');
+      }
+
+      iframeDoc.open();
+      iframeDoc.write(invoiceHtml);
+      iframeDoc.close();
+
+      // Wait for fonts/images to load (basic delay or checks)
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      const fileName = `فاتورة-${currentInvoice.invoice_number}.pdf`;
+
+      // Generate PDF blob using correct html2pdf.js API chain from the iframe body
+      const pdfBlob: Blob = await html2pdf()
+        .set({
+          margin: 10,
+          filename: fileName,
+          image: { type: 'jpeg', quality: 0.98 },
+          html2canvas: {
+            scale: 2,
+            useCORS: true,
+            // Strip all stylesheets from the cloned document to avoid
+            // Tailwind v4 oklch() color parsing errors in html2canvas
+            onclone: (clonedDoc: Document) => {
+              clonedDoc.querySelectorAll('link[rel="stylesheet"], style').forEach((el: Element) => el.remove());
+            },
+          },
+          jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+        })
+        .from(iframeDoc.body)
+        .toPdf()
+        .output('blob');
+
+      // Clean up
+      document.body.removeChild(iframe);
+
+      const pdfFile = new File([pdfBlob], fileName, { type: 'application/pdf' });
+
+      // Try Web Share API (works on mobile)
+      if (navigator.share && navigator.canShare) {
+        try {
+          const canShareFiles = navigator.canShare({ files: [pdfFile] });
+          if (canShareFiles) {
+            await navigator.share({
+              title: `فاتورة #${currentInvoice.invoice_number}`,
+              text: `فاتورة من City Phones - رقم ${currentInvoice.invoice_number}`,
+              files: [pdfFile],
+            });
+            return;
+          }
+        } catch (_) {
+          // canShare threw, fall through to download
+        }
+      }
+
+      // Fallback: download the PDF directly
+      const url = URL.createObjectURL(pdfBlob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch (err: any) {
+      if (err?.name !== 'AbortError') {
+        console.error('Share failed:', err);
+        // Show the actual error message for debugging
+        alert(`حدث خطأ أثناء المشاركة: ${err.message || String(err)}`);
+      }
+    } finally {
+      setSharing(false);
+    }
+  };
+
   if (singleLoading) {
     return (
       <Layout>
@@ -193,7 +390,7 @@ export default function Singlebills() {
         <div className="flex flex-col md:flex-row justify-center gap-[30px] mt-[80px] mb-20">
           <Sidebar />
           <div className="md:w-[883px] w-full">
-            <Topbar title={`تفاصيل الفاتورة #${currentInvoice.invoice_number}`} btn={true} onPrint={handlePrint} />
+            <Topbar title={`تفاصيل الفاتورة #${currentInvoice.invoice_number}`} btn={true} onPrint={handlePrint} onShare={handleShare} />
 
             {/* Printable Content */}
             <div ref={printRef}>
