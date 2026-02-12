@@ -92,10 +92,10 @@ export default function LatestOffers() {
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent"></div>
 
               <div className="z-[20] absolute flex flex-col bottom-0 justify-center items-center pb-[40px] md:pb-[50px] lg:pb-[100px] text-center w-full">
-                <h1 className="text-white font-[700] text-[32px] md:text-[35px] lg:text-[54px] drop-shadow-lg">
+                <h1 className="text-white font-[700] text-[20px] md:text-[24px] lg:text-[32px] drop-shadow-lg">
                   {laptopOffer.name_ar || laptopOffer.name_en || t("Laptop")}
                 </h1>
-                <p className="text-[18px] md:text-[24px] text-[#F3AC5D] font-[700] mt-1 drop-shadow-lg">
+                <p className="text-[14px] md:text-[18px] text-[#F3AC5D] font-[700] mt-1 drop-shadow-lg">
                   {getDiscountText(laptopOffer)}
                 </p>
                 <Link
@@ -233,10 +233,10 @@ export default function LatestOffers() {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent"></div>
 
                 <div className="absolute inset-0 flex flex-col items-center justify-center text-center z-20 px-4">
-                  <h1 className="text-[23px] md:text-[40px] lg:text-[56px] font-[700] text-white drop-shadow-lg">
+                  <h1 className="text-[18px] md:text-[24px] lg:text-[32px] font-[700] text-white drop-shadow-lg">
                     {gamingOffer.name_ar || gamingOffer.name_en || t("GamingDevices")}
                   </h1>
-                  <p className="text-[#F3AC5D] text-[15px] md:text-[20px] font-[700] mt-1 drop-shadow-lg">
+                  <p className="text-[#F3AC5D] text-[12px] md:text-[16px] font-[700] mt-1 drop-shadow-lg">
                     {getDiscountText(gamingOffer)}
                   </p>
                   <Link
