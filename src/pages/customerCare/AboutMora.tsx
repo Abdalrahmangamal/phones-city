@@ -4,12 +4,12 @@ import Layout from "@/components/layout/Layout";
 import InternalBanner from "@/components/public/Internalbanner";
 import { useLangSync } from "@/hooks/useLangSync";
 import Loader from "@/components/Loader";
-import { usePageData } from "@/hooks/usePageData"; 
+import { usePageData } from "@/hooks/usePageData";
 
 const AboutMora = () => {
   const { lang } = useLangSync();
-  const { page, loading } = usePageData("about-mowara"); 
-  
+  const { page, loading } = usePageData("about-mowara");
+
   // عرض Loader إذا كانت البيانات قيد التحميل
   if (loading) {
     return (
@@ -44,11 +44,10 @@ const AboutMora = () => {
               {page?.title}
             </h1>
             <div
-              className={`absolute ${
-                lang === "ar" ? "right:-49px" : "left:-49px z-[-1]"
-              }`}
+              className={`absolute ${lang !== "ar" ? "z-[-1]" : ""}`}
               style={{
                 top: "-12px",
+                [lang === "ar" ? "right" : "left"]: "-49px",
                 width: "110px",
                 height: "85.6058px",
               }}
