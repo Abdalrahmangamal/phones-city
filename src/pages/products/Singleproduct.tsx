@@ -129,7 +129,7 @@ export default function ProductPage() {
                   href="#reviews"
                   className="text-[#333D4C] font-[500] hover:text-[#211C4D] transition-colors whitespace-nowrap"
                 >
-                  {lang === "ar" ? "المراجعات" : "Reviews"} ({product?.reviews_count || 0})
+                  {lang === "ar" ? "المراجعات" : "Reviews"} ({product.reviews_count || 0})
                 </a>
               </li>
             </ol>
@@ -142,7 +142,7 @@ export default function ProductPage() {
             <Gallery
               images={
                 hasOptions &&
-                  product.options[selectedOptionIndex]?.images &&
+                  product.options[selectedOptionIndex].images &&
                   product.options[selectedOptionIndex].images.length > 0
                   ? product.options[selectedOptionIndex].images
                   : (product.images || [])
@@ -195,7 +195,7 @@ export default function ProductPage() {
               btn={true}
               link={`/${lang}/BestSellerPage`}
               showPagination={false}
-              isLoading={productsLoading?.bestSellers || false}
+              isLoading={productsLoading.bestSellers || false}
             />
           )}
         </main>

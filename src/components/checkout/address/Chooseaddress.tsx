@@ -108,6 +108,15 @@ export default function Chooseaddress() {
     );
   }
 
+  const handleDeliveryChange = (value: "Homedelivery" | "showroomdelivery") => {
+    setSelected(value);
+    if (value === "Homedelivery") {
+      setDeliveryMethod("delivery");
+    } else {
+      setDeliveryMethod("pickup");
+    }
+  };
+
   return (
     <div className="w-full" dir={isRTL ? "rtl" : "ltr"}>
       <div className="w-full">
@@ -119,21 +128,15 @@ export default function Chooseaddress() {
       <div className={`flex min-w-full max-w-sm flex-col justify-start items-start mt-10 gap-6 ${isRTL ? "items-end" : "items-start"}`}>
         <Tabs
           value={selected}
-          onValueChange={(value) => {
-            setSelected(value);
-            if (value === "Homedelivery") {
-              setDeliveryMethod("delivery");
-            } else if (value === "showroomdelivery") {
-              setDeliveryMethod("pickup");
-            }
-          }}
+          onValueChange={(value) =>
+            handleDeliveryChange(value as "Homedelivery" | "showroomdelivery")
+          }
           className="w-full flex flex-col gap-35"
         >
           <TabsList className={`flex flex-col justify-start gap-[40px] w-full ${isRTL ? "items-end" : "items-start"}`}>
             <div className="w-full relative !border !border-[#D6D6D6] !rounded-[8px] h-[52px]">
               <TabsTrigger
                 value="Homedelivery"
-                onClick={() => setSelected("Homedelivery")}
                 className={`w-full !border flex items-center !border-[#D6D6D6] !rounded-[8px] h-[52px] ${isRTL ? "pr-11 justify-end" : "pl-11 justify-start"}`}
               >
                 <p className={`text-[#211C4DB2] text-[24px] font-[500] ${isRTL ? "text-start" : "text-end"}`}>
@@ -143,9 +146,10 @@ export default function Chooseaddress() {
               <div className={`absolute top-4 ${isRTL ? "right-4" : "left-4"}`}>
                 <label className="relative flex items-center justify-center cursor-pointer">
                   <input
-                    type="checkbox"
+                    type="radio"
+                    name="deliveryMethod"
                     checked={selected === "Homedelivery" ? true : false}
-                    readOnly
+                    onChange={() => handleDeliveryChange("Homedelivery")}
                     className="peer w-[20px] h-[20px] appearance-none border border-[#211C4D] rounded-full checked:bg-none transition-all duration-200"
                   />
                   <span className="absolute !left-[1px] top-[0px] hidden peer-checked:block text-white text-[16px]">
@@ -171,7 +175,6 @@ export default function Chooseaddress() {
             <div className="w-full relative !border !border-[#D6D6D6] !rounded-[8px] h-[52px]">
               <TabsTrigger
                 value="showroomdelivery"
-                onClick={() => setSelected("showroomdelivery")}
                 className={`w-full !border flex items-center !border-[#D6D6D6] !rounded-[8px] h-[52px] ${isRTL ? "pr-11 justify-end" : "pl-11 justify-start"}`}
               >
                 <p className={`text-[#211C4DB2] text-[24px] font-[500] ${isRTL ? "text-start" : "text-end"}`}>
@@ -182,8 +185,9 @@ export default function Chooseaddress() {
                 <label className="relative flex items-center justify-center cursor-pointer">
                   <input
                     checked={selected === "showroomdelivery" ? true : false}
-                    type="checkbox"
-                    readOnly
+                    type="radio"
+                    name="deliveryMethod"
+                    onChange={() => handleDeliveryChange("showroomdelivery")}
                     className="peer w-[20px] h-[20px] appearance-none border border-[#211C4D] rounded-full checked:bg-none transition-all duration-200"
                   />
                   <span className="absolute !left-[1px] top-[0px] hidden peer-checked:block text-white text-[16px]">
