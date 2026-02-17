@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useLangSync } from "@/hooks/useLangSync";
+import { useAboutStore } from "@/store/aboutusStore";
 import axios from "axios";
 
 const baseUrl = import.meta.env.VITE_BASE_URL;
@@ -8,6 +9,11 @@ const baseUrl = import.meta.env.VITE_BASE_URL;
 export default function Contactform() {
   const { t } = useTranslation();
   const { lang } = useLangSync();
+  const { data: aboutData, fetchAbout, loading: aboutLoading } = useAboutStore();
+
+  useEffect(() => {
+    fetchAbout(lang);
+  }, [lang, fetchAbout]);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -176,7 +182,7 @@ export default function Contactform() {
             {t("Weareavailable24hoursaday7daysaweek")}
           </p>
           <p className="text-[#000000] font-[400] text-[16px] mb-4">
-            {t("PhoneNumber")}: +2222222222
+            {t("PhoneNumber")}: {aboutLoading ? "جاري التحميل..." : aboutData?.phone || "+966501108846"}
           </p>
           <hr className="h-[1px] my-[35px] bg-black text-black" />
           <div className="flex items-center gap-3 mb-2">
@@ -209,7 +215,7 @@ export default function Contactform() {
               {t("Email")}:
             </p>
             <p className="text-black font-[400] text-[16px]">
-              PHONECITY@gmail.com
+              {aboutLoading ? "جاري التحميل..." : aboutData?.email || "Support@cityphonesa.com"}
             </p>
           </div>
 
@@ -237,7 +243,7 @@ export default function Contactform() {
             {lang === "ar" ? "تواصل معنا مباشرة عبر واتساب" : "Contact us directly via WhatsApp"}
           </p>
           <a
-            href="https://wa.me/966501108846"
+            href={`https://wa.me/${aboutData?.phone?.replace(/\D/g, '') || '966501108846'}`}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 bg-[#F3AC5D] text-white px-6 py-3 rounded-[16px] font-[500] text-[16px] transition-all duration-300 ease-in-out hover:bg-[#e29b4a] hover:scale-[1.05] focus:ring-4 focus:ring-[#F3AC5D]/50"
