@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import axiosClient from "@/api/axiosClient";
+import { useSettings } from "@/store/settings";
 
 interface CartProduct {
   id: number;
@@ -66,9 +67,11 @@ export const useCartStore = create<CartState>((set, get) => ({
 
   fetchCart: async () => {
     try {
+      const currentLang = useSettings.getState().lang || "ar";
       const res = await axiosClient.get(`api/v1/cart`, {
         headers: {
           Accept: "application/json",
+          "Accept-Language": currentLang,
         },
       });
 

@@ -9,7 +9,7 @@ import Loader from '@/components/Loader';
 import Bestseller from "@/components/home/Bestseller";
 import { useParams } from "react-router";
 import { useProductsStore } from '@/store/productsStore';
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import '@/style.css';
 import { useLangSync } from "@/hooks/useLangSync";
 import { usePageStore } from '@/store/customerCareStore';
@@ -31,6 +31,18 @@ export default function ProductPage() {
   const { page, fetchPage, loading: pageLoading } = usePageStore();
 
   const [isInitialLoad, setIsInitialLoad] = useState(true);
+  const prevIdRef = useRef(id);
+
+  // Clear stale product data when navigating to a different product
+  useEffect(() => {
+    if (prevIdRef.current !== id) {
+      // Different product — reset state so Loader shows immediately
+      useProductsStore.setState({ response: null });
+      setIsInitialLoad(true);
+      setSelectedOptionIndex(0);
+      prevIdRef.current = id;
+    }
+  }, [id]);
 
   useEffect(() => {
     if (id) {
