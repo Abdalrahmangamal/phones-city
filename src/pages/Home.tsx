@@ -40,24 +40,6 @@ const NewHome = () => {
     console.log(lang)
   }, [lang]);
 
-  // Effect to show popup after a delay only if it hasn't been shown yet
-  useEffect(() => {
-    // Reset popup state when component mounts (homepage is visited)
-    usePopupStore.getState().resetPopup();
-
-    const popupTimer = setTimeout(() => {
-      // Check if popup has already been shown
-      if (!usePopupStore.getState().hasShown) {
-        showPopup();
-      }
-    }, 10000); // Show popup after 10 seconds (as per user request)
-
-    // Cleanup timer if component unmounts
-    return () => {
-      clearTimeout(popupTimer);
-    };
-  }, []);
-
   // All stores
   const {
     fetchOffers,
@@ -74,6 +56,24 @@ const NewHome = () => {
   const { fetchCertificates, certificates } = useCertificateStore();
   const { fetchCategories, categories } = useCategoriesStore();
   const { fetchFeatures, getFeaturesByLanguage } = useFeaturesStore();
+
+  // Effect to show popup after a delay only if it hasn't been shown yet AND there are sliders
+  useEffect(() => {
+    // Reset popup state when component mounts (homepage is visited)
+    usePopupStore.getState().resetPopup();
+
+    const popupTimer = setTimeout(() => {
+      // Check if popup has already been shown AND if there are actual sliders/offers
+      if (!usePopupStore.getState().hasShown && sliders && sliders.length > 0) {
+        showPopup();
+      }
+    }, 10000); // Show popup after 10 seconds (as per user request)
+
+    // Cleanup timer if component unmounts
+    return () => {
+      clearTimeout(popupTimer);
+    };
+  }, [sliders]);
 
 
   // Fetch all data in one place

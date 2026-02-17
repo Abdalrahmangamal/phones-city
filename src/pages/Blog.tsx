@@ -115,39 +115,53 @@ export default function Blog() {
                 </div>
 
                 {/* Pagination */}
-                {pagination && pagination.last_page > 1 && (
-                  <div className="flex flex-wrap justify-center items-center gap-2 sm:gap-3 mt-6 sm:mt-8 mb-6 sm:mb-8 px-2">
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-6 bg-gradient-to-r from-[#211C4D]/10 to-[#211C4D]/5 backdrop-blur-md rounded-2xl p-6 border border-[#211C4D]/20 shadow-2xl mt-8 mb-8">
+                  <div className="text-center sm:text-left"></div>
+                  <div className="flex items-center justify-center gap-3">
                     <button
                       onClick={() => handlePageChange(currentPage - 1)}
                       disabled={currentPage === 1}
-                      className="px-3 sm:px-4 py-2 text-sm sm:text-base rounded-lg bg-[#211C4D] text-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#2a2458] transition-colors"
+                      className={`group flex items-center gap-2 px-5 py-3 rounded-xl font-medium transition-all duration-300 ${currentPage === 1
+                          ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                          : "bg-white text-[#211C4D] hover:bg-[#211C4D] hover:text-white shadow-md hover:shadow-lg"
+                        }`}
                     >
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`w-5 h-5 transition-transform ${lang === "ar" ? "rotate-180 group-hover:translate-x-1" : "group-hover:-translate-x-1"}`}>
+                        <path d="m15 18-6-6 6-6"></path>
+                      </svg>
                       {t("Previous")}
                     </button>
 
-                    {Array.from({ length: pagination.last_page }, (_, i) => i + 1).map((page) => (
-                      <button
-                        key={page}
-                        onClick={() => handlePageChange(page)}
-                        className={`px-3 sm:px-4 py-2 text-sm sm:text-base rounded-lg ${
-                          currentPage === page
-                            ? "bg-[#F3AC5D] text-white"
-                            : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-                        } transition-colors`}
-                      >
-                        {page}
-                      </button>
-                    ))}
+                    <div className="flex items-center gap-2">
+                      {pagination && Array.from({ length: pagination.last_page }, (_, i) => i + 1).map((page) => (
+                        <button
+                          key={page}
+                          onClick={() => handlePageChange(page)}
+                          className={`w-12 h-12 rounded-xl font-semibold text-lg transition-all duration-300 flex items-center justify-center ${currentPage === page
+                              ? "bg-yellow-500 text-[#211C4D] shadow-xl shadow-yellow-500/50 scale-110"
+                              : "bg-white text-[#211C4D] hover:bg-[#211C4D] hover:text-white shadow-md hover:shadow-lg"
+                            }`}
+                        >
+                          {page}
+                        </button>
+                      ))}
+                    </div>
 
                     <button
                       onClick={() => handlePageChange(currentPage + 1)}
-                      disabled={currentPage === pagination.last_page}
-                      className="px-3 sm:px-4 py-2 text-sm sm:text-base rounded-lg bg-[#211C4D] text-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#2a2458] transition-colors"
+                      disabled={!pagination || currentPage === pagination.last_page}
+                      className={`group flex items-center gap-2 px-5 py-3 rounded-xl font-medium transition-all duration-300 ${!pagination || currentPage === pagination.last_page
+                          ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                          : "bg-white text-[#211C4D] hover:bg-[#211C4D] hover:text-white shadow-md hover:shadow-lg"
+                        }`}
                     >
                       {t("Next")}
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`w-5 h-5 transition-transform ${lang === "ar" ? "rotate-180 group-hover:-translate-x-1" : "group-hover:translate-x-1"}`}>
+                        <path d="m9 18 6-6-6-6"></path>
+                      </svg>
                     </button>
                   </div>
-                )}
+                </div>
               </>
             )}
           </div>
