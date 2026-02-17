@@ -9,7 +9,7 @@ import Loader from '@/components/Loader';
 import Bestseller from "@/components/home/Bestseller";
 import { useParams } from "react-router";
 import { useProductsStore } from '@/store/productsStore';
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import '@/style.css';
 import { useLangSync } from "@/hooks/useLangSync";
 import { usePageStore } from '@/store/customerCareStore';
@@ -30,24 +30,18 @@ export default function ProductPage() {
   const { lang } = useLangSync();
   const { page, fetchPage, loading: pageLoading } = usePageStore();
 
-  const [isInitialLoad, setIsInitialLoad] = useState(true);
-  const prevIdRef = useRef(id);
+  const [dataReady, setDataReady] = useState(false);
 
-  // Clear stale product data when navigating to a different product
+  // Reset selected option when product changes
   useEffect(() => {
-    if (prevIdRef.current !== id) {
-      // Different product — reset state so Loader shows immediately
-      useProductsStore.setState({ response: null });
-      setIsInitialLoad(true);
-      setSelectedOptionIndex(0);
-      prevIdRef.current = id;
-    }
+    setSelectedOptionIndex(0);
   }, [id]);
 
   useEffect(() => {
     if (id) {
+      setDataReady(false); // mark as not ready before fetching
       fetchProductbyid(id, lang).finally(() => {
-        setIsInitialLoad(false);
+        setDataReady(true);
       });
     }
     fetchPage("singlepro", lang);
@@ -58,13 +52,6 @@ export default function ProductPage() {
     setSelectedOptionIndex(index);
   };
 
-  useEffect(() => {
-    setSelectedOptionIndex(0);
-  }, []);
-
-  // التحميل الحقيقي: فقط أثناء التحميل الأولي للمنتج
-  const isLoading = isInitialLoad && !response;
-
   // الحصول على المنتج
   const product = response && typeof response === 'object' && 'id' in response
     ? response
@@ -72,8 +59,26 @@ export default function ProductPage() {
       ? response[0]
       : null;
 
+  // تحقق إن المنتج المحمل هو فعلاً المنتج المطلوب في الـ URL
+  // هذا يعمل أثناء الـ render مش بعده - فمفيش flash للبيانات القديمة
+  const isCorrectProduct = product && (
+    product.slug === id || String(product.id) === id
+  );
+
+  // Show loader if: data not ready yet, or product doesn't match current URL
+  const isLoading = !dataReady || !isCorrectProduct;
+
+  // إذا كان لا يزال التحميل جارياً أو المنتج مش بتاع الـ URL الحالي
+  if (isLoading) {
+    return (
+      <Layout>
+        <Loader />
+      </Layout>
+    );
+  }
+
   // إذا كان المنتج غير موجود بعد التحميل
-  if (!isLoading && !product) {
+  if (dataReady && !product) {
     return (
       <Layout>
         <div className="min-h-screen flex items-center justify-center">
@@ -81,15 +86,6 @@ export default function ProductPage() {
             {lang === "ar" ? "المنتج غير موجود" : "Product not found"}
           </p>
         </div>
-      </Layout>
-    );
-  }
-
-  // إذا كان لا يزال التحميل جارياً
-  if (isLoading) {
-    return (
-      <Layout>
-        <Loader />
       </Layout>
     );
   }
