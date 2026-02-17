@@ -26,6 +26,7 @@ import { useNavigate } from "react-router-dom";
 // استيراد stores
 import { useCartStore } from "@/store/cartStore/cartStore";
 import { useNotifications } from "@/store/notifications/notificationStore"; // أضف هذا الاستيراد
+import { useFavoritesStore } from "@/store/favoritesStore";
 
 const baseUrl = import.meta.env.VITE_BASE_URL;
 import MobileMenu from "./MobileMenu";
@@ -68,6 +69,9 @@ export default function Header() {
   const { items: cartItems, fetchCart } = useCartStore();
   const cartQuantity = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
+  // Use favorites store
+  const { count: favoritesCount, fetchFavorites } = useFavoritesStore();
+
   // تعريف token
   const token = localStorage.getItem("token");
   const headerKey = lang;
@@ -87,6 +91,12 @@ export default function Header() {
   useEffect(() => {
     fetchCart();
   }, [fetchCart]);
+
+  useEffect(() => {
+    if (token) {
+      fetchFavorites();
+    }
+  }, [token, fetchFavorites]);
 
   const navitem = [
     { link: `/${lang}/`, name: `${t("Home")}` },
@@ -347,8 +357,16 @@ export default function Header() {
               </button>
 
               <Link to={`/${lang}/favourite`}>
-                <IconButton aria-label="المفضلة">
+                <IconButton aria-label="المفضلة" className="relative">
                   <Heart className="h-5 w-5 opacity-90" />
+                  {favoritesCount > 0 && (
+                    <Badge
+                      variant="destructive"
+                      className="absolute -top-2 -right-2 h-6 w-6 rounded-full p-0 flex items-center justify-center text-xs font-bold bg-[#F3AC5D]"
+                    >
+                      {favoritesCount}
+                    </Badge>
+                  )}
                 </IconButton>
               </Link>
               <Link to="/profile">

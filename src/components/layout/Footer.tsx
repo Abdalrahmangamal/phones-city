@@ -187,12 +187,12 @@ const Footer: React.FC = () => {
 
               {/* Badges */}
               <div className="flex justify-start flex-wrap gap-2 sm:gap-3 mt-4">
-                {[googleanalytic, googletagmaneger, blue, drive, Google, emkan, amwal].map(
+                {[emkan, amwal].map(
                   (img, i) => (
-                    <a key={i} href={i >= 5 ? (i === 5 ? "/about-quara" : "/about-mora") : "#"} className="inline-block">
+                    <a key={i} href={i === 0 ? "/about-quara" : "/about-mora"} className="inline-block">
                       <img
                         src={img}
-                        alt={i >= 5 ? (i === 5 ? "Coara" : "Mora") : "badge"}
+                        alt={i === 0 ? "Coara" : "Mora"}
                         className="h-9 sm:h-7 lg:h-10 object-contain rounded-lg"
                         style={{ maxWidth: 130 }}
                       />
