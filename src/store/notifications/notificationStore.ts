@@ -123,9 +123,15 @@ export const useNotificationStore = create<NotificationStore>()(
       },
     });
 
-    // باقي الكود كما هو...
+    if (response.ok) {
+      const json = await response.json();
+      const list = json?.data?.notifications ?? json?.data?.data ?? json?.data ?? json?.notifications ?? [];
+      const items = Array.isArray(list) ? list : [];
+      const unreadCount = items.filter((n: Notification) => !n.read_at).length;
+      set({ notifications: items, unreadCount, error: null });
+    }
   } catch (error: any) {
-    // ...
+    set({ error: error?.message ?? 'Failed to fetch notifications' });
   } finally {
     set({ isLoading: false });
   }

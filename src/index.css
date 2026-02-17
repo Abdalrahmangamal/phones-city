@@ -289,3 +289,16 @@ swiper {
   align-items: center !important;
   text-align: center !important;
 }
+
+/* ظهور واختفاء سلس للقوائم المنسدلة */
+.dropdown-menu-smooth,
+[data-slot="dropdown-menu-content"].dropdown-menu-smooth {
+  --tw-duration: 280ms;
+  animation-duration: 280ms !important;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+.dropdown-menu-smooth[data-state="closed"],
+[data-slot="dropdown-menu-content"].dropdown-menu-smooth[data-state="closed"] {
+  animation-duration: 220ms !important;
+  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1) !important;
+}

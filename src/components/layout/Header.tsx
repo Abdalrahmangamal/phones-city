@@ -1,7 +1,7 @@
 "use client";
 import * as React from "react";
 import logo from "../../assets/images/logo.png";
-import { ShoppingCart, UserRound, Heart, Globe, Search, Bell } from "lucide-react";
+import { ShoppingCart, UserRound, Heart, Globe, Search, Bell, LogOut, Package, MapPin, Wallet, FileText, Tag } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import "../../style.css";
@@ -18,19 +18,32 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuSubContent,
   DropdownMenuPortal,
+  DropdownMenuSeparator,
+  DropdownMenuLabel,
 } from "@/components/ui/dropdown-menu";
 import { Link, NavLink } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+  SheetFooter,
+} from "@/components/ui/sheet";
 
 // استيراد stores
 import { useCartStore } from "@/store/cartStore/cartStore";
-import { useNotifications } from "@/store/notifications/notificationStore"; // أضف هذا الاستيراد
+import { useNotifications } from "@/store/notifications/notificationStore";
+import { useFavoritesStore } from "@/store/favoritesStore";
+import { useAuthStore } from "@/store/useauthstore";
 
 const baseUrl = import.meta.env.VITE_BASE_URL;
 import MobileMenu from "./MobileMenu";
 import MobileNavbar from "./MobileNavbar";
 import { getCategoryIcon } from "@/utils/categoryIcons";
+import { cn } from "@/lib/utils";
 
 interface SuggestionItem {
   id: number;
@@ -65,8 +78,15 @@ export default function Header() {
   } = useNotifications();
 
   // استخدم cart store
-  const { items: cartItems, fetchCart } = useCartStore();
+  const { items: cartItems, total: cartTotal, fetchCart } = useCartStore();
   const cartQuantity = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+  const [cartSheetOpen, setCartSheetOpen] = useState(false);
+
+  // استخدم favorites store لعرض العدد في الهيدر
+  const { favorites, fetchFavorites } = useFavoritesStore();
+  const favoritesCount = favorites.length;
+
+  const { logout } = useAuthStore();
 
   // تعريف token
   const token = localStorage.getItem("token");
@@ -87,6 +107,12 @@ export default function Header() {
   useEffect(() => {
     fetchCart();
   }, [fetchCart]);
+
+  useEffect(() => {
+    if (token) {
+      fetchFavorites();
+    }
+  }, [token, fetchFavorites]);
 
   const navitem = [
     { link: `/${lang}/`, name: `${t("Home")}` },
@@ -184,13 +210,8 @@ export default function Header() {
     setOpenSections(false);
   };
 
-  // معالجة تحديث الإشعارات عند النقر
-  const handleNotificationClick = async () => {
-    // إذا كنت تريد تحديث الإشعارات عند النقر على الأيقونة
-    if (token) {
-      await fetchNotifications();
-    }
-    navigate(`/${lang}/notifications`);
+  const handleLogout = () => {
+    logout();
   };
 
   return (
@@ -327,48 +348,340 @@ export default function Header() {
                 </Link>
               )}
 
-              {/* زر الإشعارات */}
-              <button
-                onClick={handleNotificationClick}
-                className="relative"
-                aria-label="الإشعارات"
-              >
-                <IconButton aria-label="الإشعارات" className="relative">
-                  <Bell className="h-5 w-5 opacity-90" />
-                  {unreadCount > 0 && (
-                    <Badge
-                      variant="destructive"
-                      className="absolute -top-2 -right-2 h-6 w-6 rounded-full p-0 flex items-center justify-center text-xs font-bold bg-red-500"
-                    >
-                      {unreadCount}
-                    </Badge>
+              {/* قائمة الإشعارات */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className="relative" aria-label={t("Notifications")}>
+                    <IconButton aria-label={t("Notifications")} className="relative">
+                      <Bell className="h-5 w-5 opacity-90" />
+                      {unreadCount > 0 && (
+                        <Badge
+                          variant="destructive"
+                          className="absolute -top-2 -right-2 h-6 w-6 rounded-full p-0 flex items-center justify-center text-xs font-bold bg-red-500"
+                        >
+                          {unreadCount}
+                        </Badge>
+                      )}
+                    </IconButton>
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  align="end"
+                  sideOffset={8}
+                  className="z-[9999] w-[320px] max-w-[90vw] rounded-xl border border-[#211C4D]/10 bg-white p-0 shadow-xl"
+                >
+                  <div className="border-b border-[#211C4D]/10 bg-[#211C4D] px-4 py-3 rounded-t-xl">
+                    <p className="font-semibold text-white text-base">{t("Notifications")}</p>
+                    {token && unreadCount > 0 && (
+                      <p className="text-white/80 text-xs mt-0.5">{unreadCount} {t("unread")}</p>
+                    )}
+                  </div>
+                  <div className="max-h-[280px] overflow-y-auto">
+                    {!token ? (
+                      <div className="p-4 text-center text-gray-500 text-sm">
+                        <p>{t("LoginToViewNotifications")}</p>
+                        <Link to={`/${lang}/login`} className="text-[#2AA0DC] font-medium mt-2 inline-block">
+                          {t("Login")}
+                        </Link>
+                      </div>
+                    ) : notifications.length === 0 ? (
+                      <div className="p-6 text-center text-gray-500 text-sm">
+                        {t("NoNotifications")}
+                      </div>
+                    ) : (
+                      notifications.slice(0, 5).map((n) => (
+                        <DropdownMenuItem
+                          key={n.id}
+                          className="flex flex-col items-start gap-0.5 rounded-none border-b border-gray-100 last:border-0 py-3 px-4 cursor-pointer focus:bg-[#211C4D]/5"
+                          onSelect={() => navigate(`/${lang}/notifications`)}
+                        >
+                          <span className="font-medium text-[#211C4D] text-sm line-clamp-1">{n.data?.title || n.type}</span>
+                          <span className="text-gray-500 text-xs line-clamp-2">{n.data?.message}</span>
+                        </DropdownMenuItem>
+                      ))
+                    )}
+                  </div>
+                  {token && notifications.length > 0 && (
+                    <>
+                      <div className="border-t border-gray-100 p-2">
+                        <Link to={`/${lang}/notifications`}>
+                          <DropdownMenuItem className="text-center text-[#2AA0DC] font-medium rounded-lg">
+                            {t("ViewAllNotifications")}
+                          </DropdownMenuItem>
+                        </Link>
+                      </div>
+                    </>
                   )}
-                </IconButton>
-              </button>
+                </DropdownMenuContent>
+              </DropdownMenu>
 
-              <Link to={`/${lang}/favourite`}>
-                <IconButton aria-label="المفضلة">
-                  <Heart className="h-5 w-5 opacity-90" />
-                </IconButton>
-              </Link>
-              <Link to="/profile">
-                <IconButton aria-label="حسابي">
-                  <UserRound className="h-5 w-5 opacity-90" />
-                </IconButton>
-              </Link>
-              <Link to={`/${lang}/checkout`}>
-                <IconButton aria-label="عربة التسوق" className="relative">
-                  <ShoppingCart className="h-5 w-5 opacity-90" />
-                  {cartQuantity > 0 && (
-                    <Badge
-                      variant="destructive"
-                      className="absolute -top-2 -right-2 h-6 w-6 rounded-full p-0 flex items-center justify-center text-xs font-bold bg-[#F3AC5D]"
-                    >
-                      {cartQuantity}
-                    </Badge>
+              {/* قائمة المفضلة */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className="relative" aria-label={t("favourite")}>
+                    <IconButton aria-label={t("favourite")}>
+                      <Heart className="h-5 w-5 opacity-90" />
+                      {favoritesCount > 0 && (
+                        <Badge
+                          variant="destructive"
+                          className="absolute -top-2 -right-2 h-6 w-6 rounded-full p-0 flex items-center justify-center text-xs font-bold bg-[#F3AC5D]"
+                        >
+                          {favoritesCount}
+                        </Badge>
+                      )}
+                    </IconButton>
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  align="end"
+                  sideOffset={8}
+                  className="z-[9999] w-[320px] max-w-[90vw] rounded-xl border border-[#211C4D]/10 bg-white p-0 shadow-xl"
+                >
+                  <div className="border-b border-[#211C4D]/10 bg-[#211C4D] px-4 py-3 rounded-t-xl">
+                    <p className="font-semibold text-white text-base">{t("favourite")}</p>
+                    {favoritesCount > 0 && (
+                      <p className="text-white/80 text-xs mt-0.5">{favoritesCount} {t("products")}</p>
+                    )}
+                  </div>
+                  <div className="max-h-[280px] overflow-y-auto">
+                    {favorites.length === 0 ? (
+                      <div className="p-6 text-center text-gray-500 text-sm">
+                        {t("NoFavoritesYet")}
+                      </div>
+                    ) : (
+                      favorites.slice(0, 4).map((fav) => (
+                        <DropdownMenuItem
+                          key={fav.id}
+                          className="flex gap-3 rounded-none border-b border-gray-100 last:border-0 py-2.5 px-4 cursor-pointer focus:bg-[#211C4D]/5"
+                          onSelect={() => navigate(`/${lang}/singleproduct/${fav.product?.id}`)}
+                        >
+                          <div className="w-12 h-12 rounded-lg bg-gray-100 overflow-hidden shrink-0">
+                            {fav.product?.main_image ? (
+                              <img src={fav.product.main_image} alt="" className="w-full h-full object-cover" />
+                            ) : (
+                              <div className="w-full h-full flex items-center justify-center text-gray-400 text-xs">—</div>
+                            )}
+                          </div>
+                          <div className="flex-1 min-w-0 text-start">
+                            <p className="font-medium text-[#211C4D] text-sm line-clamp-2">{fav.product?.name}</p>
+                            <p className="text-[#F3AC5D] font-semibold text-xs mt-0.5">{fav.product?.final_price} {t("SAR")}</p>
+                          </div>
+                        </DropdownMenuItem>
+                      ))
+                    )}
+                  </div>
+                  {favorites.length > 0 && (
+                    <div className="border-t border-gray-100 p-2">
+                      <Link to={`/${lang}/favourite`}>
+                        <DropdownMenuItem className="text-center text-[#2AA0DC] font-medium rounded-lg">
+                          {t("ViewAllFavorites")}
+                        </DropdownMenuItem>
+                      </Link>
+                    </div>
                   )}
-                </IconButton>
-              </Link>
+                </DropdownMenuContent>
+              </DropdownMenu>
+
+              {/* قائمة البروفايل */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button aria-label={t("MyAccount")}>
+                    <IconButton aria-label={t("MyAccount")}>
+                      <UserRound className="h-5 w-5 opacity-90" />
+                    </IconButton>
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  align="end"
+                  sideOffset={8}
+                  className="z-[9999] w-[240px] rounded-xl border border-[#211C4D]/10 bg-white p-0 shadow-xl"
+                >
+                  <div className="border-b border-[#211C4D]/10 bg-[#211C4D] px-4 py-3 rounded-t-xl">
+                    <p className="font-semibold text-white text-base">{t("MyAccount")}</p>
+                  </div>
+                  <div className="py-2">
+                    {!token ? (
+                      <Link to={`/${lang}/login`}>
+                        <DropdownMenuItem className="flex items-center gap-2 py-2.5 px-4 mx-1 rounded-lg text-[#2AA0DC] font-medium">
+                          <UserRound className="h-4 w-4" />
+                          {t("Login")}
+                        </DropdownMenuItem>
+                      </Link>
+                    ) : (
+                      <>
+                        <Link to={`/${lang}/profile`}>
+                          <DropdownMenuItem className="flex items-center gap-2 py-2.5 px-4 mx-1 rounded-lg focus:bg-[#211C4D]/5">
+                            <UserRound className="h-4 w-4 text-[#211C4D]" />
+                            <span className="text-[#211C4D]">{t("Profile")}</span>
+                          </DropdownMenuItem>
+                        </Link>
+                        <Link to={`/${lang}/myorder`}>
+                          <DropdownMenuItem className="flex items-center gap-2 py-2.5 px-4 mx-1 rounded-lg focus:bg-[#211C4D]/5">
+                            <Package className="h-4 w-4 text-[#211C4D]" />
+                            <span className="text-[#211C4D]">{t("MyOrders")}</span>
+                          </DropdownMenuItem>
+                        </Link>
+                        <Link to={`/${lang}/address`}>
+                          <DropdownMenuItem className="flex items-center gap-2 py-2.5 px-4 mx-1 rounded-lg focus:bg-[#211C4D]/5">
+                            <MapPin className="h-4 w-4 text-[#211C4D]" />
+                            <span className="text-[#211C4D]">{t("Addresses")}</span>
+                          </DropdownMenuItem>
+                        </Link>
+                        <Link to={`/${lang}/wallet`}>
+                          <DropdownMenuItem className="flex items-center gap-2 py-2.5 px-4 mx-1 rounded-lg focus:bg-[#211C4D]/5">
+                            <Wallet className="h-4 w-4 text-[#211C4D]" />
+                            <span className="text-[#211C4D]">{t("Wallet")}</span>
+                          </DropdownMenuItem>
+                        </Link>
+                        <Link to={`/${lang}/favourite`}>
+                          <DropdownMenuItem className="flex items-center gap-2 py-2.5 px-4 mx-1 rounded-lg focus:bg-[#211C4D]/5">
+                            <Heart className="h-4 w-4 text-[#211C4D]" />
+                            <span className="text-[#211C4D]">{t("favourite")}</span>
+                          </DropdownMenuItem>
+                        </Link>
+                        <Link to={`/${lang}/bills`}>
+                          <DropdownMenuItem className="flex items-center gap-2 py-2.5 px-4 mx-1 rounded-lg focus:bg-[#211C4D]/5">
+                            <FileText className="h-4 w-4 text-[#211C4D]" />
+                            <span className="text-[#211C4D]">{t("Bills")}</span>
+                          </DropdownMenuItem>
+                        </Link>
+                        <Link to={`/${lang}/discounts`}>
+                          <DropdownMenuItem className="flex items-center gap-2 py-2.5 px-4 mx-1 rounded-lg focus:bg-[#211C4D]/5">
+                            <Tag className="h-4 w-4 text-[#211C4D]" />
+                            <span className="text-[#211C4D]">{t("Discounts")}</span>
+                          </DropdownMenuItem>
+                        </Link>
+                        <DropdownMenuSeparator className="bg-gray-100" />
+                        <DropdownMenuItem
+                          variant="destructive"
+                          className="flex items-center gap-2 py-2.5 px-4 mx-1 rounded-lg focus:bg-red-50 focus:text-red-600"
+                          onSelect={handleLogout}
+                        >
+                          <LogOut className="h-4 w-4" />
+                          <span>{t("Logout")}</span>
+                        </DropdownMenuItem>
+                      </>
+                    )}
+                  </div>
+                </DropdownMenuContent>
+              </DropdownMenu>
+              <Sheet
+                open={cartSheetOpen}
+                onOpenChange={(open) => {
+                  setCartSheetOpen(open);
+                  if (open) fetchCart();
+                }}
+              >
+                <SheetTrigger asChild>
+                  <button type="button" aria-label={t("Cart")} className="relative">
+                    <IconButton aria-label={t("Cart")} className="relative">
+                      <ShoppingCart className="h-5 w-5 opacity-90" />
+                      {cartQuantity > 0 && (
+                        <Badge
+                          variant="destructive"
+                          className="absolute -top-2 -right-2 h-6 w-6 rounded-full p-0 flex items-center justify-center text-xs font-bold bg-[#F3AC5D]"
+                        >
+                          {cartQuantity}
+                        </Badge>
+                      )}
+                    </IconButton>
+                  </button>
+                </SheetTrigger>
+                <SheetContent
+                  side={lang === "ar" ? "left" : "right"}
+                  className="w-full sm:max-w-md flex flex-col p-0 border-0 shadow-2xl"
+                  dir={lang === "ar" ? "rtl" : "ltr"}
+                >
+                  <SheetHeader
+                    className={cn(
+                      "border-b border-[#211C4D]/10 bg-[#211C4D] text-white py-4 rounded-t-lg",
+                      lang === "ar" ? "ps-12 pe-6" : "pe-12 ps-6"
+                    )}
+                  >
+                    <SheetTitle className="text-white text-xl font-bold flex items-center gap-2">
+                      <ShoppingCart className="h-6 w-6" />
+                      {t("Cart")}
+                      {cartQuantity > 0 && (
+                        <span className="bg-[#F3AC5D] text-[#211C4D] text-sm font-bold px-2.5 py-0.5 rounded-full">
+                          {cartQuantity}
+                        </span>
+                      )}
+                    </SheetTitle>
+                  </SheetHeader>
+                  <div className="flex-1 overflow-y-auto">
+                    {cartItems.length === 0 ? (
+                      <div className="flex flex-col items-center justify-center py-16 px-6 text-center">
+                        <div className="w-20 h-20 rounded-full bg-[#211C4D]/10 flex items-center justify-center mb-4">
+                          <ShoppingCart className="h-10 w-10 text-[#211C4D]/50" />
+                        </div>
+                        <p className="text-[#211C4D] font-medium text-lg">{t("YourCartIsEmpty")}</p>
+                        <p className="text-gray-500 text-sm mt-1">{t("AddProductsToGetStarted")}</p>
+                        <Link
+                          to={`/${lang}/`}
+                          onClick={() => setCartSheetOpen(false)}
+                          className="mt-6 inline-flex items-center justify-center h-12 px-6 rounded-full bg-[#2AA0DC] text-white font-semibold hover:bg-[#238ec4] transition-colors"
+                        >
+                          {t("ContinueShopping")}
+                        </Link>
+                      </div>
+                    ) : (
+                      <ul className="divide-y divide-gray-100">
+                        {cartItems.map((item) => (
+                          <li key={item.id} className="flex gap-3 p-4 hover:bg-gray-50/80 transition-colors">
+                            <Link
+                              to={`/${lang}/singleproduct/${item.product?.id}`}
+                              onClick={() => setCartSheetOpen(false)}
+                              className="w-16 h-16 rounded-xl bg-gray-100 overflow-hidden shrink-0 flex items-center justify-center"
+                            >
+                              {item.product?.main_image ? (
+                                <img src={item.product.main_image} alt={item.product.name} className="w-full h-full object-cover" />
+                              ) : (
+                                <ShoppingCart className="h-6 w-6 text-gray-400" />
+                              )}
+                            </Link>
+                            <div className="flex-1 min-w-0">
+                              <Link
+                                to={`/${lang}/singleproduct/${item.product?.id}`}
+                                onClick={() => setCartSheetOpen(false)}
+                                className="font-medium text-[#211C4D] text-sm line-clamp-2 hover:text-[#2AA0DC]"
+                              >
+                                {item.product?.name}
+                              </Link>
+                              <p className="text-gray-500 text-xs mt-0.5">
+                                {item.quantity} × {item.price} {t("SAR")}
+                              </p>
+                              <p className="text-[#F3AC5D] font-semibold text-sm mt-1">{item.subtotal} {t("SAR")}</p>
+                            </div>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                  {cartItems.length > 0 && (
+                    <SheetFooter className="border-t border-gray-200 p-4 flex-col gap-3 sm:flex-col">
+                      <div className="flex items-center justify-between w-full text-[#211C4D] font-semibold">
+                        <span>{t("Total")}</span>
+                        <span className="text-lg text-[#F3AC5D]">{cartTotal} {t("SAR")}</span>
+                      </div>
+                      <Link
+                        to={`/${lang}/checkout`}
+                        onClick={() => setCartSheetOpen(false)}
+                        className="w-full inline-flex items-center justify-center gap-2 h-12 rounded-full bg-[#F3AC5D] text-[#211C4D] font-bold hover:bg-[#e09d4a] transition-colors"
+                      >
+                        <ShoppingCart className="h-5 w-5" />
+                        {t("CompletePurchase")}
+                      </Link>
+                      <Link
+                        to={`/${lang}/`}
+                        onClick={() => setCartSheetOpen(false)}
+                        className="w-full text-center text-[#2AA0DC] text-sm font-medium hover:underline"
+                      >
+                        {t("ContinueShopping")}
+                      </Link>
+                    </SheetFooter>
+                  )}
+                </SheetContent>
+              </Sheet>
             </div>
           </div>
 

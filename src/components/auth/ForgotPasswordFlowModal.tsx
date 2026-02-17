@@ -1,5 +1,5 @@
 // ForgotPasswordFlowModal.tsx
-import { useState } from "react";
+import { useState, useRef, useCallback } from "react";
 import Dialog from "@mui/material/Dialog";
 import { Eye, EyeOff } from "lucide-react";
 import { useAuthStore } from "@/store/useauthstore";
@@ -22,13 +22,44 @@ export default function ForgotPasswordFlowModal({ isOpen, onClose }: Props) {
   const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const OTP_LENGTH = 6;
+  const otpContainerRef = useRef<HTMLDivElement>(null);
+
+  /** تطبيع قيمة OTP: أرقام فقط وحد أقصى 6 */
+  const normalizeOtpValue = useCallback((value: string) => value.replace(/\D/g, "").slice(0, OTP_LENGTH), []);
+
+  /** تركيز سلس على المربع الأول مع وضع المؤشر في النهاية دون تحديد النص */
+  const focusFirstOtpInput = useCallback(() => {
+    const first = otpContainerRef.current?.querySelector("input") as HTMLInputElement | null;
+    if (first) {
+      requestAnimationFrame(() => {
+        first.focus();
+        const len = first.value.length;
+        first.setSelectionRange(len, len);
+      });
+    }
+  }, []);
+
+  /** عند النقر فقط على أي مربع: إرجاع التركيز للمربع الأول (الكتابة العادية لا تُعطّل حتى يتم إدخال الـ 6 أرقام) */
+  const handleOtpContainerMouseDown = useCallback(
+    (e: React.MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (target.closest?.(".MuiOtpInput-TextField") || target.tagName === "INPUT") {
+        e.preventDefault();
+        e.stopPropagation();
+        focusFirstOtpInput();
+      }
+    },
+    [focusFirstOtpInput]
+  );
 
   const { forgotpassword, resetPassword, loading } = useAuthStore();
   const { t, i18n } = useTranslation();
   const isRTL = i18n.language === "ar";
 
   const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-  const isValidCode = code.length === 6;
+  /** الكود صالح فقط عندما يكون 6 أرقام بالكامل */
+  const isValidCode = /^\d{6}$/.test(code);
   const passwordsMatch = password === passwordConfirm && password.length >= 6;
 
   const handleSendCode = async () => {
@@ -198,15 +229,21 @@ export default function ForgotPasswordFlowModal({ isOpen, onClose }: Props) {
             <span className="font-semibold">{email}</span>
           </p>
 
-          {/* حقل إدخال الكود - 6 خانات منفصلة */}
-          <div dir="ltr" className="flex justify-center w-full">
+          {/* حقل إدخال الكود: أرقام فقط، تركيز ثابت على المربع الأول */}
+          <div
+            ref={otpContainerRef}
+            dir="ltr"
+            className="flex justify-center w-full"
+            onMouseDownCapture={handleOtpContainerMouseDown}
+          >
             <MuiOtpInput
               value={code}
-              length={6}
+              length={OTP_LENGTH}
               onChange={(value) => {
-                setCode(value);
+                setCode(normalizeOtpValue(value));
                 setErrorMessage("");
               }}
+              validateChar={(char) => /^\d$/.test(char)}
               autoFocus
             />
           </div>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useCallback } from "react";
 import Dialog from "@mui/material/Dialog";
 import { Eye, EyeOff } from "lucide-react";
 import { MuiOtpInput } from "mui-one-time-password-input";
@@ -24,6 +24,32 @@ export default function ResetPasswordWithCodeModal({
   const [showConfirm, setShowConfirm] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
+  const OTP_LENGTH = 6;
+  const otpContainerRef = useRef<HTMLDivElement>(null);
+
+  const normalizeOtpValue = useCallback((value: string) => value.replace(/\D/g, "").slice(0, OTP_LENGTH), []);
+  const focusFirstOtpInput = useCallback(() => {
+    const first = otpContainerRef.current?.querySelector("input") as HTMLInputElement | null;
+    if (first) {
+      requestAnimationFrame(() => {
+        first.focus();
+        first.setSelectionRange(first.value.length, first.value.length);
+      });
+    }
+  }, []);
+
+  /** عند النقر فقط: إرجاع التركيز للمربع الأول — لا نعطّل انتقال التركيز أثناء الكتابة */
+  const handleOtpContainerMouseDown = useCallback(
+    (e: React.MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (target.closest?.(".MuiOtpInput-TextField") || target.tagName === "INPUT") {
+        e.preventDefault();
+        e.stopPropagation();
+        focusFirstOtpInput();
+      }
+    },
+    [focusFirstOtpInput]
+  );
 
   const { resetPassword, loading } = useAuthStore();
 
@@ -99,12 +125,18 @@ export default function ResetPasswordWithCodeModal({
               <label className="block mb-2 text-lg font-medium text-[#211C4DB2]">
                 كود التحقق
               </label>
-              <MuiOtpInput
-                value={otp}
-                onChange={setOtp}
-                length={6}
-                autoFocus
-              />
+              <div
+                ref={otpContainerRef}
+                onMouseDownCapture={handleOtpContainerMouseDown}
+              >
+                <MuiOtpInput
+                  value={otp}
+                  length={OTP_LENGTH}
+                  onChange={(value) => setOtp(normalizeOtpValue(value))}
+                  validateChar={(char) => /^\d$/.test(char)}
+                  autoFocus
+                />
+              </div>
             </div>
 
             {/* كلمة المرور الجديدة */}

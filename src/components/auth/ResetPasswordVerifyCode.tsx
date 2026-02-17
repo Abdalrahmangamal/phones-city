@@ -1,5 +1,5 @@
 // ResetPasswordVerifyCode.tsx
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import Dialog from "@mui/material/Dialog";
 import { MuiOtpInput } from "mui-one-time-password-input";
 import { useAuthStore } from "@/store/useauthstore";
@@ -23,6 +23,32 @@ export default function ResetPasswordVerifyCode({
   const [errorMessage, setErrorMessage] = useState("");
   const [resendTimer, setResendTimer] = useState(0);
   const [canResend, setCanResend] = useState(false);
+  const OTP_LENGTH = 6;
+  const otpContainerRef = useRef<HTMLDivElement>(null);
+
+  const normalizeOtpValue = useCallback((value: string) => value.replace(/\D/g, "").slice(0, OTP_LENGTH), []);
+  const focusFirstOtpInput = useCallback(() => {
+    const first = otpContainerRef.current?.querySelector("input") as HTMLInputElement | null;
+    if (first) {
+      requestAnimationFrame(() => {
+        first.focus();
+        first.setSelectionRange(first.value.length, first.value.length);
+      });
+    }
+  }, []);
+
+  /** عند النقر فقط: إرجاع التركيز للمربع الأول — لا نعطّل انتقال التركيز أثناء الكتابة */
+  const handleOtpContainerMouseDown = useCallback(
+    (e: React.MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (target.closest?.(".MuiOtpInput-TextField") || target.tagName === "INPUT") {
+        e.preventDefault();
+        e.stopPropagation();
+        focusFirstOtpInput();
+      }
+    },
+    [focusFirstOtpInput]
+  );
 
   const { sendVerifyCode, loading, error } = useAuthStore();
 
@@ -131,25 +157,32 @@ export default function ResetPasswordVerifyCode({
               تم إرسال رمز من 6 أرقام إلى {email}
             </p>
 
-            <MuiOtpInput 
-              value={otp} 
-              length={6} 
-              onChange={(value) => {
-                setOtp(value);
-                setErrorMessage(""); // مسح الخطأ عند الكتابة
-              }}
-              autoFocus
-              sx={{
-                gap: '10px',
-                '& .MuiOtpInput-TextField': {
-                  '& input': {
-                    fontSize: '24px',
-                    width: '50px',
-                    height: '60px',
-                  }
-                }
-              }}
-            />
+            <div
+              ref={otpContainerRef}
+              className="flex justify-center w-full"
+              onMouseDownCapture={handleOtpContainerMouseDown}
+            >
+              <MuiOtpInput
+                value={otp}
+                length={OTP_LENGTH}
+                onChange={(value) => {
+                  setOtp(normalizeOtpValue(value));
+                  setErrorMessage("");
+                }}
+                validateChar={(char) => /^\d$/.test(char)}
+                autoFocus
+                sx={{
+                  gap: "10px",
+                  "& .MuiOtpInput-TextField": {
+                    "& input": {
+                      fontSize: "24px",
+                      width: "50px",
+                      height: "60px",
+                    },
+                  },
+                }}
+              />
+            </div>
 
             {errorMessage && (
               <div className="w-full bg-red-50 border border-red-200 rounded p-3">
@@ -159,7 +192,7 @@ export default function ResetPasswordVerifyCode({
 
             <button
               onClick={handleSubmit}
-              disabled={loading || otp.length !== 6}
+              disabled={loading || !/^\d{6}$/.test(otp)}
               className="bg-[#2AA0DC] w-[340px] h-[52px] rounded-full text-white disabled:opacity-60 hover:bg-[#1e8ec9] transition-colors"
             >
               {loading ? "جاري التحقق..." : "تأكيد"}

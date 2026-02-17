@@ -13,7 +13,7 @@ import { useTranslation } from "react-i18next";
 import { useAuthStore } from "@/store/useauthstore";
 import VerifyCode from "@/components/auth/VerifyCode";
 export default function Register() {
-  const { sendRegisterData, error } = useAuthStore();
+  const { sendRegisterData } = useAuthStore();
   // translate
   const { t, i18n } = useTranslation();
   const isRTL = i18n.language === "ar";
@@ -80,45 +80,28 @@ export default function Register() {
       console.error("Register: sendRegisterData error:", err);
     }
   };
-  const formatServerFieldError = (field: string) => {
-    if (!error) return undefined;
-    if (typeof error === "string") return error;
-
-    // Handle { email: ["message"], phone: ["message"] }
-    const val = (error as any)?.[field];
-    if (!val) return undefined;
-
-    // If it's an array, join with bullet
-    if (Array.isArray(val)) {
-      return val.join(" • ");
-    }
-
-    // Otherwise convert to string
-    return String(val);
-  };
-
-
+  // عرض أخطاء التحقق (Zod) فقط داخل النموذج — لا نعرض رسائل السيرفر (مثل "email already taken") في النافذة
   const signupInputs = [
     {
       title: "Name",
       type: "text",
       name: "name",
       register: register("name"),
-      error: errors.name?.message || formatServerFieldError("name"),
+      error: errors.name?.message,
     },
     {
       title: "Email",
       type: "text",
       name: "email",
       register: register("email"),
-      error: errors.email?.message || formatServerFieldError("email"),
+      error: errors.email?.message,
     },
     {
       title: "Phone",
       type: "Number",
       name: "phone",
       register: register("phone"),
-      error: errors.phone?.message || formatServerFieldError("phone"),
+      error: errors.phone?.message,
     },
     {
       title: "Password",
@@ -127,7 +110,7 @@ export default function Register() {
       register: register("password"),
       showtoggle: true,
       function: () => setShowPassword(!showPassword),
-      error: errors.password?.message || formatServerFieldError("password"),
+      error: errors.password?.message,
       icontoggle: showPassword ? <EyeOff size={22} /> : <Eye size={22} />,
     },
     {
@@ -137,7 +120,7 @@ export default function Register() {
       register: register("password_confirmation"),
       showtoggle: true,
       function: () => setShowConfirmPassword(!showConfirmPassword),
-      error: errors.password_confirmation?.message || formatServerFieldError("password_confirmation"),
+      error: errors.password_confirmation?.message,
       icontoggle: showConfirmPassword ? (
         <EyeOff size={22} />
       ) : (
