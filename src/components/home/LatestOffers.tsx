@@ -54,7 +54,7 @@ export default function LatestOffers() {
   }
 
   return (
-    <div className="w-full translate-y-[-50px] md:h-[60vh] xl:h-[100vh] xl:px-[90px] px-2 pt-8 md:pt-0 relative md:px-0">
+    <div className="w-full translate-y-[-50px] md:h-[60vh] xl:h-[100vh] md:min-h-[600px] xl:min-h-[700px] xl:px-[90px] px-2 pt-8 md:pt-0 relative md:px-0 flex flex-col">
       <div className="relative w-fit mx-auto mb-8">
         <h1 className="text-[24px] md:text-[40px] font-[700] text-[#211C4D] text-center">
           {t("LatestOffers")}
@@ -69,7 +69,7 @@ export default function LatestOffers() {
         />
       </div>
 
-      <div className="flex flex-col md:flex-row items-center h-full md:items-start justify-center pt-[40px] md:pt-[50px] gap-[20px]">
+      <div className="flex flex-col md:flex-row items-center flex-1 min-h-0 md:items-start justify-center pt-[40px] md:pt-[50px] gap-[20px]">
         {/* Laptop Section - Desktop */}
         <div className="relative hidden md:flex items-end justify-center md:!h-full w-[300px] md:w-[36%] rounded-[16px] overflow-hidden">
           {laptopOffer ? (

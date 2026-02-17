@@ -93,15 +93,24 @@ export default function ProductCard({ product, imagecard, containerstyle, quanti
     || product.main_image
     || "";
 
-  // حالة السلة محلياً
-  const [isInCart, setIsInCart] = useState((product as any)?.in_cart || false);
+  // حالة السلة - مشتقة من بيانات السلة في الـ store
+  const { items: cartItems } = useCartStore();
 
-  // إعادة تعيين حالة السلة عند تغيير الـ variant المحدد
+  const checkIsInCart = () => {
+    if (!cartItems || cartItems.length === 0) return false;
+    const hasMultiple = product.options && product.options.length > 1;
+    if (hasMultiple && selectedVariant) {
+      return cartItems.some((item: any) => item?.product?.id === selectedVariant.id || item?.product_option_id === selectedVariant.id);
+    }
+    return cartItems.some((item: any) => item?.product?.id === product.id);
+  };
+
+  const [isInCart, setIsInCart] = useState(checkIsInCart);
+
+  // مزامنة حالة السلة مع الـ store عند تغيير العناصر أو الـ variant
   useEffect(() => {
-    // عند تغيير الـ variant، نعيد تعيين حالة السلة
-    // لأن الـ variant الجديد قد لا يكون موجود في السلة
-    setIsInCart(false);
-  }, [selectedIndex]);
+    setIsInCart(checkIsInCart());
+  }, [cartItems, selectedIndex, product.id]);
 
   return (
     <div
@@ -121,9 +130,11 @@ export default function ProductCard({ product, imagecard, containerstyle, quanti
 
         <div className="flex w-full items-center justify-between absolute right-0 top-0 z-10 p-2">
           {/* زر المفضلة */}
-          <div
-            className="bg-[#EEF1F6] flex items-center justify-center w-[36px] h-[36px] rounded-full cursor-pointer hover:bg-[#e0e5f0] transition-colors"
+          <button
+            type="button"
+            className="bg-[#EEF1F6] flex items-center justify-center w-[36px] h-[36px] rounded-full cursor-pointer hover:bg-[#e0e5f0] transition-colors z-[20]"
             onClick={(e: any) => {
+              e.preventDefault();
               e.stopPropagation();
               const prev = localFavorite;
               setLocalFavorite(!prev);
@@ -163,7 +174,7 @@ export default function ProductCard({ product, imagecard, containerstyle, quanti
                 />
               </svg>
             )}
-          </div>
+          </button>
 
           {/* Badge: غير متوفر / كمية محدودة / نسبة الخصم */}
           {isOutOfStock ? (
@@ -242,59 +253,62 @@ export default function ProductCard({ product, imagecard, containerstyle, quanti
         </div>
 
         {/* زر السلة - معطل فقط إذا كان غير متوفر تماماً */}
-        <div
-          onClick={
-            isOutOfStock
-              ? undefined
-              : () => {
-                const hasMultiple = product.options && product.options.length > 1;
-                const idToSend = hasMultiple ? selectedVariant?.id : product.id;
+        <button
+          type="button"
+          disabled={isOutOfStock}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
 
-                if (!idToSend) return;
+            if (isOutOfStock) return;
 
-                if (!isInCart) {
-                  addToCart(idToSend, 1, hasMultiple)
-                    .then(() => {
+            const hasMultiple = product.options && product.options.length > 1;
+            const idToSend = hasMultiple ? selectedVariant?.id : product.id;
+
+            if (!idToSend) return;
+
+            if (!isInCart) {
+              addToCart(idToSend, 1, hasMultiple)
+                .then(() => {
+                  setIsInCart(true);
+                  toast.success(t("toast.cart.added", { name: product.name }), {
+                    position: "bottom-right",
+                    autoClose: 2000,
+                  });
+                })
+                .catch((error: any) => {
+                  let errorMessage = t("product.addToCartFailed");
+                  if (error?.response?.data?.message) {
+                    const apiMessage = error.response.data.message;
+                    if (apiMessage.includes("out of stock") || apiMessage.includes("نفد المخزون")) {
+                      errorMessage = t("product.outOfStock");
+                    } else if (apiMessage.includes("already in cart")) {
+                      errorMessage = t("product.alreadyInCart");
                       setIsInCart(true);
-                      toast.success(t("toast.cart.added", { name: product.name }), {
-                        position: "bottom-right",
-                        autoClose: 2000,
-                      });
-                    })
-                    .catch((error: any) => {
-                      let errorMessage = t("product.addToCartFailed");
-                      if (error?.response?.data?.message) {
-                        const apiMessage = error.response.data.message;
-                        if (apiMessage.includes("out of stock") || apiMessage.includes("نفد المخزون")) {
-                          errorMessage = t("product.outOfStock");
-                        } else if (apiMessage.includes("already in cart")) {
-                          errorMessage = t("product.alreadyInCart");
-                          setIsInCart(true);
-                        } else {
-                          errorMessage = apiMessage;
-                        }
-                      }
-                      toast.error(errorMessage, { position: "bottom-right", autoClose: 3000 });
-                    });
-                } else {
-                  deleteToCart(idToSend)
-                    .then(() => {
-                      setIsInCart(false);
-                      toast.info(t("toast.cart.removed", { name: product.name }), {
-                        position: "bottom-right",
-                        autoClose: 2000,
-                      });
-                    })
-                    .catch(() => {
-                      toast.error(t("toast.cart.removeFailed"), {
-                        position: "bottom-right",
-                        autoClose: 3000,
-                      });
-                    });
-                }
-              }
-          }
-          className={`w-[20px] h-[20px] md:w-[40px] md:h-[40px] flex items-center justify-center rounded-[8px] transition-all duration-200 ${isOutOfStock
+                    } else {
+                      errorMessage = apiMessage;
+                    }
+                  }
+                  toast.error(errorMessage, { position: "bottom-right", autoClose: 3000 });
+                });
+            } else {
+              deleteToCart(idToSend)
+                .then(() => {
+                  setIsInCart(false);
+                  toast.info(t("toast.cart.removed", { name: product.name }), {
+                    position: "bottom-right",
+                    autoClose: 2000,
+                  });
+                })
+                .catch(() => {
+                  toast.error(t("toast.cart.removeFailed"), {
+                    position: "bottom-right",
+                    autoClose: 3000,
+                  });
+                });
+            }
+          }}
+          className={`w-[20px] h-[20px] md:w-[40px] md:h-[40px] flex items-center justify-center rounded-[8px] transition-all duration-200 z-[20] ${isOutOfStock
             ? "bg-gray-300 cursor-not-allowed opacity-60"
             : isInCart
               ? "bg-[#211C4D] shadow-[0px_4px_8px_0px_#211C4D4d] hover:shadow-[0px_6px_12px_0px_#211C4D66] cursor-pointer"
@@ -334,7 +348,7 @@ export default function ProductCard({ product, imagecard, containerstyle, quanti
               </defs>
             </svg>
           )}
-        </div>
+        </button>
       </div>
     </div>
   );

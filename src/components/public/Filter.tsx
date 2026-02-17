@@ -45,13 +45,14 @@ const Filter: React.FC<FilterProps> = ({
     if (priceSliderRef.current) {
       const minVal = rangeValues[0];
       const maxVal = rangeValues[1];
-      const minPercent = (minVal / maxPrice) * 100;
-      const maxPercent = (maxVal / maxPrice) * 100;
+      const range = maxPrice - minPrice;
+      const minPercent = range > 0 ? ((minVal - minPrice) / range) * 100 : 0;
+      const maxPercent = range > 0 ? ((maxVal - minPrice) / range) * 100 : 100;
 
       priceSliderRef.current.style.left = `${minPercent}%`;
       priceSliderRef.current.style.right = `${100 - maxPercent}%`;
     }
-  }, [rangeValues, maxPrice]);
+  }, [rangeValues, maxPrice, minPrice]);
 
   const handleSortChange = (optionId: string) => {
     setSelectedSort(optionId);
@@ -229,25 +230,7 @@ const Filter: React.FC<FilterProps> = ({
                 </div>
               </div>
 
-              <div className="relative h-4 bg-gray-200 rounded-full mb-10">
-                <div ref={priceSliderRef} className="absolute h-4 bg-[#211C4D] rounded-full top-0"></div>
-                <input
-                  type="range"
-                  min={minPrice}
-                  max={maxPrice}
-                  value={rangeValues[0]}
-                  onChange={(e) => handleMinChange(parseInt(e.target.value))}
-                  className="absolute w-full h-4 bg-transparent appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-8 [&::-webkit-slider-thumb]:h-8 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#211C4D] [&::-webkit-slider-thumb]:shadow-xl"
-                />
-                <input
-                  type="range"
-                  min={minPrice}
-                  max={maxPrice}
-                  value={rangeValues[1]}
-                  onChange={(e) => handleMaxChange(parseInt(e.target.value))}
-                  className="absolute w-full h-4 bg-transparent appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-8 [&::-webkit-slider-thumb]:h-8 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#211C4D] [&::-webkit-slider-thumb]:shadow-xl"
-                />
-              </div>
+
 
               <div className="flex justify-between text-[16px] text-gray-700 font-medium">
                 <span className="flex items-center gap-1">{minPrice.toLocaleString()} <SaudiRiyalIcon className="w-4 h-4" /></span>
