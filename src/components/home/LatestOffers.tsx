@@ -69,9 +69,9 @@ export default function LatestOffers() {
         />
       </div>
 
-      <div className="flex flex-col md:flex-row items-center flex-1 min-h-0 md:items-start justify-center pt-[40px] md:pt-[50px] gap-[20px]">
+      <div className="flex flex-col md:flex-row items-center flex-1 min-h-0 md:items-stretch justify-center pt-[40px] md:pt-[50px] gap-4 md:gap-5">
         {/* Laptop Section - Desktop */}
-        <div className="relative hidden md:flex items-end justify-center md:!h-full w-[300px] md:w-[36%] rounded-[16px] overflow-hidden">
+        <div className="relative hidden md:flex items-stretch justify-center md:!h-full w-[300px] md:w-[36%] rounded-[16px] overflow-hidden shrink-0">
           {laptopOffer ? (
             <>
               {/* صورة العرض الرئيسية فقط */}
@@ -163,14 +163,14 @@ export default function LatestOffers() {
           )}
         </div>
 
-        {/* Right Section - Accessories & Gaming */}
-        <div className="flex flex-col gap-[20px] h-full justify-between w-full md:w-[60%]">
+        {/* Right Section — موبايل: ارتفاعات ثابتة | ديسكتوب: 3 صفوف متساوية + gap ثابت */}
+        <div className="flex flex-col gap-4 md:gap-5 w-full md:w-[60%] min-w-0 md:flex-1 md:min-h-0">
           {/* Row 1 - Accessories 1 & 2 */}
-          <div className="flex flex-row gap-[20px]">
+          <div className="flex flex-row gap-4 md:gap-5 h-[120px] md:h-auto md:flex-1 md:min-h-0">
             {[0, 1].map((index) => {
               const offer = accessoryOffers[index];
               return offer ? (
-                <div key={index} className="w-full h-[120px] md:h-full lg:h-[175px] rounded-[16px] relative overflow-hidden">
+                <div key={index} className="flex-1 min-h-0 h-full rounded-[16px] relative overflow-hidden">
                   <img
                     src={offer.image}
                     className="absolute inset-0 w-full h-full object-cover"
@@ -202,7 +202,7 @@ export default function LatestOffers() {
                   </div>
                 </div>
               ) : (
-                <div key={index} className="w-full h-[120px] md:h-full lg:h-[175px] rounded-[16px] bg-gray-100 flex items-center justify-center overflow-hidden">
+                <div key={index} className="flex-1 min-h-0 h-full rounded-[16px] bg-gray-100 flex items-center justify-center overflow-hidden">
                   <img
                     src={lang === 'ar' ? '/src/assets/images/coming-soon-ar.svg' : '/src/assets/images/coming-soon-en.svg'}
                     alt={t("ComingSoon")}
@@ -213,8 +213,8 @@ export default function LatestOffers() {
             })}
           </div>
 
-          {/* Gaming Section */}
-          <div className="relative w-full h-[150px] md:h-[200px] lg:h-[250px] rounded-[16px] overflow-hidden">
+          {/* Gaming Section — موبايل: ارتفاع ثابت | ديسكتوب: نفس ارتفاع الصف */}
+          <div className="relative h-[150px] md:h-auto md:flex-1 md:min-h-0 rounded-[16px] overflow-hidden">
             {gamingOffer ? (
               <>
                 <img
@@ -259,12 +259,12 @@ export default function LatestOffers() {
           </div>
 
           {/* Row 2 - Accessories 3 & 4 */}
-          <div className="flex flex-row gap-[20px]">
+          <div className="flex flex-row gap-4 md:gap-5 h-[120px] md:h-auto md:flex-1 md:min-h-0">
             {[2, 3].map((index) => {
               const offerIndex = index;
               const offer = accessoryOffers[offerIndex];
               return offer ? (
-                <div key={index} className="w-full h-[120px] md:h-full lg:h-[175px] rounded-[16px] relative overflow-hidden">
+                <div key={index} className="flex-1 min-h-0 h-full rounded-[16px] relative overflow-hidden">
                   <img
                     src={offer.image}
                     className="absolute inset-0 w-full h-full object-cover"
@@ -296,7 +296,7 @@ export default function LatestOffers() {
                   </div>
                 </div>
               ) : (
-                <div key={index} className="w-full h-[120px] md:h-full lg:h-[175px] rounded-[16px] bg-gray-100 flex items-center justify-center overflow-hidden">
+                <div key={index} className="flex-1 min-h-0 h-full rounded-[16px] bg-gray-100 flex items-center justify-center overflow-hidden">
                   <img
                     src={lang === 'ar' ? '/src/assets/images/coming-soon-ar.svg' : '/src/assets/images/coming-soon-en.svg'}
                     alt={t("ComingSoon")}

@@ -31,7 +31,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         </>
       )} */}
       <Header />
-      <main>{children}</main>
+      <main className="pt-[70px] md:pt-[170px]">{children}</main>
       <Footer />
       <ChatBot />
     </div>

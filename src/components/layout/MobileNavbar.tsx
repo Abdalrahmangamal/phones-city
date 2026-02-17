@@ -21,6 +21,7 @@ interface MobileNavbarProps {
   onSectionToggle: () => void;
   isMenuOpen: boolean;
   onSearchToggle?: () => void;
+  headerVisible?: boolean;
 }
 
 export default function MobileNavbar({
@@ -28,6 +29,7 @@ export default function MobileNavbar({
   onSectionToggle,
   isMenuOpen,
   onSearchToggle,
+  headerVisible = true,
 }: MobileNavbarProps) {
   const { lang } = useLangSync();
   const { i18n, t } = useTranslation();
@@ -61,7 +63,11 @@ export default function MobileNavbar({
   };
 
   return (
-    <div className="fixed top-0 left-0 right-0 bg-[#211C4DDE] backdrop-blur-md border-b border-[#FFFFFF20] z-50 h-[70px] px-4">
+    <div
+      className={`fixed top-0 left-0 right-0 bg-[#211C4DDE] backdrop-blur-md border-b border-[#FFFFFF20] z-50 h-[70px] px-4 transition-transform duration-300 ease-out ${
+        headerVisible ? "translate-y-0" : "-translate-y-full"
+      }`}
+    >
       <div className="flex items-center justify-between h-full">
         {/* زر الأقسام */}
         <button

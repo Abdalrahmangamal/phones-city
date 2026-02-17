@@ -35,14 +35,9 @@ import {
 
 // استيراد stores
 import { useCartStore } from "@/store/cartStore/cartStore";
-<<<<<<< HEAD
 import { useNotifications } from "@/store/notifications/notificationStore";
 import { useFavoritesStore } from "@/store/favoritesStore";
 import { useAuthStore } from "@/store/useauthstore";
-=======
-import { useNotifications } from "@/store/notifications/notificationStore"; // أضف هذا الاستيراد
-import { useFavoritesStore } from "@/store/favoritesStore";
->>>>>>> 40708e98d33ac04845fffbfbdda7fcef31c0c028
 
 const baseUrl = import.meta.env.VITE_BASE_URL;
 import MobileMenu from "./MobileMenu";
@@ -75,6 +70,25 @@ export default function Header() {
   const debounceRef = useRef<number | null>(null);
   const [openSections, setOpenSections] = useState(false);
 
+  // إخفاء الهيدر عند التمرير للأسفل وإظهاره عند التمرير للأعلى
+  const [headerVisible, setHeaderVisible] = useState(true);
+  const lastScrollY = useRef(0);
+  useEffect(() => {
+    const handleScroll = () => {
+      const y = window.scrollY;
+      if (y <= 10) {
+        setHeaderVisible(true);
+      } else if (y > lastScrollY.current) {
+        setHeaderVisible(false);
+      } else {
+        setHeaderVisible(true);
+      }
+      lastScrollY.current = y;
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   // استخدم الـ store للإشعارات بدلاً من useState
   const {
     notifications,
@@ -92,9 +106,6 @@ export default function Header() {
   const favoritesCount = favorites.length;
 
   const { logout } = useAuthStore();
-
-  // Use favorites store
-  const { count: favoritesCount, fetchFavorites } = useFavoritesStore();
 
   // تعريف token
   const token = localStorage.getItem("token");
@@ -228,7 +239,10 @@ export default function Header() {
       <header
         key={headerKey}
         dir={lang === "ar" ? "rtl" : "ltr"}
-        className="w-full border-b items-center justify-center h-[170px] hidden md:flex border-white/10 bg-[#211a44] text-white"
+        className={cn(
+          "fixed top-0 left-0 right-0 z-50 w-full border-b items-center justify-center h-[170px] hidden md:flex border-white/10 bg-[#211a44] text-white transition-transform duration-300 ease-out",
+          !headerVisible && "-translate-y-full"
+        )}
       >
         <div className="flex flex-col w-full h-[170px] justify-around lg:px-[90px] px-2 pt-20 md:pt-0">
           {/* Top row */}
@@ -423,8 +437,7 @@ export default function Header() {
                 </DropdownMenuContent>
               </DropdownMenu>
 
-<<<<<<< HEAD
-              {/* قائمة المفضلة */}
+{/* قائمة المفضلة */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <button className="relative" aria-label={t("favourite")}>
@@ -487,36 +500,6 @@ export default function Header() {
                         </DropdownMenuItem>
                       </Link>
                     </div>
-=======
-              <Link to={`/${lang}/favourite`}>
-                <IconButton aria-label="المفضلة" className="relative">
-                  <Heart className="h-5 w-5 opacity-90" />
-                  {favoritesCount > 0 && (
-                    <Badge
-                      variant="destructive"
-                      className="absolute -top-2 -right-2 h-6 w-6 rounded-full p-0 flex items-center justify-center text-xs font-bold bg-[#F3AC5D]"
-                    >
-                      {favoritesCount}
-                    </Badge>
-                  )}
-                </IconButton>
-              </Link>
-              <Link to="/profile">
-                <IconButton aria-label="حسابي">
-                  <UserRound className="h-5 w-5 opacity-90" />
-                </IconButton>
-              </Link>
-              <Link to={`/${lang}/checkout`}>
-                <IconButton aria-label="عربة التسوق" className="relative">
-                  <ShoppingCart className="h-5 w-5 opacity-90" />
-                  {cartQuantity > 0 && (
-                    <Badge
-                      variant="destructive"
-                      className="absolute -top-2 -right-2 h-6 w-6 rounded-full p-0 flex items-center justify-center text-xs font-bold bg-[#F3AC5D]"
-                    >
-                      {cartQuantity}
-                    </Badge>
->>>>>>> 40708e98d33ac04845fffbfbdda7fcef31c0c028
                   )}
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -895,6 +878,7 @@ export default function Header() {
           onSectionToggle={handleMobileSectionToggle}
           isMenuOpen={isMenuOpen}
           onSearchToggle={() => setIsMobileSearchOpen(true)}
+          headerVisible={headerVisible}
         />
 
         {/* Mobile Search Modal */}
