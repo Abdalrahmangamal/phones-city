@@ -1,6 +1,6 @@
 import { Plus, Minus, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { TabbyModal } from "@/components/singleproduct/Modelpayment";
 import { TamaraModal } from "@/components/singleproduct/TamaraModal";
 import { useNavigate } from "react-router-dom";
@@ -34,9 +34,22 @@ export default function Productdetails({
   );
   const [isAddingToCart, setIsAddingToCart] = useState(false);
   const [isBuyingNow, setIsBuyingNow] = useState(false);
+  const [colorDropdownOpen, setColorDropdownOpen] = useState(false);
+  const colorDropdownRef = useRef<HTMLDivElement>(null);
   const { lang } = useLangSync();
   const { t } = useTranslation();
   const navigate = useNavigate();
+
+  // Close color dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (colorDropdownRef.current && !colorDropdownRef.current.contains(event.target as Node)) {
+        setColorDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   useEffect(() => {
     handleindexchange(selectedOptionIndex);
@@ -50,17 +63,10 @@ export default function Productdetails({
 
   if (!product) return <div>تحميل...</div>;
 
-  const hasOptions = product?.options && Array.isArray(product.options) && product.options.length > 0;
+  const hasOptions = product?.options && Array.isArray(product.options) && product.options.length > 1;
 
   const selectedVariant = product.options?.[selectedOptionIndex];
 
-  const openModal = (modalType: string) => {
-    if (modalType === "tamara") {
-      setIsTamaraModalOpen(true);
-    } else {
-      setIsTabbyModalOpen(true);
-    }
-  };
 
   const handleAddToCart = async () => {
     if (isOutOfStock) {
@@ -193,46 +199,107 @@ export default function Productdetails({
             ))}
           </div>
           <span className="text-xs md:text-sm text-muted-foreground">
-            ({product.reviews_count} {t("review")})
+            ({product.reviews_count} {t("review.reviews")})
           </span>
         </div>
       </div>
 
       {
-        hasOptions && (
-          <div className="mt-4">
-            <p className="text-sm font-medium text-gray-700 mb-2 text-start">
-              {t("Option")}:
-            </p>
-            <div className="flex items-center gap-3 flex-wrap justify-start">
-              {product.options.map((variant: any, index: number) => (
-                <button
-                  key={index}
-                  onClick={() => setSelectedOptionIndex(index)}
-                  className={`
-                  flex items-center justify-center 
-                  transition border-2 text-sm font-medium
-                  ${variant.type === "size"
-                      ? "min-w-[50px] h-[30px] px-3 rounded-md bg-white text-[#211C4D]"
-                      : "w-[30px] h-[30px] rounded-full"
-                    }
-                  ${index === selectedOptionIndex
-                      ? "border-[#211C4D] scale-110 ring-1 ring-offset-2 ring-[#211C4D]"
-                      : "border-gray-300 hover:border-gray-400"
-                    }
-                `}
-                  style={{
-                    backgroundColor: variant.type === "color" ? variant.value : "#fff",
-                  }}
-                  title={`Select ${variant.value}`}
-                  aria-label={`Select ${variant.value}`}
-                >
-                  {variant.type === "size" ? variant.value : ""}
-                </button>
-              ))}
+        hasOptions && (() => {
+          // Group options by type for rendering
+          const isColorType = product.options.some((v: any) => v.type === "color");
+
+          if (isColorType) {
+            // Custom dropdown for colors with swatch preview
+            return (
+              <div className="mt-4">
+                <p className="text-sm font-medium text-gray-700 mb-2 text-start">
+                  {t("Chooseyourcolor")}:
+                </p>
+                <div className="relative" ref={colorDropdownRef}>
+                  <button
+                    type="button"
+                    onClick={() => setColorDropdownOpen(!colorDropdownOpen)}
+                    className="w-full max-w-[320px] flex items-center gap-3 border-2 border-gray-300 rounded-lg px-4 py-3 bg-white hover:border-[#211C4D] transition-colors text-start"
+                  >
+                    <span
+                      className="w-6 h-6 rounded-full border-2 border-gray-200 shrink-0"
+                      style={{ backgroundColor: product.options[selectedOptionIndex]?.value || "#ccc" }}
+                    />
+                    <span className="flex-1 text-sm font-medium text-[#211C4D] truncate">
+                      {product.options[selectedOptionIndex]?.value || "—"}
+                    </span>
+                    <svg
+                      className={`w-4 h-4 text-gray-500 transition-transform ${colorDropdownOpen ? "rotate-180" : ""}`}
+                      fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+
+                  {colorDropdownOpen && (
+                    <div className="absolute z-50 mt-1 w-full max-w-[320px] bg-white border border-gray-200 rounded-lg shadow-lg max-h-[240px] overflow-y-auto">
+                      {product.options.map((variant: any, index: number) => (
+                        <button
+                          key={index}
+                          type="button"
+                          onClick={() => {
+                            setSelectedOptionIndex(index);
+                            setColorDropdownOpen(false);
+                          }}
+                          className={`w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors ${index === selectedOptionIndex ? "bg-blue-50 border-r-2 border-r-[#211C4D]" : ""
+                            }`}
+                        >
+                          <span
+                            className={`w-6 h-6 rounded-full border-2 shrink-0 ${index === selectedOptionIndex ? "border-[#211C4D] ring-2 ring-offset-1 ring-[#211C4D]" : "border-gray-200"
+                              }`}
+                            style={{ backgroundColor: variant.value || "#ccc" }}
+                          />
+                          <span className={`text-sm font-medium truncate ${index === selectedOptionIndex ? "text-[#211C4D] font-semibold" : "text-gray-700"
+                            }`}>
+                            {variant.value}
+                          </span>
+                          {index === selectedOptionIndex && (
+                            <svg className="w-4 h-4 text-[#211C4D] ms-auto shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                            </svg>
+                          )}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            );
+          }
+
+          // For non-color options (size, text, etc.) — styled <select> dropdown
+          return (
+            <div className="mt-4">
+              <p className="text-sm font-medium text-gray-700 mb-2 text-start">
+                {t("Option")}:
+              </p>
+              <select
+                value={selectedOptionIndex}
+                onChange={(e) => setSelectedOptionIndex(Number(e.target.value))}
+                className="w-full max-w-[320px] border-2 border-gray-300 rounded-lg px-4 py-3 bg-white text-sm font-medium text-[#211C4D] hover:border-[#211C4D] focus:border-[#211C4D] focus:ring-1 focus:ring-[#211C4D] outline-none transition-colors cursor-pointer appearance-none"
+                style={{
+                  backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E")`,
+                  backgroundRepeat: "no-repeat",
+                  backgroundPosition: lang === "ar" ? "left 12px center" : "right 12px center",
+                  paddingRight: lang === "ar" ? "16px" : "40px",
+                  paddingLeft: lang === "ar" ? "40px" : "16px",
+                }}
+              >
+                {product.options.map((variant: any, index: number) => (
+                  <option key={index} value={index}>
+                    {variant.value}
+                  </option>
+                ))}
+              </select>
             </div>
-          </div>
-        )
+          );
+        })()
       }
 
       <div className="mt-2">

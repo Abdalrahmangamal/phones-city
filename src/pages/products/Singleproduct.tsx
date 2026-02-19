@@ -20,7 +20,6 @@ export default function ProductPage() {
   const {
     fetchProductbyid,
     response,
-    loading,
     fetchBestSellers,
     bestSellerProducts,
     loading: productsLoading
@@ -28,7 +27,8 @@ export default function ProductPage() {
 
   const [selectedOptionIndex, setSelectedOptionIndex] = useState(0);
   const { lang } = useLangSync();
-  const { page, fetchPage, loading: pageLoading } = usePageStore();
+  const { getPage, fetchPage, isLoading: isPageLoading } = usePageStore();
+  const page = getPage("singlepro", lang);
 
   const [dataReady, setDataReady] = useState(false);
 
@@ -145,7 +145,9 @@ export default function ProductPage() {
                   product.options[selectedOptionIndex].images &&
                   product.options[selectedOptionIndex].images.length > 0
                   ? product.options[selectedOptionIndex].images
-                  : (product.images || [])
+                  : (product.images && product.images.length > 0
+                    ? product.images
+                    : (product.main_image ? [product.main_image] : []))
               }
               discountPercent={
                 (() => {
@@ -176,7 +178,7 @@ export default function ProductPage() {
           <Informationproduct product={product} />
 
           {/* Featured Hero Section */}
-          {!pageLoading && page && (
+          {!isPageLoading("singlepro", lang) && page && (
             <FeaturedHeroSection
               title={page.title || ""}
               description={page.short_description || ""}
@@ -195,7 +197,7 @@ export default function ProductPage() {
               btn={true}
               link={`/${lang}/BestSellerPage`}
               showPagination={false}
-              isLoading={productsLoading.bestSellers || false}
+              isLoading={productsLoading}
             />
           )}
         </main>
