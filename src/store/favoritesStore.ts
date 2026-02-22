@@ -56,6 +56,8 @@ interface FavoriteProduct {
   is_favorite: boolean;
   in_cart: boolean;
   created_at: string;
+  slug: string;
+  options: any[];
 }
 
 interface FavoriteItem {
@@ -80,9 +82,9 @@ interface FavoritesState {
   error: string | null;
   clearFavorites: () => Promise<void>;
 
-  fetchFavorites: () => Promise<void>;
-  addFavorite: (productId: number) => Promise<void>;
-  removeFavorite: (favoriteId: number) => Promise<void>;
+  fetchFavorites: (lang?: string) => Promise<void>;
+  addFavorite: (productId: number) => Promise<FavoriteItem | void>;
+  removeFavorite: (favoriteId: number) => Promise<number | void>;
 }
 
 export const useFavoritesStore = create<FavoritesState>((set, get) => ({
@@ -91,13 +93,14 @@ export const useFavoritesStore = create<FavoritesState>((set, get) => ({
   loading: false,
   error: null,
 
-  fetchFavorites: async () => {
+  fetchFavorites: async (lang?: string) => {
     try {
       set({ loading: true });
 
       const response = await axiosClient.get(`api/v1/favorites`, {
         headers: {
           Accept: "application/json",
+          "Accept-Language": lang || "ar",
         },
       });
 

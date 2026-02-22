@@ -10,11 +10,12 @@ import { Trash2 } from "lucide-react";
 export default function Favourite() {
   const { fetchFavorites, favorites, clearFavorites } = useFavoritesStore();
 
-  useEffect(() => {
-    fetchFavorites();
-  }, []);
+  const { t, i18n } = useTranslation();
+  const lang = i18n.language;
 
-  const { t } = useTranslation();
+  useEffect(() => {
+    fetchFavorites(lang);
+  }, [lang]);
 
   const handleDeleteAll = () => {
     // TODO: Implement API call to delete all favorites
@@ -24,7 +25,7 @@ export default function Favourite() {
   // Filter out any favorite items that don't have a valid product
   const validProducts = favorites
     .filter(f => f && f.product)
-    .map(f => f.product);
+    .map(f => f.product as any);
 
   return (
     <div>

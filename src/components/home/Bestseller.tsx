@@ -17,6 +17,7 @@ interface BestsellerProps {
   filterComponent?: React.ReactNode;
   imagecard?: string;
   containercard?: string;
+  containerstyle?: string;
 
   // إضافة Props للـ Pagination
   currentPage?: number;
@@ -57,8 +58,8 @@ export default function Bestseller({
   const productsToShow = showPagination
     ? products
     : limit
-    ? products.slice(0, limit)
-    : products;
+      ? products.slice(0, limit)
+      : products;
 
   // ====== إضافة console.log للتصحيح ======
   console.log("Bestseller - Debug Info:", {
@@ -160,7 +161,7 @@ export default function Bestseller({
               <Pagination
                 currentPage={currentPage}
                 totalPages={totalPages}
-                onPageChange={onPageChange || (() => {})}
+                onPageChange={onPageChange || (() => { })}
                 itemsPerPage={itemsPerPage}
                 totalItems={totalItems}
               />

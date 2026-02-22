@@ -201,7 +201,7 @@ function ProductCardInner({ product, imagecard, containerstyle, quantity }: Prod
 
       {/* الاسم */}
       <Link to={`/${lang}/singleproduct/${product.slug}`}>
-        <h2 className="text-[15px] md:text-[24px] font-[500] text-[#211C4D] line-clamp-1 mt-[10px]">
+        <h2 className="text-[15px] md:text-[24px] font-[500] text-[#211C4D] line-clamp-1 mt-[10px]" title={product?.name}>
           {product?.name}
         </h2>
       </Link>
