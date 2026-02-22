@@ -11,10 +11,10 @@ import { useHeroSectionStore } from "@/store/home/herosectionStore";
 import { useLangSync } from "@/hooks/useLangSync";
 import HeroSection from "@/components/public/HeroSection";
 import { useHomePageStore } from "@/store/home/homepageStore";
-import { useProductsStore } from "@/store/productsStore.ts";
 import { useTranslation } from "react-i18next";
 import type { Product } from '@/types/index';
-import { parseSortToken } from "@/utils/filterUtils";
+import { getProductNumericPrice, parseSortToken } from "@/utils/filterUtils";
+import axiosClient from "@/api/axiosClient";
 
 export default function CategorySingle() {
   const { id, productmain } = useParams();
@@ -40,9 +40,139 @@ export default function CategorySingle() {
   const [categoryInfo, setCategoryInfo] = useState<any>(null);
   const [categoryProducts, setCategoryProducts] = useState<Product[]>([]);
   const [allCategoryIds, setAllCategoryIds] = useState<number[]>([]);
+  const [productsLoading, setProductsLoading] = useState(false);
 
   const { fetchCategories, categories } = useCategoriesStore();
-  const { fetchProducts, loading } = useProductsStore();
+
+  const sortProductsLocally = (products: Product[], sortToken: string) => {
+    const parsedSort = parseSortToken(sortToken);
+    if (!parsedSort) return products;
+
+    const { sortBy, sortOrder } = parsedSort;
+    const dir = sortOrder === "asc" ? 1 : -1;
+    const sorted = [...products];
+
+    const str = (value: unknown) => (value == null ? "" : String(value)).toLowerCase();
+    const num = (value: unknown) => {
+      const n = Number(value);
+      return Number.isFinite(n) ? n : 0;
+    };
+
+    sorted.sort((a: any, b: any) => {
+      let left: any;
+      let right: any;
+
+      switch (sortBy) {
+        case "main_price":
+          left = getProductNumericPrice(a);
+          right = getProductNumericPrice(b);
+          break;
+        case "average_rating":
+          left = num(a?.average_rating);
+          right = num(b?.average_rating);
+          break;
+        case "created_at":
+          left = Date.parse(a?.created_at || "") || 0;
+          right = Date.parse(b?.created_at || "") || 0;
+          break;
+        case "name_ar":
+        case "name_en":
+          left = str(a?.name);
+          right = str(b?.name);
+          break;
+        case "best_seller":
+          left = num(a?.best_seller ?? a?.is_best_seller);
+          right = num(b?.best_seller ?? b?.is_best_seller);
+          break;
+        default:
+          left = a?.[sortBy];
+          right = b?.[sortBy];
+          break;
+      }
+
+      if (typeof left === "string" || typeof right === "string") {
+        return str(left).localeCompare(str(right), lang || "ar") * dir;
+      }
+
+      if (left === right) return 0;
+      return (left > right ? 1 : -1) * dir;
+    });
+
+    return sorted;
+  };
+
+  const fetchProductsPageRaw = async (params: Record<string, unknown>, langCode: string) => {
+    for (let attempt = 0; attempt < 3; attempt += 1) {
+      try {
+        const res = await axiosClient.get(`api/v1/products`, {
+          params,
+          headers: {
+            "Accept-Language": `${langCode || "ar"}`,
+            Accept: "application/json",
+          },
+        });
+        return res.data;
+      } catch (error: any) {
+        const status = error?.response?.status;
+        if (status === 429 && attempt < 2) {
+          await new Promise((resolve) => setTimeout(resolve, 400 * (attempt + 1)));
+          continue;
+        }
+        throw error;
+      }
+    }
+
+    return { data: [] };
+  };
+
+  const fetchAllProductsForCategory = async (
+    categoryId: number,
+    langCode: string,
+    extraParams: Record<string, unknown>
+  ): Promise<Product[]> => {
+    const perPage = 100;
+    const all: Product[] = [];
+    let page = 1;
+    let lastPage = 1;
+    let safety = 0;
+
+    while (page <= lastPage && safety < 50) {
+      safety += 1;
+
+      const raw = await fetchProductsPageRaw(
+        {
+          simple: false,
+          category_id: categoryId,
+          page,
+          per_page: perPage,
+          ...extraParams,
+        },
+        langCode
+      );
+
+      const pageItems = Array.isArray(raw?.data) ? raw.data : [];
+      all.push(...pageItems);
+
+      const pager = raw?.pagination || raw?.meta || raw?.pager;
+      const parsedLastPage = Number(
+        pager?.last_page ?? pager?.total_pages ?? 1
+      );
+      lastPage =
+        Number.isFinite(parsedLastPage) && parsedLastPage > 0
+          ? parsedLastPage
+          : pageItems.length < perPage
+            ? page
+            : page + 1;
+
+      if (pageItems.length < perPage && !pager) {
+        break;
+      }
+
+      page += 1;
+    }
+
+    return all;
+  };
 
   // React Router reuses this component when only the route param changes.
   // Reset page-specific state immediately so products/filters from the previous category do not bleed into the next one.
@@ -143,6 +273,7 @@ export default function CategorySingle() {
     const loadFilteredProducts = async () => {
       try {
         const currentRouteCategoryKey = String(id ?? "");
+        setProductsLoading(true);
         const queryParams: any = {
           simple: false,
           page: currentPage,
@@ -161,8 +292,6 @@ export default function CategorySingle() {
           categoryIdsToFilter = allCategoryIds;
         }
 
-        // Always send a single category_id.
-        // The backend already includes child-category products when using a parent category_id.
         const activeCategoryId =
           selectedSubCategory !== null
             ? selectedSubCategory
@@ -193,43 +322,76 @@ export default function CategorySingle() {
           setCategoryProducts([]);
           setTotalItems(0);
           setTotalPages(1);
+          setProductsLoading(false);
           return;
         }
-        
-        // Fetch products with filters
-        const result = await fetchProducts(queryParams, lang);
+
+        const aggregateParentAndChildren =
+          selectedSubCategory === null && allCategoryIds.length > 1;
+
+        let productsData: Product[] = [];
+        let totalCount = 0;
+
+        if (aggregateParentAndChildren) {
+          const extraParams: Record<string, unknown> = {};
+          if (queryParams.min_price !== undefined) extraParams.min_price = queryParams.min_price;
+          if (queryParams.max_price !== undefined) extraParams.max_price = queryParams.max_price;
+          if (queryParams.sort_by !== undefined) extraParams.sort_by = queryParams.sort_by;
+          if (queryParams.sort_order !== undefined) extraParams.sort_order = queryParams.sort_order;
+
+          const categoryIdsSet = new Set(allCategoryIds.map(Number));
+          const categoryResults: Product[][] = [];
+          for (const categoryId of allCategoryIds) {
+            const productsForCategory = await fetchAllProductsForCategory(
+              Number(categoryId),
+              lang,
+              extraParams
+            );
+            categoryResults.push(productsForCategory);
+          }
+
+          // Merge and remove duplicates (products can belong to both parent and child categories).
+          const deduped = new Map<number, Product>();
+          for (const list of categoryResults) {
+            for (const product of list) {
+              const productCategories = Array.isArray((product as any)?.categories)
+                ? (product as any).categories
+                : [];
+
+              const belongsToRequestedTree =
+                productCategories.length === 0 ||
+                productCategories.some((cat: any) => categoryIdsSet.has(Number(cat?.id)));
+
+              if (!belongsToRequestedTree) continue;
+              if (!deduped.has(product.id)) {
+                deduped.set(product.id, product);
+              }
+            }
+          }
+
+          const mergedProducts = sortProductsLocally([...deduped.values()], sortOption);
+          totalCount = mergedProducts.length;
+          const start = (currentPage - 1) * itemsPerPage;
+          productsData = mergedProducts.slice(start, start + itemsPerPage);
+        } else {
+          // Single category request can rely on backend pagination.
+          const raw = await fetchProductsPageRaw(queryParams, lang);
+          productsData = Array.isArray(raw?.data) ? raw.data : [];
+          totalCount =
+            Number(raw?.pagination?.total ?? raw?.meta?.total ?? raw?.pager?.total) ||
+            productsData.length;
+        }
 
         // Ignore late responses from a previous category route.
         if (cancelled || String(id ?? "") !== currentRouteCategoryKey) {
           return;
         }
 
-        // Handle response data
-        let productsData: Product[] = [];
-        let totalCount = 0;
-
-        if (result && result.data && Array.isArray(result.data)) {
-          productsData = result.data;
-          
-          // Extract pagination info
-          if (result.pagination) {
-            totalCount = result.pagination.total || productsData.length;
-          } else if (result.meta) {
-            totalCount = result.meta.total || productsData.length;
-          } else {
-            totalCount = productsData.length;
-          }
-        } else if (Array.isArray(result)) {
-          productsData = result;
-          totalCount = result.length;
-        } else {
-          productsData = [];
-        }
-
         // Update states
         setCategoryProducts(productsData);
         setTotalItems(totalCount);
         setTotalPages(Math.ceil(totalCount / itemsPerPage) || 1);
+        setProductsLoading(false);
         
         
       } catch (error) {
@@ -238,6 +400,7 @@ export default function CategorySingle() {
         setCategoryProducts([]);
         setTotalItems(0);
         setTotalPages(1);
+        setProductsLoading(false);
       }
     };
 
@@ -253,7 +416,7 @@ export default function CategorySingle() {
     return () => {
       cancelled = true;
     };
-  }, [lang, id, selectedSubCategory, sortOption, priceRange, currentPage, categoryInfo, allCategoryIds, fetchProducts, categories.length]);
+  }, [lang, id, selectedSubCategory, sortOption, priceRange, currentPage, categoryInfo, allCategoryIds, categories.length]);
 
   // Filter handlers
   const handleSortChange = (option: string) => {
@@ -294,7 +457,7 @@ export default function CategorySingle() {
             title={categoryTitle || t("CategoryProducts") || "منتجات الفئة"}
             btn={false}
             products={categoryProducts}
-            isLoading={loading}
+            isLoading={productsLoading}
             filterComponent={
               <div className="flex justify-center">
                 <Filter

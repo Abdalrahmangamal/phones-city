@@ -887,12 +887,14 @@ export default function Header() {
                         </DropdownMenuSubTrigger>
 
                         <DropdownMenuPortal>
-                          <DropdownMenuSubContent className="w-48">
-                            <DropdownMenuItem asChild>
-                              <Link to={`/${lang}/categorySingle/${category.slug}/products`}>
-                                {t("View all")} {category.name}
-                              </Link>
-                            </DropdownMenuItem>
+                            <DropdownMenuSubContent className="w-48">
+                              <DropdownMenuItem asChild>
+                                <Link to={`/${lang}/categorySingle/${category.slug}/products`}>
+                                  {lang === "ar"
+                                    ? `${category.name} - ${t("ViewAll")}`
+                                    : `${t("ViewAll")} ${category.name}`}
+                                </Link>
+                              </DropdownMenuItem>
                             {category.children.map((child: any) => (
                               <DropdownMenuItem key={child.id} asChild>
                                 <Link to={`/${lang}/categorySingle/${child.slug}/products`} className="flex items-center gap-2">
