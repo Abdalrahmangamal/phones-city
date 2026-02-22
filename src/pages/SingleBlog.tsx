@@ -1,10 +1,11 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useParams, Link } from "react-router-dom";
 import Layout from "@/components/layout/layout";
 import { useBlogsStore } from "@/store/blogsStore";
 import { useLangSync } from "@/hooks/useLangSync";
 import { useTranslation } from "react-i18next";
 import Loader from "@/components/Loader";
+import { usePageSEO, jsonLdGenerators } from "@/hooks/usePageSEO";
 
 export default function SingleBlog() {
   const { t } = useTranslation();
@@ -39,6 +40,33 @@ export default function SingleBlog() {
   const getLocalizedDescription = (blog: any) => {
     return lang === "ar" ? blog.short_description_ar : blog.short_description_en || blog.short_description;
   };
+
+  // SEO: Dynamic meta tags for single blog post
+  const blogJsonLd = useMemo(() => {
+    if (!singleBlog) return undefined;
+    return [
+      jsonLdGenerators.article(singleBlog, lang),
+      jsonLdGenerators.breadcrumb([
+        { name: lang === "ar" ? "الرئيسية" : "Home", url: `/${lang}/` },
+        { name: lang === "ar" ? "المدونة" : "Blog", url: `/${lang}/blog` },
+        { name: getLocalizedTitle(singleBlog), url: `/${lang}/blog/${singleBlog.slug}` },
+      ]),
+    ];
+  }, [singleBlog, lang]);
+
+  usePageSEO({
+    title: singleBlog ? getLocalizedTitle(singleBlog) : (lang === "ar" ? "المدونة" : "Blog"),
+    description: singleBlog
+      ? (lang === "ar" ? singleBlog.meta_description_ar || singleBlog.short_description_ar : singleBlog.meta_description_en || singleBlog.short_description_en || singleBlog.short_description) || ""
+      : "",
+    keywords: singleBlog
+      ? (lang === "ar" ? singleBlog.meta_keywords_ar : singleBlog.meta_keywords_en || singleBlog.meta_keywords) || undefined
+      : undefined,
+    lang,
+    ogType: "article",
+    ogImage: singleBlog?.featured_image,
+    jsonLd: blogJsonLd,
+  });
 
   if (loadingSingle) {
     return (
@@ -129,7 +157,7 @@ export default function SingleBlog() {
               lineHeight: "1.8",
             }}
           />
-          
+
           <style>{`
             .blog-content h1,
             .blog-content h2,

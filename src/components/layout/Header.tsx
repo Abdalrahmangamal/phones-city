@@ -55,7 +55,8 @@ interface SuggestionItem {
 }
 
 export default function Header() {
-  const { categories, fetchCategories } = useCategoriesStore();
+  const categories = useCategoriesStore((state) => state.categories);
+  const fetchCategories = useCategoriesStore((state) => state.fetchCategories);
   const { lang } = useLangSync();
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
@@ -73,20 +74,38 @@ export default function Header() {
   // إخفاء الهيدر عند التمرير للأسفل وإظهاره عند التمرير للأعلى
   const [headerVisible, setHeaderVisible] = useState(true);
   const lastScrollY = useRef(0);
+  const scrollRafRef = useRef<number | null>(null);
+  const headerVisibleRef = useRef(true);
+
+  useEffect(() => {
+    headerVisibleRef.current = headerVisible;
+  }, [headerVisible]);
+
   useEffect(() => {
     const handleScroll = () => {
-      const y = window.scrollY;
-      if (y <= 10) {
-        setHeaderVisible(true);
-      } else if (y > lastScrollY.current) {
-        setHeaderVisible(false);
-      } else {
-        setHeaderVisible(true);
-      }
-      lastScrollY.current = y;
+      if (scrollRafRef.current !== null) return;
+
+      scrollRafRef.current = window.requestAnimationFrame(() => {
+        const y = window.scrollY;
+        const nextVisible = y <= 10 ? true : y <= lastScrollY.current;
+
+        if (nextVisible !== headerVisibleRef.current) {
+          headerVisibleRef.current = nextVisible;
+          setHeaderVisible(nextVisible);
+        }
+
+        lastScrollY.current = y;
+        scrollRafRef.current = null;
+      });
     };
+
     window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      if (scrollRafRef.current !== null) {
+        window.cancelAnimationFrame(scrollRafRef.current);
+      }
+    };
   }, []);
 
   // استخدم الـ store للإشعارات بدلاً من useState
@@ -126,7 +145,7 @@ export default function Header() {
       fetchNotifications();
       lastFetchRef.current.notifications = Date.now();
     }
-  }, [token]);
+  }, [fetchNotifications, token]);
 
   // جلب الأقسام عند تحميل المكون وعند تغيير اللغة
   useEffect(() => {
@@ -134,21 +153,21 @@ export default function Header() {
       fetchCategories(lang);
       lastFetchRef.current.categories = lang;
     }
-  }, [lang]);
+  }, [fetchCategories, lang]);
 
   useEffect(() => {
     if (Date.now() - lastFetchRef.current.cart > CACHE_DURATION) {
       fetchCart();
       lastFetchRef.current.cart = Date.now();
     }
-  }, []);
+  }, [fetchCart]);
 
   useEffect(() => {
     if (token && Date.now() - lastFetchRef.current.favorites > CACHE_DURATION) {
       fetchFavorites();
       lastFetchRef.current.favorites = Date.now();
     }
-  }, [token]);
+  }, [fetchFavorites, token]);
 
   const navitem = [
     { link: `/${lang}/`, name: `${t("Home")}` },

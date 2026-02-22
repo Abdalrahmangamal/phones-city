@@ -6,7 +6,6 @@ import googleplay from '../../assets/images/googleplay.png'
 // import './s24-responsive.css'; // Import S24 Ultra specific styles (now imported globally)
 
 const S24AppDownloadSection = () => {
-  console.log("Rendering S24AppDownloadSection");
   return (
     <div className="w-full">
       {/* Desktop version for S24 Ultra - hidden on mobile */}

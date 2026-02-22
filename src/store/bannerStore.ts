@@ -39,7 +39,6 @@ export const useBannerStore = create<BannerState>((set) => ({
 
             if (res.data && res.data.data) {
                 // Check if data is array or object. API might return array of 1 or just object.
-                console.log("Banner API Response:", data);
                 set({
                     bannerData: data,
                     bannerImage: data.image,

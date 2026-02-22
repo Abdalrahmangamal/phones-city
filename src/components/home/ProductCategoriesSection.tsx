@@ -15,7 +15,8 @@ export default function ProductCategoriesSection() {
 
   const { lang } = useLangSync();
   const { t } = useTranslation(); // Use translation hook
-  const { fetchCategories, categories } = useCategoriesStore();
+  const fetchCategories = useCategoriesStore((state) => state.fetchCategories);
+  const categories = useCategoriesStore((state) => state.categories);
   const hasCategories = (categories?.length ?? 0) > 0;
   const canLoop = (categories?.length ?? 0) > 6;
 

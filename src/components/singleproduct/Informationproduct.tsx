@@ -6,12 +6,10 @@ import { useTranslation } from "react-i18next";
 const DetailsList = ({ details }: { details: any[] }) => {
   if (!details || !Array.isArray(details)) return null;
 
-  console.log("DetailsList rendering with details:", details);
   
   return (
     <div className="space-y-3 md:space-y-4">
       {details.map((item, index) => {
-        console.log(`Item ${index}:`, item, "Type:", typeof item);
         
         // إذا كان العنصر كائنًا يحتوي على key و value
         if (item && typeof item === 'object' && item.key && item.value) {
@@ -71,8 +69,6 @@ export default function Informationproduct({ product }: any) {
   const { lang } = useLangSync();
   const { t } = useTranslation();
 
-  console.log("product details structure:", product?.details);
-  console.log("product about:", product?.about);
 
   // معالجة التفاصيل إذا كانت موجودة
   const hasDetails = product?.details && Array.isArray(product.details) && product.details.length > 0;

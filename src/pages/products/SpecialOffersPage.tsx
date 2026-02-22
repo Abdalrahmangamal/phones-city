@@ -37,7 +37,6 @@ export default function SpecialOffersPage() {
 
   useEffect(() => {
     fetchOffers(lang, currentPage).then(() => {
-      console.log('Offers loaded', { offersMeta, offersCount: Array.isArray(offersProducts) ? offersProducts.length : 0, currentPage });
     }).catch((err) => console.error('Failed to fetch offers', err));
 
     // جلب الفئات للفلتر

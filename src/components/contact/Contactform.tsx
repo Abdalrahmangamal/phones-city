@@ -60,7 +60,6 @@ export default function Contactform() {
         }
       );
 
-      console.log("Ticket submitted successfully:", response.data);
       setSuccessMessage("تم إرسال التذكرة بنجاح!");
 
       // Reset form
@@ -71,7 +70,7 @@ export default function Contactform() {
         message: "",
       });
     } catch (error: any) {
-      console.error("Error submitting ticket:", error);
+      console.error("Error submitting ticket");
       setErrorMessage(
         error?.response?.data?.message || "حدث خطأ أثناء إرسال التذكرة. يرجى المحاولة مرة أخرى."
       );

@@ -24,23 +24,15 @@ export default function MobileMenu({
   const { lang } = useLangSync();
   const { i18n, t } = useTranslation();
   const [open] = React.useState(false);
-  const { categories, fetchCategories } = useCategoriesStore();
+  const categories = useCategoriesStore((state) => state.categories);
+  const fetchCategories = useCategoriesStore((state) => state.fetchCategories);
 
 
   useEffect(() => {
     if (isOpen && lang) {
       fetchCategories(lang);
-      console.log("MobileMenu: Fetching categories for language:", lang);
     }
   }, [isOpen, lang, fetchCategories]);
-
-
-  useEffect(() => {
-    if (isOpen && openSections) {
-      // لا حاجة لفعل أي شيء، openSections يتم استخدامه في render
-      console.log("MobileMenu: Opening sections automatically");
-    }
-  }, [isOpen, openSections]);
 
   const navitem = [
     { link: `/${lang}/`, name: `${t("Home")}` },

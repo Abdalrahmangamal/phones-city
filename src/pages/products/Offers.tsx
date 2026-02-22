@@ -14,6 +14,7 @@ import Loader from "@/components/Loader";
 import { useHeroSectionStore } from "@/store/home/herosectionStore";
 import { useHomePageStore } from '@/store/home/homepageStore';
 import type { Product } from '@/types/index'; // Import Product type if needed
+import { usePageSEO } from "@/hooks/usePageSEO";
 
 export default function Offers() {
   const { fetchProducts, response, loading } = useProductsStore();
@@ -55,6 +56,18 @@ export default function Offers() {
 
     loadData();
   }, [lang]);
+
+  // SEO for offers page
+  usePageSEO({
+    title: lang === "ar" ? "العروض - أفضل العروض والخصومات" : "Offers - Best Deals & Discounts",
+    description: lang === "ar"
+      ? "اكتشف أفضل عروض وخصومات مدينة الهواتف على الهواتف الذكية والأجهزة الإلكترونية في السعودية"
+      : "Discover the best deals and discounts at City Phones on smartphones and electronics in Saudi Arabia",
+    keywords: lang === "ar"
+      ? "عروض, خصومات, تخفيضات, هواتف, أجهزة إلكترونية, مدينة الهواتف"
+      : "offers, deals, discounts, phones, electronics, City Phones",
+    lang,
+  });
 
   // Reset page when filters change
   useEffect(() => {

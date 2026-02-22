@@ -7,6 +7,8 @@ import { useEffect } from "react";
 import { useLangSync } from "@/hooks/useLangSync";
 import Loader from "@/components/Loader";
 import { usePageStore } from '@/store/customerCareStore';
+import { usePageSEO } from "@/hooks/usePageSEO";
+
 export default function Servces() {
   const { lang } = useLangSync();
   const { fetchPage, page } = usePageStore()
@@ -16,8 +18,17 @@ export default function Servces() {
     fetchPage("content-of-our-services", lang)
   }, [lang]);
 
-  console.log("servvvv", page);
-
+  // SEO for services page
+  usePageSEO({
+    title: lang === "ar" ? "خدماتنا - مدينة الهواتف" : "Our Services - City Phones",
+    description: lang === "ar"
+      ? "تعرف على خدمات مدينة الهواتف - تقسيط، استبدال أجهزة، بيع أجهزة، برمجة وصيانة، اتصالات وإنترنت، وخدمة عملاء مميزة"
+      : "Discover City Phones services - installments, device exchange, device selling, programming & maintenance, telecom & internet, and premium customer service",
+    keywords: lang === "ar"
+      ? "خدمات, تقسيط, استبدال, صيانة, برمجة, اتصالات, مدينة الهواتف"
+      : "services, installments, exchange, maintenance, programming, telecom, City Phones",
+    lang,
+  });
   return (
     <Layout>
       {

@@ -31,6 +31,10 @@ interface CertificateState {
   clearError: () => void;
 }
 
+const CERTIFICATES_CACHE_TTL_MS = 60_000;
+let certificatesCache: { data: Certificate[]; fetchedAt: number } | null = null;
+let certificatesInFlight: Promise<void> | null = null;
+
 export const useCertificateStore = create<CertificateState>()(
   devtools(
     (set, get) => ({
@@ -42,33 +46,62 @@ export const useCertificateStore = create<CertificateState>()(
 
       // Fetch all certificates
       fetchCertificates: async () => {
+        if (
+          certificatesCache &&
+          Date.now() - certificatesCache.fetchedAt < CERTIFICATES_CACHE_TTL_MS
+        ) {
+          set(() => ({
+            certificates: certificatesCache!.data,
+            loading: false,
+            error: null,
+          }));
+          return;
+        }
+
+        if (certificatesInFlight) {
+          return certificatesInFlight;
+        }
 
         set(() => ({ loading: true, error: null }));
 
-        try {
+        certificatesInFlight = (async () => {
+          try {
+            const response = await axiosClient.get("/api/v1/certificates");
 
-          const response = await axiosClient.get("/api/v1/certificates");
+            if (response.data.status) {
+              const nextCertificates = Array.isArray(response.data.data)
+                ? response.data.data
+                : [];
 
+              certificatesCache = {
+                data: nextCertificates,
+                fetchedAt: Date.now(),
+              };
 
-          if (response.data.status) {
+              set(() => ({
+                certificates: nextCertificates,
+                loading: false,
+                error: null,
+              }));
+            } else {
+              set(() => ({
+                error: response.data.message || "Failed to fetch certificates",
+                loading: false
+              }));
+            }
+
+          } catch (error: any) {
+            console.error("Error fetching certificates");
             set(() => ({
-              certificates: response.data.data,
+              error: error?.response?.data?.message || "Network error occurred",
               loading: false
             }));
-          } else {
-            set(() => ({
-              error: response.data.message || "Failed to fetch certificates",
-              loading: false
-            }));
+          } finally {
+            certificatesInFlight = null;
           }
+        })();
 
-        } catch (error: any) {
-          console.error("Error fetching certificates");
-          set(() => ({
-            error: error?.response?.data?.message || "Network error occurred",
-            loading: false
-          }));
-        }
+        return certificatesInFlight;
       },
 
       // Fetch a single certificate

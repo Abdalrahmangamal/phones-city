@@ -28,6 +28,9 @@ interface AboutState {
 }
 
 const baseUrl = import.meta.env.VITE_BASE_URL;
+const ABOUT_CACHE_TTL_MS = 60_000;
+const aboutCache = new Map<string, { data: AboutData; fetchedAt: number }>();
+const aboutInFlight = new Map<string, Promise<void>>();
 
 export const useAboutStore = create<AboutState>((set) => ({
   loading: false,
@@ -35,27 +38,50 @@ export const useAboutStore = create<AboutState>((set) => ({
   data: null,
 
   fetchAbout: async (lang) => {
-    try {
-      set({ loading: true, error: null });
-
-      const res = await axios.get(`${baseUrl}api/v1/about`, {
-        headers: {
-          Accept: "application/json",
-         "Accept-Language": `${lang}`,
-
-        },
-      });
-
-      set({
-        data: res.data.data,
-        loading: false,
-        error: null,
-      });
-    } catch (err: any) {
-      set({
-        error: err?.response?.data?.message || "Failed to fetch about data",
-        loading: false,
-      });
+    const normalizedLang = (lang || "ar").trim() || "ar";
+    const cached = aboutCache.get(normalizedLang);
+    if (cached && Date.now() - cached.fetchedAt < ABOUT_CACHE_TTL_MS) {
+      set({ data: cached.data, loading: false, error: null });
+      return;
     }
+
+    const pending = aboutInFlight.get(normalizedLang);
+    if (pending) {
+      return pending;
+    }
+
+    const request = (async () => {
+      try {
+        set({ loading: true, error: null });
+
+        const res = await axios.get(`${baseUrl}api/v1/about`, {
+          headers: {
+            Accept: "application/json",
+            "Accept-Language": normalizedLang,
+          },
+        });
+
+        const nextData = res.data?.data ?? null;
+        if (nextData) {
+          aboutCache.set(normalizedLang, { data: nextData, fetchedAt: Date.now() });
+        }
+
+        set({
+          data: nextData,
+          loading: false,
+          error: null,
+        });
+      } catch (err: any) {
+        set({
+          error: err?.response?.data?.message || "Failed to fetch about data",
+          loading: false,
+        });
+      } finally {
+        aboutInFlight.delete(normalizedLang);
+      }
+    })();
+
+    aboutInFlight.set(normalizedLang, request);
+    return request;
   },
 }));

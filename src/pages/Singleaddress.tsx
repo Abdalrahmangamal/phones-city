@@ -45,7 +45,6 @@ export default function Singleaddress() {
     setValue("country", "المملكة العربية السعودية");
     fetchCities(lang);
   }, [setValue, lang]);
-  console.log("citiessssssssssssss", cities);
 
   const onSubmit = async (data: AddressFormData) => {
     setIsSubmitting(true);

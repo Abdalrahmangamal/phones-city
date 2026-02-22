@@ -21,7 +21,9 @@ interface Offer {
 export default function LatestOffers() {
   const { lang } = useLangSync();
   const { t } = useTranslation();
-  const { offers, loading, fetchOffers } = useLatestOffersStore();
+  const offers = useLatestOffersStore((state) => state.offers);
+  const loading = useLatestOffersStore((state) => state.loading);
+  const fetchOffers = useLatestOffersStore((state) => state.fetchOffers);
 
   useEffect(() => {
     fetchOffers(lang);

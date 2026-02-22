@@ -8,6 +8,7 @@ import { useEffect } from "react";
 import { useLangSync } from "@/hooks/useLangSync";
 import { useTranslation } from "react-i18next";
 import Loader from "@/components/Loader";
+import { usePageSEO } from "@/hooks/usePageSEO";
 
 import { usePageStore } from "@/store/customerCareStore";
 
@@ -15,13 +16,23 @@ export default function About() {
   const { t } = useTranslation();
 
   const { lang } = useLangSync();
-  const { fetchAbout, data } = useAboutStore();
+  const fetchAbout = useAboutStore((state) => state.fetchAbout);
+  const data = useAboutStore((state) => state.data);
   const { fetchPage, page } = usePageStore();
 
   useEffect(() => {
     fetchAbout(lang);
     fetchPage("image-of-the-place", lang);
-  }, [lang]);
+  }, [fetchAbout, fetchPage, lang]);
+
+  // SEO for about page
+  usePageSEO({
+    title: lang === "ar" ? "من نحن - تعرف على مدينة الهواتف" : "About Us - Get to Know City Phones",
+    description: lang === "ar"
+      ? "تعرف على متجر مدينة الهواتف - رؤيتنا ومهمتنا وخدماتنا في عالم الهواتف الذكية والأجهزة الإلكترونية في السعودية"
+      : "Learn about City Phones - our vision, mission and services in the world of smartphones and electronics in Saudi Arabia",
+    lang,
+  });
 
   return (
     <Layout>

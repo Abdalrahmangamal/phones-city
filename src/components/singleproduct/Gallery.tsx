@@ -65,8 +65,6 @@ export default function Gallery({
     ? safeImages
     : [{ url: "/placeholder.svg" }];
 
-  console.log("Original images:", images);
-  console.log("Normalized displayImages:", displayImages);
 
   return (
     <div className="md:w-full">

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import Layout from "@/components/layout/layout";
 import HeroSection from "@/components/public/HeroSection";
 import BannerSection from "@/components/public/BannerSection";
@@ -22,15 +22,36 @@ import useFeaturesStore from "@/store/home/featuresStore";
 import { useLangSync } from "@/hooks/useLangSync";
 import { useHomePageStore } from '@/store/home/homepageStore';
 import { usePopupStore } from '@/store/popupStore';
+import { usePageSEO, jsonLdGenerators } from "@/hooks/usePageSEO";
 
 const NewHome = () => {
   const { fetchHomePage, data } = useHomePageStore();
   const { lang } = useLangSync();
   const { isShowing, showPopup, hidePopup } = usePopupStore();
 
+  // SEO: Dynamic meta tags for the home page
+  const homeJsonLd = useMemo(() => [
+    jsonLdGenerators.organization(lang),
+    jsonLdGenerators.website(lang),
+  ], [lang]);
+
+  usePageSEO({
+    title: lang === "ar"
+      ? "الرئيسية - أفضل العروض على الهواتف والأجهزة الإلكترونية"
+      : "Home - Best Deals on Phones & Electronics",
+    description: lang === "ar"
+      ? "متجر مدينة الهواتف - تسوق أحدث الهواتف الذكية، اللابتوبات، الإكسسوارات والأجهزة الإلكترونية في السعودية. عروض حصرية، تقسيط ميسّر، ضمان وشحن سريع."
+      : "City Phones Store - Shop the latest smartphones, laptops, accessories and electronics in Saudi Arabia. Exclusive offers, easy installments, warranty and fast shipping.",
+    keywords: lang === "ar"
+      ? "هواتف, جوالات, سامسونج, ايفون, ابل, لابتوب, عروض, تقسيط, اكسسوارات, السعودية, مدينة الهواتف"
+      : "phones, smartphones, Samsung, iPhone, Apple, laptop, deals, installments, accessories, Saudi Arabia, City Phones",
+    lang,
+    jsonLd: homeJsonLd,
+  });
+
   useEffect(() => {
     fetchHomePage(lang);
-  }, [lang]);
+  }, [fetchHomePage, lang]);
 
   // Product stores - use separate loading states
   const {
@@ -47,7 +68,7 @@ const NewHome = () => {
 
   const { fetchSliders, sliders } = useHeroSectionStore();
   const { fetchCertificates, certificates } = useCertificateStore();
-  const { fetchCategories } = useCategoriesStore();
+  const fetchCategories = useCategoriesStore((state) => state.fetchCategories);
   const { fetchFeatures, getFeaturesByLanguage } = useFeaturesStore();
 
   // Effect to show popup after a delay only if it hasn't been shown yet AND there are sliders
@@ -75,7 +96,7 @@ const NewHome = () => {
     fetchCertificates();
     fetchCategories(lang);
     fetchFeatures();
-  }, [lang]);
+  }, [fetchBestSellers, fetchCategories, fetchCertificates, fetchFeatures, fetchNewArrivals, fetchOffers, fetchSliders, lang]);
 
   // Features translated by current language
   const langFeatures = getFeaturesByLanguage(lang === "ar" ? "ar" : "en") || [];

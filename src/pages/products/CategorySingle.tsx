@@ -105,10 +105,7 @@ export default function CategorySingle() {
         collectSubCategoryIds(foundCategory);
         setAllCategoryIds(categoryIds);
         
-        console.log("Found category:", foundCategory);
-        console.log("All category IDs to search:", categoryIds);
       } else {
-        console.log("Category not found. ID:", id);
       }
     }
   }, [categories, id]);
@@ -164,10 +161,8 @@ export default function CategorySingle() {
           queryParams.max_price = priceRange[1];
         }
 
-        console.log("Fetching products with params:", queryParams);
         
         if (categoryIdsToFilter.length === 0) {
-          console.log("No category IDs to filter by");
           setCategoryProducts([]);
           setTotalItems(0);
           setTotalPages(1);
@@ -176,7 +171,6 @@ export default function CategorySingle() {
         
         // Fetch products with filters
         const result = await fetchProducts(queryParams, lang);
-        console.log("Products API result:", result);
 
         // Handle response data
         let productsData: Product[] = [];
@@ -198,7 +192,6 @@ export default function CategorySingle() {
           totalCount = result.length;
         } else {
           productsData = [];
-          console.log("No products data found in response");
         }
 
         // Update states
@@ -206,7 +199,6 @@ export default function CategorySingle() {
         setTotalItems(totalCount);
         setTotalPages(Math.ceil(totalCount / itemsPerPage) || 1);
         
-        console.log("Loaded products:", productsData.length);
         
       } catch (error) {
         console.error("Error loading filtered products:", error);
@@ -223,17 +215,14 @@ export default function CategorySingle() {
 
   // Filter handlers
   const handleSortChange = (option: string) => {
-    console.log("Sort option changed:", option);
     setSortOption(option);
   };
 
   const handleCategoryChange = (categoryId: number | null) => {
-    console.log("Category changed:", categoryId);
     setSelectedSubCategory(categoryId);
   };
 
   const handlePriceRangeChange = (minPrice: number | null, maxPrice: number | null) => {
-    console.log("Price range changed:", minPrice, maxPrice);
     setPriceRange([minPrice, maxPrice]);
   };
 

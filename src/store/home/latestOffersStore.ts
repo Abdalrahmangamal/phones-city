@@ -25,6 +25,9 @@ interface LatestOffersState {
 }
 
 const baseUrl = import.meta.env.VITE_BASE_URL.replace(/\/$/, "");
+const LATEST_OFFERS_CACHE_TTL_MS = 60_000;
+const latestOffersCache = new Map<string, { data: Offer[]; fetchedAt: number }>();
+const latestOffersInFlight = new Map<string, Promise<void>>();
 
 export const useLatestOffersStore = create<LatestOffersState>()(
   devtools(
@@ -34,50 +37,69 @@ export const useLatestOffersStore = create<LatestOffersState>()(
       error: null,
 
       fetchOffers: async (lang: string) => {
-        set({ loading: true, error: null });
-        try {
-          const token = localStorage.getItem('token');
-          const response = await axios.get('/api/v1/offers/home', {
-            baseURL: baseUrl,
-            headers: {
-              ...(token && { Authorization: `Bearer ${token}` }),
-              'Accept': 'application/json',
-              'Accept-Language': lang === 'ar' ? 'ar' : 'en',
-              'Content-Type': 'application/json',
-            },
-            params: {
-              limit: 6,
-              simple: true,
-            },
-          });
-
-
-
-
-          if (response.data.status && response.data.data) {
-            const limitedOffers = response.data.data.slice(0, 6);
-            // تأكد من أن الصور تحتوي على رابط كامل
-            const offersWithFullImageUrls = limitedOffers.map((offer: Offer) => ({
-              ...offer,
-              // إذا كانت الصورة رابطًا نسبيًا، أضف الـ base URL
-              image: offer.image
-                ? (offer.image.startsWith('http')
-                  ? offer.image
-                  : `${baseUrl}/storage/${offer.image}`)
-                : '',
-            }));
-
-            set({ offers: offersWithFullImageUrls, loading: false });
-          } else {
-            set({ error: 'Failed to fetch offers: ' + response.data.message, loading: false });
-          }
-        } catch (error: any) {
-          console.error('Error fetching offers:', error);
-          set({
-            error: error.response?.data?.message || error.message || 'Network error',
-            loading: false,
-          });
+        const normalizedLang = lang === "ar" ? "ar" : "en";
+        const cached = latestOffersCache.get(normalizedLang);
+        if (cached && Date.now() - cached.fetchedAt < LATEST_OFFERS_CACHE_TTL_MS) {
+          set({ offers: cached.data, loading: false, error: null });
+          return;
         }
+
+        const pending = latestOffersInFlight.get(normalizedLang);
+        if (pending) {
+          return pending;
+        }
+
+        set({ loading: true, error: null });
+        const request = (async () => {
+          try {
+            const token = localStorage.getItem('token');
+            const response = await axios.get('/api/v1/offers/home', {
+              baseURL: baseUrl,
+              headers: {
+                ...(token && { Authorization: `Bearer ${token}` }),
+                'Accept': 'application/json',
+                'Accept-Language': normalizedLang,
+                'Content-Type': 'application/json',
+              },
+              params: {
+                limit: 6,
+                simple: true,
+              },
+            });
+
+            if (response.data.status && response.data.data) {
+              const limitedOffers = response.data.data.slice(0, 6);
+              const offersWithFullImageUrls = limitedOffers.map((offer: Offer) => ({
+                ...offer,
+                image: offer.image
+                  ? (offer.image.startsWith('http')
+                    ? offer.image
+                    : `${baseUrl}/storage/${offer.image}`)
+                  : '',
+              }));
+
+              latestOffersCache.set(normalizedLang, {
+                data: offersWithFullImageUrls,
+                fetchedAt: Date.now(),
+              });
+
+              set({ offers: offersWithFullImageUrls, loading: false, error: null });
+            } else {
+              set({ error: 'Failed to fetch offers: ' + response.data.message, loading: false });
+            }
+          } catch (error: any) {
+            console.error('Error fetching offers');
+            set({
+              error: error.response?.data?.message || error.message || 'Network error',
+              loading: false,
+            });
+          } finally {
+            latestOffersInFlight.delete(normalizedLang);
+          }
+        })();
+
+        latestOffersInFlight.set(normalizedLang, request);
+        return request;
       },
     }),
     { name: 'LatestOffersStore' }

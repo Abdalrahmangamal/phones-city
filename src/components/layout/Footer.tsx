@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useLangSync } from "@/hooks/useLangSync";
 
@@ -17,50 +17,44 @@ import Google from "../../assets/images/Google.png";
 import amwal from "../../assets/images/amwal.png";
 import emkan from "../../assets/images/emkan.png";
 import payment from "../../assets/images/payment.png";
-import { useAboutStore } from '@/store/aboutusStore'
+import { useAboutStore } from '@/store/aboutusStore';
+
 const Footer: React.FC = () => {
   const { t } = useTranslation();
   const { lang } = useLangSync();
-  const { fetchAbout, data } = useAboutStore()
-  useEffect(() => { fetchAbout(lang) }, [])
+  const fetchAbout = useAboutStore((state) => state.fetchAbout);
+  const data = useAboutStore((state) => state.data);
 
-  const navigate = useNavigate();
+  useEffect(() => {
+    fetchAbout(lang);
+  }, [fetchAbout, lang]);
+
 
   const serviceMenuItems = [
-    { label: t("InstallmentService"), path: "/servces" },
-    { label: t("DeviceExchange"), path: "/servces" },
-    { label: t("DeviceSelling"), path: "/servces" },
-    { label: t("ProgrammingAndMaintenance"), path: "/servces" },
-    { label: t("TelecomAndInternet"), path: "/servces" },
-    { label: t("PremiumCustomerService"), path: "/servces" },
+    { label: t("InstallmentService"), path: `/${lang}/servces` },
+    { label: t("DeviceExchange"), path: `/${lang}/servces` },
+    { label: t("DeviceSelling"), path: `/${lang}/servces` },
+    { label: t("ProgrammingAndMaintenance"), path: `/${lang}/servces` },
+    { label: t("TelecomAndInternet"), path: `/${lang}/servces` },
+    { label: t("PremiumCustomerService"), path: `/${lang}/servces` },
   ];
 
   const aboutMenuItems = [
-    { label: t("WhoWeAre"), path: "/about" },
-    { label: t("Offers"), path: "/offers" },
-    { label: t("OurServices"), path: "/servces" },
-    { label: t("ContactUs"), path: "/contact" },
-    { label: t("Blog") || "المدونة", path: "/blog" },
-    { label: t("TermsAndConditions"), path: "/terms-and-conditions" },
+    { label: t("WhoWeAre"), path: `/${lang}/about` },
+    { label: t("Offers"), path: `/${lang}/offers` },
+    { label: t("OurServices"), path: `/${lang}/servces` },
+    { label: t("ContactUs"), path: `/${lang}/contact` },
+    { label: t("Blog") || "المدونة", path: `/${lang}/blog` },
+    { label: t("TermsAndConditions"), path: `/${lang}/terms-and-conditions` },
   ];
 
   const customerCareMenuItems = [
-    { label: t("WarrantyPolicy"), path: "/warranty-policy" },
-    { label: t("ReturnPolicy"), path: "/return-policy" },
-    { label: t("TermsAndConditions"), path: "/terms-and-conditions" },
-    { label: t("AboutMora"), path: "/about-mora" },
-    { label: t("AboutCoara"), path: "/about-quara" },
+    { label: t("WarrantyPolicy"), path: `/${lang}/warranty-policy` },
+    { label: t("ReturnPolicy"), path: `/${lang}/return-policy` },
+    { label: t("TermsAndConditions"), path: `/${lang}/terms-and-conditions` },
+    { label: t("AboutMora"), path: `/${lang}/about-mora` },
+    { label: t("AboutCoara"), path: `/${lang}/about-quara` },
   ];
-
-  const handleCustomerCareItemClick = (path: string) => {
-    if (path !== "#") {
-      navigate(path);
-    }
-  };
-
-  const handleAboutItemClick = (path: string) => {
-    navigate(path);
-  };
 
   return (
     <footer
@@ -85,19 +79,19 @@ const Footer: React.FC = () => {
               <h3 className="font-[Cairo] font-semibold text-[22px] sm:text-[18px] lg:text-[24px] leading-[150%]">
                 {t("CustomerCare")}
               </h3>
-              <div className="flex flex-col gap-2" dir={lang === "ar" ? "rtl" : "ltr"}
-              >
+              <nav className="flex flex-col gap-2" dir={lang === "ar" ? "rtl" : "ltr"}
+                aria-label={t("CustomerCare")}>
                 {customerCareMenuItems.map((item, i) => (
-                  <button
+                  <Link
                     key={i}
-                    className="text-[#E0E5EB] hover:text-white text-[15px] sm:text-[12px] lg:text-[18px] text-start bg-transparent border-0 p-0 cursor-pointer"
+                    to={item.path}
+                    className="text-[#E0E5EB] hover:text-white text-[15px] sm:text-[12px] lg:text-[18px] text-start"
                     style={{ fontFamily: "Roboto" }}
-                    onClick={() => handleCustomerCareItemClick(item.path)}
                   >
                     {item.label}
-                  </button>
+                  </Link>
                 ))}
-              </div>
+              </nav>
             </div>
 
             {/* About */}
@@ -105,18 +99,18 @@ const Footer: React.FC = () => {
               <h3 className="font-[Cairo] font-semibold text-[22px] sm:text-[18px] lg:text-[24px] leading-[150%]">
                 {t("AboutCityPhones")}
               </h3>
-              <div className="flex flex-col gap-2">
+              <nav className="flex flex-col gap-2" aria-label={t("AboutCityPhones")}>
                 {aboutMenuItems.map((item, i) => (
-                  <button
+                  <Link
                     key={i}
-                    className="text-[#E0E5EB] hover:text-white text-[15px] sm:text-[12px] lg:text-[16px] text-start bg-transparent border-0 p-0 cursor-pointer"
+                    to={item.path}
+                    className="text-[#E0E5EB] hover:text-white text-[15px] sm:text-[12px] lg:text-[16px] text-start"
                     style={{ fontFamily: "Roboto" }}
-                    onClick={() => handleAboutItemClick(item.path)}
                   >
                     {item.label}
-                  </button>
+                  </Link>
                 ))}
-              </div>
+              </nav>
             </div>
 
             {/* Services */}
@@ -124,22 +118,18 @@ const Footer: React.FC = () => {
               <h3 className="font-[Cairo] font-semibold text-[22px] sm:text-[18px] lg:text-[24px] leading-[150%]">
                 {t("CityPhonesServices")}
               </h3>
-              <div className="flex flex-col gap-2">
+              <nav className="flex flex-col gap-2" aria-label={t("CityPhonesServices")}>
                 {serviceMenuItems.map((item, i) => (
-                  <button
+                  <Link
                     key={i}
-                    className="text-[#E0E5EB] hover:text-white text-[15px] sm:text-[12px] lg:text-[16px] text-start bg-transparent border-0 p-0 cursor-pointer"
+                    to={item.path}
+                    className="text-[#E0E5EB] hover:text-white text-[15px] sm:text-[12px] lg:text-[16px] text-start"
                     style={{ fontFamily: "Roboto" }}
-                    onClick={() => {
-                      if (item.path !== "#") {
-                        navigate(item.path);
-                      }
-                    }}
                   >
                     {item.label}
-                  </button>
+                  </Link>
                 ))}
-              </div>
+              </nav>
             </div>
 
             {/* Brand & Socials */}
@@ -159,23 +149,24 @@ const Footer: React.FC = () => {
               <div className="flex justify-start mt-2">
                 <div className="flex items-center gap-2 sm:gap-3 flex-wrap justify-end">
                   {[
-                    { icon: tiktok, url: "https://www.tiktok.com/@madinatalhawatif?_r=1&_t=ZS-92MSlSSc6D2" },
-                    { icon: snapchat, url: "https://www.snapchat.com/add/madinat6100?share_id=qzDj5oOT5kM&locale=ar-SA" },
-                    // { icon: whatsapp, url: "#" },
-                    { icon: x, url: "https://x.com/AlhwatfMdy43074" },
-                    { icon: insta, url: "https://www.instagram.com/cityphone.sa?igsh=cnVoeGpncWF0Mjc5" },
-                    { icon: facebook, url: "https://www.facebook.com/share/14PAhVuoWz7/" }
+                    { icon: tiktok, url: "https://www.tiktok.com/@madinatalhawatif?_r=1&_t=ZS-92MSlSSc6D2", name: "TikTok" },
+                    { icon: snapchat, url: "https://www.snapchat.com/add/madinat6100?share_id=qzDj5oOT5kM&locale=ar-SA", name: "Snapchat" },
+                    // { icon: whatsapp, url: "#", name: "WhatsApp" },
+                    { icon: x, url: "https://x.com/AlhwatfMdy43074", name: "X (Twitter)" },
+                    { icon: insta, url: "https://www.instagram.com/cityphone.sa?igsh=cnVoeGpncWF0Mjc5", name: "Instagram" },
+                    { icon: facebook, url: "https://www.facebook.com/share/14PAhVuoWz7/", name: "Facebook" }
                   ].map((social, i) => (
                     <a
                       key={i}
                       href={social.url}
                       target="_blank"
                       rel="noopener noreferrer"
+                      aria-label={`${lang === "ar" ? "تابعنا على" : "Follow us on"} ${social.name}`}
                       className="w-8 h-8 sm:w-7 sm:h-7 lg:w-9 lg:h-9 rounded-full bg-white flex items-center justify-center transition-all hover:bg-gray-100 hover:shadow-md"
                     >
                       <img
                         src={social.icon}
-                        alt="social"
+                        alt={social.name}
                         className="w-4 h-4 sm:w-5 sm:h-5 object-contain"
                       />
                     </a>

@@ -6,14 +6,14 @@ import { useTranslation } from "react-i18next";
 
 
 export default function Location() {
-    const { t } = useTranslation();
+  const { t } = useTranslation();
 
   const { lang } = useLangSync();
-  const { fetchAbout, data } = useAboutStore();
+  const fetchAbout = useAboutStore((state) => state.fetchAbout);
+  const data = useAboutStore((state) => state.data);
   useEffect(() => {
     fetchAbout(lang);
-  }, [lang]);
-  console.log("dd", data);
+  }, [fetchAbout, lang]);
   return (
     <div className="lg:px-[90px] px-2 pt-20 md:pt-0">
       <div className="flex items-end justify-start gap-[10px]">

@@ -6,6 +6,7 @@ import { useBlogsStore } from "@/store/blogsStore";
 import { useLangSync } from "@/hooks/useLangSync";
 import { useTranslation } from "react-i18next";
 import Loader from "@/components/Loader";
+import { usePageSEO } from "@/hooks/usePageSEO";
 
 export default function Blog() {
   const { t } = useTranslation();
@@ -16,6 +17,18 @@ export default function Blog() {
   useEffect(() => {
     fetchBlogs(lang, currentPage);
   }, [lang, currentPage]);
+
+  // SEO for blog listing page
+  usePageSEO({
+    title: lang === "ar" ? "المدونة - أحدث المقالات والأخبار" : "Blog - Latest Articles & News",
+    description: lang === "ar"
+      ? "تابع مدونة مدينة الهواتف لأحدث المقالات والأخبار عن الهواتف الذكية والتكنولوجيا والعروض الحصرية"
+      : "Follow City Phones blog for the latest articles and news about smartphones, technology, and exclusive offers",
+    keywords: lang === "ar"
+      ? "مدونة, مقالات, هواتف, تكنولوجيا, أخبار, مدينة الهواتف"
+      : "blog, articles, phones, technology, news, City Phones",
+    lang,
+  });
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -122,8 +135,8 @@ export default function Blog() {
                       onClick={() => handlePageChange(currentPage - 1)}
                       disabled={currentPage === 1}
                       className={`group flex items-center gap-2 px-5 py-3 rounded-xl font-medium transition-all duration-300 ${currentPage === 1
-                          ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-                          : "bg-white text-[#211C4D] hover:bg-[#211C4D] hover:text-white shadow-md hover:shadow-lg"
+                        ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                        : "bg-white text-[#211C4D] hover:bg-[#211C4D] hover:text-white shadow-md hover:shadow-lg"
                         }`}
                     >
                       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`w-5 h-5 transition-transform ${lang === "ar" ? "rotate-180 group-hover:translate-x-1" : "group-hover:-translate-x-1"}`}>
@@ -138,8 +151,8 @@ export default function Blog() {
                           key={page}
                           onClick={() => handlePageChange(page)}
                           className={`w-12 h-12 rounded-xl font-semibold text-lg transition-all duration-300 flex items-center justify-center ${currentPage === page
-                              ? "bg-yellow-500 text-[#211C4D] shadow-xl shadow-yellow-500/50 scale-110"
-                              : "bg-white text-[#211C4D] hover:bg-[#211C4D] hover:text-white shadow-md hover:shadow-lg"
+                            ? "bg-yellow-500 text-[#211C4D] shadow-xl shadow-yellow-500/50 scale-110"
+                            : "bg-white text-[#211C4D] hover:bg-[#211C4D] hover:text-white shadow-md hover:shadow-lg"
                             }`}
                         >
                           {page}
@@ -151,8 +164,8 @@ export default function Blog() {
                       onClick={() => handlePageChange(currentPage + 1)}
                       disabled={!pagination || currentPage === pagination.last_page}
                       className={`group flex items-center gap-2 px-5 py-3 rounded-xl font-medium transition-all duration-300 ${!pagination || currentPage === pagination.last_page
-                          ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-                          : "bg-white text-[#211C4D] hover:bg-[#211C4D] hover:text-white shadow-md hover:shadow-lg"
+                        ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                        : "bg-white text-[#211C4D] hover:bg-[#211C4D] hover:text-white shadow-md hover:shadow-lg"
                         }`}
                     >
                       {t("Next")}

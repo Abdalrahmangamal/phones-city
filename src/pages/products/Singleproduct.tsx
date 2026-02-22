@@ -9,11 +9,12 @@ import Loader from '@/components/Loader';
 import Bestseller from "@/components/home/Bestseller";
 import { useParams } from "react-router";
 import { useProductsStore } from '@/store/productsStore';
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import '@/style.css';
 import { useLangSync } from "@/hooks/useLangSync";
 import { usePageStore } from '@/store/customerCareStore';
 import { Link } from "react-router-dom";
+import { usePageSEO, jsonLdGenerators } from "@/hooks/usePageSEO";
 
 export default function ProductPage() {
   const { id } = useParams();
@@ -103,6 +104,35 @@ export default function ProductPage() {
       return false;
     }
   })();
+
+  // SEO: Dynamic meta tags for the product page
+  const productJsonLd = useMemo(() => {
+    if (!product) return undefined;
+    return [
+      jsonLdGenerators.product(product, lang),
+      jsonLdGenerators.breadcrumb([
+        { name: lang === "ar" ? "الرئيسية" : "Home", url: `/${lang}/` },
+        { name: lang === "ar" ? "المنتجات" : "Products", url: `/${lang}/` },
+        { name: product.name, url: `/${lang}/singleproduct/${product.slug || product.id}` },
+      ]),
+    ];
+  }, [product, lang]);
+
+  usePageSEO({
+    title: product?.name || (lang === "ar" ? "تفاصيل المنتج" : "Product Details"),
+    description: (product as any)?.short_description || (product as any)?.description
+      ? ((product as any).short_description || (product as any).description || "").replace(/<[^>]*>/g, "").slice(0, 160)
+      : lang === "ar"
+        ? `${product?.name || ""} - اشتري الآن من مدينة الهواتف بأفضل سعر في السعودية`
+        : `${product?.name || ""} - Buy now from City Phones at the best price in Saudi Arabia`,
+    keywords: product?.name
+      ? `${product.name}, ${(product as any).brand?.name || ""}, ${lang === "ar" ? "شراء, سعر, عروض, مدينة الهواتف" : "buy, price, deals, City Phones"}`
+      : undefined,
+    lang,
+    ogType: "product",
+    ogImage: product?.main_image || (typeof product?.images?.[0] === "string" ? product.images[0] : undefined),
+    jsonLd: productJsonLd,
+  });
 
   return (
     <Layout>

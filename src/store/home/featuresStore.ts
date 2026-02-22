@@ -43,49 +43,75 @@ interface ApiResponse {
   };
 }
 
+const FEATURES_CACHE_TTL_MS = 60_000;
+let featuresCache: { data: StoreFeature[]; fetchedAt: number } | null = null;
+let featuresInFlight: Promise<void> | null = null;
+
 const useFeaturesStore = create<FeaturesState>((set, get) => ({
   features: [],
   loading: false,
   error: null,
 
   fetchFeatures: async () => {
-    set({ loading: true, error: null });
-    
-    try {
-      const baseUrl = import.meta.env.VITE_BASE_URL;
-      const token = localStorage.getItem("token");
-      
-      if (!baseUrl) {
-        throw new Error('VITE_BASE_URL is not defined');
-      }
-      
-      const axiosInstance = axios.create({
-        baseURL: baseUrl,
-        headers: {
-          "Content-Type": "application/json",
-          ...(token && { Authorization: `Bearer ${token}` })
-        },
+    if (featuresCache && Date.now() - featuresCache.fetchedAt < FEATURES_CACHE_TTL_MS) {
+      set({
+        features: featuresCache.data,
+        loading: false,
+        error: null,
       });
-      
-      const response = await axiosInstance.get<ApiResponse>('/api/v1/store-features');
-      
-      if (response.data.status && response.data.data) {
-        set({ 
-          features: response.data.data,
-          loading: false 
-        });
-      } else {
-        set({ 
-          error: response.data.message || 'Failed to fetch features',
-          loading: false 
-        });
-      }
-    } catch (error: any) {
-      set({ 
-        error: error.message || 'Network error occurred',
-        loading: false 
-      });
+      return;
     }
+
+    if (featuresInFlight) {
+      return featuresInFlight;
+    }
+
+    set({ loading: true, error: null });
+
+    featuresInFlight = (async () => {
+      try {
+        const baseUrl = import.meta.env.VITE_BASE_URL;
+        const token = localStorage.getItem("token");
+        
+        if (!baseUrl) {
+          throw new Error('VITE_BASE_URL is not defined');
+        }
+        
+        const axiosInstance = axios.create({
+          baseURL: baseUrl,
+          headers: {
+            "Content-Type": "application/json",
+            ...(token && { Authorization: `Bearer ${token}` })
+          },
+        });
+        
+        const response = await axiosInstance.get<ApiResponse>('/api/v1/store-features');
+        
+        if (response.data.status && response.data.data) {
+          const nextFeatures = Array.isArray(response.data.data) ? response.data.data : [];
+          featuresCache = { data: nextFeatures, fetchedAt: Date.now() };
+          set({ 
+            features: nextFeatures,
+            loading: false,
+            error: null,
+          });
+        } else {
+          set({ 
+            error: response.data.message || 'Failed to fetch features',
+            loading: false 
+          });
+        }
+      } catch (error: any) {
+        set({ 
+          error: error.message || 'Network error occurred',
+          loading: false 
+        });
+      } finally {
+        featuresInFlight = null;
+      }
+    })();
+
+    return featuresInFlight;
   },
 
   getFeatureById: (id: number) => {

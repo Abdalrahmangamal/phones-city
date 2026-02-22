@@ -63,7 +63,6 @@ export const useInstallmentStore = create<InstallmentStore>()(
               installmentData, 
               loading: false 
             });
-            console.log('✅ Data fetched successfully:', installmentData);
           } else {
             throw new Error(data.message || 'No data received');
           }

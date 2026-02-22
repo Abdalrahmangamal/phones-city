@@ -44,11 +44,10 @@ export default function MobileNavbar({
   const { unreadCount } = useNotifications();
 
   const handleSearchClick = () => {
-    console.log("Search button clicked");
     if (onSearchToggle) {
       onSearchToggle();
     } else {
-      console.error("onSearchToggle is not provided");
+      console.error("Search toggle handler is not provided");
     }
   };
 

@@ -35,6 +35,9 @@ import { create } from "zustand";
 import axios from "axios";
 
 const baseUrl = import.meta.env.VITE_BASE_URL;
+const HOME_PAGE_CACHE_TTL_MS = 60_000;
+const homePageCache = new Map<string, { data: HomePageData; fetchedAt: number }>();
+const homePageInFlight = new Map<string, Promise<void>>();
 
 interface HomePageStore {
   data: HomePageData | null;
@@ -55,36 +58,61 @@ export const useHomePageStore = create<HomePageStore>((set, get) => ({
   error: null,
 
   fetchHomePage: async (lang:string) => {
-
-
-    try {
-      set({ loading: true, error: null });
-
-      const token = localStorage.getItem("token");
-
-      const res = await axios.get<HomePageResponse>(
-        `${baseUrl}api/v1/home-page`,
-        {
-          headers: {
-            Authorization: token ? `Bearer ${token}` : "",
-            "Accept-Language": `${lang}`,
-            Accept: "application/json",
-          },
-        }
-      );
-
-      set({
-        data: res.data.data,
-        loading: false,
-      });
-    } catch (err: any) {
-      set({
-        error:
-          err?.response?.data?.message ||
-          "Failed to fetch home page data",
-        loading: false,
-      });
+    const normalizedLang = (lang || "ar").trim() || "ar";
+    const cached = homePageCache.get(normalizedLang);
+    if (cached && Date.now() - cached.fetchedAt < HOME_PAGE_CACHE_TTL_MS) {
+      set({ data: cached.data, loading: false, error: null });
+      return;
     }
+
+    const pending = homePageInFlight.get(normalizedLang);
+    if (pending) {
+      return pending;
+    }
+
+    const request = (async () => {
+      try {
+        set({ loading: true, error: null });
+
+        const token = localStorage.getItem("token");
+
+        const res = await axios.get<HomePageResponse>(
+          `${baseUrl}api/v1/home-page`,
+          {
+            headers: {
+              ...(token ? { Authorization: `Bearer ${token}` } : {}),
+              "Accept-Language": normalizedLang,
+              Accept: "application/json",
+            },
+          }
+        );
+
+        if (res.data?.data) {
+          homePageCache.set(normalizedLang, {
+            data: res.data.data,
+            fetchedAt: Date.now(),
+          });
+        }
+
+        set({
+          data: res.data.data,
+          loading: false,
+          error: null,
+        });
+      } catch (err: any) {
+        set({
+          error:
+            err?.response?.data?.message ||
+            "Failed to fetch home page data",
+          loading: false,
+        });
+      } finally {
+        homePageInFlight.delete(normalizedLang);
+      }
+    })();
+
+    homePageInFlight.set(normalizedLang, request);
+    return request;
   },
 
   // ================= Helpers =================
