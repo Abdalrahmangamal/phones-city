@@ -72,7 +72,7 @@ export default function Informationproduct({ product }: any) {
 
   // معالجة التفاصيل إذا كانت موجودة
   const hasDetails = product?.details && Array.isArray(product.details) && product.details.length > 0;
-  const hasAbout = product?.about && product.about.trim() !== "";
+  const hasAbout = typeof product?.about === "string" && product.about.trim() !== "";
 
   return (
     <div

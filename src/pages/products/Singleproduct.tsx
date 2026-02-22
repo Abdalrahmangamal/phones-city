@@ -21,6 +21,7 @@ export default function ProductPage() {
   const {
     fetchProductbyid,
     response,
+    error: productError,
     fetchBestSellers,
     bestSellerProducts,
     loading: productsLoading
@@ -47,7 +48,7 @@ export default function ProductPage() {
     }
     fetchPage("singlepro", lang);
     fetchBestSellers(lang);
-  }, [id, lang]);
+  }, [fetchBestSellers, fetchPage, fetchProductbyid, id, lang]);
 
   const handleOptionChange = (index: number) => {
     setSelectedOptionIndex(index);
@@ -66,56 +67,40 @@ export default function ProductPage() {
     product.slug === id || String(product.id) === id
   );
 
-  // Show loader if: data not ready yet, or product doesn't match current URL
-  const isLoading = !dataReady || !isCorrectProduct;
+  const productOptions = Array.isArray(product?.options) ? product.options : [];
+  const hasOptions = productOptions.length > 0;
+  const safeSelectedOptionIndex =
+    selectedOptionIndex >= 0 && selectedOptionIndex < productOptions.length
+      ? selectedOptionIndex
+      : 0;
+  const selectedVariant = hasOptions ? productOptions[safeSelectedOptionIndex] : null;
 
-  // إذا كان لا يزال التحميل جارياً أو المنتج مش بتاع الـ URL الحالي
-  if (isLoading) {
-    return (
-      <Layout>
-        <Loader />
-      </Layout>
-    );
-  }
-
-  // إذا كان المنتج غير موجود بعد التحميل
-  if (dataReady && !product) {
-    return (
-      <Layout>
-        <div className="min-h-screen flex items-center justify-center">
-          <p className="text-lg text-gray-500">
-            {lang === "ar" ? "المنتج غير موجود" : "Product not found"}
-          </p>
-        </div>
-      </Layout>
-    );
-  }
-
-  const hasOptions = product?.options && Array.isArray(product.options) && product.options.length > 0;
-
-  // تحديد إذا كان المنتج غير متوفر
-  const isOutOfStock = (() => {
-    try {
-      const selectedVariant = hasOptions ? product.options[selectedOptionIndex] : null;
-      const stockQuantity = selectedVariant?.quantity ?? product?.quantity ?? 0;
-      const stockStatus = selectedVariant?.stock_status ?? product?.stock_status ?? "in_stock";
-      return stockQuantity <= 0 || stockStatus === "out_of_stock" || stockStatus === "unavailable";
-    } catch {
-      return false;
+  // Guard against stale option index when navigating between products with different variant counts
+  useEffect(() => {
+    if (selectedOptionIndex !== safeSelectedOptionIndex) {
+      setSelectedOptionIndex(safeSelectedOptionIndex);
     }
-  })();
+  }, [safeSelectedOptionIndex, selectedOptionIndex]);
+
+  // Show loader only while the fetch is in progress.
+  // If the fetch fails, render an error/not-found state instead of hanging on the loader forever.
+  const isLoading = !dataReady;
 
   // SEO: Dynamic meta tags for the product page
   const productJsonLd = useMemo(() => {
     if (!product) return undefined;
-    return [
-      jsonLdGenerators.product(product, lang),
-      jsonLdGenerators.breadcrumb([
-        { name: lang === "ar" ? "الرئيسية" : "Home", url: `/${lang}/` },
-        { name: lang === "ar" ? "المنتجات" : "Products", url: `/${lang}/` },
-        { name: product.name, url: `/${lang}/singleproduct/${product.slug || product.id}` },
-      ]),
-    ];
+    try {
+      return [
+        jsonLdGenerators.product(product, lang),
+        jsonLdGenerators.breadcrumb([
+          { name: lang === "ar" ? "الرئيسية" : "Home", url: `/${lang}/` },
+          { name: lang === "ar" ? "المنتجات" : "Products", url: `/${lang}/` },
+          { name: product.name, url: `/${lang}/singleproduct/${product.slug || product.id}` },
+        ]),
+      ];
+    } catch {
+      return undefined;
+    }
   }, [product, lang]);
 
   usePageSEO({
@@ -133,6 +118,57 @@ export default function ProductPage() {
     ogImage: product?.main_image || (typeof product?.images?.[0] === "string" ? product.images[0] : undefined),
     jsonLd: productJsonLd,
   });
+
+  // إذا كان لا يزال التحميل جارياً أو المنتج مش بتاع الـ URL الحالي
+  if (isLoading) {
+    return (
+      <Layout>
+        <Loader />
+      </Layout>
+    );
+  }
+
+  // إذا حدث خطأ أثناء جلب المنتج (مثلاً 404 / 429)
+  if (dataReady && productError) {
+    return (
+      <Layout>
+        <div className="min-h-screen flex items-center justify-center px-4">
+          <div className="text-center">
+            <p className="text-lg text-gray-500">
+              {lang === "ar" ? "تعذر تحميل المنتج" : "Unable to load product"}
+            </p>
+            <p className="text-sm text-gray-400 mt-2">
+              {productError}
+            </p>
+          </div>
+        </div>
+      </Layout>
+    );
+  }
+
+  // إذا كان المنتج غير موجود بعد التحميل أو لا يطابق الـ URL الحالي
+  if (dataReady && (!product || !isCorrectProduct)) {
+    return (
+      <Layout>
+        <div className="min-h-screen flex items-center justify-center">
+          <p className="text-lg text-gray-500">
+            {lang === "ar" ? "المنتج غير موجود" : "Product not found"}
+          </p>
+        </div>
+      </Layout>
+    );
+  }
+
+  // تحديد إذا كان المنتج غير متوفر
+  const isOutOfStock = (() => {
+    try {
+      const stockQuantity = selectedVariant?.quantity ?? product?.quantity ?? 0;
+      const stockStatus = selectedVariant?.stock_status ?? product?.stock_status ?? "in_stock";
+      return stockQuantity <= 0 || stockStatus === "out_of_stock" || stockStatus === "unavailable";
+    } catch {
+      return false;
+    }
+  })();
 
   return (
     <Layout>
@@ -172,9 +208,9 @@ export default function ProductPage() {
             <Gallery
               images={
                 hasOptions &&
-                  product.options[selectedOptionIndex].images &&
-                  product.options[selectedOptionIndex].images.length > 0
-                  ? product.options[selectedOptionIndex].images
+                  selectedVariant?.images &&
+                  selectedVariant.images.length > 0
+                  ? selectedVariant.images
                   : (product.images && product.images.length > 0
                     ? product.images
                     : (product.main_image ? [product.main_image] : []))
@@ -182,9 +218,8 @@ export default function ProductPage() {
               discountPercent={
                 (() => {
                   try {
-                    const opt = hasOptions ? product.options[selectedOptionIndex] : null;
-                    const ori = opt ? opt.original_price : product.original_price;
-                    const fin = opt ? opt.final_price : product.final_price;
+                    const ori = selectedVariant ? selectedVariant.original_price : product.original_price;
+                    const fin = selectedVariant ? selectedVariant.final_price : product.final_price;
                     const o = ori ? Number(String(ori).replace(/,/g, "")) : 0;
                     const f = fin ? Number(String(fin).replace(/,/g, "")) : 0;
                     return o > 0 && f < o ? Math.round(((o - f) / o) * 100) : 0;
@@ -199,7 +234,7 @@ export default function ProductPage() {
             <Productdetails
               product={product}
               handleindexchange={handleOptionChange}
-              selectedOptionIndex={selectedOptionIndex}
+              selectedOptionIndex={safeSelectedOptionIndex}
               isOutOfStock={isOutOfStock} // تمرير حالة المخزون هنا أيضاً
             />
           </div>

@@ -507,7 +507,7 @@ export default function Header() {
                         <DropdownMenuItem
                           key={fav.id}
                           className="flex gap-3 rounded-none border-b border-gray-100 last:border-0 py-2.5 px-4 cursor-pointer focus:bg-[#211C4D]/5"
-                          onSelect={() => navigate(`/${lang}/singleproduct/${fav.product?.id}`)}
+                          onSelect={() => navigate(`/${lang}/singleproduct/${fav.product?.slug || fav.product?.id}`)}
                         >
                           <div className="w-12 h-12 rounded-lg bg-gray-100 overflow-hidden shrink-0">
                             {fav.product?.main_image ? (
@@ -679,7 +679,7 @@ export default function Header() {
                         {cartItems.map((item) => (
                           <li key={item.id} className="flex gap-3 p-4 hover:bg-gray-50/80 transition-colors">
                             <Link
-                              to={`/${lang}/singleproduct/${item.product?.id}`}
+                              to={`/${lang}/singleproduct/${item.product?.slug || item.product?.id}`}
                               onClick={() => setCartSheetOpen(false)}
                               className="w-16 h-16 rounded-xl bg-gray-100 overflow-hidden shrink-0 flex items-center justify-center"
                             >
@@ -691,7 +691,7 @@ export default function Header() {
                             </Link>
                             <div className="flex-1 min-w-0">
                               <Link
-                                to={`/${lang}/singleproduct/${item.product?.id}`}
+                                to={`/${lang}/singleproduct/${item.product?.slug || item.product?.id}`}
                                 onClick={() => setCartSheetOpen(false)}
                                 className="font-medium text-[#211C4D] text-sm line-clamp-2 hover:text-[#2AA0DC]"
                               >

@@ -279,10 +279,12 @@ export const useProductsStore = create<PageState>((set) => ({
 
       set({
         response: res.data.data,
+        error: null,
         loading: false,
       });
     } catch (err: any) {
       set({
+        response: null,
         error: err?.response?.data?.message || "Something went wrong",
         loading: false,
       });
