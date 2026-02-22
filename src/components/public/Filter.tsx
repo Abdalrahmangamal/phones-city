@@ -101,9 +101,9 @@ const Filter: React.FC<FilterProps> = ({
   const categoryLabel = (cat?: CategoryLike | null) =>
     cat
       ? (isRTL ? normalizeText(cat.name_ar) : normalizeText(cat.name_en)) ||
-        normalizeText(cat.name) ||
-        normalizeText(cat.slug) ||
-        `${isRTL ? "فئة" : "Category"} ${cat.id}`
+      normalizeText(cat.name) ||
+      normalizeText(cat.slug) ||
+      `${isRTL ? "فئة" : "Category"} ${cat.id}`
       : "";
 
   const flatCategories = useMemo(() => {
@@ -253,279 +253,293 @@ const Filter: React.FC<FilterProps> = ({
       </button>
 
       {open && (
-        <div className={`absolute top-[calc(100%+10px)] z-40 w-full rounded-2xl border border-[#211C4D]/10 bg-white shadow-[0_18px_50px_-20px_rgba(33,28,77,0.35)] ${isRTL ? "right-0" : "left-0"}`}>
-          <div className="px-4 py-3 border-b border-[#EEF2F6] bg-gradient-to-r from-[#FAFBFF] to-white flex items-center justify-between gap-2">
-            <div>
-              <p className="text-sm font-semibold text-[#211C4D]">{title || tf("Filter", "الفلتر", "Filter")}</p>
-              <p className="text-xs text-[#667085]">
-                {activeCount > 0 ? `${activeCount} ${isRTL ? "فلاتر مفعلة" : "active filters"}` : (isRTL ? "خصص النتائج" : "Customize results")}
-              </p>
+        <>
+          {/* Mobile Overlay */}
+          <div className="fixed inset-0 z-[60] bg-black/40 backdrop-blur-sm md:hidden transition-opacity" aria-hidden="true" onClick={() => setOpen(false)} />
+
+          {/* Filter Container: Bottom Sheet (Mobile) / Absolute Dropdown (Desktop) */}
+          <div className={`fixed inset-x-0 bottom-0 z-[70] w-full flex flex-col rounded-t-3xl bg-white shadow-[0_-8px_30px_rgba(0,0,0,0.12)] transition-transform duration-300 
+            md:absolute md:top-[calc(100%+8px)] md:bottom-auto md:w-[350px] md:rounded-2xl md:border md:border-[#211C4D]/10 md:shadow-[0_18px_50px_-20px_rgba(33,28,77,0.35)] 
+            ${isRTL ? "md:right-0 md:left-auto" : "md:left-0 md:right-auto"}`}>
+
+            {/* Grab Handle for Mobile */}
+            <div className="md:hidden flex justify-center pt-3 pb-1 shrink-0">
+              <div className="w-12 h-1.5 bg-gray-200 rounded-full"></div>
             </div>
-            <div className="flex items-center gap-2">
-              {activeCount > 0 && (
+
+            <div className="px-4 py-3 border-b border-[#EEF2F6] bg-gradient-to-r from-[#FAFBFF] to-white flex items-center justify-between gap-2 md:rounded-t-2xl">
+              <div>
+                <p className="text-sm font-semibold text-[#211C4D]">{title || tf("Filter", "الفلتر", "Filter")}</p>
+                <p className="text-xs text-[#667085]">
+                  {activeCount > 0 ? `${activeCount} ${isRTL ? "فلاتر مفعلة" : "active filters"}` : (isRTL ? "خصص النتائج" : "Customize results")}
+                </p>
+              </div>
+              <div className="flex items-center gap-2">
+                {activeCount > 0 && (
+                  <button
+                    type="button"
+                    onClick={resetAll}
+                    className="inline-flex items-center gap-1 rounded-full border border-[#E4E7EC] px-2.5 py-1 text-xs text-[#344054] hover:bg-[#F9FAFB]"
+                  >
+                    <RotateCcw className="w-3.5 h-3.5" />
+                    {tf("resetFilters", "إعادة ضبط", "Reset")}
+                  </button>
+                )}
                 <button
                   type="button"
-                  onClick={resetAll}
-                  className="inline-flex items-center gap-1 rounded-full border border-[#E4E7EC] px-2.5 py-1 text-xs text-[#344054] hover:bg-[#F9FAFB]"
+                  onClick={() => setOpen(false)}
+                  className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-[#E4E7EC] hover:bg-[#F9FAFB]"
+                  aria-label={isRTL ? "إغلاق" : "Close"}
                 >
-                  <RotateCcw className="w-3.5 h-3.5" />
-                  {tf("resetFilters", "إعادة ضبط", "Reset")}
+                  <X className="w-4 h-4 text-[#344054]" />
                 </button>
-              )}
-              <button
-                type="button"
-                onClick={() => setOpen(false)}
-                className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-[#E4E7EC] hover:bg-[#F9FAFB]"
-                aria-label={isRTL ? "إغلاق" : "Close"}
-              >
-                <X className="w-4 h-4 text-[#344054]" />
-              </button>
-            </div>
-          </div>
-
-          <div className="max-h-[70vh] overflow-y-auto p-3 space-y-3">
-            {activeCount > 0 && (
-              <div className="flex flex-wrap gap-2">
-                {localSort && (
-                  <button
-                    type="button"
-                    onClick={() => setSortValue("")}
-                    className="inline-flex items-center gap-1.5 rounded-full border border-[#DCE7F3] bg-[#F7FBFF] px-3 py-1 text-xs text-[#344054]"
-                  >
-                    {tf("SortBy", "الترتيب", "Sort")}: {sortLabel}
-                    <X className="w-3 h-3" />
-                  </button>
-                )}
-                {localCategory !== null && selectedCategoryObj && (
-                  <button
-                    type="button"
-                    onClick={() => setCategoryValue(null)}
-                    className="inline-flex items-center gap-1.5 rounded-full border border-[#DCE7F3] bg-[#F7FBFF] px-3 py-1 text-xs text-[#344054]"
-                  >
-                    {tf("Categories", "الفئات", "Categories")}: {categoryLabel(selectedCategoryObj)}
-                    <X className="w-3 h-3" />
-                  </button>
-                )}
-                {(activeMin !== null || activeMax !== null) && (
-                  <button
-                    type="button"
-                    onClick={resetPriceRange}
-                    className="inline-flex items-center gap-1.5 rounded-full border border-[#DCE7F3] bg-[#F7FBFF] px-3 py-1 text-xs text-[#344054]"
-                  >
-                    {tf("Price", "السعر", "Price")}: {(activeMin ?? minPrice).toLocaleString()} - {(activeMax ?? maxPrice).toLocaleString()}
-                    <X className="w-3 h-3" />
-                  </button>
-                )}
               </div>
-            )}
-
-            <div className="rounded-2xl border border-[#EEF2F6] overflow-hidden">
-              <button type="button" className="w-full px-4 py-3 flex items-center justify-between bg-[#FBFCFE]" onClick={() => setSortOpen((v) => !v)}>
-                <div className="text-start">
-                  <p className="text-sm font-semibold text-[#211C4D]">{tf("SortBy", "الترتيب", "Sort by")}</p>
-                  <p className="text-xs text-[#667085]">{sortLabel}</p>
-                </div>
-                <ChevronDown className={`w-4 h-4 text-[#344054] transition-transform ${sortOpen ? "rotate-180" : ""}`} />
-              </button>
-              {sortOpen && (
-                <div className="p-3 space-y-2">
-                  {sortOptions.map((opt) => {
-                    const selected = localSort === opt.id;
-                    return (
-                      <button
-                        key={opt.id || "default"}
-                        type="button"
-                        onClick={() => setSortValue(opt.id)}
-                        className={`w-full rounded-xl border px-3 py-2.5 text-start transition-all ${selected ? "border-[#2AA0DC]/35 bg-[#EAF8FF]" : "border-[#EEF2F6] hover:bg-[#FAFBFC]"}`}
-                      >
-                        <div className="flex items-center gap-3">
-                          <span className={`inline-flex h-5 w-5 items-center justify-center rounded-full border ${selected ? "bg-[#2AA0DC] border-[#2AA0DC]" : "border-[#D0D5DD]"}`}>
-                            {selected && <Check className="w-3 h-3 text-white" />}
-                          </span>
-                          <span className={`text-sm ${selected ? "font-semibold text-[#211C4D]" : "text-[#344054]"}`}>{opt.label}</span>
-                        </div>
-                      </button>
-                    );
-                  })}
-                </div>
-              )}
             </div>
 
-            <div className="rounded-2xl border border-[#EEF2F6] overflow-hidden">
-              <button type="button" className="w-full px-4 py-3 flex items-center justify-between bg-[#FBFCFE]" onClick={() => setCategoryOpen((v) => !v)}>
-                <div className="text-start">
-                  <p className="text-sm font-semibold text-[#211C4D]">{tf("Categories", "الفئات", "Categories")}</p>
-                  <p className="text-xs text-[#667085] truncate max-w-[220px]">
-                    {localCategory !== null && selectedCategoryObj ? categoryLabel(selectedCategoryObj) : tf("All", "الكل", "All")}
-                  </p>
-                </div>
-                <ChevronDown className={`w-4 h-4 text-[#344054] transition-transform ${categoryOpen ? "rotate-180" : ""}`} />
-              </button>
-              {categoryOpen && (
-                <div className="p-3 space-y-2">
-                  {showCategorySearch && categorySource.length > 6 && (
-                    <div className="relative">
-                      <Search className={`w-4 h-4 text-[#667085] absolute top-1/2 -translate-y-1/2 ${isRTL ? "right-3" : "left-3"}`} />
-                      <input
-                        type="text"
-                        value={categorySearch}
-                        onChange={(e) => setCategorySearch(e.target.value)}
-                        placeholder={tf("Search", "ابحث عن فئة", "Search category")}
-                        className={`w-full rounded-xl border border-[#E4E7EC] py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#2AA0DC]/25 ${isRTL ? "pr-9 pl-3" : "pl-9 pr-3"}`}
-                      />
-                    </div>
+            <div className="flex-1 overflow-y-auto p-4 md:p-3 space-y-4 md:space-y-3 max-h-[85vh] md:max-h-[70vh] pb-8 md:pb-3">
+              {activeCount > 0 && (
+                <div className="flex flex-wrap gap-2">
+                  {localSort && (
+                    <button
+                      type="button"
+                      onClick={() => setSortValue("")}
+                      className="inline-flex items-center gap-1.5 rounded-full border border-[#DCE7F3] bg-[#F7FBFF] px-3 py-1 text-xs text-[#344054]"
+                    >
+                      {tf("SortBy", "الترتيب", "Sort")}: {sortLabel}
+                      <X className="w-3 h-3" />
+                    </button>
                   )}
-
-                  <div className="max-h-[230px] overflow-y-auto space-y-2">
+                  {localCategory !== null && selectedCategoryObj && (
                     <button
                       type="button"
                       onClick={() => setCategoryValue(null)}
-                      className={`w-full rounded-xl border px-3 py-2.5 text-start ${localCategory === null ? "border-[#2AA0DC]/35 bg-[#EAF8FF]" : "border-[#EEF2F6] hover:bg-[#FAFBFC]"}`}
+                      className="inline-flex items-center gap-1.5 rounded-full border border-[#DCE7F3] bg-[#F7FBFF] px-3 py-1 text-xs text-[#344054]"
                     >
-                      <div className="flex items-center gap-3">
-                        <span className={`inline-flex h-5 w-5 items-center justify-center rounded-full border ${localCategory === null ? "bg-[#2AA0DC] border-[#2AA0DC]" : "border-[#D0D5DD]"}`}>
-                          {localCategory === null && <Check className="w-3 h-3 text-white" />}
-                        </span>
-                        <span className="text-sm text-[#344054]">{tf("All", "الكل", "All")}</span>
-                      </div>
+                      {tf("Categories", "الفئات", "Categories")}: {categoryLabel(selectedCategoryObj)}
+                      <X className="w-3 h-3" />
                     </button>
+                  )}
+                  {(activeMin !== null || activeMax !== null) && (
+                    <button
+                      type="button"
+                      onClick={resetPriceRange}
+                      className="inline-flex items-center gap-1.5 rounded-full border border-[#DCE7F3] bg-[#F7FBFF] px-3 py-1 text-xs text-[#344054]"
+                    >
+                      {tf("Price", "السعر", "Price")}: {(activeMin ?? minPrice).toLocaleString()} - {(activeMax ?? maxPrice).toLocaleString()}
+                      <X className="w-3 h-3" />
+                    </button>
+                  )}
+                </div>
+              )}
 
-                    {filteredCategories.map((cat) => {
-                      const selected = localCategory === cat.id;
+              <div className="rounded-2xl border border-[#EEF2F6] overflow-hidden">
+                <button type="button" className="w-full px-4 py-3 flex items-center justify-between bg-[#FBFCFE]" onClick={() => setSortOpen((v) => !v)}>
+                  <div className="text-start">
+                    <p className="text-sm font-semibold text-[#211C4D]">{tf("SortBy", "الترتيب", "Sort by")}</p>
+                    <p className="text-xs text-[#667085]">{sortLabel}</p>
+                  </div>
+                  <ChevronDown className={`w-4 h-4 text-[#344054] transition-transform ${sortOpen ? "rotate-180" : ""}`} />
+                </button>
+                {sortOpen && (
+                  <div className="p-3 space-y-2">
+                    {sortOptions.map((opt) => {
+                      const selected = localSort === opt.id;
                       return (
                         <button
-                          key={cat.id}
+                          key={opt.id || "default"}
                           type="button"
-                          onClick={() => setCategoryValue(cat.id)}
-                          className={`w-full rounded-xl border px-3 py-2.5 text-start ${selected ? "border-[#2AA0DC]/35 bg-[#EAF8FF]" : "border-[#EEF2F6] hover:bg-[#FAFBFC]"}`}
+                          onClick={() => setSortValue(opt.id)}
+                          className={`w-full rounded-xl border px-3 py-2.5 text-start transition-all ${selected ? "border-[#2AA0DC]/35 bg-[#EAF8FF]" : "border-[#EEF2F6] hover:bg-[#FAFBFC]"}`}
                         >
                           <div className="flex items-center gap-3">
                             <span className={`inline-flex h-5 w-5 items-center justify-center rounded-full border ${selected ? "bg-[#2AA0DC] border-[#2AA0DC]" : "border-[#D0D5DD]"}`}>
                               {selected && <Check className="w-3 h-3 text-white" />}
                             </span>
-                            <span className={`text-sm truncate ${selected ? "font-semibold text-[#211C4D]" : "text-[#344054]"}`}>{categoryLabel(cat)}</span>
-                            {Array.isArray(cat.children) && cat.children.length > 0 && (
-                              <span className="ms-auto text-[10px] rounded-full bg-[#F2F4F7] px-2 py-0.5 text-[#667085]">
-                                {cat.children.length}
-                              </span>
-                            )}
+                            <span className={`text-sm ${selected ? "font-semibold text-[#211C4D]" : "text-[#344054]"}`}>{opt.label}</span>
                           </div>
                         </button>
                       );
                     })}
+                  </div>
+                )}
+              </div>
 
-                    {filteredCategories.length === 0 && (
-                      <div className="rounded-xl border border-dashed border-[#D9E2EC] px-4 py-4 text-center text-sm text-[#667085]">
-                        {isRTL ? "لا توجد نتائج للفئات" : "No categories found"}
+              <div className="rounded-2xl border border-[#EEF2F6] overflow-hidden">
+                <button type="button" className="w-full px-4 py-3 flex items-center justify-between bg-[#FBFCFE]" onClick={() => setCategoryOpen((v) => !v)}>
+                  <div className="text-start">
+                    <p className="text-sm font-semibold text-[#211C4D]">{tf("Categories", "الفئات", "Categories")}</p>
+                    <p className="text-xs text-[#667085] truncate max-w-[220px]">
+                      {localCategory !== null && selectedCategoryObj ? categoryLabel(selectedCategoryObj) : tf("All", "الكل", "All")}
+                    </p>
+                  </div>
+                  <ChevronDown className={`w-4 h-4 text-[#344054] transition-transform ${categoryOpen ? "rotate-180" : ""}`} />
+                </button>
+                {categoryOpen && (
+                  <div className="p-3 space-y-2">
+                    {showCategorySearch && categorySource.length > 6 && (
+                      <div className="relative">
+                        <Search className={`w-4 h-4 text-[#667085] absolute top-1/2 -translate-y-1/2 ${isRTL ? "right-3" : "left-3"}`} />
+                        <input
+                          type="text"
+                          value={categorySearch}
+                          onChange={(e) => setCategorySearch(e.target.value)}
+                          placeholder={tf("Search", "ابحث عن فئة", "Search category")}
+                          className={`w-full rounded-xl border border-[#E4E7EC] py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#2AA0DC]/25 ${isRTL ? "pr-9 pl-3" : "pl-9 pr-3"}`}
+                        />
                       </div>
                     )}
-                  </div>
-                </div>
-              )}
-            </div>
 
-            <div className="rounded-2xl border border-[#EEF2F6] overflow-hidden">
-              <button type="button" className="w-full px-4 py-3 flex items-center justify-between bg-[#FBFCFE]" onClick={() => setPriceOpen((v) => !v)}>
-                <div className="text-start">
-                  <p className="text-sm font-semibold text-[#211C4D]">{tf("Price", "السعر", "Price")}</p>
-                  <p className="text-xs text-[#667085]">
-                    {activeMin !== null || activeMax !== null ? `${(activeMin ?? minPrice).toLocaleString()} - ${(activeMax ?? maxPrice).toLocaleString()}` : (isRTL ? "كل الأسعار" : "All prices")}
-                  </p>
-                </div>
-                <ChevronDown className={`w-4 h-4 text-[#344054] transition-transform ${priceOpen ? "rotate-180" : ""}`} />
-              </button>
-              {priceOpen && (
-                <div className="p-3 space-y-3">
-                  <div className="rounded-xl border border-[#EEF2F6] p-3 bg-white">
-                    <div className="relative h-2 rounded-full bg-[#EEF2F6] overflow-hidden">
-                      <div
-                        className="absolute inset-y-0 rounded-full bg-gradient-to-r from-[#211C4D] to-[#2AA0DC]"
-                        style={{ left: `${Math.max(0, minPercent)}%`, right: `${Math.max(0, 100 - maxPercent)}%` }}
-                      />
+                    <div className="max-h-[230px] overflow-y-auto space-y-2">
+                      <button
+                        type="button"
+                        onClick={() => setCategoryValue(null)}
+                        className={`w-full rounded-xl border px-3 py-2.5 text-start ${localCategory === null ? "border-[#2AA0DC]/35 bg-[#EAF8FF]" : "border-[#EEF2F6] hover:bg-[#FAFBFC]"}`}
+                      >
+                        <div className="flex items-center gap-3">
+                          <span className={`inline-flex h-5 w-5 items-center justify-center rounded-full border ${localCategory === null ? "bg-[#2AA0DC] border-[#2AA0DC]" : "border-[#D0D5DD]"}`}>
+                            {localCategory === null && <Check className="w-3 h-3 text-white" />}
+                          </span>
+                          <span className="text-sm text-[#344054]">{tf("All", "الكل", "All")}</span>
+                        </div>
+                      </button>
+
+                      {filteredCategories.map((cat) => {
+                        const selected = localCategory === cat.id;
+                        return (
+                          <button
+                            key={cat.id}
+                            type="button"
+                            onClick={() => setCategoryValue(cat.id)}
+                            className={`w-full rounded-xl border px-3 py-2.5 text-start ${selected ? "border-[#2AA0DC]/35 bg-[#EAF8FF]" : "border-[#EEF2F6] hover:bg-[#FAFBFC]"}`}
+                          >
+                            <div className="flex items-center gap-3">
+                              <span className={`inline-flex h-5 w-5 items-center justify-center rounded-full border ${selected ? "bg-[#2AA0DC] border-[#2AA0DC]" : "border-[#D0D5DD]"}`}>
+                                {selected && <Check className="w-3 h-3 text-white" />}
+                              </span>
+                              <span className={`text-sm truncate ${selected ? "font-semibold text-[#211C4D]" : "text-[#344054]"}`}>{categoryLabel(cat)}</span>
+                              {Array.isArray(cat.children) && cat.children.length > 0 && (
+                                <span className="ms-auto text-[10px] rounded-full bg-[#F2F4F7] px-2 py-0.5 text-[#667085]">
+                                  {cat.children.length}
+                                </span>
+                              )}
+                            </div>
+                          </button>
+                        );
+                      })}
+
+                      {filteredCategories.length === 0 && (
+                        <div className="rounded-xl border border-dashed border-[#D9E2EC] px-4 py-4 text-center text-sm text-[#667085]">
+                          {isRTL ? "لا توجد نتائج للفئات" : "No categories found"}
+                        </div>
+                      )}
                     </div>
+                  </div>
+                )}
+              </div>
 
-                    <div className="grid grid-cols-2 gap-2 mt-3">
-                      <div className="relative">
+              <div className="rounded-2xl border border-[#EEF2F6] overflow-hidden">
+                <button type="button" className="w-full px-4 py-3 flex items-center justify-between bg-[#FBFCFE]" onClick={() => setPriceOpen((v) => !v)}>
+                  <div className="text-start">
+                    <p className="text-sm font-semibold text-[#211C4D]">{tf("Price", "السعر", "Price")}</p>
+                    <p className="text-xs text-[#667085]">
+                      {activeMin !== null || activeMax !== null ? `${(activeMin ?? minPrice).toLocaleString()} - ${(activeMax ?? maxPrice).toLocaleString()}` : (isRTL ? "كل الأسعار" : "All prices")}
+                    </p>
+                  </div>
+                  <ChevronDown className={`w-4 h-4 text-[#344054] transition-transform ${priceOpen ? "rotate-180" : ""}`} />
+                </button>
+                {priceOpen && (
+                  <div className="p-3 space-y-3">
+                    <div className="rounded-xl border border-[#EEF2F6] p-3 bg-white">
+                      <div className="relative h-2 rounded-full bg-[#EEF2F6] overflow-hidden">
+                        <div
+                          className="absolute inset-y-0 rounded-full bg-gradient-to-r from-[#211C4D] to-[#2AA0DC]"
+                          style={{ left: `${Math.max(0, minPercent)}%`, right: `${Math.max(0, 100 - maxPercent)}%` }}
+                        />
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-2 mt-3">
+                        <div className="relative">
+                          <input
+                            type="number"
+                            min={minPrice}
+                            max={draftRange[1] - priceStep}
+                            step={priceStep}
+                            value={draftRange[0]}
+                            onChange={(e) => setDraftRange(normalizeRange(Number(e.target.value), draftRange[1]))}
+                            className={`w-full rounded-lg border border-[#E4E7EC] py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#2AA0DC]/25 ${isRTL ? "pr-3 pl-8" : "pl-3 pr-8"}`}
+                          />
+                          <SaudiRiyalIcon className={`w-4 h-4 text-[#98A2B3] absolute top-1/2 -translate-y-1/2 ${isRTL ? "left-2.5" : "right-2.5"}`} />
+                        </div>
+                        <div className="relative">
+                          <input
+                            type="number"
+                            min={draftRange[0] + priceStep}
+                            max={maxPrice}
+                            step={priceStep}
+                            value={draftRange[1]}
+                            onChange={(e) => setDraftRange(normalizeRange(draftRange[0], Number(e.target.value)))}
+                            className={`w-full rounded-lg border border-[#E4E7EC] py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#2AA0DC]/25 ${isRTL ? "pr-3 pl-8" : "pl-3 pr-8"}`}
+                          />
+                          <SaudiRiyalIcon className={`w-4 h-4 text-[#98A2B3] absolute top-1/2 -translate-y-1/2 ${isRTL ? "left-2.5" : "right-2.5"}`} />
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-2 mt-3">
                         <input
-                          type="number"
+                          type="range"
                           min={minPrice}
-                          max={draftRange[1] - priceStep}
+                          max={maxPrice}
                           step={priceStep}
                           value={draftRange[0]}
                           onChange={(e) => setDraftRange(normalizeRange(Number(e.target.value), draftRange[1]))}
-                          className={`w-full rounded-lg border border-[#E4E7EC] py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#2AA0DC]/25 ${isRTL ? "pr-3 pl-8" : "pl-3 pr-8"}`}
+                          className="w-full accent-[#211C4D]"
                         />
-                        <SaudiRiyalIcon className={`w-4 h-4 text-[#98A2B3] absolute top-1/2 -translate-y-1/2 ${isRTL ? "left-2.5" : "right-2.5"}`} />
-                      </div>
-                      <div className="relative">
                         <input
-                          type="number"
-                          min={draftRange[0] + priceStep}
+                          type="range"
+                          min={minPrice}
                           max={maxPrice}
                           step={priceStep}
                           value={draftRange[1]}
                           onChange={(e) => setDraftRange(normalizeRange(draftRange[0], Number(e.target.value)))}
-                          className={`w-full rounded-lg border border-[#E4E7EC] py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#2AA0DC]/25 ${isRTL ? "pr-3 pl-8" : "pl-3 pr-8"}`}
+                          className="w-full accent-[#2AA0DC]"
                         />
-                        <SaudiRiyalIcon className={`w-4 h-4 text-[#98A2B3] absolute top-1/2 -translate-y-1/2 ${isRTL ? "left-2.5" : "right-2.5"}`} />
+                      </div>
+
+                      <div className="flex flex-wrap gap-2 mt-3">
+                        <button type="button" onClick={() => resetPriceRange()} className="rounded-full border border-[#E4E7EC] px-2.5 py-1 text-[11px] text-[#344054] hover:bg-[#F9FAFB]">
+                          {tf("All", "الكل", "All")}
+                        </button>
+                        <button type="button" onClick={() => applyPriceRange(minPrice, Math.min(maxPrice, minPrice + Math.round((maxPrice - minPrice) / 3)))} className="rounded-full border border-[#E4E7EC] px-2.5 py-1 text-[11px] text-[#344054] hover:bg-[#F9FAFB]">
+                          {tf("Budget", "اقتصادي", "Budget")}
+                        </button>
+                        <button type="button" onClick={() => applyPriceRange(Math.max(minPrice, maxPrice - Math.round((maxPrice - minPrice) / 3)), maxPrice)} className="rounded-full border border-[#E4E7EC] px-2.5 py-1 text-[11px] text-[#344054] hover:bg-[#F9FAFB]">
+                          {tf("Premium", "مرتفع", "Premium")}
+                        </button>
+                      </div>
+
+                      <div className="flex gap-2 mt-3">
+                        <button
+                          type="button"
+                          onClick={() => applyPriceRange(draftRange[0], draftRange[1])}
+                          className="flex-1 rounded-xl bg-[#211C4D] text-white text-sm font-semibold px-3 py-2.5 hover:bg-[#2B2559]"
+                        >
+                          {tf("Apply", "تطبيق", "Apply")}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={resetPriceRange}
+                          className="rounded-xl border border-[#E4E7EC] text-sm font-medium text-[#344054] px-3 py-2.5 hover:bg-[#F9FAFB]"
+                        >
+                          {tf("ResetPrice", "مسح السعر", "Clear")}
+                        </button>
                       </div>
                     </div>
-
-                    <div className="grid grid-cols-2 gap-2 mt-3">
-                      <input
-                        type="range"
-                        min={minPrice}
-                        max={maxPrice}
-                        step={priceStep}
-                        value={draftRange[0]}
-                        onChange={(e) => setDraftRange(normalizeRange(Number(e.target.value), draftRange[1]))}
-                        className="w-full accent-[#211C4D]"
-                      />
-                      <input
-                        type="range"
-                        min={minPrice}
-                        max={maxPrice}
-                        step={priceStep}
-                        value={draftRange[1]}
-                        onChange={(e) => setDraftRange(normalizeRange(draftRange[0], Number(e.target.value)))}
-                        className="w-full accent-[#2AA0DC]"
-                      />
-                    </div>
-
-                    <div className="flex flex-wrap gap-2 mt-3">
-                      <button type="button" onClick={() => resetPriceRange()} className="rounded-full border border-[#E4E7EC] px-2.5 py-1 text-[11px] text-[#344054] hover:bg-[#F9FAFB]">
-                        {tf("All", "الكل", "All")}
-                      </button>
-                      <button type="button" onClick={() => applyPriceRange(minPrice, Math.min(maxPrice, minPrice + Math.round((maxPrice - minPrice) / 3)))} className="rounded-full border border-[#E4E7EC] px-2.5 py-1 text-[11px] text-[#344054] hover:bg-[#F9FAFB]">
-                        {tf("Budget", "اقتصادي", "Budget")}
-                      </button>
-                      <button type="button" onClick={() => applyPriceRange(Math.max(minPrice, maxPrice - Math.round((maxPrice - minPrice) / 3)), maxPrice)} className="rounded-full border border-[#E4E7EC] px-2.5 py-1 text-[11px] text-[#344054] hover:bg-[#F9FAFB]">
-                        {tf("Premium", "مرتفع", "Premium")}
-                      </button>
-                    </div>
-
-                    <div className="flex gap-2 mt-3">
-                      <button
-                        type="button"
-                        onClick={() => applyPriceRange(draftRange[0], draftRange[1])}
-                        className="flex-1 rounded-xl bg-[#211C4D] text-white text-sm font-semibold px-3 py-2.5 hover:bg-[#2B2559]"
-                      >
-                        {tf("Apply", "تطبيق", "Apply")}
-                      </button>
-                      <button
-                        type="button"
-                        onClick={resetPriceRange}
-                        className="rounded-xl border border-[#E4E7EC] text-sm font-medium text-[#344054] px-3 py-2.5 hover:bg-[#F9FAFB]"
-                      >
-                        {tf("ResetPrice", "مسح السعر", "Clear")}
-                      </button>
-                    </div>
                   </div>
-                </div>
-              )}
+                )}
+              </div>
             </div>
           </div>
-        </div>
+        </>
       )}
     </div>
   );
