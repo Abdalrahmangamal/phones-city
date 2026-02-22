@@ -41,10 +41,6 @@ export const usePageStore = create<PageState>((set, get) => ({
         error: null,
       }));
 
-      // Log token status for debugging
-      const token = localStorage.getItem("token");
-      console.log(`📄 Page Request (${slug}) - Token:`, token ? "✅ Token found" : "❌ No token (guest user)");
-
       const res = await axiosClient.get(`api/v1/pages/${slug}`, {
         headers: {
           "Accept-Language": `${lang}`,

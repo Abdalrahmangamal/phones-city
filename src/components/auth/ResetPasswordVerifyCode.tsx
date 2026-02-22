@@ -119,7 +119,6 @@ export default function ResetPasswordVerifyCode({
     // استخدام purpose 'reset' للتحقق من كود إعادة التعيين
     const res = await sendVerifyCode({ email, code: otp }, "reset");
     
-    console.log("Verify Code Response:", res);
 
     if (res?.status === true) {
       setShowSuccess(true);

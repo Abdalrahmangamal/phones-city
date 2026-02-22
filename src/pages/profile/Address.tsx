@@ -29,7 +29,6 @@ export default function Address() {
   useEffect(() => {
     fetchAddresses();
   }, [fetchAddresses]);
-  console.log(addresses)
   const handleDelete = async (id: number) => {
     // عرض toast.
     toast(

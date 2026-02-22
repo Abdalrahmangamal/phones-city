@@ -52,12 +52,6 @@ export default function ForgotpasswordModal({ isopen, onClose }: ForgotProps) {
     }
   };
 
-  useEffect(() => {
-    if (verifiedCode) {
-      console.log("ForgotpasswordModal: verifiedCode set ->", verifiedCode);
-    }
-  }, [verifiedCode]);
-
   return (
     <>
       {loading && <Loader />}

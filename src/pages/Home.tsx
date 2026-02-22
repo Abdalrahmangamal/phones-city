@@ -120,7 +120,7 @@ const NewHome = () => {
             key={lang}
             title={data?.app_title || ""}
             description={data?.app_description || ""}
-            image={data?.app_main_image || ""}
+            image={data?.app_main_image || undefined}
           />
         </main>
       </div>

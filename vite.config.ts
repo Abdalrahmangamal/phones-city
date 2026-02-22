@@ -3,7 +3,7 @@ import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import path from "path";
 
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   base: '/',
   plugins: [react(), tailwindcss()],
   resolve: {
@@ -17,6 +17,10 @@ export default defineConfig({
   optimizeDeps: {
     include: ['@botpress/webchat', '@botpress/chat']
   },
+  // Strip console output from production bundles to avoid leaking debug/customer data.
+  esbuild: mode === "production"
+    ? { drop: ["console", "debugger"] }
+    : undefined,
   build: {
     rollupOptions: {
       output: {
@@ -35,4 +39,4 @@ export default defineConfig({
       },
     },
   },
-});
+}));

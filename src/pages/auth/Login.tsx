@@ -38,7 +38,6 @@ export default function Login() {
     e?.preventDefault();
     setLoginError("");
 
-    console.log("Login submitted", data);
 
     const res = await sendLogin(data);
 

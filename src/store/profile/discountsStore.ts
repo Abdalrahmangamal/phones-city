@@ -67,13 +67,7 @@ export const useDiscountStore = create<DiscountStore>((set, get) => ({
       const response = await axiosClient.get<DiscountResponse>('/api/v1/discounts', {
         params: { page }
       });
-      console.log('✅ استجابة API:', response.data);
-      console.log('📊 حالة الاستجابة:', response.data.status);
-    console.log('📦 البيانات:', response.data.data);
-    console.log('🔢 عدد العناصر:', response.data.data?.length || 0);
-    console.log('📄 معلومات الصفحة:', response.data.pagination);
 
-    
       const data = response.data;
       
       if (data.status && data.data) {
@@ -101,7 +95,7 @@ export const useDiscountStore = create<DiscountStore>((set, get) => ({
         discounts: [],
         pagination: null
       });
-      console.error('Error fetching discounts:', error);
+      console.error('Error fetching discounts');
       return [];
     } finally {
       set({ loading: false });

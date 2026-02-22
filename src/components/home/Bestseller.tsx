@@ -61,22 +61,6 @@ export default function Bestseller({
       ? products.slice(0, limit)
       : products;
 
-  // ====== إضافة console.log للتصحيح ======
-  console.log("Bestseller - Debug Info:", {
-    hasProducts,
-    showPagination,
-    currentPage,
-    totalPages,
-    itemsPerPage,
-    totalItems,
-    allProductsCount: products.length,
-    productsToShowCount: productsToShow.length,
-    startIndex: showPagination ? (currentPage - 1) * itemsPerPage : 0,
-    endIndex: showPagination
-      ? (currentPage - 1) * itemsPerPage + itemsPerPage
-      : limit || products.length,
-  });
-
   return (
     <div
       className={`mt-[20px] lg:px-[90px] px-2 pt-20 md:pt-20 ${containercard}`}

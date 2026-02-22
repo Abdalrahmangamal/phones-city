@@ -54,7 +54,6 @@ export default function Profile() {
   // Update form data when profile is loaded
   useEffect(() => {
     if (profile) {
-      console.log('🔄 تحديث formData بالبيانات الجديدة:', profile);
       const newData = {
         firstName: profile.firstName || '',
         lastName: profile.lastName || '',
@@ -76,8 +75,6 @@ export default function Profile() {
   };
 
   const handleSaveAll = async () => {
-    console.log('💾 حفظ جميع التعديلات:', formData);
-
     // تجهيز البيانات للإرسال
     const updateData: any = {};
 
@@ -107,7 +104,7 @@ export default function Profile() {
         setOriginalData({ ...formData });
         setIsEditing(false);
       } catch (error) {
-        console.error('❌ خطأ في الحفظ:', error);
+        console.error('Profile save failed');
       }
     } else {
       setIsEditing(false);
@@ -150,14 +147,10 @@ export default function Profile() {
     setPasswordSuccess("");
 
     try {
-      console.log("🔐 جاري تغيير كلمة المرور:", passwordForm);
-
       const response = await axiosClient.put("/api/v1/profile", {
         password: passwordForm.password,
         password_confirmation: passwordForm.password_confirmation
       });
-
-      console.log("✅ استجابة تغيير كلمة المرور:", response.data);
 
       if (response.data.status) {
         setPasswordSuccess(t("auth.passwordChangedSuccess"));
@@ -177,7 +170,7 @@ export default function Profile() {
         setPasswordError(response.data.message || t("auth.passwordChangeError"));
       }
     } catch (error: any) {
-      console.error("❌ خطأ في تغيير كلمة المرور:", error);
+      console.error("Password change request failed");
 
       let errorMessage = t("auth.passwordChangeError");
 

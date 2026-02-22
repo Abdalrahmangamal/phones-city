@@ -60,17 +60,13 @@ export default function Register() {
   // Manual Validation
   const onSubmit: SubmitHandler<ISignup> = async (data) => {
     const result = signupSchema.safeParse(data);
-    console.log("Register: onSubmit called", data);
     if (!result.success) {
-      console.log("Register: validation failed", result.error);
       return; // validation failed
     }
 
     // send to API and open verify modal on success
     try {
-      console.log("Register: sending data ->", result.data);
       const res = await sendRegisterData(result.data);
-      console.log("Register: response ->", res);
 
       // If the API call returns successfully and status is true (or it's just truthy with no status false)
       if (res && res.status !== false) {
@@ -78,10 +74,9 @@ export default function Register() {
         setopenverifymodal(true);
         reset();
       } else if (res && res.status === false) {
-        console.log("API returned status false:", res);
       }
     } catch (err) {
-      console.error("Register: sendRegisterData error:", err);
+      console.error("Register request failed");
     }
   };
   // عرض أخطاء التحقق (Zod) فقط داخل النموذج — لا نعرض رسائل السيرفر (مثل "email already taken") في النافذة
@@ -140,7 +135,6 @@ export default function Register() {
         email={verifyEmail}
         onClose={() => setopenverifymodal(false)}
         onSuccess={(code) => {
-          console.log("Verified code:", code);
           setopenverifymodal(false);
         }}
       />

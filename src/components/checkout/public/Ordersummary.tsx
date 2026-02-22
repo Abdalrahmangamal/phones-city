@@ -139,7 +139,6 @@ export default function OrderSummary({
   };
 
   const handleBankTransferSubmit = async (file: File, bankDetails: any) => {
-    console.log('Bank Transfer Submit:', { file, bankDetails });
     // TODO: إرسال البيانات للـ Backend
     // يمكن إضافة الـ API call هنا
   };

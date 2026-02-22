@@ -51,7 +51,6 @@ export default function CheckoutPage() {
 
   useEffect(() => {
     fetchCart();
-    console.log('usePoints state in Checkout:', usePoints);
   }, [fetchCart, usePoints]);
 
 
@@ -214,7 +213,6 @@ export default function CheckoutPage() {
         points_discount: usePoints ? pointsDiscountAmount : 0,
       };
 
-      console.log('Sending order data:', orderRequestData); // Debugging
 
       // إرسال الطلب
       const response = await axiosClient.post('/api/v1/orders', orderRequestData);
@@ -243,11 +241,6 @@ export default function CheckoutPage() {
       const orderNum = orderData?.order_number || response.data.order_number || response.data.id;
       const orderIdFromResponse = orderData?.id || response.data.data?.id || response.data.id || response.data.order_id;
 
-      console.log('=== Order Created ===');
-      console.log('Full Response:', response.data);
-      console.log('Order Data:', orderData);
-      console.log('Order Number:', orderNum);
-      console.log('Order ID:', orderIdFromResponse);
 
       setOrderNumber(orderNum);
       setOrderId(orderIdFromResponse);
@@ -260,9 +253,6 @@ export default function CheckoutPage() {
         const apiUploadUrl = paymentData?.upload_url || null;
         const apiBankDetails = paymentData?.bank_account_details || null;
 
-        console.log('=== Bank Transfer Details ===');
-        console.log('Upload URL:', apiUploadUrl);
-        console.log('Bank Account Details:', apiBankDetails);
 
         setUploadUrl(apiUploadUrl);
         setBankAccountDetails(apiBankDetails);
@@ -323,7 +313,7 @@ export default function CheckoutPage() {
 
       showCustomToast('error', errorTitle, errorMessage);
 
-      console.error('Order submission error:', error);
+      console.error('Order submission failed');
     } finally {
       setIsSubmitting(false);
     }
@@ -340,8 +330,6 @@ export default function CheckoutPage() {
 
 
   const handleUsePointsChange = (value: boolean) => {
-    console.log('setUsePoints called with:', value);
-    console.log('Previous value was:', usePoints);
     setUsePoints(value);
   };
 
@@ -542,8 +530,6 @@ export default function CheckoutPage() {
               points_discount: usePoints ? pointsDiscountAmount : 0,
             };
 
-            console.log('=== Creating Order from Modal ===');
-            console.log('Order Request Data:', orderRequestData);
 
             const response = await axiosClient.post('/api/v1/orders', orderRequestData);
 
@@ -553,8 +539,6 @@ export default function CheckoutPage() {
             const paymentData = response.data?.payment || response.data?.data?.payment;
             const apiUploadUrl = paymentData?.upload_url || null;
 
-            console.log('Order Created:', orderIdFromResponse);
-            console.log('Upload URL:', apiUploadUrl);
 
             setOrderNumber(orderNum);
             setOrderId(orderIdFromResponse);
@@ -565,7 +549,7 @@ export default function CheckoutPage() {
               uploadUrl: apiUploadUrl
             };
           } catch (error: any) {
-            console.error('Error creating order:', error);
+            console.error('Error creating order');
             const errorMessage = error.response?.data?.message ||
               (isRTL ? 'فشل في إنشاء الطلب' : 'Failed to create order');
             showCustomToast('error', isRTL ? 'خطأ' : 'Error', errorMessage);

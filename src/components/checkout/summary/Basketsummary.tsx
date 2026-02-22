@@ -13,9 +13,6 @@ export default function Basketsummary({ products, total }: any) {
   const isRTL = i18n.language === "ar";
   const [isDeletingAll, setIsDeletingAll] = useState(false);
 
-  // تسجيل البيانات للتصحيح
-  console.log("Cart items in Basketsummary:", products);
-
   const handleDeleteAll = async () => {
     if (items.length === 0 || isDeletingAll || loading) return;
 
@@ -24,7 +21,7 @@ export default function Basketsummary({ products, total }: any) {
       try {
         await clearCart();
       } catch (error) {
-        console.error("Failed to delete all items:", error);
+        console.error("Failed to delete all items");
         alert(t("DeleteAllFailed"));
       } finally {
         setIsDeletingAll(false);

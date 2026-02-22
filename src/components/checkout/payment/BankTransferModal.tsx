@@ -78,7 +78,7 @@ export default function BankTransferModal({
                 });
             }
         } catch (error) {
-            console.error("Error fetching bank details:", error);
+            console.error("Error fetching bank details");
         } finally {
             setLoadingBankDetails(false);
         }
@@ -123,7 +123,6 @@ export default function BankTransferModal({
 
             // ⭐ إذا لم يكن هناك orderId، نقوم بإنشاء الطلب أولاً
             if (!currentOrderId && onCreateOrder) {
-                console.log('=== Creating Order First ===');
                 const orderResult = await onCreateOrder();
                 if (!orderResult) {
                     // فشل إنشاء الطلب
@@ -132,22 +131,16 @@ export default function BankTransferModal({
                 }
                 currentOrderId = orderResult.orderId;
                 currentUploadUrl = orderResult.uploadUrl;
-                console.log('Order created:', currentOrderId);
             }
 
             // تحديد الـ URL للرفع - نستخدم uploadUrl من الـ API إذا كان متوفرًا
             const finalUploadUrl = currentUploadUrl || (currentOrderId ? `/api/v1/orders/${currentOrderId}/payment/upload-proof` : null);
 
-            console.log('=== Upload Payment Proof ===');
-            console.log('orderId:', currentOrderId);
-            console.log('Final Upload URL:', finalUploadUrl);
-            console.log('uploadedFile:', uploadedFile);
 
             if (finalUploadUrl) {
                 const formData = new FormData();
                 formData.append('payment_proof', uploadedFile);
 
-                console.log('Sending request to:', finalUploadUrl);
 
                 const response = await axiosClient.post(
                     finalUploadUrl,
@@ -159,9 +152,6 @@ export default function BankTransferModal({
                     }
                 );
 
-                console.log('Upload Response:', response);
-                console.log('Response Status:', response.status);
-                console.log('Response Data:', response.data);
 
                 if (response.data.status || response.status === 200 || response.status === 201) {
                     alert(isRTL ? "تم رفع إثبات الدفع بنجاح!" : "Payment proof uploaded successfully!");
@@ -172,14 +162,13 @@ export default function BankTransferModal({
                     return;
                 }
             } else {
-                console.log('No upload URL available - cannot upload to API');
             }
 
             // fallback للـ onSubmit القديمة
             await onSubmit(uploadedFile, bankDetails);
             onClose();
         } catch (error: any) {
-            console.error("Error submitting bank transfer:", error);
+            console.error("Error submitting bank transfer");
             const errorMessage = error.response?.data?.message ||
                 (isRTL ? "حدث خطأ أثناء رفع إثبات الدفع" : "Error uploading payment proof");
             alert(errorMessage);

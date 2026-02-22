@@ -54,12 +54,10 @@ export const useProfileStore = create<ProfileStore>((set) => ({
   error: null,
 
   fetchProfile: async () => {
-    console.log('📡 جاري جلب بيانات الملف الشخصي...');
     set({ isLoading: true, error: null });
     
     try {
       const response = await axiosClient.get<ApiResponse>('/api/v1/profile');
-      console.log('✅ استجابة API:', response.data);
       
       if (response.data.status && response.data.data) {
         const apiData = response.data.data;
@@ -75,7 +73,6 @@ export const useProfileStore = create<ProfileStore>((set) => ({
           address: apiData.address || ''
         };
         
-        console.log('📦 بيانات الملف الشخصي المحولة:', profileData);
         set({ profile: profileData, isLoading: false });
       } else {
         set({ 
@@ -84,7 +81,7 @@ export const useProfileStore = create<ProfileStore>((set) => ({
         });
       }
     } catch (error: any) {
-      console.error('❌ خطأ في API:', error);
+      console.error('Profile fetch request failed');
       const errorMessage = error.response?.data?.message || 
                           error.message || 
                           'فشل في الاتصال بالخادم';
@@ -96,7 +93,6 @@ export const useProfileStore = create<ProfileStore>((set) => ({
   },
 
   updateProfile: async (data: Partial<ProfileData>) => {
-    console.log('✏️ جاري تحديث البيانات:', data);
     set({ isLoading: true, error: null });
     
     try {
@@ -111,8 +107,6 @@ export const useProfileStore = create<ProfileStore>((set) => ({
         delete updateData.firstName;
         delete updateData.lastName;
       }
-      
-      console.log('📤 بيانات الإرسال للـ API:', updateData);
       
       const response = await axiosClient.put<ApiResponse>('/api/v1/profile', updateData);
       
@@ -130,7 +124,6 @@ export const useProfileStore = create<ProfileStore>((set) => ({
         };
         
         set({ profile: profileData, isLoading: false });
-        console.log('✅ تم تحديث البيانات بنجاح:', profileData);
       } else {
         set({ 
           error: response.data.message || 'فشل في تحديث البيانات', 
@@ -138,7 +131,7 @@ export const useProfileStore = create<ProfileStore>((set) => ({
         });
       }
     } catch (error: any) {
-      console.error('❌ خطأ في تحديث API:', error);
+      console.error('Profile update request failed');
       const errorMessage = error.response?.data?.message || 
                           'فشل في تحديث الملف الشخصي';
       set({ 

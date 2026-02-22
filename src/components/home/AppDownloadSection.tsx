@@ -9,7 +9,7 @@ import { useLangSync } from "@/hooks/useLangSync";
 interface typeapp {
   title: string;
   description: string;
-  image: string;
+  image?: string;
 }
 const AppDownloadSection = ({ title, description, image }: typeapp) => {
   const isS24Ultra = useS24Ultra();
@@ -30,7 +30,7 @@ const AppDownloadSection = ({ title, description, image }: typeapp) => {
 
         {/* Images */}
         <div className={`absolute top-[10%] md:top-auto md:bottom-[0%] z-10 w-[280px] md:w-[230px] lg:w-[360px] ${lang === 'en' ? 'right-[18%] md:right-[9%]' : 'left-[18%] md:left-[9%]'}`}>
-          <img src={image} alt="main visual" className="w-full h-auto" />
+          {image ? <img src={image} alt="main visual" className="w-full h-auto" /> : null}
           <img
             src={expotuer}
             alt="decor"
@@ -95,11 +95,11 @@ const AppDownloadSection = ({ title, description, image }: typeapp) => {
             />
           </div>
 
-          <img
+          {image ? <img
             src={image}
             alt="App visual"
             className="w-[70%] max-w-[150px]  md:max-w-[250px] mx-auto mt-4"
-          />
+          /> : null}
         </div>
       </div>
     </div>

@@ -72,7 +72,6 @@ export default function ForgotPasswordFlowModal({ isOpen, onClose }: Props) {
 
     try {
       const res = await forgotpassword({ email });
-      console.log("Forgot Password Response:", res);
 
       if (res?.status === true || res?.success === true || res?.message?.toLowerCase().includes("تم")) {
         setStep("code"); // الانتقال إلى نافذة إدخال الكود
@@ -81,7 +80,7 @@ export default function ForgotPasswordFlowModal({ isOpen, onClose }: Props) {
         setErrorMessage(res?.message || t("forgotPassword.failedToSendCode"));
       }
     } catch (err: any) {
-      console.error("Forgot Password Error:", err);
+      console.error("Forgot password request failed");
       setErrorMessage(err?.message || t("forgotPassword.errorSending"));
     }
   };
@@ -93,7 +92,6 @@ export default function ForgotPasswordFlowModal({ isOpen, onClose }: Props) {
     }
 
     // التحقق من صحة الكود هنا (يمكنك إضافة API للتحقق)
-    console.log("Verifying code:", code);
 
     // إذا كان الكود صحيح، انتقل إلى نافذة كلمة المرور
     setStep("password");
@@ -116,11 +114,9 @@ export default function ForgotPasswordFlowModal({ isOpen, onClose }: Props) {
       password_confirmation: passwordConfirm,
     };
 
-    console.log("Sending reset payload:", payload);
 
     try {
       const res = await resetPassword(payload);
-      console.log("Reset Password Response:", res);
 
       if (res?.status === true) {
         setSuccessMessage(t("forgotPassword.passwordChangedSuccess"));
@@ -133,7 +129,7 @@ export default function ForgotPasswordFlowModal({ isOpen, onClose }: Props) {
         setErrorMessage(res?.message || t("forgotPassword.failedToResetPassword"));
       }
     } catch (err: any) {
-      console.error("Reset Password Error:", err);
+      console.error("Password reset request failed");
       setErrorMessage(t("forgotPassword.errorResetting"));
     }
   };
@@ -160,7 +156,7 @@ export default function ForgotPasswordFlowModal({ isOpen, onClose }: Props) {
         alert(t("forgotPassword.codeSentSuccess"));
       }
     } catch (err) {
-      console.error("Resend error:", err);
+      console.error("Resend verification code failed");
     }
   };
 

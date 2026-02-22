@@ -17,12 +17,12 @@ import Google from "../../assets/images/Google.png";
 import amwal from "../../assets/images/amwal.png";
 import emkan from "../../assets/images/emkan.png";
 import payment from "../../assets/images/payment.png";
-import {useAboutStore} from '@/store/aboutusStore'
+import { useAboutStore } from '@/store/aboutusStore'
 const Footer: React.FC = () => {
   const { t } = useTranslation();
   const { lang } = useLangSync();
-  const {fetchAbout,data}=useAboutStore()
-  useEffect(()=>{fetchAbout(lang)},[])
+  const { fetchAbout, data } = useAboutStore()
+  useEffect(() => { fetchAbout(lang) }, [])
 
   const navigate = useNavigate();
 
@@ -64,7 +64,7 @@ const Footer: React.FC = () => {
 
   return (
     <footer
-      dir={lang==="ar"?"rtl":"ltr"}
+      dir={lang === "ar" ? "rtl" : "ltr"}
       className="bg-[#211C4D] text-white"
       style={{
         boxSizing: "border-box",
@@ -85,8 +85,8 @@ const Footer: React.FC = () => {
               <h3 className="font-[Cairo] font-semibold text-[22px] sm:text-[18px] lg:text-[24px] leading-[150%]">
                 {t("CustomerCare")}
               </h3>
-              <div className="flex flex-col gap-2"       dir={lang==="ar"?"rtl":"ltr"}
->
+              <div className="flex flex-col gap-2" dir={lang === "ar" ? "rtl" : "ltr"}
+              >
                 {customerCareMenuItems.map((item, i) => (
                   <button
                     key={i}
@@ -148,14 +148,12 @@ const Footer: React.FC = () => {
                 {t("CityPhones")}
               </h2>
 
-              <p
+              <div
                 className="text-[#CAD0D9] text-[15px] sm:text-[12px] lg:text-[16px] leading-[150%]"
                 style={{ fontFamily: "Roboto" }}
               >
-<div>
-  {data?.about_us?.replace(/<\/?p>/g, "")}
-</div>
-              </p>
+                {data?.about_us?.replace(/<\/?p>/g, "")}
+              </div>
 
               {/* Social icons */}
               <div className="flex justify-start mt-2">

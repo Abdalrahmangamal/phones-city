@@ -16,10 +16,12 @@ export default function ProductCategoriesSection() {
   const { lang } = useLangSync();
   const { t } = useTranslation(); // Use translation hook
   const { fetchCategories, categories } = useCategoriesStore();
+  const hasCategories = (categories?.length ?? 0) > 0;
+  const canLoop = (categories?.length ?? 0) > 6;
+
   useEffect(() => {
     fetchCategories(lang);
-  }, []);
-  console.log("home", categories);
+  }, [fetchCategories, lang]);
 
 
   return (
@@ -39,62 +41,65 @@ export default function ProductCategoriesSection() {
           />
         </div>
 
-        <Swiper
-          key={lang} // لإعادة تهيئة السلايدر عند تغيير اللغة
-          dir={lang === "ar" ? "rtl" : "ltr"}
-          slidesPerView={5}
-          spaceBetween={12}
-          autoplay={{
-            delay: 3000,
-            disableOnInteraction: false,
-          }}
-          loop={true}
-          navigation={true}
-          modules={[Navigation, Autoplay]}
-          className="mySwiper h-[200px] sm:h-[240px] md:h-[280px] lg:h-[320px]"
-          breakpoints={{
-            320: { slidesPerView: 5, spaceBetween: 10 },
-            480: { slidesPerView: 5, spaceBetween: 12 },
-            768: { slidesPerView: 5, spaceBetween: 16 },
-            1024: { slidesPerView: 6, spaceBetween: 20 },
-            1440: { slidesPerView: 6, spaceBetween: 24 },
-          }}
-        >
-          {categories?.map((cat, index) => (
-            <SwiperSlide
-              key={cat.id ?? index} // نستخدم id إذا كان موجودًا، وإلا index
-              className="flex flex-col items-center justify-center transition-transform duration-300 hover:scale-105"
-            >
-              {cat.slug ? (
-                <Link to={`categorySingle/${cat.slug}/products`} className="flex justify-center flex-col items-center">
+        {hasCategories ? (
+          <Swiper
+            key={lang} // لإعادة تهيئة السلايدر عند تغيير اللغة
+            dir={lang === "ar" ? "rtl" : "ltr"}
+            slidesPerView={5}
+            spaceBetween={12}
+            autoplay={{
+              delay: 3000,
+              disableOnInteraction: false,
+            }}
+            loop={canLoop}
+            navigation={true}
+            modules={[Navigation, Autoplay]}
+            className="mySwiper h-[200px] sm:h-[240px] md:h-[280px] lg:h-[320px]"
+            breakpoints={{
+              320: { slidesPerView: 5, spaceBetween: 10 },
+              480: { slidesPerView: 5, spaceBetween: 12 },
+              768: { slidesPerView: 5, spaceBetween: 16 },
+              1024: { slidesPerView: 6, spaceBetween: 20 },
+              1440: { slidesPerView: 6, spaceBetween: 24 },
+            }}
+          >
+            {categories?.map((cat, index) => (
+              <SwiperSlide
+                key={cat.id ?? index} // نستخدم id إذا كان موجودًا، وإلا index
+                className="flex flex-col items-center justify-center transition-transform duration-300 hover:scale-105"
+              >
+                {cat.slug ? (
+                  <Link to={`categorySingle/${cat.slug}/products`} className="flex justify-center flex-col items-center">
+                    <div className="w-[70px] h-[70px] sm:w-[110px] sm:h-[110px] md:w-[120px] md:h-[120px] lg:w-[140px] lg:h-[140px] shadow-[0px_7px_29px_0px_rgba(100,100,111,0.2)] rounded-full flex items-center justify-center bg-white overflow-hidden">
+                      <img
+                        src={cat.image || undefined}
+                        alt={cat.name}
+                        className="!object-cover w-full h-full"
+                        loading="lazy"
+                      />
+                    </div>
+                    <h2 className="text-[#211C4D] text-[6px] sm:text-[14px] md:text-[16px] lg:text-[18px] font-[600] mt-2 text-center leading-tight">
+                      {cat.name}
+                    </h2>
+                  </Link>
+                ) : (
                   <div className="w-[70px] h-[70px] sm:w-[110px] sm:h-[110px] md:w-[120px] md:h-[120px] lg:w-[140px] lg:h-[140px] shadow-[0px_7px_29px_0px_rgba(100,100,111,0.2)] rounded-full flex items-center justify-center bg-white overflow-hidden">
                     <img
-                      src={cat.image}
-                      alt={cat.name}
+                      src={cat?.image || undefined}
+                      alt={cat?.name}
                       className="!object-cover w-full h-full"
                       loading="lazy"
                     />
                   </div>
-                  <h2 className="text-[#211C4D] text-[6px] sm:text-[14px] md:text-[16px] lg:text-[18px] font-[600] mt-2 text-center leading-tight">
-                    {cat.name}
-                  </h2>
-                </Link>
-              ) : (
-                <div className="w-[70px] h-[70px] sm:w-[110px] sm:h-[110px] md:w-[120px] md:h-[120px] lg:w-[140px] lg:h-[140px] shadow-[0px_7px_29px_0px_rgba(100,100,111,0.2)] rounded-full flex items-center justify-center bg-white overflow-hidden">
-                  <img
-                    src={cat?.image}
-                    alt={cat?.name}
-                    className="!object-cover w-full h-full"
-                    loading="lazy"
-                  />
-                </div>
-              )}
-            </SwiperSlide>
-          ))}
-        </Swiper>
+                )}
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        ) : categories ? null : (
+          <Loader />
+        )}
 
       </div>
-      {!categories ? (<Loader />) : ("")}
     </div>
   );
 };

@@ -390,19 +390,17 @@ export default function Header() {
               {/* قائمة الإشعارات */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <button className="relative" aria-label={t("Notifications")}>
-                    <IconButton aria-label={t("Notifications")} className="relative">
-                      <Bell className="h-5 w-5 opacity-90" />
-                      {unreadCount > 0 && (
-                        <Badge
-                          variant="destructive"
-                          className="absolute -top-2 -right-2 h-6 w-6 rounded-full p-0 flex items-center justify-center text-xs font-bold bg-red-500"
-                        >
-                          {unreadCount}
-                        </Badge>
-                      )}
-                    </IconButton>
-                  </button>
+                  <IconButton aria-label={t("Notifications")} className="relative">
+                    <Bell className="h-5 w-5 opacity-90" />
+                    {unreadCount > 0 && (
+                      <Badge
+                        variant="destructive"
+                        className="absolute -top-2 -right-2 h-6 w-6 rounded-full p-0 flex items-center justify-center text-xs font-bold bg-red-500"
+                      >
+                        {unreadCount}
+                      </Badge>
+                    )}
+                  </IconButton>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent
                   align="end"
@@ -457,19 +455,17 @@ export default function Header() {
               {/* قائمة المفضلة */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <button className="relative" aria-label={t("favourite")}>
-                    <IconButton aria-label={t("favourite")}>
-                      <Heart className="h-5 w-5 opacity-90" />
-                      {favoritesCount > 0 && (
-                        <Badge
-                          variant="destructive"
-                          className="absolute -top-2 -right-2 h-6 w-6 rounded-full p-0 flex items-center justify-center text-xs font-bold bg-[#F3AC5D]"
-                        >
-                          {favoritesCount}
-                        </Badge>
-                      )}
-                    </IconButton>
-                  </button>
+                  <IconButton aria-label={t("favourite")} className="relative">
+                    <Heart className="h-5 w-5 opacity-90" />
+                    {favoritesCount > 0 && (
+                      <Badge
+                        variant="destructive"
+                        className="absolute -top-2 -right-2 h-6 w-6 rounded-full p-0 flex items-center justify-center text-xs font-bold bg-[#F3AC5D]"
+                      >
+                        {favoritesCount}
+                      </Badge>
+                    )}
+                  </IconButton>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent
                   align="end"
@@ -524,11 +520,9 @@ export default function Header() {
               {/* قائمة البروفايل */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <button aria-label={t("MyAccount")}>
-                    <IconButton aria-label={t("MyAccount")}>
-                      <UserRound className="h-5 w-5 opacity-90" />
-                    </IconButton>
-                  </button>
+                  <IconButton aria-label={t("MyAccount")}>
+                    <UserRound className="h-5 w-5 opacity-90" />
+                  </IconButton>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent
                   align="end"
@@ -612,19 +606,17 @@ export default function Header() {
                 }}
               >
                 <SheetTrigger asChild>
-                  <button type="button" aria-label={t("Cart")} className="relative">
-                    <IconButton aria-label={t("Cart")} className="relative">
-                      <ShoppingCart className="h-5 w-5 opacity-90" />
-                      {cartQuantity > 0 && (
-                        <Badge
-                          variant="destructive"
-                          className="absolute -top-2 -right-2 h-6 w-6 rounded-full p-0 flex items-center justify-center text-xs font-bold bg-[#F3AC5D]"
-                        >
-                          {cartQuantity}
-                        </Badge>
-                      )}
-                    </IconButton>
-                  </button>
+                  <IconButton aria-label={t("Cart")} className="relative" type="button">
+                    <ShoppingCart className="h-5 w-5 opacity-90" />
+                    {cartQuantity > 0 && (
+                      <Badge
+                        variant="destructive"
+                        className="absolute -top-2 -right-2 h-6 w-6 rounded-full p-0 flex items-center justify-center text-xs font-bold bg-[#F3AC5D]"
+                      >
+                        {cartQuantity}
+                      </Badge>
+                    )}
+                  </IconButton>
                 </SheetTrigger>
                 <SheetContent
                   side={lang === "ar" ? "left" : "right"}

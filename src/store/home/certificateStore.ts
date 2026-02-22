@@ -63,7 +63,7 @@ export const useCertificateStore = create<CertificateState>()(
           }
 
         } catch (error: any) {
-          console.error("Error fetching certificates:", error);
+          console.error("Error fetching certificates");
           set(() => ({
             error: error?.response?.data?.message || "Network error occurred",
             loading: false
@@ -91,7 +91,7 @@ export const useCertificateStore = create<CertificateState>()(
           }
 
         } catch (error: any) {
-          console.error("Error fetching single certificate:", error);
+          console.error("Error fetching single certificate");
           set(() => ({
             error: error?.response?.data?.message || "Network error occurred",
             loadingSingle: false

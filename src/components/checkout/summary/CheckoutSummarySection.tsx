@@ -83,7 +83,7 @@ const CheckoutSummarySection: React.FC<CheckoutSummarySectionProps> = ({
           });
         }
       } catch (error) {
-        console.error("Failed to fetch points", error);
+        console.error("Failed to fetch points");
       } finally {
         setLoadingPoints(false);
       }
@@ -135,18 +135,6 @@ const CheckoutSummarySection: React.FC<CheckoutSummarySectionProps> = ({
   // 5. Calculate max possible discount (cap at total price including tax)
   const maxDiscountAmount = totalPriceWithTax; // الخصم على السعر الإجمالي (شامل الضريبة)
   const maxPointsValue = pointsData ? parseFloat(pointsData.available_points_value) : 0;
-
-  // Debug: Log values to understand the calculation
-  console.log('🔍 Points Discount Debug:', {
-    totalPriceWithTax,
-    subtotal,
-    tax,
-    maxDiscountAmount,
-    maxPointsValue,
-    pointsDiscountAmount,
-    usePoints,
-    items: items.map(i => ({ subtotal: i.subtotal, quantity: i.quantity }))
-  });
 
   // Points Discount - use custom amount if set, otherwise use max available
   // But never exceed the subtotal (max 100% discount on products only)

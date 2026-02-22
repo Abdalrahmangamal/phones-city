@@ -65,11 +65,9 @@ export default function ResetPasswordModal({
       password_confirmation: passwordConfirm,
     };
 
-    console.log("ResetPasswordModal: sending reset payload ->", payload);
 
     try {
       const res = await resetPassword(payload);
-      console.log("ResetPasswordModal: reset response ->", res);
       
       if (res?.status === true) {
         setSuccessMessage("تم تغيير كلمة المرور بنجاح!");
@@ -88,7 +86,7 @@ export default function ResetPasswordModal({
         setErrorMessage(res?.message || "فشل إعادة تعيين كلمة المرور. حاول مرة أخرى.");
       }
     } catch (err: any) {
-      console.error("ResetPasswordModal: reset error ->", err);
+      console.error("Reset password request failed");
       setErrorMessage("حدث خطأ أثناء إعادة تعيين كلمة المرور. حاول مرة أخرى.");
     }
   };
