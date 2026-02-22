@@ -14,7 +14,7 @@ interface RegisterData {
   phone: string;
   password: string;
   password_confirmation: string;
-  code: string;
+  code?: string;
 }
 
 interface VerifyCodetypes {

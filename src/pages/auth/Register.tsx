@@ -13,7 +13,7 @@ import { useTranslation } from "react-i18next";
 import { useAuthStore } from "@/store/useauthstore";
 import VerifyCode from "@/components/auth/VerifyCode";
 export default function Register() {
-  const { sendRegisterData } = useAuthStore();
+  const { sendRegisterData, error: authError } = useAuthStore();
   // translate
   const { t, i18n } = useTranslation();
   const isRTL = i18n.language === "ar";
@@ -33,8 +33,8 @@ export default function Register() {
       phone: z.string().min(1, { message: `${t(`Phoneisrequired`)}` }),
       password: z
         .string()
-        .min(8, { message: `${t(`Passwordmustbeatleast6characters`)}` }),
-      password_confirmation: z.string().min(8, {
+        .min(6, { message: `${t(`Passwordmustbeatleast6characters`)}` }),
+      password_confirmation: z.string().min(6, {
         message: `${t(`Passwordconfirmationmustbeatleast6characters`)}`,
       }),
     })
@@ -71,10 +71,14 @@ export default function Register() {
       console.log("Register: sending data ->", result.data);
       const res = await sendRegisterData(result.data);
       console.log("Register: response ->", res);
-      if (res) {
+
+      // If the API call returns successfully and status is true (or it's just truthy with no status false)
+      if (res && res.status !== false) {
         setVerifyEmail(result.data.email);
         setopenverifymodal(true);
         reset();
+      } else if (res && res.status === false) {
+        console.log("API returned status false:", res);
       }
     } catch (err) {
       console.error("Register: sendRegisterData error:", err);
@@ -98,7 +102,7 @@ export default function Register() {
     },
     {
       title: "Phone",
-      type: "Number",
+      type: "number",
       name: "phone",
       register: register("phone"),
       error: errors.phone?.message,
@@ -157,6 +161,15 @@ export default function Register() {
             onSubmit={handleSubmit(onSubmit)}
             className={`grid grid-cols-2 gap-4 pt-0 bg-white p-6 rounded-2xl ${isRTL ? 'text-right' : 'text-left'}`}
           >
+            {/* عرض أخطاء السيرفر */}
+            {authError && (
+              <div className="col-span-2 mb-2 p-3 bg-red-50 border border-red-300 rounded-xl text-red-600 font-semibold text-sm">
+                {typeof authError === "string"
+                  ? authError
+                  : Object.values(authError).flat().join(", ")}
+              </div>
+            )}
+
             {/* الاسم */}
             {signupInputs.map((inputt) => (
               <div
@@ -171,8 +184,8 @@ export default function Register() {
                   type={inputt.type}
                   placeholder={`${t("Enter")} ${t(`${inputt.title}`)}`}
                   className={`w-full p-3 border rounded-xl h-[50px] transition-all ${inputt.error
-                      ? "border-red-400 bg-red-50 focus:ring-red-300 focus:ring-2"
-                      : "border-gray-300 focus:ring-blue-300 focus:ring-2"
+                    ? "border-red-400 bg-red-50 focus:ring-red-300 focus:ring-2"
+                    : "border-gray-300 focus:ring-blue-300 focus:ring-2"
                     }`}
                   {...inputt.register}
                 />
