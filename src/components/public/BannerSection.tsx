@@ -67,6 +67,7 @@ const BannerSection: React.FC<BannerSectionProps> = ({
                 alt={`بانر ${index + 1}`}
                 className="w-full h-full !object-fill rounded-[16px]"
                 loading={index === 0 ? "eager" : "lazy"}
+                fetchPriority={index === 0 ? "high" : "auto"}
               />
             </SwiperSlide>
           ))}

@@ -4,7 +4,7 @@ import tailwindcss from "@tailwindcss/vite";
 import path from "path";
 
 export default defineConfig({
-    base: '/',
+  base: '/',
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
@@ -16,5 +16,23 @@ export default defineConfig({
   },
   optimizeDeps: {
     include: ['@botpress/webchat', '@botpress/chat']
-  }
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          // React core
+          'vendor-react': ['react', 'react-dom', 'react-router-dom'],
+          // UI Libraries
+          'vendor-swiper': ['swiper'],
+          // i18n
+          'vendor-i18n': ['react-i18next', 'i18next'],
+          // State management
+          'vendor-zustand': ['zustand'],
+          // Toast notifications
+          'vendor-toast': ['react-toastify'],
+        },
+      },
+    },
+  },
 });

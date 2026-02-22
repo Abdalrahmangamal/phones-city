@@ -42,13 +42,13 @@ export const useCertificateStore = create<CertificateState>()(
 
       // Fetch all certificates
       fetchCertificates: async () => {
-        console.log("fetchCertificates called");
+
         set(() => ({ loading: true, error: null }));
 
         try {
-          console.log("Making API request to /api/v1/certificates");
+
           const response = await axiosClient.get("/api/v1/certificates");
-          console.log("API Response:", response);
+
 
           if (response.data.status) {
             set(() => ({

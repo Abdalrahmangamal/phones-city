@@ -1,49 +1,54 @@
 // App.tsx
-import { useEffect } from "react";
+import { useEffect, Suspense, lazy } from "react";
 import { BrowserRouter, Routes, Route, Navigate, useParams } from "react-router-dom";
 import { useSettings } from "@/store/settings";
 import { useMaintenanceStore } from "@/store/maintenanceStore";
 import i18n from "@/i18n";
-import Home from "@/pages/Home";
-import About from "@/pages/about";
-import Servces from "@/pages/Servces";
-import Contact from "@/pages/Contact";
-import SpecialOffersPage from "./pages/products/SpecialOffersPage"; // الصفحة الفعلية لقائمة العروض
-import MaintenancePage from "./pages/MaintenancePage";
 import Loader from "./components/Loader";
 
-import Login from "./pages/auth/Login";
-import Register from "./pages/auth/Register";
-import ProductDetails from "./pages/ProductDetails";
-import ReturnPolicy from "./pages/customerCare/ReturnPolicy";
-import WarrantyPolicy from "./pages/customerCare/WarrantyPolicy";
-import TermsAndConditions from "./pages/customerCare/TermsAndConditions";
-import AboutQuara from "./pages/customerCare/AboutQuara";
-import AboutMora from "./pages/customerCare/AboutMora";
-import Profile from "./pages/profile/Profile";
-import Myorder from "./pages/profile/Myorder";
-import Bills from "./pages/profile/Bills";
-import Singlebills from "./pages/Singlebills";
-import Wallet from "./pages/profile/Wallet";
-import Address from "./pages/profile/Address";
-import Singleaddress from "./pages/Singleaddress";
-import Discounts from "./pages/profile/Discounts";
-import Favourite from "./pages/profile/Favourite";
-import Trademarks from "./pages/products/Trademarks";
-import BestSellerPage from "./pages/BestSellerPage";
-import Trademarkscategory from "./pages/Trademarkscategory";
-import Singleproduct from "./pages/products/Singleproduct";
-import SearchResults from "./pages/products/SearchResults";
-import CategorySingle from "./pages/products/CategorySingle";
-import Checkout from "./pages/checkout/Checkout";
+// Home is eagerly loaded (main entry point)
+import Home from "@/pages/Home";
+
+// Lazy-loaded pages (loaded on demand)
+const About = lazy(() => import("@/pages/about"));
+const Servces = lazy(() => import("@/pages/Servces"));
+const Contact = lazy(() => import("@/pages/Contact"));
+const SpecialOffersPage = lazy(() => import("./pages/products/SpecialOffersPage"));
+const MaintenancePage = lazy(() => import("./pages/MaintenancePage"));
+
+const Login = lazy(() => import("./pages/auth/Login"));
+const Register = lazy(() => import("./pages/auth/Register"));
+const ProductDetails = lazy(() => import("./pages/ProductDetails"));
+const ReturnPolicy = lazy(() => import("./pages/customerCare/ReturnPolicy"));
+const WarrantyPolicy = lazy(() => import("./pages/customerCare/WarrantyPolicy"));
+const TermsAndConditions = lazy(() => import("./pages/customerCare/TermsAndConditions"));
+const AboutQuara = lazy(() => import("./pages/customerCare/AboutQuara"));
+const AboutMora = lazy(() => import("./pages/customerCare/AboutMora"));
+const Profile = lazy(() => import("./pages/profile/Profile"));
+const Myorder = lazy(() => import("./pages/profile/Myorder"));
+const Bills = lazy(() => import("./pages/profile/Bills"));
+const Singlebills = lazy(() => import("./pages/Singlebills"));
+const Wallet = lazy(() => import("./pages/profile/Wallet"));
+const Address = lazy(() => import("./pages/profile/Address"));
+const Singleaddress = lazy(() => import("./pages/Singleaddress"));
+const Discounts = lazy(() => import("./pages/profile/Discounts"));
+const Favourite = lazy(() => import("./pages/profile/Favourite"));
+const Trademarks = lazy(() => import("./pages/products/Trademarks"));
+const BestSellerPage = lazy(() => import("./pages/BestSellerPage"));
+const Trademarkscategory = lazy(() => import("./pages/Trademarkscategory"));
+const Singleproduct = lazy(() => import("./pages/products/Singleproduct"));
+const SearchResults = lazy(() => import("./pages/products/SearchResults"));
+const CategorySingle = lazy(() => import("./pages/products/CategorySingle"));
+const Checkout = lazy(() => import("./pages/checkout/Checkout"));
+const Blog = lazy(() => import("./pages/Blog"));
+const SingleBlog = lazy(() => import("./pages/SingleBlog"));
+const Offers = lazy(() => import("./pages/products/Offers"));
+const Notifications = lazy(() => import("./pages/profile/nothification/Notifications"));
+
 import Protectedroutse from "./store/protectedroutse";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ScrollToTop from "./components/ScrollToTop";
-import Blog from "./pages/Blog";
-import SingleBlog from "./pages/SingleBlog";
-import Offers from "./pages/products/Offers";
-import Notifications from "./pages/profile/nothification/Notifications"; // أضف هذا الاستيراد
 
 // Language Wrapper Component
 function LangWrapper() {
@@ -63,54 +68,56 @@ function LangWrapper() {
   }, [urlLang]);
 
   return (
-    <Routes>
-      <Route path="" element={<Home />} />
-      <Route path="about" element={<About />} />
-      <Route path="servces" element={<Servces />} />
-      <Route path="contact" element={<Contact />} />
+    <Suspense fallback={<Loader />}>
+      <Routes>
+        <Route path="" element={<Home />} />
+        <Route path="about" element={<About />} />
+        <Route path="servces" element={<Servces />} />
+        <Route path="contact" element={<Contact />} />
 
-      {/* صفحة قائمة جميع العروض */}
-      <Route path="offers" element={<Offers />} />
+        {/* صفحة قائمة جميع العروض */}
+        <Route path="offers" element={<Offers />} />
 
-      <Route path="SpecialOffersPage" element={<SpecialOffersPage />} />
+        <Route path="SpecialOffersPage" element={<SpecialOffersPage />} />
 
-      {/* صفحة تفاصيل عرض فردي - الجديدة */}
-      {/* <Route path="offer/:slugOrId" element={<OfferDetails />} /> */}
+        {/* صفحة تفاصيل عرض فردي - الجديدة */}
+        {/* <Route path="offer/:slugOrId" element={<OfferDetails />} /> */}
 
-      <Route path="search" element={<SearchResults />} />
-      <Route path="login" element={<Login />} />
-      <Route path="register" element={<Register />} />
-      <Route path="product-details" element={<ProductDetails />} />
-      <Route path="return-policy" element={<ReturnPolicy />} />
-      <Route path="warranty-policy" element={<WarrantyPolicy />} />
-      <Route path="terms-and-conditions" element={<TermsAndConditions />} />
-      <Route path="about-quara" element={<AboutQuara />} />
-      <Route path="about-mora" element={<AboutMora />} />
+        <Route path="search" element={<SearchResults />} />
+        <Route path="login" element={<Login />} />
+        <Route path="register" element={<Register />} />
+        <Route path="product-details" element={<ProductDetails />} />
+        <Route path="return-policy" element={<ReturnPolicy />} />
+        <Route path="warranty-policy" element={<WarrantyPolicy />} />
+        <Route path="terms-and-conditions" element={<TermsAndConditions />} />
+        <Route path="about-quara" element={<AboutQuara />} />
+        <Route path="about-mora" element={<AboutMora />} />
 
-      {/* Protected Routes */}
-      <Route element={<Protectedroutse />}>
-        <Route path="profile" element={<Profile />} />
-        <Route path="wallet" element={<Wallet />} />
-        <Route path="notifications" element={<Notifications />} /> {/* أضف هذا المسار المحمي */}
-      </Route>
+        {/* Protected Routes */}
+        <Route element={<Protectedroutse />}>
+          <Route path="profile" element={<Profile />} />
+          <Route path="wallet" element={<Wallet />} />
+          <Route path="notifications" element={<Notifications />} />
+        </Route>
 
-      <Route path="myorder" element={<Myorder />} />
-      <Route path="bills" element={<Bills />} />
-      <Route path="singlebills" element={<Navigate to={`../bills`} replace />} />
-      <Route path="singlebills/:id" element={<Singlebills />} />
-      <Route path="address" element={<Address />} />
-      <Route path="singleaddress" element={<Singleaddress />} />
-      <Route path="discounts" element={<Discounts />} />
-      <Route path="favourite" element={<Favourite />} />
-      <Route path="trademarks/:id" element={<Trademarks />} />
-      <Route path="BestSellerPage" element={<BestSellerPage />} />
-      <Route path="trademarkscategory" element={<Trademarkscategory />} />
-      <Route path="singleproduct/:id" element={<Singleproduct />} />
-      <Route path="checkout" element={<Checkout />} />
-      <Route path="categorySingle/:id/:productmain?" element={<CategorySingle />} />
-      <Route path="blog" element={<Blog />} />
-      <Route path="blog/:slug" element={<SingleBlog />} />
-    </Routes>
+        <Route path="myorder" element={<Myorder />} />
+        <Route path="bills" element={<Bills />} />
+        <Route path="singlebills" element={<Navigate to={`../bills`} replace />} />
+        <Route path="singlebills/:id" element={<Singlebills />} />
+        <Route path="address" element={<Address />} />
+        <Route path="singleaddress" element={<Singleaddress />} />
+        <Route path="discounts" element={<Discounts />} />
+        <Route path="favourite" element={<Favourite />} />
+        <Route path="trademarks/:id" element={<Trademarks />} />
+        <Route path="BestSellerPage" element={<BestSellerPage />} />
+        <Route path="trademarkscategory" element={<Trademarkscategory />} />
+        <Route path="singleproduct/:id" element={<Singleproduct />} />
+        <Route path="checkout" element={<Checkout />} />
+        <Route path="categorySingle/:id/:productmain?" element={<CategorySingle />} />
+        <Route path="blog" element={<Blog />} />
+        <Route path="blog/:slug" element={<SingleBlog />} />
+      </Routes>
+    </Suspense>
   );
 }
 

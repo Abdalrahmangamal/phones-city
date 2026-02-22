@@ -1,16 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import logo from "../assets/images/logo.png";
 import { useTranslation } from "react-i18next";
 const Loader: React.FC = () => {
   const { t } = useTranslation();
-  const [rand, setRand] = useState(1);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setRand(Math.random());
-    }, 1000);
-    return () => clearInterval(interval);
-  }, []);
 
   return (
     <div className="fixed inset-0 bg-[#0a0f1c] flex items-center justify-center z-[9999]">
@@ -42,7 +34,7 @@ const Loader: React.FC = () => {
 
         {/* الشعار نفسه */}
         <img
-          src={logo}   
+          src={logo}
           alt="Phone City"
           className="w-24 drop-shadow-[0_0_15px_rgba(0,153,229,0.6)]
                      animate-[bounce-smooth_2s_ease-in-out_infinite]"

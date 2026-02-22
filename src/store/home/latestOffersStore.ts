@@ -51,7 +51,8 @@ export const useLatestOffersStore = create<LatestOffersState>()(
             },
           });
 
-          console.log('Offers API Response:', response.data);
+
+
 
           if (response.data.status && response.data.data) {
             const limitedOffers = response.data.data.slice(0, 6);

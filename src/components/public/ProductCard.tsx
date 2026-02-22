@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, memo } from "react";
 import { Rating, RatingButton } from "@/components/ui/shadcn-io/rating";
 import type { Product } from "@/types/index";
 import { useLangSync } from "@/hooks/useLangSync";
@@ -19,7 +19,7 @@ interface ProductCardProps {
   variations?: { color: string; image: string }[];
 }
 
-export default function ProductCard({ product, imagecard, containerstyle, quantity }: ProductCardProps) {
+function ProductCardInner({ product, imagecard, containerstyle, quantity }: ProductCardProps) {
   const { t } = useTranslation();
 
   const { addFavorite, removeFavorite, favorites } = useFavoritesStore();
@@ -124,7 +124,7 @@ export default function ProductCard({ product, imagecard, containerstyle, quanti
             src={currentImage}
             className={`md:!w-[220px] h-[160px] w-[160px] object-contain ${imagecard} md:!h-[220px]`}
             alt={product.name}
-            loading="eager"
+            loading="lazy"
           />
         </Link>
 
@@ -353,3 +353,16 @@ export default function ProductCard({ product, imagecard, containerstyle, quanti
     </div>
   );
 }
+
+const ProductCard = memo(ProductCardInner, (prevProps, nextProps) => {
+  return (
+    prevProps.product.id === nextProps.product.id &&
+    prevProps.product.name === nextProps.product.name &&
+    prevProps.product.final_price === nextProps.product.final_price &&
+    prevProps.product.main_image === nextProps.product.main_image &&
+    prevProps.product.stock_status === nextProps.product.stock_status &&
+    prevProps.product.quantity === nextProps.product.quantity
+  );
+});
+
+export default ProductCard;

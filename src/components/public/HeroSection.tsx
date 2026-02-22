@@ -86,6 +86,7 @@ const NewHeroSection: React.FC<HeroSectionProps> = ({ sliders, showButton = true
                 alt={`${slide.title} - Slide ${index + 1}`}
                 className="w-full h-full object-cover rounded-[16px]"
                 loading={index === 0 ? "eager" : "lazy"}
+                fetchPriority={index === 0 ? "high" : "auto"}
               />
 
               {/* Overlay */}

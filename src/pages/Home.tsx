@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import Layout from "@/components/layout/layout";
 import HeroSection from "@/components/public/HeroSection";
 import BannerSection from "@/components/public/BannerSection";
@@ -10,12 +10,8 @@ import LatestOffers from "@/components/home/LatestOffers";
 import Parttner from "@/components/public/Parttner";
 import AppDownloadSection from "@/components/home/AppDownloadSection";
 import CertificationBadgesSection from "@/components/home/CertificationBadgesSection";
-import Loader from "@/components/Loader";
 import SpecialOffersSection from "@/components/home/SpecialOffersSection";
 import HomePopup from "@/components/home/HomePopup";
-import BestSellersSection from "@/components/home/BestSellersSection";
-
-
 
 // Stores
 import { useProductsStore } from "@/store/productsStore";
@@ -25,22 +21,18 @@ import { useCategoriesStore } from "@/store/categories/useCategoriesStore";
 import useFeaturesStore from "@/store/home/featuresStore";
 import { useLangSync } from "@/hooks/useLangSync";
 import { useHomePageStore } from '@/store/home/homepageStore';
-import { usePopupStore } from '@/store/popupStore'; // Added popup store
-// import type { Product } from '@/types/index';
+import { usePopupStore } from '@/store/popupStore';
 
 const NewHome = () => {
-  const [isLoading, setIsLoading] = useState(false);
-
   const { fetchHomePage, data } = useHomePageStore();
   const { lang } = useLangSync();
-  const { isShowing, showPopup, hidePopup } = usePopupStore(); // Use popup store
+  const { isShowing, showPopup, hidePopup } = usePopupStore();
 
   useEffect(() => {
     fetchHomePage(lang);
-    console.log(lang)
   }, [lang]);
 
-  // All stores
+  // Product stores - use separate loading states
   const {
     fetchOffers,
     fetchBestSellers,
@@ -48,97 +40,45 @@ const NewHome = () => {
     offersProducts,
     bestSellerProducts,
     newArrivalsProducts,
-    response: productsResponse,
-    loading: productsLoading,
+    offersLoading,
+    bestSellersLoading,
+    newArrivalsLoading,
   } = useProductsStore();
 
   const { fetchSliders, sliders } = useHeroSectionStore();
   const { fetchCertificates, certificates } = useCertificateStore();
-  const { fetchCategories, categories } = useCategoriesStore();
+  const { fetchCategories } = useCategoriesStore();
   const { fetchFeatures, getFeaturesByLanguage } = useFeaturesStore();
 
   // Effect to show popup after a delay only if it hasn't been shown yet AND there are sliders
   useEffect(() => {
-    // Reset popup state when component mounts (homepage is visited)
     usePopupStore.getState().resetPopup();
 
     const popupTimer = setTimeout(() => {
-      // Check if popup has already been shown AND if there are actual sliders/offers
       if (!usePopupStore.getState().hasShown && sliders && sliders.length > 0) {
         showPopup();
       }
-    }, 10000); // Show popup after 10 seconds (as per user request)
+    }, 10000);
 
-    // Cleanup timer if component unmounts
     return () => {
       clearTimeout(popupTimer);
     };
   }, [sliders]);
 
-
-  // Fetch all data in one place
+  // Fetch all data in parallel — NO blocking loader
   useEffect(() => {
-    const loadAllData = async () => {
-      try {
-        setIsLoading(true);
-
-        await Promise.all([
-          // Special offers products
-          fetchOffers(lang),
-
-          // Best sellers products
-          fetchBestSellers(lang),
-
-          // New arrivals products
-          fetchNewArrivals(lang),
-
-          // Hero sliders
-          fetchSliders(lang),
-
-          // Certificates
-          fetchCertificates(),
-
-          // Product categories
-          fetchCategories(lang),
-
-          // Features (FrameSection)
-          fetchFeatures(),
-
-          // Trademarks / Brands (Parttner)
-          // fetchtradmarks(),
-        ]);
-      } catch (error) {
-        console.error("Error loading home page data:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    loadAllData();
+    // Fire all requests in parallel, each section loads independently
+    fetchOffers(lang);
+    fetchBestSellers(lang);
+    fetchNewArrivals(lang);
+    fetchSliders(lang);
+    fetchCertificates();
+    fetchCategories(lang);
+    fetchFeatures();
   }, [lang]);
-
-  // Helper to safely get products array
-  const getProductsArray = () => {
-    if (!productsResponse) return [];
-    if (Array.isArray(productsResponse)) return productsResponse.slice(0, 10);
-    return [productsResponse];
-  };
-
-  const products = getProductsArray();
 
   // Features translated by current language
   const langFeatures = getFeaturesByLanguage(lang === "ar" ? "ar" : "en") || [];
-
-  // Map categories to handle null images
-  const mappedCategories = categories.map(category => ({
-    ...category,
-    image: category.image || undefined
-  }));
-
-  // Global loading state
-  if (isLoading || productsLoading) {
-    return <Loader />;
-  }
 
   return (
     <Layout>
@@ -157,23 +97,20 @@ const NewHome = () => {
             title="SpecialOffersForYou"
             products={offersProducts || []}
             link="offers"
+            isLoading={offersLoading}
           />
           <SpecialOffersSection
             title="BestSellers"
             products={bestSellerProducts || []}
             link="BestSellerPage"
+            isLoading={bestSellersLoading}
           />
           <SpecialOffersSection
             title="NewArrivals"
             products={newArrivalsProducts || []}
             link="new-arrivals"
+            isLoading={newArrivalsLoading}
           />
-          {/* <SpecialOffersSection 
-            title="SpecialOffersForYou"    
-            products={offersProducts} 
-            link="offers"
-          /> */}
-
 
           <TestimonialsSection />
           <FrameSection features={langFeatures} />
@@ -181,9 +118,9 @@ const NewHome = () => {
           <Parttner />
           <AppDownloadSection
             key={lang}
-            title={data?.app_title}
-            description={data?.app_description}
-            image={data?.app_main_image}
+            title={data?.app_title || ""}
+            description={data?.app_description || ""}
+            image={data?.app_main_image || ""}
           />
         </main>
       </div>

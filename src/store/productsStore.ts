@@ -2,7 +2,6 @@ import { create } from "zustand";
 import axiosClient from "@/api/axiosClient";
 import type { Product } from "@/types/index";
 
-// تحديث الـ interface لإضافة المعلمات المفقودة
 interface productsParams {
   simple?: boolean;
   has_offer?: number;
@@ -25,7 +24,11 @@ interface PageState {
   bestSellerProducts?: Product[];
   offersProducts?: Product[];
   newArrivalsProducts?: Product[];
-  offersMeta?: any; // pagination metadata from backend (current_page, last_page, total...)
+  // Separate loading states for each section
+  offersLoading: boolean;
+  bestSellersLoading: boolean;
+  newArrivalsLoading: boolean;
+  offersMeta?: any;
   fetchBestSellers: (lang: string) => Promise<void>;
   fetchOffers: (lang: string, page?: number) => Promise<void>;
   fetchNewArrivals: (lang: string) => Promise<void>;
@@ -37,12 +40,14 @@ export const useProductsStore = create<PageState>((set) => ({
   loading: false,
   error: null,
   response: null,
+  offersLoading: false,
+  bestSellersLoading: false,
+  newArrivalsLoading: false,
 
   fetchProducts: async (params: productsParams = {}, lang?: string) => {
     try {
       set({ loading: true, error: null });
 
-      // تنظيف المعلمات - إزالة القيم undefined
       const cleanedParams: Record<string, unknown> = {};
       Object.keys(params).forEach(key => {
         if (params[key as keyof productsParams] !== undefined && params[key as keyof productsParams] !== null) {
@@ -63,7 +68,6 @@ export const useProductsStore = create<PageState>((set) => ({
         loading: false,
       });
 
-      // إرجاع البيانات لاستخدامها في Home.tsx
       return res.data.data;
     } catch (err: unknown) {
       const error = err as { response?: { data?: { message?: string } } };
@@ -78,16 +82,13 @@ export const useProductsStore = create<PageState>((set) => ({
 
   fetchOffers: async (lang: string, page: number = 1) => {
     try {
-      set({ loading: true });
+      set({ offersLoading: true });
 
       const res = await axiosClient.get(`api/v1/products`, {
         params: { has_offer: 1, per_page: 15, page, simple: true },
         headers: { "Accept-Language": lang },
       });
 
-
-
-      // Normalize pagination meta from common shapes (meta, pagination, pager...)
       const rawMeta = res.data.meta || res.data.pagination || res.data.pager || null;
       let normalizedMeta: any = null;
 
@@ -100,11 +101,10 @@ export const useProductsStore = create<PageState>((set) => ({
           per_page: rawMeta.per_page || rawMeta.limit || 15,
         };
       } else {
-        // If backend didn't return meta, infer simple meta from data length
         const len = Array.isArray(res.data.data) ? res.data.data.length : 0;
         normalizedMeta = {
           current_page: page,
-          last_page: len < 15 ? page : page, // can't infer further; will allow Next to be clicked to verify
+          last_page: len < 15 ? page : page,
           total: undefined,
           per_page: 15,
         };
@@ -113,15 +113,14 @@ export const useProductsStore = create<PageState>((set) => ({
       set({
         offersProducts: res.data.data,
         offersMeta: normalizedMeta,
-        loading: false,
+        offersLoading: false,
       });
 
-      // return the response for callers that want to inspect meta
       return res.data;
     } catch (err: any) {
       set({
         error: err?.response?.data?.message,
-        loading: false,
+        offersLoading: false,
       });
       throw err;
     }
@@ -129,7 +128,7 @@ export const useProductsStore = create<PageState>((set) => ({
 
   fetchBestSellers: async (lang: string) => {
     try {
-      set({ loading: true });
+      set({ bestSellersLoading: true });
 
       const res = await axiosClient.get(`api/v1/products`, {
         params: { best_seller: true, per_page: 10, simple: true },
@@ -138,19 +137,19 @@ export const useProductsStore = create<PageState>((set) => ({
 
       set({
         bestSellerProducts: res.data.data,
-        loading: false,
+        bestSellersLoading: false,
       });
     } catch (err: any) {
       set({
         error: err?.response?.data?.message,
-        loading: false,
+        bestSellersLoading: false,
       });
     }
   },
 
   fetchNewArrivals: async (lang: string) => {
     try {
-      set({ loading: true });
+      set({ newArrivalsLoading: true });
 
       const res = await axiosClient.get(`api/v1/products/new-arrivals`, {
         params: { simple: true },
@@ -159,12 +158,12 @@ export const useProductsStore = create<PageState>((set) => ({
 
       set({
         newArrivalsProducts: res.data.data,
-        loading: false,
+        newArrivalsLoading: false,
       });
     } catch (err: any) {
       set({
         error: err?.response?.data?.message,
-        loading: false,
+        newArrivalsLoading: false,
       });
     }
   },
@@ -173,9 +172,7 @@ export const useProductsStore = create<PageState>((set) => ({
     try {
       set({ loading: true, error: null });
 
-      // Get user token to track product views
       const token = localStorage.getItem("token");
-      console.log("📦 Product View Request - Token:", token ? "✅ Token found" : "❌ No token (guest user)");
 
       const res = await axiosClient.get(`api/v1/products/${id}`, {
         params,
@@ -184,8 +181,6 @@ export const useProductsStore = create<PageState>((set) => ({
           ...(token && { Authorization: `Bearer ${token}` }),
         },
       });
-
-
 
       set({
         response: res.data.data,

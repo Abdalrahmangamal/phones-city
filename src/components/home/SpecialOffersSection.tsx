@@ -35,6 +35,32 @@ const SpecialOffersSection: React.FC<SpecialOffersSectionProps> = ({
   // إنشاء unique ID لكل slider بناءً على title لمنع التزامن
   const sliderId = title.replace(/\s+/g, '-').toLowerCase();
 
+  const slidesPerView = 4;
+
+  const calculateShouldAllowSlide = () => {
+    if (!products || products.length === 0) return false;
+    const width = window.innerWidth;
+    let currentSlidesPerView = slidesPerView;
+
+    if (width < 480) currentSlidesPerView = 3;
+    else if (width < 640) currentSlidesPerView = 3;
+    else if (width < 768) currentSlidesPerView = 3;
+    else if (width < 1024) currentSlidesPerView = 3;
+    else if (width < 1280) currentSlidesPerView = 3;
+    else currentSlidesPerView = 4;
+
+    return products.length > currentSlidesPerView;
+  };
+
+  useEffect(() => {
+    setShouldAllowSlide(calculateShouldAllowSlide());
+    const handleResize = () => {
+      setShouldAllowSlide(calculateShouldAllowSlide());
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [products?.length, lang]);
+
   // حالة التحميل
   if (isLoading) {
     return (
@@ -116,35 +142,10 @@ const SpecialOffersSection: React.FC<SpecialOffersSectionProps> = ({
     );
   }
 
-
   if (!products || products.length === 0) {
     return null;
   }
 
-  const slidesPerView = 4;
-
-  const calculateShouldAllowSlide = () => {
-    const width = window.innerWidth;
-    let currentSlidesPerView = slidesPerView;
-
-    if (width < 480) currentSlidesPerView = 3;
-    else if (width < 640) currentSlidesPerView = 3;
-    else if (width < 768) currentSlidesPerView = 3;
-    else if (width < 1024) currentSlidesPerView = 3;
-    else if (width < 1280) currentSlidesPerView = 3;
-    else currentSlidesPerView = 4;
-
-    return products.length > currentSlidesPerView;
-  };
-
-  useEffect(() => {
-    setShouldAllowSlide(calculateShouldAllowSlide());
-    const handleResize = () => {
-      setShouldAllowSlide(calculateShouldAllowSlide());
-    };
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, [products.length, lang]);
 
   return (
     <div className={`special-offers-container w-full flex md:mt-[80px] flex-col xl:px-[90px] px-2 pt-0 md:pt-0 items-start md:gap-[32px] gap-[0px] ${style}`}>

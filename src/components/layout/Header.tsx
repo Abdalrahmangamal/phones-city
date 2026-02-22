@@ -112,26 +112,43 @@ export default function Header() {
   const headerKey = lang;
 
   // تحديث useEffect للإشعارات لاستخدام الـ store
+  // Cache ref to avoid re-fetching on every page navigation
+  const lastFetchRef = useRef<{ notifications: number; categories: string; cart: number; favorites: number }>({
+    notifications: 0,
+    categories: '',
+    cart: 0,
+    favorites: 0,
+  });
+  const CACHE_DURATION = 60000; // 60 seconds
+
   useEffect(() => {
-    if (token) {
+    if (token && Date.now() - lastFetchRef.current.notifications > CACHE_DURATION) {
       fetchNotifications();
+      lastFetchRef.current.notifications = Date.now();
     }
-  }, [token, fetchNotifications]);
+  }, [token]);
 
   // جلب الأقسام عند تحميل المكون وعند تغيير اللغة
   useEffect(() => {
-    fetchCategories(lang);
-  }, [lang, fetchCategories]);
-
-  useEffect(() => {
-    fetchCart();
-  }, [fetchCart]);
-
-  useEffect(() => {
-    if (token) {
-      fetchFavorites();
+    if (lastFetchRef.current.categories !== lang) {
+      fetchCategories(lang);
+      lastFetchRef.current.categories = lang;
     }
-  }, [token, fetchFavorites]);
+  }, [lang]);
+
+  useEffect(() => {
+    if (Date.now() - lastFetchRef.current.cart > CACHE_DURATION) {
+      fetchCart();
+      lastFetchRef.current.cart = Date.now();
+    }
+  }, []);
+
+  useEffect(() => {
+    if (token && Date.now() - lastFetchRef.current.favorites > CACHE_DURATION) {
+      fetchFavorites();
+      lastFetchRef.current.favorites = Date.now();
+    }
+  }, [token]);
 
   const navitem = [
     { link: `/${lang}/`, name: `${t("Home")}` },
@@ -437,7 +454,7 @@ export default function Header() {
                 </DropdownMenuContent>
               </DropdownMenu>
 
-{/* قائمة المفضلة */}
+              {/* قائمة المفضلة */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <button className="relative" aria-label={t("favourite")}>

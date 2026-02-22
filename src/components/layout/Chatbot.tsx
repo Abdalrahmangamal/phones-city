@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { useWebchat } from '@botpress/webchat';
-import botGif from '../../assets/images/Untitled design (1).gif';
+import botGif from '../../assets/images/ezgif-5c28a7a768da984f.webp';
 import { useSettings } from "@/store/settings";
 
 export default function Chatbot() {
@@ -120,30 +120,30 @@ export default function Chatbot() {
   return (
     <>
       {!isOpen && (
-  <img
-    src={botGif}
-    alt="Chat Bot"
-    onClick={() => setIsOpen(!isOpen)}
-    className={`fixed z-[500] 
+        <img
+          src={botGif}
+          alt="Chat Bot"
+          onClick={() => setIsOpen(!isOpen)}
+          className={`fixed z-[500] 
       w-[160px] h-[140px] md:w-[200px] md:h-[180px] 
       bottom-[-15px] md:bottom-[-20px]
       ${isEn ? 'right-[-15px] md:right-[-20px]' : 'left-[-15px] md:left-[-20px]'} 
       cursor-pointer transition-transform duration-300 hover:scale-110`}
-  />
-)}
+        />
+      )}
 
       <AnimatePresence>
         {isOpen && (
           <motion.div
-      initial={{ opacity: 0, y: 20, scale: 0.95 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      exit={{ opacity: 0, y: 20, scale: 0.95 }}
-      className={`fixed bottom-24 md:bottom-28 
+            initial={{ opacity: 0, y: 20, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.95 }}
+            className={`fixed bottom-24 md:bottom-28 
         ${isEn ? 'right-4 md:right-6' : 'left-4 md:left-6'} 
         z-50 w-[90vw] max-w-[360px] h-[75vh] max-h-[550px] 
         bg-white rounded-2xl shadow-2xl flex flex-col border border-gray-100 overflow-hidden font-sans`}
-      style={{ direction: isEn ? 'ltr' : 'rtl' }}
-    >
+            style={{ direction: isEn ? 'ltr' : 'rtl' }}
+          >
             <div className="bg-[#2F2C79] text-white p-4 flex items-center justify-between shadow-md z-10">
               <div className="flex items-center gap-3">
                 <div className="relative">
@@ -189,16 +189,16 @@ export default function Chatbot() {
                 const userStyle = {
                   container: "self-start",
                   bubble: `bg-[#2F2C79] text-white shadow-md ${isEn
-                      ? "rounded-tr-2xl rounded-tl-2xl rounded-br-2xl rounded-bl-none" // Tail Bottom Left
-                      : "rounded-tr-2xl rounded-tl-2xl rounded-bl-2xl rounded-br-none" // Tail Bottom Right (Original)
+                    ? "rounded-tr-2xl rounded-tl-2xl rounded-br-2xl rounded-bl-none" // Tail Bottom Left
+                    : "rounded-tr-2xl rounded-tl-2xl rounded-bl-2xl rounded-br-none" // Tail Bottom Right (Original)
                     }`,
                 };
 
                 const botStyle = {
                   container: "self-end",
                   bubble: `bg-white text-gray-800 border border-gray-100 shadow-sm ${isEn
-                      ? "rounded-tr-2xl rounded-tl-2xl rounded-bl-2xl rounded-br-none" // Tail Bottom Right
-                      : "rounded-tr-2xl rounded-tl-2xl rounded-br-2xl rounded-bl-none" // Tail Bottom Left (Original)
+                    ? "rounded-tr-2xl rounded-tl-2xl rounded-bl-2xl rounded-br-none" // Tail Bottom Right
+                    : "rounded-tr-2xl rounded-tl-2xl rounded-br-2xl rounded-bl-none" // Tail Bottom Left (Original)
                     }`,
                 };
 
