@@ -81,7 +81,7 @@ export const useProductsStore = create<PageState>((set) => ({
       set({ loading: true });
 
       const res = await axiosClient.get(`api/v1/products`, {
-        params: { has_offer: 1, per_page: 15, page },
+        params: { has_offer: 1, per_page: 15, page, simple: true },
         headers: { "Accept-Language": lang },
       });
 
@@ -132,7 +132,7 @@ export const useProductsStore = create<PageState>((set) => ({
       set({ loading: true });
 
       const res = await axiosClient.get(`api/v1/products`, {
-        params: { best_seller: true, per_page: 10 },
+        params: { best_seller: true, per_page: 10, simple: true },
         headers: { "Accept-Language": lang },
       });
 
@@ -153,6 +153,7 @@ export const useProductsStore = create<PageState>((set) => ({
       set({ loading: true });
 
       const res = await axiosClient.get(`api/v1/products/new-arrivals`, {
+        params: { simple: true },
         headers: { "Accept-Language": lang },
       });
 

@@ -47,6 +47,7 @@ export const useLatestOffersStore = create<LatestOffersState>()(
             },
             params: {
               limit: 6,
+              simple: true,
             },
           });
 
@@ -58,13 +59,13 @@ export const useLatestOffersStore = create<LatestOffersState>()(
             const offersWithFullImageUrls = limitedOffers.map((offer: Offer) => ({
               ...offer,
               // إذا كانت الصورة رابطًا نسبيًا، أضف الـ base URL
-              image: offer.image 
-                ? (offer.image.startsWith('http') 
-                    ? offer.image 
-                    : `${baseUrl}/storage/${offer.image}`)
+              image: offer.image
+                ? (offer.image.startsWith('http')
+                  ? offer.image
+                  : `${baseUrl}/storage/${offer.image}`)
                 : '',
             }));
-            
+
             set({ offers: offersWithFullImageUrls, loading: false });
           } else {
             set({ error: 'Failed to fetch offers: ' + response.data.message, loading: false });
