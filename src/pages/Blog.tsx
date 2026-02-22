@@ -130,46 +130,61 @@ export default function Blog() {
                 {/* Pagination */}
                 <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-6 bg-gradient-to-r from-[#211C4D]/10 to-[#211C4D]/5 backdrop-blur-md rounded-2xl p-6 border border-[#211C4D]/20 shadow-2xl mt-8 mb-8">
                   <div className="text-center sm:text-left"></div>
-                  <div className="flex items-center justify-center gap-3">
+                  <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 w-full sm:w-auto">
                     <button
                       onClick={() => handlePageChange(currentPage - 1)}
                       disabled={currentPage === 1}
-                      className={`group flex items-center gap-2 px-5 py-3 rounded-xl font-medium transition-all duration-300 ${currentPage === 1
+                      className={`group flex items-center justify-center gap-1 sm:gap-2 px-3 sm:px-5 py-2 sm:py-3 rounded-lg sm:rounded-xl font-medium text-xs sm:text-base transition-all duration-300 flex-1 sm:flex-none sm:min-w-[120px] ${currentPage === 1
                         ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-                        : "bg-white text-[#211C4D] hover:bg-[#211C4D] hover:text-white shadow-md hover:shadow-lg"
+                        : "bg-[#211C4D] text-white hover:bg-yellow-600 hover:shadow-lg hover:shadow-yellow-500/30 transform hover:scale-105"
                         }`}
                     >
-                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`w-5 h-5 transition-transform ${lang === "ar" ? "rotate-180 group-hover:translate-x-1" : "group-hover:-translate-x-1"}`}>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`w-4 h-4 sm:w-5 sm:h-5 transition-transform ${lang === "ar" ? "rotate-180 group-hover:translate-x-1" : "group-hover:-translate-x-1"}`}>
                         <path d="m15 18-6-6 6-6"></path>
                       </svg>
-                      {t("Previous")}
+                      <span className="inline-block sm:inline">{t("Previous")}</span>
                     </button>
 
-                    <div className="flex items-center gap-2">
-                      {pagination && Array.from({ length: pagination.last_page }, (_, i) => i + 1).map((page) => (
-                        <button
-                          key={page}
-                          onClick={() => handlePageChange(page)}
-                          className={`w-12 h-12 rounded-xl font-semibold text-lg transition-all duration-300 flex items-center justify-center ${currentPage === page
-                            ? "bg-yellow-500 text-[#211C4D] shadow-xl shadow-yellow-500/50 scale-110"
-                            : "bg-white text-[#211C4D] hover:bg-[#211C4D] hover:text-white shadow-md hover:shadow-lg"
-                            }`}
-                        >
-                          {page}
-                        </button>
-                      ))}
+                    <div className="flex flex-wrap items-center justify-center gap-1 sm:gap-2" dir="ltr">
+                      {(() => {
+                        const totalPages = pagination?.last_page || 1;
+                        const pages: number[] = [];
+                        if (totalPages <= 5) {
+                          for (let i = 1; i <= totalPages; i++) pages.push(i);
+                        } else {
+                          let startPage = Math.max(1, currentPage - 2);
+                          let endPage = Math.min(totalPages, currentPage + 2);
+                          if (endPage - startPage < 4) {
+                            if (startPage === 1) endPage = 5;
+                            else if (endPage === totalPages) startPage = totalPages - 4;
+                          }
+                          for (let i = startPage; i <= endPage; i++) pages.push(i);
+                        }
+                        return pages.map((page) => (
+                          <button
+                            key={page}
+                            onClick={() => handlePageChange(page)}
+                            className={`w-8 h-8 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl font-semibold text-sm sm:text-lg transition-all duration-300 flex items-center justify-center ${currentPage === page
+                              ? "bg-yellow-500 text-[#211C4D] shadow-md sm:shadow-xl shadow-yellow-500/50 scale-105 sm:scale-110"
+                              : "bg-white text-[#211C4D] hover:bg-[#211C4D] hover:text-white hover:shadow-md border border-[#211C4D]/20"
+                              }`}
+                          >
+                            {page}
+                          </button>
+                        ));
+                      })()}
                     </div>
 
                     <button
                       onClick={() => handlePageChange(currentPage + 1)}
                       disabled={!pagination || currentPage === pagination.last_page}
-                      className={`group flex items-center gap-2 px-5 py-3 rounded-xl font-medium transition-all duration-300 ${!pagination || currentPage === pagination.last_page
+                      className={`group flex items-center justify-center gap-1 sm:gap-2 px-3 sm:px-5 py-2 sm:py-3 rounded-lg sm:rounded-xl font-medium text-xs sm:text-base transition-all duration-300 flex-1 sm:flex-none sm:min-w-[120px] ${!pagination || currentPage === pagination.last_page
                         ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-                        : "bg-white text-[#211C4D] hover:bg-[#211C4D] hover:text-white shadow-md hover:shadow-lg"
+                        : "bg-[#211C4D] text-white hover:bg-yellow-600 hover:shadow-lg hover:shadow-yellow-500/30 transform hover:scale-105"
                         }`}
                     >
-                      {t("Next")}
-                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`w-5 h-5 transition-transform ${lang === "ar" ? "rotate-180 group-hover:-translate-x-1" : "group-hover:translate-x-1"}`}>
+                      <span className="inline-block sm:inline">{t("Next")}</span>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`w-4 h-4 sm:w-5 sm:h-5 transition-transform ${lang === "ar" ? "rotate-180 group-hover:-translate-x-1" : "group-hover:translate-x-1"}`}>
                         <path d="m9 18 6-6-6-6"></path>
                       </svg>
                     </button>
