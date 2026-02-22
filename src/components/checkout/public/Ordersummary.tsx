@@ -234,7 +234,7 @@ export default function OrderSummary({
           <div
             key={provider.id}
             onClick={() => handlePaymentSelect(provider.id)}
-            className={`flex items-center gap-4 rounded-lg border p-4 cursor-pointer transition-all ${selectedPaymentId === provider.id
+            className={`grid grid-cols-[auto_1fr_auto] items-start sm:items-center gap-3 sm:gap-4 rounded-lg border p-3 sm:p-4 cursor-pointer transition-all ${selectedPaymentId === provider.id
               ? "border-blue-500 bg-blue-50"
               : "border-gray-200 hover:border-gray-400"
               }`}
@@ -245,49 +245,52 @@ export default function OrderSummary({
               name="payment"
               checked={selectedPaymentId === provider.id}
               onChange={() => handlePaymentSelect(provider.id)}
-              className="h-5 w-5 text-blue-600"
+              className="h-5 w-5 text-blue-600 mt-0.5 sm:mt-0"
               aria-label={provider.name}
             />
 
-            <div className="flex-1">
-              <p className={`text-sm font-medium ${isRTL ? 'text-right' : 'text-left'}`}>{provider.name}</p>
-              <p className={`text-xs text-gray-500 mt-1 ${isRTL ? 'text-right' : 'text-left'}`}>{provider.description}</p>
+            <div className="min-w-0">
+              <p className={`text-sm font-medium break-words ${isRTL ? 'text-right' : 'text-left'}`}>{provider.name}</p>
+              <p className={`text-xs text-gray-500 mt-1 leading-5 break-words ${isRTL ? 'text-right' : 'text-left'}`}>{provider.description}</p>
             </div>
 
-            <img src={provider.logo} alt={provider.name} className="h-10 w-auto max-w-[100px] object-contain" />
+            <img src={provider.logo} alt={provider.name} className="h-8 sm:h-10 w-auto max-w-[84px] sm:max-w-[100px] object-contain self-center" />
           </div>
         ))}
 
         {/* التحويل البنكي المباشر */}
         <div
           onClick={() => handlePaymentSelect(BANK_TRANSFER_ID)}
-          className={`flex items-center justify-between gap-4 rounded-lg border p-4 cursor-pointer transition-all ${(selectedPaymentId === BANK_TRANSFER_ID || isBankTransferSelected)
+          className={`grid grid-cols-[auto_1fr_auto] items-start sm:items-center gap-3 sm:gap-4 rounded-lg border p-3 sm:p-4 cursor-pointer transition-all ${(selectedPaymentId === BANK_TRANSFER_ID || isBankTransferSelected)
             ? "border-blue-500 bg-blue-50"
             : "border-gray-200 hover:border-gray-400"
             }`}
           dir={isRTL ? "rtl" : "ltr"}
-          style={{ height: '70px', borderRadius: '8px' }}
         >
-          <div className="flex items-center gap-4">
-            <input
-              type="radio"
-              name="payment"
-              checked={selectedPaymentId === BANK_TRANSFER_ID || isBankTransferSelected}
-              onChange={() => handlePaymentSelect(BANK_TRANSFER_ID)}
-              className="h-5 w-5 text-blue-600"
-              aria-label={isRTL ? "التحويل البنكي المباشر" : "Direct Bank Transfer"}
-            />
+          <input
+            type="radio"
+            name="payment"
+            checked={selectedPaymentId === BANK_TRANSFER_ID || isBankTransferSelected}
+            onChange={() => handlePaymentSelect(BANK_TRANSFER_ID)}
+            className="h-5 w-5 text-blue-600 mt-0.5 sm:mt-0"
+            aria-label={isRTL ? "التحويل البنكي المباشر" : "Direct Bank Transfer"}
+          />
+
+          <div className="min-w-0">
             <p
-              className="text-base font-normal"
+              className="text-sm sm:text-base font-medium sm:font-normal leading-5 break-words"
               style={{ fontFamily: 'Roboto', color: '#211C4D' }}
             >
               {isRTL ? "التحويل البنكي المباشر" : "Direct Bank Transfer"}
             </p>
+            <p className={`text-[11px] sm:text-xs text-gray-500 mt-1 ${isRTL ? "text-right" : "text-left"}`}>
+              {isRTL ? "ارفع إيصال التحويل بعد إتمام الدفع" : "Upload transfer receipt after payment"}
+            </p>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 self-center">
             {/* أيقونة البنك */}
-            <div className="w-[38px] h-[38px] flex items-center justify-center bg-gray-100 rounded-lg">
+            <div className="w-9 h-9 sm:w-[38px] sm:h-[38px] flex items-center justify-center bg-gray-100 rounded-lg shrink-0">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M12 2L2 7V10H22V7L12 2Z" stroke="#211C4D" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                 <path d="M4 10V20" stroke="#211C4D" strokeWidth="1.5" strokeLinecap="round" />
@@ -305,7 +308,7 @@ export default function OrderSummary({
                 handlePaymentSelect(BANK_TRANSFER_ID);
                 setIsBankTransferModalOpen(true);
               }}
-              className="w-6 h-6 flex items-center justify-center hover:bg-gray-200 rounded transition"
+              className="w-8 h-8 sm:w-6 sm:h-6 flex items-center justify-center hover:bg-gray-200 rounded transition shrink-0"
               title={isRTL ? "تعديل معلومات الحساب" : "Edit account info"}
             >
               <Pencil className="w-4 h-4" style={{ color: '#211C4D' }} />
@@ -315,9 +318,9 @@ export default function OrderSummary({
       </div>
 
       {/* Madfu Notification */}
-      <div className="mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200 flex flex-col items-center text-center gap-3">
-        <img src={footerLogo} alt="Madfu" className="h-8 object-contain" />
-        <p className="text-sm text-gray-600 font-medium leading-relaxed">
+      <div className="mt-4 p-3 sm:p-4 bg-gray-50 rounded-lg border border-gray-200 flex flex-col items-center text-center gap-2 sm:gap-3">
+        <img src={footerLogo} alt="Madfu" className="h-7 sm:h-8 max-w-full object-contain" />
+        <p className="text-xs sm:text-sm text-gray-600 font-medium leading-relaxed px-1">
           {t("SoonMadfu")}
         </p>
       </div>

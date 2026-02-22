@@ -20,7 +20,6 @@ interface BankDetails {
     accountHolderName: string;
     iban: string;
     accountNumber: string;
-    swiftCode?: string;
     branch?: string;
     bankInstructions?: string;
 }
@@ -44,7 +43,6 @@ export default function BankTransferModal({
         accountHolderName: "",
         iban: "",
         accountNumber: "",
-        swiftCode: "",
         branch: "",
         bankInstructions: "",
     });
@@ -72,7 +70,6 @@ export default function BankTransferModal({
                     accountHolderName: data.account_holder || "",
                     iban: data.iban || "",
                     accountNumber: data.account_number || "",
-                    swiftCode: data.swift_code || "",
                     branch: data.branch || "",
                     bankInstructions: data.bank_instructions || "",
                 });
@@ -301,28 +298,6 @@ export default function BankTransferModal({
                                             {bankDetails.accountNumber || (isRTL ? "غير متوفر" : "Not available")}
                                         </div>
                                     </div>
-
-                                    {/* Swift Code */}
-                                    {bankDetails.swiftCode && (
-                                        <div className="space-y-2">
-                                            <label
-                                                className="block font-semibold text-base"
-                                                style={{ color: "#211C4D", fontFamily: "Roboto" }}
-                                            >
-                                                {isRTL ? "رمز Swift" : "Swift Code"}
-                                            </label>
-                                            <div
-                                                className="w-full min-h-[56px] px-4 py-3 border border-gray-300 rounded-lg text-base bg-gray-50 flex items-center"
-                                                style={{
-                                                    fontFamily: "Roboto",
-                                                    color: "rgba(33, 28, 77, 0.8)",
-                                                    textAlign: isRTL ? "right" : "left",
-                                                }}
-                                            >
-                                                {bankDetails.swiftCode}
-                                            </div>
-                                        </div>
-                                    )}
 
                                     {/* Branch */}
                                     {bankDetails.branch && (

@@ -1,5 +1,5 @@
 import Layout from "@/components/layout/Layout";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -22,11 +22,14 @@ interface AddressFormData {
 export default function Singleaddress() {
   const { t, i18n } = useTranslation();
   const { lang } = useLangSync();
+  const routeLang = lang?.startsWith("en") ? "en" : "ar";
 
   const navigate = useNavigate();
-  const { addAddress, loading, error, setError, fetchCities, cities } =
+  const location = useLocation();
+  const { addAddress, updateAddress, fetchAddresses, getAddressById, loading, error, setError, fetchCities, cities } =
     useAddressStore();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [prefilledAddressId, setPrefilledAddressId] = useState<number | null>(null);
   const {
     register,
     handleSubmit,
@@ -40,11 +43,65 @@ export default function Singleaddress() {
     },
   });
 
+  const navigationState = (location.state || {}) as {
+    returnTo?: string;
+    checkoutStep?: number;
+    fromCheckout?: boolean;
+    editAddressId?: number;
+  };
+
+  const editingAddressId =
+    typeof navigationState.editAddressId === "number" ? navigationState.editAddressId : null;
+  const isEditMode = editingAddressId !== null;
+
+  const fallbackReturnPath = `/${routeLang}/address`;
+  const returnPath =
+    typeof navigationState.returnTo === "string" && navigationState.returnTo.startsWith("/")
+      ? navigationState.returnTo
+      : fallbackReturnPath;
+
+  const returnState =
+    typeof navigationState.checkoutStep === "number"
+      ? { checkoutStep: navigationState.checkoutStep, fromAddressSaved: true }
+      : undefined;
+
   // تعيين القيم الافتراضية عند التحميل
   useEffect(() => {
     setValue("country", "المملكة العربية السعودية");
     fetchCities(lang);
   }, [setValue, lang]);
+
+  useEffect(() => {
+    if (!isEditMode || !editingAddressId) return;
+
+    const targetAddress = getAddressById(editingAddressId);
+    if (!targetAddress) {
+      fetchAddresses().catch(() => {
+        // handled by store error state
+      });
+    }
+  }, [isEditMode, editingAddressId, getAddressById, fetchAddresses]);
+
+  useEffect(() => {
+    if (!isEditMode || !editingAddressId) return;
+    if (prefilledAddressId === editingAddressId) return;
+
+    const targetAddress = getAddressById(editingAddressId);
+    if (!targetAddress) return;
+
+    reset({
+      first_name: targetAddress.first_name || "",
+      last_name: targetAddress.last_name || "",
+      street_address: targetAddress.street_address || "",
+      national_address: targetAddress.national_address || "",
+      city_id: targetAddress.city_id ? String(targetAddress.city_id) : "",
+      country: targetAddress.country || "المملكة العربية السعودية",
+      phone: targetAddress.phone || "",
+      email: targetAddress.email || "",
+      label: targetAddress.label || "",
+    });
+    setPrefilledAddressId(editingAddressId);
+  }, [isEditMode, editingAddressId, prefilledAddressId, getAddressById, reset]);
 
   const onSubmit = async (data: AddressFormData) => {
     setIsSubmitting(true);
@@ -65,13 +122,21 @@ export default function Singleaddress() {
         label: data.label || null,
       };
 
-      await addAddress(addressData);
+      if (isEditMode && editingAddressId) {
+        await updateAddress(editingAddressId, addressData);
+      } else {
+        await addAddress(addressData);
+      }
 
       // عرض رسالة النجاح
       toast.success(
         i18n.language === "ar"
-          ? "تم إضافة العنوان بنجاح"
-          : "Address added successfully",
+          ? isEditMode
+            ? "تم تحديث العنوان بنجاح"
+            : "تم إضافة العنوان بنجاح"
+          : isEditMode
+            ? "Address updated successfully"
+            : "Address added successfully",
         {
           position: i18n.language === "ar" ? "top-center" : "top-center",
           autoClose: 3000,
@@ -87,7 +152,10 @@ export default function Singleaddress() {
 
       // الانتقال إلى صفحة العناوين بعد ثانية ونصف (لإعطاء وقت لعرض الـ toast)
       setTimeout(() => {
-        navigate("/address");
+        navigate(returnPath, {
+          replace: true,
+          state: returnState,
+        });
       }, 1500);
     } catch (err: any) {
       console.error("Error adding address:", err);
@@ -109,7 +177,7 @@ export default function Singleaddress() {
   };
 
   const handleCancel = () => {
-    navigate("/address");
+    navigate(returnPath, { state: returnState });
   };
 
   return (
@@ -134,7 +202,9 @@ export default function Singleaddress() {
           className="w-full max-w-5xl mx-auto p-10 rounded-2xl mt-10"
         >
           <h2 className="text-[#211C4D] text-[24px] font-semibold mb-8 text-right">
-            {t("Address Details")}
+            {isEditMode
+              ? (i18n.language === "ar" ? "تعديل العنوان" : "Edit Address")
+              : t("Address Details")}
           </h2>
 
           {error && (
@@ -399,7 +469,11 @@ export default function Singleaddress() {
               disabled={loading || isSubmitting}
               className="w-full md:w-[40%] bg-[#F3AC5D] text-white py-3 rounded-lg text-[24px] font-semibold hover:opacity_id-90 disabled:opacity_id-50 disabled:cursor-not-allowed"
             >
-              {loading || isSubmitting ? t("Saving...") : t("Save Address")}
+              {loading || isSubmitting
+                ? t("Saving...")
+                : isEditMode
+                  ? (i18n.language === "ar" ? "تحديث العنوان" : "Update Address")
+                  : t("Save Address")}
             </button>
             <button
               type="button"

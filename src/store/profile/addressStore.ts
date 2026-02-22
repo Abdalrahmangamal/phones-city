@@ -86,7 +86,7 @@ interface AddressState {
 
   fetchAddresses: () => Promise<void>;
   addAddress: (addressData: AddAddressInput) => Promise<void>;
-  updateAddress: (id: number, addressData: Partial<Address>) => Promise<void>;
+  updateAddress: (id: number, addressData: Partial<AddAddressInput>) => Promise<void>;
   deleteAddress: (id: number) => Promise<void>;
   selectAddress: (id: number) => void;
 

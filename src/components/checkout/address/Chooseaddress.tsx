@@ -9,7 +9,7 @@ import { useTranslation } from "react-i18next";
 
 export default function Chooseaddress() {
   const { t, i18n } = useTranslation();
-  const currentLanguage = i18n.language;
+  const currentLanguage = i18n.language?.startsWith("en") ? "en" : "ar";
   const isRTL = currentLanguage === "ar";
 
   const {
@@ -32,7 +32,24 @@ export default function Chooseaddress() {
   const navigate = useNavigate();
 
   const handleAddNewAddress = () => {
-    navigate("/singleaddress");
+    navigate(`/${currentLanguage}/singleaddress`, {
+      state: {
+        returnTo: `/${currentLanguage}/checkout`,
+        checkoutStep: 1,
+        fromCheckout: true,
+      },
+    });
+  };
+
+  const handleEditAddress = (addressId: number) => {
+    navigate(`/${currentLanguage}/singleaddress`, {
+      state: {
+        returnTo: `/${currentLanguage}/checkout`,
+        checkoutStep: 1,
+        fromCheckout: true,
+        editAddressId: addressId,
+      },
+    });
   };
 
   useEffect(() => {
@@ -270,6 +287,7 @@ export default function Chooseaddress() {
                                   variant="ghost"
                                   size="icon"
                                   className="h-8 w-8 text-muted-foreground hover:text-foreground"
+                                  onClick={() => handleEditAddress(address.id)}
                                 >
                                   <Edit2 className="h-4 w-4" />
                                 </Button>

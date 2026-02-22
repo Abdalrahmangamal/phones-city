@@ -4,7 +4,7 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import order from "@/assets/images/order.png";
 import step2 from "@/assets/images/step2.png";
 import step3 from "@/assets/images/step3.png";
@@ -21,8 +21,12 @@ import BankTransferModal from "@/components/checkout/payment/BankTransferModal";
 import { SaudiRiyalIcon } from "@/components/common/SaudiRiyalIcon";
 
 export default function CheckoutPage() {
+  const location = useLocation();
+  const locationState = (location.state || {}) as { checkoutStep?: number };
+  const requestedStep =
+    typeof locationState.checkoutStep === "number" ? locationState.checkoutStep : 0;
 
-  const [activeStep, setActiveStep] = useState(0);
+  const [activeStep, setActiveStep] = useState(() => Math.max(0, Math.min(2, requestedStep)));
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [orderCompleted, setOrderCompleted] = useState(false);
   const [orderNumber, setOrderNumber] = useState<string | null>(null);

@@ -16,6 +16,78 @@ import type { Product } from '@/types/index';
 import { getProductNumericPrice, parseSortToken } from "@/utils/filterUtils";
 import axiosClient from "@/api/axiosClient";
 
+const CATEGORY_PAGE_CACHE_TTL_MS = 60_000;
+const CATEGORY_TREE_CACHE_TTL_MS = 120_000;
+const CATEGORY_FETCH_ALL_CACHE_TTL_MS = 120_000;
+const MAX_PARALLEL_CATEGORY_FETCHES = 4;
+
+type TimedCacheEntry<T> = {
+  data: T;
+  fetchedAt: number;
+};
+
+const categoryPageCache = new Map<string, TimedCacheEntry<any>>();
+const categoryTreeCache = new Map<string, TimedCacheEntry<Product[]>>();
+const categoryFetchAllCache = new Map<string, TimedCacheEntry<Product[]>>();
+
+const getFreshCacheValue = <T,>(
+  cache: Map<string, TimedCacheEntry<T>>,
+  key: string,
+  ttlMs: number
+): T | null => {
+  const entry = cache.get(key);
+  if (!entry) return null;
+  if (Date.now() - entry.fetchedAt > ttlMs) return null;
+  return entry.data;
+};
+
+const buildCacheParamsKey = (params: Record<string, unknown>) =>
+  Object.entries(params)
+    .filter(([, value]) => value !== undefined && value !== null && value !== "")
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([key, value]) => `${key}=${String(value)}`)
+    .join("&");
+
+const buildCategoryPageCacheKey = (langCode: string, params: Record<string, unknown>) =>
+  `${langCode || "ar"}::page::${buildCacheParamsKey(params)}`;
+
+const buildCategoryFetchAllCacheKey = (
+  categoryId: number,
+  langCode: string,
+  params: Record<string, unknown>
+) => `${langCode || "ar"}::all::${categoryId}::${buildCacheParamsKey(params)}`;
+
+const buildCategoryTreeCacheKey = (
+  langCode: string,
+  categoryIds: number[],
+  params: Record<string, unknown>
+) =>
+  `${langCode || "ar"}::tree::${[...categoryIds].sort((a, b) => a - b).join(",")}::${buildCacheParamsKey(params)}`;
+
+async function mapWithConcurrency<T, R>(
+  items: T[],
+  limit: number,
+  mapper: (item: T, index: number) => Promise<R>
+): Promise<R[]> {
+  if (items.length === 0) return [];
+
+  const safeLimit = Math.max(1, Math.min(limit, items.length));
+  const results = new Array<R>(items.length);
+  let nextIndex = 0;
+
+  const worker = async () => {
+    while (true) {
+      const index = nextIndex;
+      nextIndex += 1;
+      if (index >= items.length) return;
+      results[index] = await mapper(items[index], index);
+    }
+  };
+
+  await Promise.all(Array.from({ length: safeLimit }, () => worker()));
+  return results;
+}
+
 export default function CategorySingle() {
   const { id, productmain } = useParams();
   const { fetchSliders, sliders } = useHeroSectionStore();
@@ -101,11 +173,16 @@ export default function CategorySingle() {
     return sorted;
   };
 
-  const fetchProductsPageRaw = async (params: Record<string, unknown>, langCode: string) => {
+  const fetchProductsPageRaw = async (
+    params: Record<string, unknown>,
+    langCode: string,
+    signal?: AbortSignal
+  ) => {
     for (let attempt = 0; attempt < 3; attempt += 1) {
       try {
         const res = await axiosClient.get(`api/v1/products`, {
           params,
+          signal,
           headers: {
             "Accept-Language": `${langCode || "ar"}`,
             Accept: "application/json",
@@ -113,6 +190,9 @@ export default function CategorySingle() {
         });
         return res.data;
       } catch (error: any) {
+        if (signal?.aborted || error?.code === "ERR_CANCELED" || error?.name === "CanceledError") {
+          throw error;
+        }
         const status = error?.response?.status;
         if (status === 429 && attempt < 2) {
           await new Promise((resolve) => setTimeout(resolve, 400 * (attempt + 1)));
@@ -128,8 +208,15 @@ export default function CategorySingle() {
   const fetchAllProductsForCategory = async (
     categoryId: number,
     langCode: string,
-    extraParams: Record<string, unknown>
+    extraParams: Record<string, unknown>,
+    signal?: AbortSignal
   ): Promise<Product[]> => {
+    const cacheKey = buildCategoryFetchAllCacheKey(categoryId, langCode, extraParams);
+    const cached = getFreshCacheValue(categoryFetchAllCache, cacheKey, CATEGORY_FETCH_ALL_CACHE_TTL_MS);
+    if (cached) {
+      return cached;
+    }
+
     const perPage = 100;
     const all: Product[] = [];
     let page = 1;
@@ -137,17 +224,22 @@ export default function CategorySingle() {
     let safety = 0;
 
     while (page <= lastPage && safety < 50) {
+      if (signal?.aborted) {
+        throw new Error("Category products request cancelled");
+      }
       safety += 1;
 
       const raw = await fetchProductsPageRaw(
         {
-          simple: false,
+          // Category grid only needs list-card fields; `simple` reduces payload size.
+          simple: true,
           category_id: categoryId,
           page,
           per_page: perPage,
           ...extraParams,
         },
-        langCode
+        langCode,
+        signal
       );
 
       const pageItems = Array.isArray(raw?.data) ? raw.data : [];
@@ -171,6 +263,7 @@ export default function CategorySingle() {
       page += 1;
     }
 
+    categoryFetchAllCache.set(cacheKey, { data: all, fetchedAt: Date.now() });
     return all;
   };
 
@@ -187,15 +280,24 @@ export default function CategorySingle() {
     setCategoryInfo(null);
     setCategoryProducts([]);
     setAllCategoryIds([]);
+    setProductsLoading(false);
   }, [id, lang]);
 
   useEffect(() => {
     const loadData = async () => {
+      const shouldFetchCategories = categories.length === 0;
+      const shouldFetchSliders = sliders.length === 0;
+
+      if (!shouldFetchCategories && !shouldFetchSliders) {
+        setIsLoading(false);
+        return;
+      }
+
       try {
-        setIsLoading(true);
+        setIsLoading(shouldFetchCategories);
         await Promise.all([
-          fetchCategories(lang),
-          fetchSliders(lang),
+          shouldFetchCategories ? fetchCategories(lang) : Promise.resolve(),
+          shouldFetchSliders ? fetchSliders(lang) : Promise.resolve(),
         ]);
       } catch (error) {
         console.error("Error loading initial data:", error);
@@ -269,13 +371,14 @@ export default function CategorySingle() {
   // Fetch products for this category with filters
   useEffect(() => {
     let cancelled = false;
+    const controller = new AbortController();
 
     const loadFilteredProducts = async () => {
       try {
         const currentRouteCategoryKey = String(id ?? "");
-        setProductsLoading(true);
         const queryParams: any = {
-          simple: false,
+          // Product cards on category pages only need summary fields.
+          simple: true,
           page: currentPage,
           per_page: itemsPerPage
         };
@@ -301,13 +404,6 @@ export default function CategorySingle() {
           queryParams.category_id = activeCategoryId;
         }
 
-        // Add sort option if selected
-        const parsedSort = parseSortToken(sortOption);
-        if (parsedSort) {
-          queryParams.sort_by = parsedSort.sortBy;
-          queryParams.sort_order = parsedSort.sortOrder;
-        }
-
         // Add price range filter
         if (priceRange[0] !== null) {
           queryParams.min_price = priceRange[0];
@@ -329,53 +425,77 @@ export default function CategorySingle() {
         const aggregateParentAndChildren =
           selectedSubCategory === null && allCategoryIds.length > 1;
 
+        const parsedSort = parseSortToken(sortOption);
+        if (!aggregateParentAndChildren && parsedSort) {
+          queryParams.sort_by = parsedSort.sortBy;
+          queryParams.sort_order = parsedSort.sortOrder;
+        }
+
         let productsData: Product[] = [];
         let totalCount = 0;
 
         if (aggregateParentAndChildren) {
-          const extraParams: Record<string, unknown> = {};
-          if (queryParams.min_price !== undefined) extraParams.min_price = queryParams.min_price;
-          if (queryParams.max_price !== undefined) extraParams.max_price = queryParams.max_price;
-          if (queryParams.sort_by !== undefined) extraParams.sort_by = queryParams.sort_by;
-          if (queryParams.sort_order !== undefined) extraParams.sort_order = queryParams.sort_order;
+          const treeFilterParams: Record<string, unknown> = {};
+          if (queryParams.min_price !== undefined) treeFilterParams.min_price = queryParams.min_price;
+          if (queryParams.max_price !== undefined) treeFilterParams.max_price = queryParams.max_price;
 
-          const categoryIdsSet = new Set(allCategoryIds.map(Number));
-          const categoryResults: Product[][] = [];
-          for (const categoryId of allCategoryIds) {
-            const productsForCategory = await fetchAllProductsForCategory(
-              Number(categoryId),
-              lang,
-              extraParams
+          const treeCacheKey = buildCategoryTreeCacheKey(lang, allCategoryIds, treeFilterParams);
+          let mergedBaseProducts = getFreshCacheValue(categoryTreeCache, treeCacheKey, CATEGORY_TREE_CACHE_TTL_MS);
+
+          if (!mergedBaseProducts) {
+            setProductsLoading(true);
+
+            const categoryIdsSet = new Set(allCategoryIds.map(Number));
+            const categoryResults = await mapWithConcurrency(
+              allCategoryIds.map(Number),
+              MAX_PARALLEL_CATEGORY_FETCHES,
+              (categoryId) => fetchAllProductsForCategory(categoryId, lang, treeFilterParams, controller.signal)
             );
-            categoryResults.push(productsForCategory);
-          }
 
-          // Merge and remove duplicates (products can belong to both parent and child categories).
-          const deduped = new Map<number, Product>();
-          for (const list of categoryResults) {
-            for (const product of list) {
-              const productCategories = Array.isArray((product as any)?.categories)
-                ? (product as any).categories
-                : [];
+            // Merge and remove duplicates (products can belong to both parent and child categories).
+            const deduped = new Map<number, Product>();
+            for (const list of categoryResults) {
+              for (const product of list) {
+                const productCategories = Array.isArray((product as any)?.categories)
+                  ? (product as any).categories
+                  : [];
 
-              const belongsToRequestedTree =
-                productCategories.length === 0 ||
-                productCategories.some((cat: any) => categoryIdsSet.has(Number(cat?.id)));
+                const belongsToRequestedTree =
+                  productCategories.length === 0 ||
+                  productCategories.some((cat: any) => categoryIdsSet.has(Number(cat?.id)));
 
-              if (!belongsToRequestedTree) continue;
-              if (!deduped.has(product.id)) {
-                deduped.set(product.id, product);
+                if (!belongsToRequestedTree) continue;
+                if (!deduped.has(product.id)) {
+                  deduped.set(product.id, product);
+                }
               }
             }
+
+            mergedBaseProducts = [...deduped.values()];
+            categoryTreeCache.set(treeCacheKey, {
+              data: mergedBaseProducts,
+              fetchedAt: Date.now(),
+            });
           }
 
-          const mergedProducts = sortProductsLocally([...deduped.values()], sortOption);
+          const mergedProducts = sortProductsLocally(mergedBaseProducts, sortOption);
           totalCount = mergedProducts.length;
           const start = (currentPage - 1) * itemsPerPage;
           productsData = mergedProducts.slice(start, start + itemsPerPage);
         } else {
           // Single category request can rely on backend pagination.
-          const raw = await fetchProductsPageRaw(queryParams, lang);
+          const pageCacheKey = buildCategoryPageCacheKey(lang, queryParams);
+          let raw = getFreshCacheValue(categoryPageCache, pageCacheKey, CATEGORY_PAGE_CACHE_TTL_MS);
+
+          if (!raw) {
+            setProductsLoading(true);
+            raw = await fetchProductsPageRaw(queryParams, lang, controller.signal);
+            categoryPageCache.set(pageCacheKey, {
+              data: raw,
+              fetchedAt: Date.now(),
+            });
+          }
+
           productsData = Array.isArray(raw?.data) ? raw.data : [];
           totalCount =
             Number(raw?.pagination?.total ?? raw?.meta?.total ?? raw?.pager?.total) ||
@@ -392,10 +512,16 @@ export default function CategorySingle() {
         setTotalItems(totalCount);
         setTotalPages(Math.ceil(totalCount / itemsPerPage) || 1);
         setProductsLoading(false);
-        
-        
-      } catch (error) {
-        if (cancelled) return;
+
+      } catch (error: any) {
+        if (
+          cancelled ||
+          controller.signal.aborted ||
+          error?.code === "ERR_CANCELED" ||
+          error?.name === "CanceledError"
+        ) {
+          return;
+        }
         console.error("Error loading filtered products:", error);
         setCategoryProducts([]);
         setTotalItems(0);
@@ -415,6 +541,7 @@ export default function CategorySingle() {
     }
     return () => {
       cancelled = true;
+      controller.abort();
     };
   }, [lang, id, selectedSubCategory, sortOption, priceRange, currentPage, categoryInfo, allCategoryIds, categories.length]);
 
@@ -436,7 +563,7 @@ export default function CategorySingle() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  if (isLoading) {
+  if (isLoading && categories.length === 0) {
     return (
       <Layout>
         <Loader />
