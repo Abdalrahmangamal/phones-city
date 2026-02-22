@@ -14,6 +14,7 @@ import { useHomePageStore } from "@/store/home/homepageStore";
 import { useProductsStore } from "@/store/productsStore.ts";
 import { useTranslation } from "react-i18next";
 import type { Product } from '@/types/index';
+import { parseSortToken } from "@/utils/filterUtils";
 
 export default function CategorySingle() {
   const { id, productmain } = useParams();
@@ -42,6 +43,21 @@ export default function CategorySingle() {
 
   const { fetchCategories, categories } = useCategoriesStore();
   const { fetchProducts, loading } = useProductsStore();
+
+  // React Router reuses this component when only the route param changes.
+  // Reset page-specific state immediately so products/filters from the previous category do not bleed into the next one.
+  useEffect(() => {
+    setSelectedSubCategory(null);
+    setSortOption("");
+    setPriceRange([null, null]);
+    setCurrentPage(1);
+    setTotalPages(1);
+    setTotalItems(0);
+    setCategoryTitle("");
+    setCategoryInfo(null);
+    setCategoryProducts([]);
+    setAllCategoryIds([]);
+  }, [id, lang]);
 
   useEffect(() => {
     const loadData = async () => {
@@ -104,8 +120,13 @@ export default function CategorySingle() {
         
         collectSubCategoryIds(foundCategory);
         setAllCategoryIds(categoryIds);
-        
       } else {
+        setCategoryInfo(null);
+        setCategoryTitle("");
+        setAllCategoryIds([]);
+        setCategoryProducts([]);
+        setTotalItems(0);
+        setTotalPages(1);
       }
     }
   }, [categories, id]);
@@ -117,8 +138,11 @@ export default function CategorySingle() {
 
   // Fetch products for this category with filters
   useEffect(() => {
+    let cancelled = false;
+
     const loadFilteredProducts = async () => {
       try {
+        const currentRouteCategoryKey = String(id ?? "");
         const queryParams: any = {
           simple: false,
           page: currentPage,
@@ -132,25 +156,27 @@ export default function CategorySingle() {
           // If a specific subcategory is selected
           categoryIdsToFilter = [selectedSubCategory];
         } else if (categoryInfo?.id && allCategoryIds.length > 0) {
-          // If no specific subcategory selected, use all category IDs
+          // Keep descendants list locally (used for UI state), but the API expects `category_id`.
+          // Sending `category_ids` is ignored by the backend and returns unfiltered products.
           categoryIdsToFilter = allCategoryIds;
         }
 
-        // Always filter by category if available
-        if (categoryIdsToFilter.length > 0) {
-          // If multiple category IDs, use category_ids parameter
-          if (categoryIdsToFilter.length > 1) {
-            queryParams.category_ids = categoryIdsToFilter;
-          } else {
-            // If only one category ID, use category_id parameter
-            queryParams.category_id = categoryIdsToFilter[0];
-          }
+        // Always send a single category_id.
+        // The backend already includes child-category products when using a parent category_id.
+        const activeCategoryId =
+          selectedSubCategory !== null
+            ? selectedSubCategory
+            : categoryInfo?.id ?? null;
+
+        if (activeCategoryId !== null) {
+          queryParams.category_id = activeCategoryId;
         }
 
         // Add sort option if selected
-        if (sortOption) {
-          queryParams.sort_by = sortOption;
-          queryParams.sort_order = "desc";
+        const parsedSort = parseSortToken(sortOption);
+        if (parsedSort) {
+          queryParams.sort_by = parsedSort.sortBy;
+          queryParams.sort_order = parsedSort.sortOrder;
         }
 
         // Add price range filter
@@ -163,6 +189,7 @@ export default function CategorySingle() {
 
         
         if (categoryIdsToFilter.length === 0) {
+          if (cancelled) return;
           setCategoryProducts([]);
           setTotalItems(0);
           setTotalPages(1);
@@ -171,6 +198,11 @@ export default function CategorySingle() {
         
         // Fetch products with filters
         const result = await fetchProducts(queryParams, lang);
+
+        // Ignore late responses from a previous category route.
+        if (cancelled || String(id ?? "") !== currentRouteCategoryKey) {
+          return;
+        }
 
         // Handle response data
         let productsData: Product[] = [];
@@ -201,6 +233,7 @@ export default function CategorySingle() {
         
         
       } catch (error) {
+        if (cancelled) return;
         console.error("Error loading filtered products:", error);
         setCategoryProducts([]);
         setTotalItems(0);
@@ -208,10 +241,19 @@ export default function CategorySingle() {
       }
     };
 
-    if (categories.length > 0 && categoryInfo && allCategoryIds.length > 0) {
+    const categoryMatchesRoute = !!(
+      id &&
+      categoryInfo &&
+      (categoryInfo.slug === id || String(categoryInfo.id) === String(id))
+    );
+
+    if (categories.length > 0 && categoryMatchesRoute && allCategoryIds.length > 0) {
       loadFilteredProducts();
     }
-  }, [lang, selectedSubCategory, sortOption, priceRange, currentPage, categoryInfo, allCategoryIds]);
+    return () => {
+      cancelled = true;
+    };
+  }, [lang, id, selectedSubCategory, sortOption, priceRange, currentPage, categoryInfo, allCategoryIds, fetchProducts, categories.length]);
 
   // Filter handlers
   const handleSortChange = (option: string) => {
@@ -263,8 +305,11 @@ export default function CategorySingle() {
                   minPrice={0}
                   maxPrice={10000}
                   initialCategoryId={categoryInfo?.id ? Number(categoryInfo.id) : null}
-                  // Pass subcategories for the current category
                   subCategories={categoryInfo?.children || []}
+                  selectedSort={sortOption}
+                  selectedCategory={selectedSubCategory}
+                  selectedPriceRange={priceRange}
+                  resultCount={totalItems}
                 />
               </div>
             }

@@ -8,6 +8,7 @@ import { useTranslation } from "react-i18next"; // أو أي طريقة تستخ
 import Filter from "@/components/public/Filter";
 import { useCategoriesStore } from "@/store/categories/useCategoriesStore";
 import type { Product } from "@/types/index";
+import { getProductNumericPrice, isProductOnOffer, parseSortToken } from "@/utils/filterUtils";
 
 export default function Trademarkbestoffer() {
   const navigate = useNavigate();
@@ -19,7 +20,7 @@ export default function Trademarkbestoffer() {
   const { response: products, loading: productsLoading, error: storeError, fetchProducts } = useProductsStore();
   
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
-  const [sortOption, setSortOption] = useState<string>("created_at");
+  const [sortOption, setSortOption] = useState<string>("");
   const [priceRange, setPriceRange] = useState<[number | null, number | null]>([null, null]);
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
 
@@ -35,7 +36,9 @@ export default function Trademarkbestoffer() {
 
   // تطبيق الفلاتر على المنتجات
   useEffect(() => {
-    let result = Array.isArray(products) ? [...products] : [];
+    let result = Array.isArray(products)
+      ? [...products].filter((product) => isProductOnOffer(product))
+      : [];
     
     // تطبيق فلتر الفئة
     if (selectedCategory !== null) {
@@ -45,7 +48,7 @@ export default function Trademarkbestoffer() {
     // تطبيق فلتر النطاق السعري
     if (priceRange[0] !== null || priceRange[1] !== null) {
       result = result.filter(product => {
-        const price = parseFloat(product.final_price || product.original_price);
+        const price = getProductNumericPrice(product);
         const min = priceRange[0];
         const max = priceRange[1];
         
@@ -56,35 +59,36 @@ export default function Trademarkbestoffer() {
     }
     
     // تطبيق الترتيب
-    switch (sortOption) {
-      case "created_at":
-        // الترتيب الافتراضي
-        break;
-      case "main_price":
-        result = [...result].sort((a, b) => {
-          const priceA = parseFloat(a.final_price || a.original_price);
-          const priceB = parseFloat(b.final_price || b.original_price);
-          return priceA - priceB;
-        });
-        break;
-      case "name_ar":
-        // Since name_ar doesn't exist in Product type, we'll use name field
-        result = [...result].sort((a, b) => 
-          (a.name || "").localeCompare(b.name || "")
-        );
-        break;
-      case "best_seller":
-        // Since sales_count doesn't exist, we'll skip this sorting option
-        break;
-      case "average_rating":
-        // Since average_rating doesn't exist, we'll skip this sorting option
-        break;
-      default:
-        break;
+    const parsedSort = parseSortToken(sortOption);
+    if (parsedSort) {
+      result = [...result].sort((a, b) => {
+        switch (parsedSort.sortBy) {
+          case "main_price": {
+            const diff = getProductNumericPrice(a) - getProductNumericPrice(b);
+            return parsedSort.sortOrder === "asc" ? diff : -diff;
+          }
+          case "name_ar": {
+            const diff = (a.name || "").localeCompare(b.name || "", lang === "ar" ? "ar" : "en");
+            return parsedSort.sortOrder === "asc" ? diff : -diff;
+          }
+          case "average_rating": {
+            const diff = Number(a.average_rating || 0) - Number(b.average_rating || 0);
+            return parsedSort.sortOrder === "asc" ? diff : -diff;
+          }
+          case "created_at": {
+            const aTime = new Date((a as any)?.created_at || 0).getTime() || 0;
+            const bTime = new Date((b as any)?.created_at || 0).getTime() || 0;
+            const diff = aTime - bTime;
+            return parsedSort.sortOrder === "asc" ? diff : -diff;
+          }
+          default:
+            return 0;
+        }
+      });
     }
     
     setFilteredProducts(result);
-  }, [products, selectedCategory, sortOption, priceRange]);
+  }, [products, selectedCategory, sortOption, priceRange, lang]);
 
   const handleSortChange = (option: string) => {
     setSortOption(option);
@@ -131,7 +135,12 @@ export default function Trademarkbestoffer() {
   }
 
   // تأكد أن products مصفوفة (للأمان)
-  const productsList = Array.isArray(products) ? products : [];
+  const productsList = Array.isArray(products)
+    ? products.filter((product) => isProductOnOffer(product))
+    : [];
+  const hasActiveFilters =
+    selectedCategory !== null || !!sortOption || priceRange[0] !== null || priceRange[1] !== null;
+  const displayedProducts = hasActiveFilters ? filteredProducts : productsList;
 
   return (
     <Layout>
@@ -158,7 +167,7 @@ export default function Trademarkbestoffer() {
             <div className="max-w-8xl mx-auto -mt-8">
               <Bestseller 
                 title={t('AllOffers')} 
-                products={filteredProducts.length > 0 ? filteredProducts : productsList}
+                products={displayedProducts}
                 btn={false}
                 style="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
                 filterComponent={
@@ -170,6 +179,10 @@ export default function Trademarkbestoffer() {
                       categories={categories}
                       minPrice={0}
                       maxPrice={10000}
+                      selectedSort={sortOption}
+                      selectedCategory={selectedCategory}
+                      selectedPriceRange={priceRange}
+                      resultCount={displayedProducts.length}
                     />
                   </div>
                 }

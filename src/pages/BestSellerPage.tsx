@@ -14,6 +14,7 @@ import { useLangSync } from "@/hooks/useLangSync";
 import { useTranslation } from "react-i18next";
 import { useCategoriesStore } from "@/store/categories/useCategoriesStore";
 import { useHomePageStore } from '@/store/home/homepageStore'; 
+import { parseSortToken } from "@/utils/filterUtils";
 
 export default function BestSellerPage() {
   const { lang } = useLangSync();
@@ -24,7 +25,7 @@ export default function BestSellerPage() {
 
   const [products, setProducts] = useState<Product[]>([]);
   const [selectedSubCategory, setSelectedSubCategory] = useState<number | null>(null);
-  const [sortOption, setSortOption] = useState<string>("best_seller");
+  const [sortOption, setSortOption] = useState<string>("best_seller:desc");
   const [priceRange, setPriceRange] = useState<[number | null, number | null]>([null, null]);
 
   // حالات الـ Pagination
@@ -50,10 +51,15 @@ export default function BestSellerPage() {
       try {
         const queryParams: any = {
           best_seller: true,
-          sort_by: sortOption,
-          sort_order: "desc",
-          page: 1, 
+          page: currentPage,
+          per_page: itemsPerPage,
         };
+
+        const parsedSort = parseSortToken(sortOption);
+        if (parsedSort) {
+          queryParams.sort_by = parsedSort.sortBy;
+          queryParams.sort_order = parsedSort.sortOrder;
+        }
 
         if (selectedSubCategory !== null) {
           const selectedCategory = categories.find(
@@ -93,11 +99,11 @@ export default function BestSellerPage() {
             totalCount = productsData.length;
           }
 
-          totalPagesCount = Math.ceil(totalCount / itemsPerPage);
+          totalPagesCount = Math.max(1, Math.ceil(totalCount / itemsPerPage));
         } else if (Array.isArray(response)) {
           productsData = response;
           totalCount = response.length;
-          totalPagesCount = Math.ceil(totalCount / itemsPerPage);
+          totalPagesCount = Math.max(1, Math.ceil(totalCount / itemsPerPage));
         }
 
         setProducts(productsData);
@@ -166,6 +172,10 @@ export default function BestSellerPage() {
                   categories={categories}
                   minPrice={0}
                   maxPrice={10000}
+                  selectedSort={sortOption}
+                  selectedCategory={selectedSubCategory}
+                  selectedPriceRange={priceRange}
+                  resultCount={totalItems}
                 />
               </div>
             }

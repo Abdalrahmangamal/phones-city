@@ -7,7 +7,6 @@ import {
   FileText,
   Heart,
   MapPin,
-  Gift,
   Wallet,
   LogOut,
   Menu,
@@ -23,11 +22,13 @@ import { Badge } from "@/components/ui/badge";
 import { useProfileStore } from "@/store/profile/profileStore";
 // أضفنا الـ store الخاص بالإشعارات
 import { useNotifications } from "@/store/notifications/notificationStore";
+import LogoutConfirmDialog from "@/components/LogoutConfirmDialog";
 
 export default function Sidebar() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
+  const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
   const { lang } = useLangSync();
 
   // جلب بيانات المستخدم من الـ store
@@ -98,9 +99,7 @@ export default function Sidebar() {
       text: `${t("Logout")}`,
       link: `/`,
       action: () => {
-        localStorage.removeItem("userData");
-        localStorage.removeItem("token");
-        navigate(`/${lang}/login`);
+        setLogoutDialogOpen(true);
       },
     },
   ];
@@ -197,6 +196,16 @@ export default function Sidebar() {
           </div>
         </div> */}
       </aside>
+      <LogoutConfirmDialog
+        open={logoutDialogOpen}
+        onOpenChange={setLogoutDialogOpen}
+        onConfirm={() => {
+          localStorage.removeItem("userData");
+          localStorage.removeItem("token");
+          navigate(`/${lang}/login`);
+        }}
+        lang={lang}
+      />
     </div>
   );
 }

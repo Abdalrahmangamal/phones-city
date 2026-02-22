@@ -50,6 +50,20 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ScrollToTop from "./components/ScrollToTop";
 
+function CategorySingleRoute() {
+  const { lang, id, productmain } = useParams<{ lang: string; id: string; productmain?: string }>();
+
+  return (
+    <CategorySingle key={`${lang || ""}:${id || ""}:${productmain || ""}`} />
+  );
+}
+
+function TrademarksRoute() {
+  const { lang, id } = useParams<{ lang: string; id: string }>();
+
+  return <Trademarks key={`${lang || ""}:${id || ""}`} />;
+}
+
 // Language Wrapper Component
 function LangWrapper() {
   const { lang } = useSettings();
@@ -108,12 +122,12 @@ function LangWrapper() {
         <Route path="singleaddress" element={<Singleaddress />} />
         <Route path="discounts" element={<Discounts />} />
         <Route path="favourite" element={<Favourite />} />
-        <Route path="trademarks/:id" element={<Trademarks />} />
+        <Route path="trademarks/:id" element={<TrademarksRoute />} />
         <Route path="BestSellerPage" element={<BestSellerPage />} />
         <Route path="trademarkscategory" element={<Trademarkscategory />} />
         <Route path="singleproduct/:id" element={<Singleproduct />} />
         <Route path="checkout" element={<Checkout />} />
-        <Route path="categorySingle/:id/:productmain?" element={<CategorySingle />} />
+        <Route path="categorySingle/:id/:productmain?" element={<CategorySingleRoute />} />
         <Route path="blog" element={<Blog />} />
         <Route path="blog/:slug" element={<SingleBlog />} />
       </Routes>

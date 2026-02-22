@@ -14,6 +14,7 @@ import { useTranslation } from "react-i18next";
 import Loader from "@/components/Loader";
 import type { Product } from '@/types/index';
 import axios from "axios";
+import { getProductNumericPrice, parseSortToken } from "@/utils/filterUtils";
 
 export default function Trademarks() {
   const { lang } = useLangSync();
@@ -43,6 +44,16 @@ export default function Trademarks() {
   } = useCategoriesStore();
 
   const { page: trademarksBannerPage, loading: isBannerLoading } = usePageData("tredmarks-banner");
+
+  // Reset route-scoped filters when trademark changes to prevent stale filters/products from the previous trademark page.
+  useEffect(() => {
+    setSelectedSubCategory(null);
+    setActiveSubCategory(null);
+    setSortOption("");
+    setPriceRange([null, null]);
+    setCurrentPage(1);
+    setTrademarkName("");
+  }, [id, lang]);
 
   // Load initial data
   useEffect(() => {
@@ -143,25 +154,39 @@ export default function Trademarks() {
 
     // Price range filter
     if (priceRange[0] !== null) {
-      result = result.filter(p => (p.price ?? 0) >= priceRange[0]!);
+      result = result.filter((p) => getProductNumericPrice(p) >= priceRange[0]!);
     }
     if (priceRange[1] !== null) {
-      result = result.filter(p => (p.price ?? 0) <= priceRange[1]!);
+      result = result.filter((p) => getProductNumericPrice(p) <= priceRange[1]!);
     }
 
     // Sorting
-    if (sortOption) {
+    const parsedSort = parseSortToken(sortOption);
+    if (parsedSort) {
       result = [...result].sort((a, b) => {
-        switch (sortOption) {
-          case "popularity":
-            return (b.popularity ?? 0) - (a.popularity ?? 0);
-          case "price_low_high":
-            return (a.price ?? 0) - (b.price ?? 0);
-          case "price_high_low":
-            return (b.price ?? 0) - (a.price ?? 0);
-          case "newest":
-            return new Date(b.created_at || "1970-01-01").getTime() - 
-                   new Date(a.created_at || "1970-01-01").getTime();
+        switch (parsedSort.sortBy) {
+          case "main_price": {
+            const diff = getProductNumericPrice(a) - getProductNumericPrice(b);
+            return parsedSort.sortOrder === "asc" ? diff : -diff;
+          }
+          case "name_ar": {
+            const diff = (a.name || "").localeCompare(b.name || "", lang === "ar" ? "ar" : "en");
+            return parsedSort.sortOrder === "asc" ? diff : -diff;
+          }
+          case "average_rating": {
+            const diff = Number(a.average_rating || 0) - Number(b.average_rating || 0);
+            return parsedSort.sortOrder === "asc" ? diff : -diff;
+          }
+          case "created_at": {
+            const aTime = new Date((a as any)?.created_at || "1970-01-01").getTime();
+            const bTime = new Date((b as any)?.created_at || "1970-01-01").getTime();
+            const diff = aTime - bTime;
+            return parsedSort.sortOrder === "asc" ? diff : -diff;
+          }
+          case "best_seller": {
+            const diff = Number((a as any)?.sales_count || 0) - Number((b as any)?.sales_count || 0);
+            return parsedSort.sortOrder === "asc" ? diff : -diff;
+          }
           default:
             return 0;
         }
@@ -174,12 +199,13 @@ export default function Trademarks() {
     activeSubCategory,
     selectedSubCategory,
     sortOption,
-    priceRange
+    priceRange,
+    lang
   ]);
 
   // ── 2. Pagination calculations ──
   const totalItems = filteredAndSortedProducts.length;
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const totalPages = Math.max(1, Math.ceil(totalItems / itemsPerPage));
 
   // ── 3. Slice products for current page only ──
   const productsToShow = useMemo(() => {
@@ -300,6 +326,10 @@ export default function Trademarks() {
                 minPrice={0}
                 maxPrice={10000}
                 selectedCategory={selectedSubCategory}
+                selectedSort={sortOption}
+                selectedPriceRange={priceRange}
+                resultCount={totalItems}
+                onReset={handleResetFilters}
               />
             </div>
           }

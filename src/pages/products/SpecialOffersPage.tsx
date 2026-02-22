@@ -9,26 +9,19 @@ import { useCategoriesStore } from "@/store/categories/useCategoriesStore";
 import type { Product } from "@/types/index";
 import InstallmentSection from "@/components/home/InstallmentSection"; // Import the InstallmentSection component
 import { useProductsStore } from "@/store/productsStore"; // Import the home page store
+import { getProductNumericPrice, isProductOnOffer, parseSortToken } from "@/utils/filterUtils";
 
 export default function SpecialOffersPage() {
   const navigate = useNavigate();
   const { lang } = useLangSync();
   const { t } = useTranslation();
-  const { offersProducts, fetchOffers, offersMeta } = useProductsStore();
+  const { offersProducts, fetchOffers, offersMeta, offersLoading, error: storeError } = useProductsStore();
   const { fetchCategories, categories } = useCategoriesStore();
 
   const [currentPage, setCurrentPage] = useState<number>(1);
 
-  // استخدم الـ response مباشرة كمصفوفة منتجات
-  const {
-    response: products,
-    loading: productsLoading,
-    error: storeError,
-    fetchProducts,
-  } = useProductsStore();
-
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
-  const [sortOption, setSortOption] = useState<string>("created_at");
+  const [sortOption, setSortOption] = useState<string>("");
   const [priceRange, setPriceRange] = useState<[number | null, number | null]>([
     null,
     null,
@@ -46,7 +39,9 @@ export default function SpecialOffersPage() {
 
   // تطبيق الفلاتر على المنتجات (باستخدام العروض)
   useEffect(() => {
-    let result = Array.isArray(offersProducts) ? [...offersProducts] : [];
+    let result = Array.isArray(offersProducts)
+      ? [...offersProducts].filter((product) => isProductOnOffer(product))
+      : [];
 
     // تطبيق فلتر الفئة
     if (selectedCategory !== null) {
@@ -58,7 +53,7 @@ export default function SpecialOffersPage() {
     // تطبيق فلتر النطاق السعري
     if (priceRange[0] !== null || priceRange[1] !== null) {
       result = result.filter((product) => {
-        const price = parseFloat(product.final_price || product.original_price);
+        const price = getProductNumericPrice(product);
         const min = priceRange[0];
         const max = priceRange[1];
 
@@ -69,35 +64,35 @@ export default function SpecialOffersPage() {
     }
 
     // تطبيق الترتيب
-    switch (sortOption) {
-      case "created_at":
-        // الترتيب الافتراضي
-        break;
-      case "main_price":
-        result = [...result].sort((a, b) => {
-          const priceA = parseFloat(a.final_price || a.original_price);
-          const priceB = parseFloat(b.final_price || b.original_price);
-          return priceA - priceB;
-        });
-        break;
-      case "name_ar":
-        // Since name_ar doesn't exist in Product type, we'll use name field
-        result = [...result].sort((a, b) =>
-          (a.name || "").localeCompare(b.name || "")
-        );
-        break;
-      case "best_seller":
-        // Since sales_count doesn't exist, we'll skip this sorting option
-        break;
-      case "average_rating":
-        // Since average_rating doesn't exist, we'll skip this sorting option
-        break;
-      default:
-        break;
+    const parsedSort = parseSortToken(sortOption);
+    if (parsedSort) {
+      result = [...result].sort((a, b) => {
+        switch (parsedSort.sortBy) {
+          case "main_price": {
+            const diff = getProductNumericPrice(a) - getProductNumericPrice(b);
+            return parsedSort.sortOrder === "asc" ? diff : -diff;
+          }
+          case "name_ar": {
+            const diff = (a.name || "").localeCompare(b.name || "", lang === "ar" ? "ar" : "en");
+            return parsedSort.sortOrder === "asc" ? diff : -diff;
+          }
+          case "average_rating": {
+            const diff = Number(a.average_rating || 0) - Number(b.average_rating || 0);
+            return parsedSort.sortOrder === "asc" ? diff : -diff;
+          }
+          case "created_at": {
+            const aTime = new Date((a as any)?.created_at || 0).getTime() || 0;
+            const bTime = new Date((b as any)?.created_at || 0).getTime() || 0;
+            const diff = aTime - bTime;
+            return parsedSort.sortOrder === "asc" ? diff : -diff;
+          }
+          default:
+            return 0;
+        }
+      });
     }
-
     setFilteredProducts(result);
-  }, [offersProducts, selectedCategory, sortOption, priceRange]);
+  }, [offersProducts, selectedCategory, sortOption, priceRange, lang]);
 
   const handleSortChange = (option: string) => {
     setSortOption(option);
@@ -123,8 +118,6 @@ export default function SpecialOffersPage() {
             <h2 className="text-2xl font-bold text-gray-800 mb-4">
               {t("AnErrorOccurred")}
             </h2>
-            asddddddddddddddddddddddd
-
             <p className="text-gray-600 mb-6">{storeError}</p>
             <button
               onClick={() => window.location.reload()}
@@ -139,7 +132,7 @@ export default function SpecialOffersPage() {
   }
 
   // حالة التحميل
-  if (productsLoading) {
+  if (offersLoading) {
     return (
       <Layout>
         <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
@@ -153,7 +146,12 @@ export default function SpecialOffersPage() {
   }
 
   // تأكد أن offersProducts مصفوفة (للأمان)
-  const offersList = Array.isArray(offersProducts) ? offersProducts : [];
+  const offersList = Array.isArray(offersProducts)
+    ? offersProducts.filter((product) => isProductOnOffer(product))
+    : [];
+  const hasActiveFilters =
+    selectedCategory !== null || !!sortOption || priceRange[0] !== null || priceRange[1] !== null;
+  const displayedProducts = hasActiveFilters ? filteredProducts : offersList;
 
   return (
     <Layout>
@@ -172,11 +170,11 @@ export default function SpecialOffersPage() {
           {/* Replace the banner with InstallmentSection */}
           {/* <InstallmentSection title={homeData?.offer_text} /> */}
 
-          {filteredProducts.length > 0 ? (
+          {offersList.length > 0 ? (
             <div className="max-w-8xl mx-auto -mt-8">
               <Bestseller
                 title={t("AllOffers")}
-                products={filteredProducts}
+                products={displayedProducts}
                 btn={false}
                 style="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
                 filterComponent={
@@ -188,6 +186,10 @@ export default function SpecialOffersPage() {
                       categories={categories || []}
                       minPrice={0}
                       maxPrice={10000}
+                      selectedSort={sortOption}
+                      selectedCategory={selectedCategory}
+                      selectedPriceRange={priceRange}
+                      resultCount={displayedProducts.length}
                     />
                   </div>
                 }

@@ -1,7 +1,7 @@
 "use client";
 import * as React from "react";
 import logo from "../../assets/images/logo.png";
-import { ShoppingCart, UserRound, Heart, Globe, Search, Bell, LogOut, Package, MapPin, Wallet, FileText, Tag } from "lucide-react";
+import { ShoppingCart, UserRound, Heart, Globe, Search, Bell, LogOut, Package, MapPin, Wallet, FileText, Tag, Trash2, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import "../../style.css";
@@ -44,6 +44,7 @@ import MobileMenu from "./MobileMenu";
 import MobileNavbar from "./MobileNavbar";
 import { getCategoryIcon } from "@/utils/categoryIcons";
 import { cn } from "@/lib/utils";
+import LogoutConfirmDialog from "@/components/LogoutConfirmDialog";
 
 interface SuggestionItem {
   id: number;
@@ -116,9 +117,10 @@ export default function Header() {
   } = useNotifications();
 
   // استخدم cart store
-  const { items: cartItems, total: cartTotal, fetchCart } = useCartStore();
+  const { items: cartItems, total: cartTotal, fetchCart, deletefromCart, clearCart } = useCartStore();
   const cartQuantity = cartItems.reduce((sum, item) => sum + item.quantity, 0);
   const [cartSheetOpen, setCartSheetOpen] = useState(false);
+  const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
 
   // استخدم favorites store لعرض العدد في الهيدر
   const { favorites, fetchFavorites } = useFavoritesStore();
@@ -265,8 +267,9 @@ export default function Header() {
     setOpenSections(false);
   };
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = (e: Event) => {
+    e.preventDefault();
+    setLogoutDialogOpen(true);
   };
 
   return (
@@ -644,19 +647,30 @@ export default function Header() {
                 >
                   <SheetHeader
                     className={cn(
-                      "border-b border-[#211C4D]/10 bg-[#211C4D] text-white py-4 rounded-t-lg",
+                      "border-b border-[#211C4D]/10 bg-[#211C4D] text-white py-4 rounded-t-lg relative",
                       lang === "ar" ? "ps-12 pe-6" : "pe-12 ps-6"
                     )}
                   >
-                    <SheetTitle className="text-white text-xl font-bold flex items-center gap-2">
-                      <ShoppingCart className="h-6 w-6" />
-                      {t("Cart")}
-                      {cartQuantity > 0 && (
-                        <span className="bg-[#F3AC5D] text-[#211C4D] text-sm font-bold px-2.5 py-0.5 rounded-full">
-                          {cartQuantity}
-                        </span>
+                    <div className="flex justify-between items-center w-full rtl:pl-4 ltr:pr-4">
+                      <SheetTitle className="text-white text-xl font-bold flex items-center gap-2">
+                        <ShoppingCart className="h-6 w-6" />
+                        {t("Cart")}
+                        {cartQuantity > 0 && (
+                          <span className="bg-[#F3AC5D] text-[#211C4D] text-sm font-bold px-2.5 py-0.5 rounded-full">
+                            {cartQuantity}
+                          </span>
+                        )}
+                      </SheetTitle>
+                      {cartItems.length > 0 && (
+                        <button
+                          onClick={() => clearCart()}
+                          className="flex items-center gap-1.5 text-sm bg-red-500/15 text-red-400 hover:bg-red-500/25 px-3 py-1.5 rounded-md font-medium transition-colors z-10 ltr:mr-8 rtl:ml-8"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                          <span>{lang === "ar" ? "حذف الكل" : "Clear All"}</span>
+                        </button>
                       )}
-                    </SheetTitle>
+                    </div>
                   </SheetHeader>
                   <div className="flex-1 overflow-y-auto">
                     {cartItems.length === 0 ? (
@@ -677,7 +691,7 @@ export default function Header() {
                     ) : (
                       <ul className="divide-y divide-gray-100">
                         {cartItems.map((item) => (
-                          <li key={item.id} className="flex gap-3 p-4 hover:bg-gray-50/80 transition-colors">
+                          <li key={item.id} className="flex gap-3 p-4 hover:bg-gray-50/80 transition-colors relative group">
                             <Link
                               to={`/${lang}/singleproduct/${item.product?.slug || item.product?.id}`}
                               onClick={() => setCartSheetOpen(false)}
@@ -689,7 +703,7 @@ export default function Header() {
                                 <ShoppingCart className="h-6 w-6 text-gray-400" />
                               )}
                             </Link>
-                            <div className="flex-1 min-w-0">
+                            <div className="flex-1 min-w-0 pr-8 rtl:pl-8 ltr:pr-8">
                               <Link
                                 to={`/${lang}/singleproduct/${item.product?.slug || item.product?.id}`}
                                 onClick={() => setCartSheetOpen(false)}
@@ -702,6 +716,16 @@ export default function Header() {
                               </p>
                               <p className="text-[#F3AC5D] font-semibold text-sm mt-1">{item.subtotal} {t("SAR")}</p>
                             </div>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                deletefromCart(item.id);
+                              }}
+                              className="absolute top-[50%] -translate-y-[50%] rtl:left-4 ltr:right-4 text-red-500 hover:text-white hover:bg-red-500 transition-colors bg-red-50 border border-red-100 rounded-full p-1.5 opacity-100 shadow-sm z-10"
+                              title={lang === "ar" ? "حذف" : "Remove"}
+                            >
+                              <X className="h-5 w-5" />
+                            </button>
                           </li>
                         ))}
                       </ul>
@@ -999,6 +1023,12 @@ export default function Header() {
           </div>
         )}
       </div>
+      <LogoutConfirmDialog
+        open={logoutDialogOpen}
+        onOpenChange={setLogoutDialogOpen}
+        onConfirm={() => logout()}
+        lang={lang}
+      />
     </>
   );
 }

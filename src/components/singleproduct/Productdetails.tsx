@@ -161,6 +161,80 @@ export default function Productdetails({
     ? parseFloat(currentDisplayPrice.replace(/,/g, ''))
     : Number(currentDisplayPrice);
 
+  const normalizeTextValue = (value: unknown) => {
+    if (typeof value === "string") return value.trim();
+    if (value === null || value === undefined) return "";
+    return String(value).trim();
+  };
+
+  const isColorCode = (value: unknown) => {
+    const v = normalizeTextValue(value);
+    if (!v) return false;
+    return /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/.test(v)
+      || /^rgba?\(/i.test(v)
+      || /^hsla?\(/i.test(v);
+  };
+
+  const getOptionLabel = (variant: any, index: number) => {
+    const namedValue =
+      (lang === "ar" ? variant?.value_ar : variant?.value_en) ||
+      (lang === "ar" ? variant?.name_ar : variant?.name_en) ||
+      variant?.label ||
+      variant?.name ||
+      variant?.title ||
+      variant?.display_value ||
+      variant?.value_name ||
+      variant?.color_name;
+
+    if (typeof namedValue === "string" && namedValue.trim() !== "" && !isColorCode(namedValue)) {
+      return namedValue.trim();
+    }
+
+    const rawValue = normalizeTextValue(variant?.value);
+    if (!rawValue) {
+      return lang === "ar" ? `الخيار ${index + 1}` : `Option ${index + 1}`;
+    }
+
+    if (isColorCode(rawValue)) {
+      return lang === "ar" ? `اللون ${index + 1}` : `Color ${index + 1}`;
+    }
+
+    return rawValue;
+  };
+
+  const getSwatchColor = (variant: any) => {
+    const candidates = [
+      variant?.color_code,
+      variant?.hex_code,
+      variant?.hex,
+      variant?.color,
+      variant?.colour,
+      variant?.swatch,
+      variant?.value,
+    ];
+
+    for (const candidate of candidates) {
+      const normalized = normalizeTextValue(candidate);
+      if (isColorCode(normalized)) {
+        return normalized;
+      }
+    }
+
+    return undefined;
+  };
+
+  const hasAnySwatchOptions = !!(hasOptions && product.options.some((v: any) => !!getSwatchColor(v)));
+  const selectedOptionLabel = hasOptions
+    ? getOptionLabel(product.options[selectedOptionIndex], selectedOptionIndex)
+    : (lang === "ar" ? "اختر الخيار" : "Select option");
+  const selectedOptionSwatch = hasOptions ? getSwatchColor(product.options[selectedOptionIndex]) : undefined;
+  const optionsFieldLabelRaw = hasAnySwatchOptions ? t("Chooseyourcolor") : t("Option");
+  const optionsFieldLabel = optionsFieldLabelRaw === "Chooseyourcolor"
+    ? (lang === "ar" ? "اختر لونك" : "Choose your color")
+    : optionsFieldLabelRaw === "Option"
+      ? (lang === "ar" ? "اختر الخيار" : "Select option")
+      : optionsFieldLabelRaw;
+
   return (
     <div className="space-y-4 md:space-y-6" dir={lang == "ar" ? "rtl" : "ltr"}>
       <div>
@@ -206,97 +280,108 @@ export default function Productdetails({
 
       {
         hasOptions && (() => {
-          // Group options by type for rendering
-          const isColorType = product.options.some((v: any) => v.type === "color");
-
-          if (isColorType) {
-            // Custom dropdown for colors with swatch preview
-            return (
-              <div className="mt-4">
-                <p className="text-sm font-medium text-gray-700 mb-2 text-start">
-                  {t("Chooseyourcolor")}:
-                </p>
-                <div className="relative" ref={colorDropdownRef}>
-                  <button
-                    type="button"
-                    onClick={() => setColorDropdownOpen(!colorDropdownOpen)}
-                    className="w-full max-w-[320px] flex items-center gap-3 border-2 border-gray-300 rounded-lg px-4 py-3 bg-white hover:border-[#211C4D] transition-colors text-start"
-                  >
-                    <span
-                      className="w-6 h-6 rounded-full border-2 border-gray-200 shrink-0"
-                      style={{ backgroundColor: product.options[selectedOptionIndex]?.value || "#ccc" }}
-                    />
-                    <span className="flex-1 text-sm font-medium text-[#211C4D] truncate">
-                      {product.options[selectedOptionIndex]?.value || "—"}
-                    </span>
-                    <svg
-                      className={`w-4 h-4 text-gray-500 transition-transform ${colorDropdownOpen ? "rotate-180" : ""}`}
-                      fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                    </svg>
-                  </button>
-
-                  {colorDropdownOpen && (
-                    <div className="absolute z-50 mt-1 w-full max-w-[320px] bg-white border border-gray-200 rounded-lg shadow-lg max-h-[240px] overflow-y-auto">
-                      {product.options.map((variant: any, index: number) => (
-                        <button
-                          key={index}
-                          type="button"
-                          onClick={() => {
-                            setSelectedOptionIndex(index);
-                            setColorDropdownOpen(false);
-                          }}
-                          className={`w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors ${index === selectedOptionIndex ? "bg-blue-50 border-r-2 border-r-[#211C4D]" : ""
-                            }`}
-                        >
-                          <span
-                            className={`w-6 h-6 rounded-full border-2 shrink-0 ${index === selectedOptionIndex ? "border-[#211C4D] ring-2 ring-offset-1 ring-[#211C4D]" : "border-gray-200"
-                              }`}
-                            style={{ backgroundColor: variant.value || "#ccc" }}
-                          />
-                          <span className={`text-sm font-medium truncate ${index === selectedOptionIndex ? "text-[#211C4D] font-semibold" : "text-gray-700"
-                            }`}>
-                            {variant.value}
-                          </span>
-                          {index === selectedOptionIndex && (
-                            <svg className="w-4 h-4 text-[#211C4D] ms-auto shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                            </svg>
-                          )}
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </div>
-            );
-          }
-
-          // For non-color options (size, text, etc.) — styled <select> dropdown
+          // Unified custom dropdown: supports color swatches and plain options with one visual style.
           return (
-            <div className="mt-4">
-              <p className="text-sm font-medium text-gray-700 mb-2 text-start">
-                {t("Option")}:
+            <div className="mt-5">
+              <p className="text-sm font-semibold text-[#211C4D]/80 mb-2 text-start">
+                {optionsFieldLabel}:
               </p>
-              <select
-                value={selectedOptionIndex}
-                onChange={(e) => setSelectedOptionIndex(Number(e.target.value))}
-                className="w-full max-w-[320px] border-2 border-gray-300 rounded-lg px-4 py-3 bg-white text-sm font-medium text-[#211C4D] hover:border-[#211C4D] focus:border-[#211C4D] focus:ring-1 focus:ring-[#211C4D] outline-none transition-colors cursor-pointer appearance-none"
-                style={{
-                  backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E")`,
-                  backgroundRepeat: "no-repeat",
-                  backgroundPosition: lang === "ar" ? "left 12px center" : "right 12px center",
-                  paddingRight: lang === "ar" ? "16px" : "40px",
-                  paddingLeft: lang === "ar" ? "40px" : "16px",
-                }}
-              >
-                {product.options.map((variant: any, index: number) => (
-                  <option key={index} value={index}>
-                    {variant.value}
-                  </option>
-                ))}
-              </select>
+              <div className="relative" ref={colorDropdownRef}>
+                <button
+                  type="button"
+                  onClick={() => setColorDropdownOpen(!colorDropdownOpen)}
+                  aria-expanded={colorDropdownOpen}
+                  aria-haspopup="listbox"
+                  className="group w-full max-w-[360px] rounded-2xl border border-[#211C4D]/12 bg-gradient-to-b from-white to-[#F8FAFC] px-4 py-3 text-start shadow-sm transition-all hover:border-[#2AA0DC]/45 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-[#2AA0DC]/30"
+                >
+                  <div className="flex items-center gap-3">
+                    <span
+                      className={`grid h-8 w-8 shrink-0 place-items-center rounded-full border-2 ${selectedOptionSwatch ? "border-white ring-1 ring-[#211C4D]/15 shadow-sm" : "border-[#D7DEEA] bg-white"
+                        }`}
+                      style={selectedOptionSwatch ? { backgroundColor: selectedOptionSwatch } : undefined}
+                    >
+                      {!selectedOptionSwatch && (
+                        <span className="h-2 w-2 rounded-full bg-[#211C4D]/25" />
+                      )}
+                    </span>
+
+                    <div className="min-w-0 flex-1">
+                      <span className="block text-[11px] leading-4 text-[#667085]">
+                        {lang === "ar" ? "الخيار المحدد" : "Selected option"}
+                      </span>
+                      <span className="block truncate text-sm font-semibold text-[#211C4D]">
+                        {selectedOptionLabel}
+                      </span>
+                    </div>
+
+                    <span className={`shrink-0 rounded-full border border-[#E4E7EC] bg-white p-1.5 transition-transform duration-200 ${colorDropdownOpen ? "rotate-180" : ""}`}>
+                      <svg
+                        className="w-4 h-4 text-[#211C4D]/70"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={2}
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </span>
+                  </div>
+                </button>
+
+                {colorDropdownOpen && (
+                  <div className="absolute z-50 mt-2 w-full max-w-[360px] overflow-hidden rounded-2xl border border-[#211C4D]/10 bg-white shadow-[0_18px_50px_-18px_rgba(33,28,77,0.35)]">
+                    <div className="max-h-[260px] overflow-y-auto p-2">
+                      {product.options.map((variant: any, index: number) => {
+                        const swatchColor = getSwatchColor(variant);
+                        const isSelected = index === selectedOptionIndex;
+                        const optionLabel = getOptionLabel(variant, index);
+
+                        return (
+                          <button
+                            key={index}
+                            type="button"
+                            role="option"
+                            aria-selected={isSelected}
+                            onClick={() => {
+                              setSelectedOptionIndex(index);
+                              setColorDropdownOpen(false);
+                            }}
+                            className={`w-full rounded-xl border px-3 py-2.5 text-start transition-all ${isSelected
+                              ? "border-[#2AA0DC]/45 bg-[#2AA0DC]/8 shadow-sm"
+                              : "border-transparent hover:border-[#211C4D]/10 hover:bg-[#F8FAFC]"
+                              }`}
+                          >
+                            <div className="flex items-center gap-3">
+                              <span
+                                className={`grid h-7 w-7 shrink-0 place-items-center rounded-full border-2 ${swatchColor
+                                  ? (isSelected ? "border-white ring-1 ring-[#211C4D]/20 shadow-sm" : "border-[#E5E7EB]")
+                                  : (isSelected ? "border-[#2AA0DC]/35 bg-white" : "border-[#E5E7EB] bg-white")
+                                  }`}
+                                style={swatchColor ? { backgroundColor: swatchColor } : undefined}
+                              >
+                                {!swatchColor && <span className="h-1.5 w-1.5 rounded-full bg-[#98A2B3]" />}
+                              </span>
+
+                              <span className={`min-w-0 flex-1 truncate text-sm ${isSelected ? "font-semibold text-[#211C4D]" : "font-medium text-[#344054]"
+                                }`}>
+                                {optionLabel}
+                              </span>
+
+                              {isSelected && (
+                                <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-[#211C4D] text-white shrink-0">
+                                  <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                                  </svg>
+                                </span>
+                              )}
+                            </div>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           );
         })()
