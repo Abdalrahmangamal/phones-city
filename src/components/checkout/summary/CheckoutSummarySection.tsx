@@ -13,6 +13,8 @@ import amwal from "@/assets/images/amwal.png";
 import moyassarlogo from "@/assets/images/moyassarlogo.png";
 import { SaudiRiyalIcon } from "@/components/common/SaudiRiyalIcon";
 
+const LOYALTY_POINT_VALUE_SAR = 1;
+
 const paymentLogos: Record<number, any> = {
   1: tamara,
   2: tabby,
@@ -57,6 +59,12 @@ const CheckoutSummarySection: React.FC<CheckoutSummarySectionProps> = ({
   const { addresses, selectedAddressId, deliveryMethod } = useAddressStore();
   const selectedAddress = addresses.find((addr) => addr.id === selectedAddressId);
   const selectedCityName = selectedAddress?.city?.name || "";
+  const estimatedEarnedPoints = items.reduce((sum, item: any) => {
+    const rawPoints = Number(item?.product?.points ?? 0);
+    const perItemPoints = Number.isFinite(rawPoints) ? Math.max(0, rawPoints) : 0;
+    const qty = Number.isFinite(Number(item?.quantity)) ? Math.max(1, Number(item.quantity)) : 1;
+    return sum + Math.floor(perItemPoints) * qty;
+  }, 0);
 
   const [pointsData, setPointsData] = useState<PointsSummary | null>(null);
   const [loadingPoints, setLoadingPoints] = useState(false);
@@ -65,6 +73,7 @@ const CheckoutSummarySection: React.FC<CheckoutSummarySectionProps> = ({
   useEffect(() => {
     const fetchPoints = async () => {
       setLoadingPoints(true);
+      setErrorPoints(null);
       try {
         const response = await axiosClient.get("/api/v1/points");
         if (response.data.status && Array.isArray(response.data.data)) {
@@ -76,30 +85,33 @@ const CheckoutSummarySection: React.FC<CheckoutSummarySectionProps> = ({
           setPointsData({
             total_points: availablePoints,
             available_points: availablePoints,
-            available_points_value: availablePoints.toString(),
-            point_value: "1",
+            available_points_value: (availablePoints * LOYALTY_POINT_VALUE_SAR).toString(),
+            point_value: String(LOYALTY_POINT_VALUE_SAR),
             used_points: 0,
             expired_points: 0,
             expiring_soon_points: 0
           });
+        } else {
+          setErrorPoints(isRTL ? "تعذر تحميل بيانات النقاط" : "Failed to load points data");
         }
-      } catch (error) {
+      } catch (error: any) {
         console.error("Failed to fetch points");
+        setErrorPoints(error?.response?.data?.message || (isRTL ? "تعذر تحميل بيانات النقاط" : "Failed to load points data"));
       } finally {
         setLoadingPoints(false);
       }
     };
     fetchPoints();
-  }, []);
+  }, [isRTL]);
 
   // 1. Calculate Total Price (including tax) - هذا هو السعر المعروض
-  const totalPriceWithTax = items.reduce((acc, item) => acc + (item.subtotal || 0), 0);
+  const totalPriceWithTax = Number(items.reduce((acc, item: any) => acc + (item.subtotal || 0), 0).toFixed(2));
 
-  // 2. Calculate Tax and Subtotal (14% VAT from total price)
-  // مثال: إذا كان السعر المعروض 100، الضريبة = 14% من 100 = 14، المجموع الفرعي = 100 - 14 = 86
+  // 2. Calculate Tax and Subtotal (15% VAT from total price)
+  // مثال: إذا كان السعر المعروض 100، الضريبة = 15% من 100 = 15، المجموع الفرعي = 100 - 15 = 85
   const taxRate = 0.15; // 15%
-  const tax = totalPriceWithTax * taxRate; // الضريبة = 14% من السعر الإجمالي
-  const subtotal = totalPriceWithTax - tax; // المجموع الفرعي = السعر الإجمالي - الضريبة
+  const tax = Number((totalPriceWithTax * taxRate).toFixed(2)); // الضريبة = 15% من السعر الإجمالي
+  const subtotal = Number((totalPriceWithTax - tax).toFixed(2)); // المجموع الفرعي = السعر الإجمالي - الضريبة
 
   // 3. Selected Payment & Fees
   const selectedPayment = (items[0]?.product as any)?.options?.[0]?.payment_methods?.find((p: any) => p.id === selectedPaymentId);
@@ -137,14 +149,18 @@ const CheckoutSummarySection: React.FC<CheckoutSummarySectionProps> = ({
 
   // 5. Calculate max possible discount (cap at total price including tax)
   const maxDiscountAmount = totalPriceWithTax; // الخصم على السعر الإجمالي (شامل الضريبة)
-  const maxPointsValue = pointsData ? parseFloat(pointsData.available_points_value) : 0;
+  const parsedMaxPointsValue = pointsData ? parseFloat(pointsData.available_points_value) : 0;
+  const maxPointsValue = Number.isFinite(parsedMaxPointsValue) ? parsedMaxPointsValue : 0;
+  const maxAllowedPointsDiscount = Math.max(0, Math.min(maxPointsValue, maxDiscountAmount));
+  const normalizedRequestedPointsDiscount = Math.max(
+    0,
+    Math.min(Math.floor(pointsDiscountAmount || 0), Math.floor(maxAllowedPointsDiscount))
+  );
 
-  // Points Discount - use custom amount if set, otherwise use max available
-  // But never exceed the subtotal (max 100% discount on products only)
+  // Points Discount is only applied when the user explicitly enters/chooses an amount.
   let pointsDiscount = 0;
   if (usePoints && pointsData) {
-    const requestedDiscount = pointsDiscountAmount > 0 ? pointsDiscountAmount : maxPointsValue;
-    pointsDiscount = Math.min(requestedDiscount, maxPointsValue, maxDiscountAmount);
+    pointsDiscount = normalizedRequestedPointsDiscount;
   }
 
   // 6. Calculate Final Total (guaranteed to be >= 0)
@@ -368,6 +384,19 @@ const CheckoutSummarySection: React.FC<CheckoutSummarySectionProps> = ({
                     value: pointsData.available_points_value,
                   })}
                 </p>
+                <p className="text-xs text-gray-500 mt-2" style={{ textAlign: isRTL ? "right" : "left" }}>
+                  {t("checkoutSummary.availablePointsSource")}
+                </p>
+                <p className="text-xs text-blue-700 mt-2 bg-blue-50 border border-blue-100 rounded p-2" style={{ textAlign: isRTL ? "right" : "left" }}>
+                  {t("checkoutSummary.pointsPolicy")}
+                </p>
+                {estimatedEarnedPoints > 0 && (
+                  <p className="text-xs text-emerald-700 mt-2 bg-emerald-50 border border-emerald-100 rounded p-2" style={{ textAlign: isRTL ? "right" : "left" }}>
+                    {t("checkoutSummary.estimatedEarnedPoints", {
+                      points: estimatedEarnedPoints.toLocaleString(isRTL ? "ar-SA" : "en-US"),
+                    })}
+                  </p>
+                )}
 
                 {/* Custom Points Input */}
                 {usePoints && (
@@ -378,20 +407,22 @@ const CheckoutSummarySection: React.FC<CheckoutSummarySectionProps> = ({
                     <div className={`flex items-center gap-2 flex-wrap sm:flex-nowrap ${isRTL ? 'flex-row-reverse' : 'flex-row'}`}>
                       <input
                         type="number"
+                        step="1"
                         min="0"
-                        max={Math.min(maxPointsValue, maxDiscountAmount)}
+                        max={maxAllowedPointsDiscount}
                         value={pointsDiscountAmount || ''}
                         onChange={(e) => {
-                          const val = parseFloat(e.target.value) || 0;
-                          const maxAllowed = Math.min(maxPointsValue, maxDiscountAmount);
-                          onPointsDiscountChange(Math.min(val, maxAllowed));
+                          const parsed = Number.parseFloat(e.target.value);
+                          const val = Number.isFinite(parsed) ? Math.floor(parsed) : 0;
+                          onPointsDiscountChange(Math.max(0, Math.min(val, Math.floor(maxAllowedPointsDiscount))));
                         }}
                         placeholder={isRTL ? 'ادخل العدد' : 'Enter amount'}
                         className="flex-1 min-w-[100px] h-10 px-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-center"
                         style={{ direction: 'ltr' }}
                       />
                       <button
-                        onClick={() => onPointsDiscountChange(Math.min(maxPointsValue, maxDiscountAmount))}
+                        type="button"
+                        onClick={() => onPointsDiscountChange(Math.floor(maxAllowedPointsDiscount))}
                         className="px-3 py-2 bg-blue-500 text-white text-xs sm:text-sm rounded-lg hover:bg-blue-600 transition whitespace-nowrap w-full sm:w-auto"
                       >
                         {isRTL ? 'استخدم الكل' : 'Use All'}
@@ -399,9 +430,14 @@ const CheckoutSummarySection: React.FC<CheckoutSummarySectionProps> = ({
                     </div>
                     <p className="text-xs text-gray-500 mt-2" style={{ textAlign: isRTL ? "right" : "left" }}>
                       {isRTL
-                        ? `الحد الأقصى للخصم: ${Math.min(maxPointsValue, maxDiscountAmount).toLocaleString()} ريال`
-                        : `Max discount: ${Math.min(maxPointsValue, maxDiscountAmount).toLocaleString()} SAR`}
+                        ? `الحد الأقصى للخصم: ${Math.floor(maxAllowedPointsDiscount).toLocaleString()} ريال`
+                        : `Max discount: ${Math.floor(maxAllowedPointsDiscount).toLocaleString()} SAR`}
                     </p>
+                    {pointsDiscount <= 0 && (
+                      <p className="text-xs text-amber-700 mt-2" style={{ textAlign: isRTL ? "right" : "left" }}>
+                        {t("checkoutSummary.pointsNotAppliedUntilAmount")}
+                      </p>
+                    )}
                     {pointsDiscount > 0 && (
                       <p className="text-xs sm:text-sm font-medium text-green-600 mt-2" style={{ textAlign: isRTL ? "right" : "left" }}>
                         {isRTL

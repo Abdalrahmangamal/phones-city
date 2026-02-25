@@ -87,7 +87,7 @@ export default function OrderSummary({
   }, [items.length, loading, fetchCart]);
 
   // Calculate subtotal from item subtotals (price before tax)
-  const subtotal = items.reduce((acc, item) => acc + (item.subtotal || 0), 0);
+  const subtotal = Number(items.reduce((acc, item) => acc + (item.subtotal || 0), 0).toFixed(2));
 
   let calculatedFinalTotal = subtotal; // تم إزالة shipping
   let processingFee = 0;

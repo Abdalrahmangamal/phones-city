@@ -54,6 +54,19 @@ export default function CheckoutPage() {
     deliveryMethod,
   } = useAddressStore();
 
+  const getPointsUsagePayload = () => {
+    const normalizedPointsDiscount = Math.max(
+      0,
+      Math.floor(Number.isFinite(pointsDiscountAmount) ? pointsDiscountAmount : 0)
+    );
+    const shouldUsePoints = usePoints && normalizedPointsDiscount > 0;
+
+    return {
+      use_point: shouldUsePoints,
+      points_discount: shouldUsePoints ? normalizedPointsDiscount : 0,
+    };
+  };
+
   useEffect(() => {
     fetchCart();
   }, [fetchCart, usePoints]);
@@ -213,14 +226,14 @@ export default function CheckoutPage() {
       );
 
       // بناء بيانات الطلب مع إضافة use_points
+      const pointsUsagePayload = getPointsUsagePayload();
       const orderRequestData = {
         ...(currentDeliveryMethod === "delivery" && { location_id: selectedAddressId }),
         payment_method_id: parseInt(selectedPaymentId),
         note: "",
         discount_code: localStorage.getItem('discount_code') || null,
         delivery_method: currentDeliveryMethod === "pickup" ? "store_pickup" : "home_delivery",
-        use_point: usePoints,
-        points_discount: usePoints ? pointsDiscountAmount : 0,
+        ...pointsUsagePayload,
       };
 
 
@@ -529,6 +542,7 @@ export default function CheckoutPage() {
           // ⭐ إنشاء الطلب عند الضغط على "دفع الآن" في المودال
           try {
             const currentDeliveryMethod = deliveryMethod || "delivery";
+            const pointsUsagePayload = getPointsUsagePayload();
 
             const orderRequestData = {
               ...(currentDeliveryMethod === "delivery" && { location_id: selectedAddressId }),
@@ -536,8 +550,7 @@ export default function CheckoutPage() {
               note: "",
               discount_code: localStorage.getItem('discount_code') || null,
               delivery_method: currentDeliveryMethod === "pickup" ? "store_pickup" : "home_delivery",
-              use_point: usePoints,
-              points_discount: usePoints ? pointsDiscountAmount : 0,
+              ...pointsUsagePayload,
             };
 
 

@@ -175,8 +175,36 @@ export default function Singlebills() {
   const handleShare = async () => {
     if (!currentInvoice || sharing) return;
     setSharing(true);
+    let iframe: HTMLIFrameElement | null = null;
 
     try {
+      const shareTitle = `${isAr ? 'فاتورة' : 'Invoice'} #${currentInvoice.invoice_number}`;
+      const shareText = isAr
+        ? `فاتورة من City Phones - رقم ${currentInvoice.invoice_number}`
+        : `Invoice from City Phones - #${currentInvoice.invoice_number}`;
+      const shareUrl = window.location.href;
+      const isProbablyMobile = typeof navigator !== "undefined" && (
+        (navigator as any).userAgentData?.mobile === true
+        || /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent || "")
+      );
+
+      // Mobile-first: avoid heavy PDF generation before opening the native share sheet.
+      if (isProbablyMobile && typeof navigator.share === "function") {
+        try {
+          await navigator.share({
+            title: shareTitle,
+            text: shareText,
+            url: shareUrl,
+          });
+          return;
+        } catch (err: any) {
+          if (err?.name === 'AbortError') {
+            return;
+          }
+          // Fall through to PDF/download fallback if native share fails.
+        }
+      }
+
       // Build the same invoice HTML used for printing
       const invoiceHtml = `
         <!DOCTYPE html>
@@ -187,7 +215,6 @@ export default function Singlebills() {
             body { margin: 0; padding: 0; background: white; color: black; font-family: 'Cairo', 'Arial', sans-serif; }
             * { box-sizing: border-box; }
           </style>
-          <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
         </head>
         <body>
           <div style="direction: ${isAr ? 'rtl' : 'ltr'}; padding: 40px; max-width: 800px; margin: 0 auto;">
@@ -281,7 +308,7 @@ export default function Singlebills() {
       }
 
       // Create an isolated iframe to avoid global styles (oklch error in Tailwind v4)
-      const iframe = document.createElement('iframe');
+      iframe = document.createElement('iframe');
       iframe.style.position = 'fixed';
       iframe.style.left = '-10000px';
       iframe.style.top = '0';
@@ -305,39 +332,41 @@ export default function Singlebills() {
       const fileName = `Invoice-${currentInvoice.invoice_number}.pdf`;
 
       // Generate PDF blob using correct html2pdf.js API chain from the iframe body
-      const pdfBlob: Blob = await html2pdf()
-        .set({
-          margin: 10,
-          filename: fileName,
-          image: { type: 'jpeg', quality: 0.98 },
-          html2canvas: {
-            scale: 2,
-            useCORS: true,
-            // Strip all stylesheets from the cloned document to avoid
-            // Tailwind v4 oklch() color parsing errors in html2canvas
-            onclone: (clonedDoc: Document) => {
-              clonedDoc.querySelectorAll('link[rel="stylesheet"], style').forEach((el: Element) => el.remove());
+      const pdfBlob: Blob = await Promise.race([
+        html2pdf()
+          .set({
+            margin: 10,
+            filename: fileName,
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: {
+              scale: 2,
+              useCORS: true,
+              // Strip all stylesheets from the cloned document to avoid
+              // Tailwind v4 oklch() color parsing errors in html2canvas
+              onclone: (clonedDoc: Document) => {
+                clonedDoc.querySelectorAll('link[rel="stylesheet"], style').forEach((el: Element) => el.remove());
+              },
             },
-          },
-          jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-        })
-        .from(iframeDoc.body)
-        .toPdf()
-        .output('blob');
-
-      // Clean up
-      document.body.removeChild(iframe);
+            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+          })
+          .from(iframeDoc.body)
+          .toPdf()
+          .output('blob'),
+        new Promise<Blob>((_, reject) =>
+          setTimeout(() => reject(new Error(isAr ? 'انتهت مهلة تجهيز ملف المشاركة' : 'Share file generation timed out')), 20000)
+        ),
+      ]);
 
       const pdfFile = new File([pdfBlob], fileName, { type: 'application/pdf' });
 
-      // Try Web Share API (works on mobile)
-      if (navigator.share && navigator.canShare) {
+      // Try file sharing if supported
+      if (typeof navigator.share === "function" && typeof navigator.canShare === "function") {
         try {
           const canShareFiles = navigator.canShare({ files: [pdfFile] });
           if (canShareFiles) {
             await navigator.share({
-              title: `فاتورة #${currentInvoice.invoice_number}`,
-              text: `فاتورة من City Phones - رقم ${currentInvoice.invoice_number}`,
+              title: shareTitle,
+              text: shareText,
               files: [pdfFile],
             });
             return;
@@ -347,15 +376,34 @@ export default function Singlebills() {
         }
       }
 
-      // Fallback: download the PDF directly
+      // Secondary fallback: native share text/url (desktop/mobile browsers that support text share but not files)
+      if (typeof navigator.share === "function") {
+        try {
+          await navigator.share({
+            title: shareTitle,
+            text: shareText,
+            url: shareUrl,
+          });
+          return;
+        } catch (err: any) {
+          if (err?.name === 'AbortError') {
+            return;
+          }
+        }
+      }
+
+      // Final fallback: download the PDF directly
       const url = URL.createObjectURL(pdfBlob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = fileName;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
+      try {
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      } finally {
+        URL.revokeObjectURL(url);
+      }
     } catch (err: any) {
       if (err?.name !== 'AbortError') {
         console.error('Share failed:', err);
@@ -363,6 +411,9 @@ export default function Singlebills() {
         alert(`حدث خطأ أثناء المشاركة: ${err.message || String(err)}`);
       }
     } finally {
+      if (iframe && iframe.parentNode) {
+        iframe.parentNode.removeChild(iframe);
+      }
       setSharing(false);
     }
   };

@@ -76,7 +76,8 @@ export const useCartStore = create<CartState>((set, get) => ({
       });
 
       const newItems = res?.data?.data?.items || [];
-      const newTotal = res?.data?.data?.total || 0;
+      const newTotalRaw = res?.data?.data?.total || 0;
+      const newTotal = Number(Number(newTotalRaw).toFixed(2));
 
       // استخراج حد الشحن المجاني من الملخص
       const summary = res?.data?.data?.summary;
