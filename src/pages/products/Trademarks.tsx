@@ -64,9 +64,9 @@ export default function Trademarks() {
     const loadData = async () => {
       try {
         await Promise.all([
-          fetchtradmarks(),
-          fetchCategoriesbyid(id, "products"),
-          fetchCatesubgategory(id)
+          fetchtradmarks(lang),
+          fetchCategoriesbyid(id, "products", lang),
+          fetchCatesubgategory(id, lang)
         ]);
       } catch (error) {
         console.error("Error loading trademark data:", error);
@@ -76,7 +76,7 @@ export default function Trademarks() {
     };
     
     loadData();
-  }, [id, fetchCategoriesbyid, fetchCatesubgategory, fetchtradmarks]);
+  }, [id, lang, fetchCategoriesbyid, fetchCatesubgategory, fetchtradmarks]);
 
   // Get trademark name with language support
   useEffect(() => {

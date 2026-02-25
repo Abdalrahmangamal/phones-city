@@ -18,10 +18,10 @@ interface CategoriesState {
   Catesubgategory: Category[];
   loading: boolean;
   error: string | null;
-  fetchCategoriesbyid: (id: string, productsmain?: string) => Promise<void>;
-  fetchCatesubgategory: (id: string) => Promise<void>;
+  fetchCategoriesbyid: (id: string, productsmain?: string, lang?: string) => Promise<void>;
+  fetchCatesubgategory: (id: string, lang?: string) => Promise<void>;
   fetchCategories: (lang: string) => Promise<void>;
-  fetchtradmarks: () => Promise<void>;
+  fetchtradmarks: (lang?: string) => Promise<void>;
 }
 const baseUrl = import.meta.env.VITE_BASE_URL;
 const CATEGORIES_CACHE_TTL_MS = 60_000;
@@ -80,11 +80,14 @@ export const useCategoriesStore = create<CategoriesState>((set) => ({
     categoriesInFlight.set(normalizedLang, request);
     return request;
   },
-  fetchCategoriesbyid: async (id: string, productsmain?: string) => {
+  fetchCategoriesbyid: async (id: string, productsmain?: string, lang?: string) => {
     set({ loading: true, error: null });
     const token = localStorage.getItem("token");
+    const normalizedLang = (lang || "ar").trim() || "ar";
     const endpoint = `${baseUrl}api/v1/categories/${id}${productsmain ? "/" + productsmain : ""}`;
     const headers = {
+      "Accept-Language": normalizedLang,
+      Accept: "application/json",
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
     };
 
@@ -127,11 +130,17 @@ export const useCategoriesStore = create<CategoriesState>((set) => ({
       });
     }
   },
-  fetchCatesubgategory: async (id: string) => {
+  fetchCatesubgategory: async (id: string, lang?: string) => {
     set({ loading: true, error: null });
+    const normalizedLang = (lang || "ar").trim() || "ar";
 
     try {
-      const res = await axios.get(`${baseUrl}api/v1/categories/${id}`);
+      const res = await axios.get(`${baseUrl}api/v1/categories/${id}`, {
+        headers: {
+          "Accept-Language": normalizedLang,
+          Accept: "application/json",
+        },
+      });
 
       set({
         // singleCategory: res.data.data,  // تخزن object هنا
@@ -145,11 +154,17 @@ export const useCategoriesStore = create<CategoriesState>((set) => ({
       });
     }
   },
-  fetchtradmarks: async () => {
+  fetchtradmarks: async (lang?: string) => {
     set({ loading: true, error: null });
+    const normalizedLang = (lang || "ar").trim() || "ar";
 
     try {
-      const res = await axios.get(`${baseUrl}api/v1/categories/trademarks`);
+      const res = await axios.get(`${baseUrl}api/v1/categories/trademarks`, {
+        headers: {
+          "Accept-Language": normalizedLang,
+          Accept: "application/json",
+        },
+      });
 
       set({
         // singleCategory: res.data.data,  // تخزن object هنا
