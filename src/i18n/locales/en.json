@@ -368,6 +368,7 @@
     "pointsPolicy": "1 point = 1 SAR. Points from this order are added only after order completion and can be used on the next order only (valid for 6 months).",
     "estimatedEarnedPoints": "Estimated points from this order after completion: {{points}} points.",
     "pointsNotAppliedUntilAmount": "No points discount will be applied until you enter an amount or tap \"Use All\".",
+    "installmentUnavailableForSomeItems": "Some items in your cart do not support installment payments, so only non-installment payment methods are shown.",
     "pointsDiscount": "Points Discount",
     "paymentFees": "{{paymentName}} Fees",
     "subtotal": "Subtotal",

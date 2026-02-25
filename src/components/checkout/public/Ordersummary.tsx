@@ -48,6 +48,43 @@ const paymentMarketingTexts: Record<number, (amount: string, isRTL: boolean) => 
     : "Use 6 interest-free installments and save fees. For our premium customers",
 };
 
+const INSTALLMENT_METHOD_IDS = new Set([1, 2, 3, 4, 5, 6]);
+
+const isInstallmentMethod = (method: any) => {
+  const id = Number(method?.id);
+  const name = String(method?.name || "").toLowerCase();
+
+  if (INSTALLMENT_METHOD_IDS.has(id)) return true;
+
+  // Keep Moyasar (7) and bank transfer (8) outside installment classification.
+  if (id === 7 || id === 8) return false;
+
+  return /(tamara|tabby|emkan|emkann|amwal|mispay|تمارا|تابي|إمكان|امكان|أموال|اموال)/i.test(name);
+};
+
+const extractItemPaymentMethods = (item: any): any[] => {
+  const selectedOptionId = item?.product_option?.id || item?.product_option_id;
+  const matchedOption = Array.isArray(item?.product?.options)
+    ? item.product.options.find((opt: any) => opt?.id === selectedOptionId)
+    : undefined;
+
+  const candidates = [
+    item?.payment_methods,
+    item?.product_option?.payment_methods,
+    matchedOption?.payment_methods,
+    item?.product?.payment_methods,
+    item?.product?.options?.[0]?.payment_methods,
+  ];
+
+  for (const candidate of candidates) {
+    if (Array.isArray(candidate) && candidate.length > 0) {
+      return candidate.filter(Boolean);
+    }
+  }
+
+  return [];
+};
+
 interface OrderSummaryProps {
   onTotalUpdate?: (total: number) => void;
   usePoints?: boolean;
@@ -89,11 +126,65 @@ export default function OrderSummary({
   // Calculate subtotal from item subtotals (price before tax)
   const subtotal = Number(items.reduce((acc, item) => acc + (item.subtotal || 0), 0).toFixed(2));
 
+  const paymentMethodsByItem = items.map((item: any) => extractItemPaymentMethods(item));
+  const hasPaymentMethodsForAllItems =
+    items.length > 0 && paymentMethodsByItem.every((methods) => Array.isArray(methods) && methods.length > 0);
+
+  const legacyPaymentMethods = (items[0]?.product as any)?.options?.[0]?.payment_methods || [];
+
+  const paymentMethods = (() => {
+    if (!hasPaymentMethodsForAllItems) {
+      return Array.isArray(legacyPaymentMethods) ? legacyPaymentMethods : [];
+    }
+
+    const methodMap = new Map<number, any>();
+    paymentMethodsByItem.forEach((methods) => {
+      methods.forEach((method) => {
+        const id = Number(method?.id);
+        if (Number.isFinite(id) && !methodMap.has(id)) {
+          methodMap.set(id, method);
+        }
+      });
+    });
+
+    let commonIds = new Set<number>(
+      paymentMethodsByItem[0]
+        .map((method) => Number(method?.id))
+        .filter((id) => Number.isFinite(id))
+    );
+
+    for (let i = 1; i < paymentMethodsByItem.length; i += 1) {
+      const currentIds = new Set<number>(
+        paymentMethodsByItem[i]
+          .map((method) => Number(method?.id))
+          .filter((id) => Number.isFinite(id))
+      );
+      commonIds = new Set([...commonIds].filter((id) => currentIds.has(id)));
+    }
+
+    return [...commonIds].map((id) => methodMap.get(id)).filter(Boolean);
+  })();
+
+  const itemHasInstallmentSupport = paymentMethodsByItem.map((methods) =>
+    methods.some((method) => isInstallmentMethod(method))
+  );
+  const hasAnyInstallmentInCart = itemHasInstallmentSupport.some(Boolean);
+  const hasItemsWithoutInstallment = itemHasInstallmentSupport.some((value) => !value);
+  const commonInstallmentMethods = paymentMethods.filter(
+    (method: any) => Number(method?.id) !== BANK_TRANSFER_ID && isInstallmentMethod(method)
+  );
+  const showInstallmentUnsupportedMessage =
+    hasPaymentMethodsForAllItems &&
+    items.length > 1 &&
+    hasAnyInstallmentInCart &&
+    (hasItemsWithoutInstallment || commonInstallmentMethods.length === 0);
+  const bankTransferSupported = hasPaymentMethodsForAllItems
+    ? paymentMethods.some((method: any) => Number(method?.id) === BANK_TRANSFER_ID)
+    : true;
+
   let calculatedFinalTotal = subtotal; // تم إزالة shipping
   let processingFee = 0;
   let selectedPaymentName = "";
-
-  const paymentMethods = (items[0]?.product as any)?.options?.[0]?.payment_methods || [];
 
   if (selectedPaymentId !== null) {
     const selected = paymentMethods.find((p: any) => p.id === selectedPaymentId);
@@ -113,12 +204,28 @@ export default function OrderSummary({
     }
   }, [calculatedFinalTotal, selectedPaymentId, updateFinalTotal, onTotalUpdate]);
 
+  useEffect(() => {
+    if (selectedPaymentId === null || selectedPaymentId === undefined) return;
+
+    const availableIds = new Set(
+      paymentMethods
+        .map((method: any) => Number(method?.id))
+        .filter((id: number) => Number.isFinite(id))
+    );
+
+    if (!availableIds.has(Number(selectedPaymentId))) {
+      setIsBankTransferSelected(false);
+      updateFinalTotal(subtotal, null);
+    }
+  }, [paymentMethods, selectedPaymentId, subtotal, updateFinalTotal]);
+
   // Removed broken useEffect trying to sync selectedPaymentId
 
 
   const handlePaymentSelect = (paymentId: number) => {
     // إذا كان التحويل البنكي
     if (paymentId === BANK_TRANSFER_ID) {
+      if (!bankTransferSupported) return;
       setIsBankTransferSelected(true);
       updateFinalTotal(subtotal, BANK_TRANSFER_ID);
       return;
@@ -147,7 +254,9 @@ export default function OrderSummary({
   const paymentProviders = paymentMethods
     .filter((p: any) => p.id !== BANK_TRANSFER_ID)
     .map((p: any) => {
-      const amount = parseFloat(p.total_price).toLocaleString(isRTL ? "ar-SA" : "en-US");
+      const parsedAmount = Number.parseFloat(String(p.total_price ?? subtotal).replace(/,/g, ""));
+      const safeAmount = Number.isFinite(parsedAmount) ? parsedAmount : subtotal;
+      const amount = safeAmount.toLocaleString(isRTL ? "ar-SA" : "en-US");
       const textFn = paymentMarketingTexts[p.id];
       const description = textFn
         ? p.id === 6
@@ -162,6 +271,7 @@ export default function OrderSummary({
         name: p.name,
         logo: paymentLogos[p.id] || madfu,
         description,
+        isInstallment: isInstallmentMethod(p),
       };
     });
 
@@ -230,6 +340,13 @@ export default function OrderSummary({
       {/* بوابات الدفع */}
       <div className="mb-8 space-y-3">
         <h2 className="text-lg font-semibold mb-3">{t("PaymentMethods")}</h2>
+        {showInstallmentUnsupportedMessage && (
+          <div className={`p-3 sm:p-4 rounded-lg border border-amber-200 bg-amber-50 ${isRTL ? "text-right" : "text-left"}`}>
+            <p className="text-amber-800 text-sm sm:text-base font-medium">
+              {t("checkoutSummary.installmentUnavailableForSomeItems")}
+            </p>
+          </div>
+        )}
         {paymentProviders.map((provider: any) => (
           <div
             key={provider.id}
@@ -259,62 +376,64 @@ export default function OrderSummary({
         ))}
 
         {/* التحويل البنكي المباشر */}
-        <div
-          onClick={() => handlePaymentSelect(BANK_TRANSFER_ID)}
-          className={`grid grid-cols-[auto_1fr_auto] items-start sm:items-center gap-3 sm:gap-4 rounded-lg border p-3 sm:p-4 cursor-pointer transition-all ${(selectedPaymentId === BANK_TRANSFER_ID || isBankTransferSelected)
-            ? "border-blue-500 bg-blue-50"
-            : "border-gray-200 hover:border-gray-400"
-            }`}
-          dir={isRTL ? "rtl" : "ltr"}
-        >
-          <input
-            type="radio"
-            name="payment"
-            checked={selectedPaymentId === BANK_TRANSFER_ID || isBankTransferSelected}
-            onChange={() => handlePaymentSelect(BANK_TRANSFER_ID)}
-            className="h-5 w-5 text-blue-600 mt-0.5 sm:mt-0"
-            aria-label={isRTL ? "التحويل البنكي المباشر" : "Direct Bank Transfer"}
-          />
+        {bankTransferSupported && (
+          <div
+            onClick={() => handlePaymentSelect(BANK_TRANSFER_ID)}
+            className={`grid grid-cols-[auto_1fr_auto] items-start sm:items-center gap-3 sm:gap-4 rounded-lg border p-3 sm:p-4 cursor-pointer transition-all ${(selectedPaymentId === BANK_TRANSFER_ID || isBankTransferSelected)
+              ? "border-blue-500 bg-blue-50"
+              : "border-gray-200 hover:border-gray-400"
+              }`}
+            dir={isRTL ? "rtl" : "ltr"}
+          >
+            <input
+              type="radio"
+              name="payment"
+              checked={selectedPaymentId === BANK_TRANSFER_ID || isBankTransferSelected}
+              onChange={() => handlePaymentSelect(BANK_TRANSFER_ID)}
+              className="h-5 w-5 text-blue-600 mt-0.5 sm:mt-0"
+              aria-label={isRTL ? "التحويل البنكي المباشر" : "Direct Bank Transfer"}
+            />
 
-          <div className="min-w-0">
-            <p
-              className="text-sm sm:text-base font-medium sm:font-normal leading-5 break-words"
-              style={{ fontFamily: 'Roboto', color: '#211C4D' }}
-            >
-              {isRTL ? "التحويل البنكي المباشر" : "Direct Bank Transfer"}
-            </p>
-            <p className={`text-[11px] sm:text-xs text-gray-500 mt-1 ${isRTL ? "text-right" : "text-left"}`}>
-              {isRTL ? "ارفع إيصال التحويل بعد إتمام الدفع" : "Upload transfer receipt after payment"}
-            </p>
-          </div>
-
-          <div className="flex items-center gap-2 self-center">
-            {/* أيقونة البنك */}
-            <div className="w-9 h-9 sm:w-[38px] sm:h-[38px] flex items-center justify-center bg-gray-100 rounded-lg shrink-0">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 2L2 7V10H22V7L12 2Z" stroke="#211C4D" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                <path d="M4 10V20" stroke="#211C4D" strokeWidth="1.5" strokeLinecap="round" />
-                <path d="M9 10V20" stroke="#211C4D" strokeWidth="1.5" strokeLinecap="round" />
-                <path d="M15 10V20" stroke="#211C4D" strokeWidth="1.5" strokeLinecap="round" />
-                <path d="M20 10V20" stroke="#211C4D" strokeWidth="1.5" strokeLinecap="round" />
-                <path d="M2 20H22" stroke="#211C4D" strokeWidth="1.5" strokeLinecap="round" />
-              </svg>
+            <div className="min-w-0">
+              <p
+                className="text-sm sm:text-base font-medium sm:font-normal leading-5 break-words"
+                style={{ fontFamily: 'Roboto', color: '#211C4D' }}
+              >
+                {isRTL ? "التحويل البنكي المباشر" : "Direct Bank Transfer"}
+              </p>
+              <p className={`text-[11px] sm:text-xs text-gray-500 mt-1 ${isRTL ? "text-right" : "text-left"}`}>
+                {isRTL ? "ارفع إيصال التحويل بعد إتمام الدفع" : "Upload transfer receipt after payment"}
+              </p>
             </div>
 
-            {/* زر القلم للتعديل */}
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                handlePaymentSelect(BANK_TRANSFER_ID);
-                setIsBankTransferModalOpen(true);
-              }}
-              className="w-8 h-8 sm:w-6 sm:h-6 flex items-center justify-center hover:bg-gray-200 rounded transition shrink-0"
-              title={isRTL ? "تعديل معلومات الحساب" : "Edit account info"}
-            >
-              <Pencil className="w-4 h-4" style={{ color: '#211C4D' }} />
-            </button>
+            <div className="flex items-center gap-2 self-center">
+              {/* أيقونة البنك */}
+              <div className="w-9 h-9 sm:w-[38px] sm:h-[38px] flex items-center justify-center bg-gray-100 rounded-lg shrink-0">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 2L2 7V10H22V7L12 2Z" stroke="#211C4D" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                  <path d="M4 10V20" stroke="#211C4D" strokeWidth="1.5" strokeLinecap="round" />
+                  <path d="M9 10V20" stroke="#211C4D" strokeWidth="1.5" strokeLinecap="round" />
+                  <path d="M15 10V20" stroke="#211C4D" strokeWidth="1.5" strokeLinecap="round" />
+                  <path d="M20 10V20" stroke="#211C4D" strokeWidth="1.5" strokeLinecap="round" />
+                  <path d="M2 20H22" stroke="#211C4D" strokeWidth="1.5" strokeLinecap="round" />
+                </svg>
+              </div>
+
+              {/* زر القلم للتعديل */}
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handlePaymentSelect(BANK_TRANSFER_ID);
+                  setIsBankTransferModalOpen(true);
+                }}
+                className="w-8 h-8 sm:w-6 sm:h-6 flex items-center justify-center hover:bg-gray-200 rounded transition shrink-0"
+                title={isRTL ? "تعديل معلومات الحساب" : "Edit account info"}
+              >
+                <Pencil className="w-4 h-4" style={{ color: '#211C4D' }} />
+              </button>
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
       {/* Madfu Notification */}

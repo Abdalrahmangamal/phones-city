@@ -365,6 +365,7 @@
     "pointsPolicy": "كل نقطة = 1 ر.س. نقاط هذا الطلب تُضاف بعد إتمام الطلب وتُستخدم في الطلب القادم فقط (صلاحيتها 6 أشهر).",
     "estimatedEarnedPoints": "النقاط المتوقعة من هذا الطلب بعد الإتمام: {{points}} نقطة.",
     "pointsNotAppliedUntilAmount": "لن يتم تطبيق خصم نقاط حتى تحدد عدد النقاط أو تضغط \"استخدم الكل\".",
+    "installmentUnavailableForSomeItems": "بعض المنتجات في السلة لا تدعم التقسيط، لذلك تم إظهار طرق الدفع غير التقسيط فقط.",
     "pointsDiscount": "خصم النقاط",
     "paymentFees": "رسوم {{paymentName}}",
     "subtotal": "المجموع الفرعي",
