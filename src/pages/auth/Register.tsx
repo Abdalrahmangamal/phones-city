@@ -129,7 +129,7 @@ export default function Register() {
   ];
 
   return (
-    <div dir={isRTL ? "rtl" : "ltr"}>
+    <div dir={isRTL ? "rtl" : "ltr"} className="relative">
       <VerifyCode
         isopen={openverifymodal}
         email={verifyEmail}
@@ -143,9 +143,13 @@ export default function Register() {
         className={`smalllogo absolute ${isRTL ? 'md:right-[60px] right-2' : 'md:left-[60px] left-2'} top-5 z-10 w-auto`}
         alt=""
       />
-      <img src={toppattern} alt="" className={`absolute ${isRTL ? 'left-0' : 'right-0 -scale-x-100'} z-4`} />
+      <img
+        src={toppattern}
+        alt=""
+        className={`absolute ${isRTL ? 'left-0' : 'right-0 -scale-x-100'} z-0 pointer-events-none`}
+      />
 
-      <div className="min-h-screen flex md:mt-0 mt-[60px] md:p-0 px-4 z-3 flex-col md:flex-row items-center justify-center gap-30 relative">
+      <div className="min-h-screen flex md:mt-0 mt-[60px] md:p-0 px-4 z-10 flex-col md:flex-row items-center justify-center gap-30 relative">
         <div className={`bg-white scale-[0.9] rounded-[20px] md:w-[600px] w-full text-start pt-4 form-wrap`}>
           <h2 className={`text-[32px] font-[600] mt-5 text-[#211C4D] mb-3 ${isRTL ? 'text-right' : 'text-left'} leading-[32px] tracking-[-0.52px]`}>
             {t("auth.createNewAccount")}

@@ -56,6 +56,7 @@ const CheckoutSummarySection: React.FC<CheckoutSummarySectionProps> = ({
   const { items, selectedPaymentId, freeShippingThreshold, updateFinalTotal } = useCartStore();
   const { addresses, selectedAddressId, deliveryMethod } = useAddressStore();
   const selectedAddress = addresses.find((addr) => addr.id === selectedAddressId);
+  const selectedCityName = selectedAddress?.city?.name || "";
 
   const [pointsData, setPointsData] = useState<PointsSummary | null>(null);
   const [loadingPoints, setLoadingPoints] = useState(false);
@@ -109,13 +110,15 @@ const CheckoutSummarySection: React.FC<CheckoutSummarySectionProps> = ({
   }
 
   const shipmentInfo: ShipmentInfo = {
-    address: selectedAddress ? `${selectedAddress.city.name} - ${selectedAddress.street_address}` : "",
+    address: selectedAddress
+      ? [selectedCityName, selectedAddress.street_address].filter(Boolean).join(" - ")
+      : "",
   };
 
   // 4. Calculate Shipping Cost
   let shippingCost = 0;
   if (deliveryMethod === "delivery" && selectedAddress) {
-    const shippingFeeStr = selectedAddress.city.shipping_fee;
+    const shippingFeeStr = selectedAddress.city?.shipping_fee;
     let baseShippingCost = typeof shippingFeeStr === "string"
       ? parseFloat(shippingFeeStr.replace(/,/g, ""))
       : typeof shippingFeeStr === "number"

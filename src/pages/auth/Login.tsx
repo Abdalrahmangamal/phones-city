@@ -70,13 +70,17 @@ export default function Login() {
         <div className="w-full flex relative">
           <img
             src={smalllogo}
-            className={`absolute ${isRTL ? 'md:right-15 right-2' : 'md:left-15 left-2'} top-5 z-2`}
+            className={`absolute ${isRTL ? 'md:right-15 right-2' : 'md:left-15 left-2'} top-5 z-10`}
             alt=""
           />
-          <img src={toppatern} alt="" className={`absolute ${isRTL ? 'left-0' : 'right-0 -scale-x-100'} z-4`} />
+          <img
+            src={toppatern}
+            alt=""
+            className={`absolute ${isRTL ? 'left-0' : 'right-0 -scale-x-100'} z-0 pointer-events-none`}
+          />
         </div>
 
-        <div className="min-h-screen flex md:mt-[0px] mt-[200px] md:p-0 px-4 z-3 flex-col md:flex-row items-center justify-center gap-20 relative">
+        <div className="min-h-screen flex md:mt-[0px] mt-[200px] md:p-0 px-4 z-10 flex-col md:flex-row items-center justify-center gap-20 relative">
           <div className={`bg-white rounded-[20px] md:w-[450px] w-full ${isRTL ? 'text-start' : 'text-start'}`}>
             <h2 className="text-[35px] font-[600] text-[#211C4D] mb-2">
               {t("auth.loginToAccount")}
@@ -189,7 +193,11 @@ export default function Login() {
           <div className="flex items-center justify-center">
             <img src={loginimage} className="scale-[0.9] md:mb-0 mb-60" alt="" />
           </div>
-          <img src={bottompattern} className={`absolute bottom-0 ${isRTL ? 'right-0' : 'left-0 -scale-x-100'}`} alt="" />
+          <img
+            src={bottompattern}
+            className={`absolute bottom-0 ${isRTL ? 'right-0' : 'left-0 -scale-x-100'} pointer-events-none`}
+            alt=""
+          />
         </div>
       </div>
     </>

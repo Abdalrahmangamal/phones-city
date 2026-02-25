@@ -50,19 +50,41 @@ export default function Singleaddress() {
     editAddressId?: number;
   };
 
-  const editingAddressId =
-    typeof navigationState.editAddressId === "number" ? navigationState.editAddressId : null;
+  const searchParams = new URLSearchParams(location.search);
+  const queryReturnTo = searchParams.get("returnTo");
+  const queryCheckoutStepRaw = searchParams.get("checkoutStep");
+  const queryEditAddressIdRaw = searchParams.get("editAddressId");
+
+  const queryCheckoutStep =
+    queryCheckoutStepRaw !== null ? Number.parseInt(queryCheckoutStepRaw, 10) : null;
+  const queryEditAddressId =
+    queryEditAddressIdRaw !== null ? Number.parseInt(queryEditAddressIdRaw, 10) : null;
+
+  const editingAddressId = Number.isInteger(navigationState.editAddressId)
+    ? navigationState.editAddressId
+    : Number.isInteger(queryEditAddressId)
+      ? queryEditAddressId
+      : null;
   const isEditMode = editingAddressId !== null;
 
   const fallbackReturnPath = `/${routeLang}/address`;
+  const stateReturnTo =
+    typeof navigationState.returnTo === "string" ? navigationState.returnTo : null;
+  const candidateReturnTo = stateReturnTo || queryReturnTo;
   const returnPath =
-    typeof navigationState.returnTo === "string" && navigationState.returnTo.startsWith("/")
-      ? navigationState.returnTo
+    typeof candidateReturnTo === "string" && candidateReturnTo.startsWith("/")
+      ? candidateReturnTo
       : fallbackReturnPath;
 
+  const checkoutStepValue = Number.isInteger(navigationState.checkoutStep)
+    ? navigationState.checkoutStep
+    : Number.isInteger(queryCheckoutStep)
+      ? queryCheckoutStep
+      : null;
+
   const returnState =
-    typeof navigationState.checkoutStep === "number"
-      ? { checkoutStep: navigationState.checkoutStep, fromAddressSaved: true }
+    Number.isInteger(checkoutStepValue)
+      ? { checkoutStep: checkoutStepValue, fromAddressSaved: true }
       : undefined;
 
   // تعيين القيم الافتراضية عند التحميل

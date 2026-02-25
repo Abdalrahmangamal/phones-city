@@ -23,8 +23,9 @@ import { SaudiRiyalIcon } from "@/components/common/SaudiRiyalIcon";
 export default function CheckoutPage() {
   const location = useLocation();
   const locationState = (location.state || {}) as { checkoutStep?: number };
-  const requestedStep =
-    typeof locationState.checkoutStep === "number" ? locationState.checkoutStep : 0;
+  const requestedStep = Number.isInteger(locationState.checkoutStep)
+    ? locationState.checkoutStep
+    : 0;
 
   const [activeStep, setActiveStep] = useState(() => Math.max(0, Math.min(2, requestedStep)));
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -56,6 +57,10 @@ export default function CheckoutPage() {
   useEffect(() => {
     fetchCart();
   }, [fetchCart, usePoints]);
+
+  useEffect(() => {
+    setActiveStep(Math.max(0, Math.min(2, requestedStep)));
+  }, [requestedStep]);
 
 
   const steps = [
@@ -91,6 +96,7 @@ export default function CheckoutPage() {
       ),
     },
   ];
+  const currentStep = steps[activeStep] ?? steps[0];
 
   const showCustomToast = (type: 'success' | 'error' | 'info', title: string, message?: React.ReactNode, duration: number = 8000) => {
     const ToastContent = () => (
@@ -467,7 +473,7 @@ export default function CheckoutPage() {
         {/* Main Content */}
         <div className="w-full mx-auto px-4 py-8">
           <div className="bg-white rounded-lg lg:p-8 min-h-96">
-            {steps[activeStep].componunt}
+            {currentStep.componunt}
           </div>
         </div>
 

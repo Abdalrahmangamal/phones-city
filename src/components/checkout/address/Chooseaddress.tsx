@@ -31,8 +31,22 @@ export default function Chooseaddress() {
   const [localLoading, setLocalLoading] = useState(true);
   const navigate = useNavigate();
 
+  const buildSingleAddressUrl = (editAddressId?: number) => {
+    const params = new URLSearchParams({
+      returnTo: `/${currentLanguage}/checkout`,
+      checkoutStep: "1",
+      fromCheckout: "1",
+    });
+
+    if (typeof editAddressId === "number") {
+      params.set("editAddressId", String(editAddressId));
+    }
+
+    return `/${currentLanguage}/singleaddress?${params.toString()}`;
+  };
+
   const handleAddNewAddress = () => {
-    navigate(`/${currentLanguage}/singleaddress`, {
+    navigate(buildSingleAddressUrl(), {
       state: {
         returnTo: `/${currentLanguage}/checkout`,
         checkoutStep: 1,
@@ -42,7 +56,7 @@ export default function Chooseaddress() {
   };
 
   const handleEditAddress = (addressId: number) => {
-    navigate(`/${currentLanguage}/singleaddress`, {
+    navigate(buildSingleAddressUrl(addressId), {
       state: {
         returnTo: `/${currentLanguage}/checkout`,
         checkoutStep: 1,
