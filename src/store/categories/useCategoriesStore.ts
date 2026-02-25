@@ -67,7 +67,7 @@ export const useCategoriesStore = create<CategoriesState>((set) => ({
         });
 
         set({ categories: nextCategories, loading: false, error: null });
-      } catch (err) {
+      } catch {
         set({
           error: "Failed to fetch categories",
           loading: false,
@@ -83,24 +83,44 @@ export const useCategoriesStore = create<CategoriesState>((set) => ({
   fetchCategoriesbyid: async (id: string, productsmain?: string) => {
     set({ loading: true, error: null });
     const token = localStorage.getItem("token");
+    const endpoint = `${baseUrl}api/v1/categories/${id}${productsmain ? "/" + productsmain : ""}`;
+    const headers = {
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    };
 
     try {
-      const res = await axios.get(
-        `${baseUrl}api/v1/categories/${id}${productsmain ? "/" + productsmain : ""
-        }`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+      const res = await axios.get(endpoint, { headers });
+
+      let allProducts = Array.isArray(res?.data?.data?.products) ? res.data.data.products : [];
+      const pagination = res?.data?.pagination;
+      const lastPage = Number(pagination?.last_page || 1);
+
+      // `/categories/{slug}/products` is paginated by the backend (default 15).
+      // Trademarks page applies client-side filters/pagination, so we need the full list.
+      if (productsmain === "products" && lastPage > 1) {
+        const nextPages = await Promise.all(
+          Array.from({ length: lastPage - 1 }, (_, index) =>
+            axios.get(endpoint, {
+              params: { page: index + 2 },
+              headers,
+            })
+          )
+        );
+
+        for (const pageRes of nextPages) {
+          const pageProducts = Array.isArray(pageRes?.data?.data?.products)
+            ? pageRes.data.data.products
+            : [];
+          allProducts = allProducts.concat(pageProducts);
         }
-      );
+      }
 
       set({
         // singleCategory: res.data.data,  // تخزن object هنا
-        Categoriesbyid: res?.data?.data?.products, // تخزن array للمنتجات هنا
+        Categoriesbyid: allProducts, // تخزن array للمنتجات هنا
         loading: false,
       });
-    } catch (err) {
+    } catch {
       set({
         error: "Failed to fetch categories",
         loading: false,
@@ -118,7 +138,7 @@ export const useCategoriesStore = create<CategoriesState>((set) => ({
         Catesubgategory: res.data.data.category.children, // تخزن array للمنتجات هنا
         loading: false,
       });
-    } catch (err) {
+    } catch {
       set({
         error: "Failed to fetch categories",
         loading: false,
@@ -136,7 +156,7 @@ export const useCategoriesStore = create<CategoriesState>((set) => ({
         treadmark: res.data.data, // تخزن array للمنتجات هنا
         loading: false,
       });
-    } catch (err) {
+    } catch {
       set({
         error: "Failed to fetch categories",
         loading: false,

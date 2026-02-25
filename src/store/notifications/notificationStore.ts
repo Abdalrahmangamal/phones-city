@@ -27,10 +27,10 @@ interface NotificationStore {
   // Actions
   setNotifications: (notifications: Notification[]) => void;
   addNotification: (notification: Notification) => void;
-  markAsRead: (id: string) => void;
-  markAllAsRead: () => void;
-  deleteNotification: (id: string) => void;
-  clearAllNotifications: () => void;
+  markAsRead: (id: string) => Promise<void>;
+  markAllAsRead: () => Promise<void>;
+  deleteNotification: (id: string) => Promise<void>;
+  clearAllNotifications: () => Promise<void>;
   setLoading: (loading: boolean) => void;
   setError: (error: string | null) => void;
   
@@ -39,13 +39,49 @@ interface NotificationStore {
   fetchUnreadCount: () => Promise<void>;
 }
 
-const baseUrl = import.meta.env.VITE_BASE_URL;
 const getApiUrl = (endpoint: string): string => {
   const base = import.meta.env.VITE_BASE_URL;
   const cleanBase = base.replace(/\/+$/, ''); // إزالة أي / في النهاية
   const cleanEndpoint = endpoint.replace(/^\/+/, ''); // إزالة / من البداية
   return `${cleanBase}/${cleanEndpoint}`;
 };
+
+const getAuthToken = (): string => {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    throw new Error('Unauthenticated');
+  }
+  return token;
+};
+
+const getErrorMessage = async (response: Response): Promise<string> => {
+  try {
+    const payload = await response.json();
+    return payload?.message || payload?.error || `Request failed (${response.status})`;
+  } catch {
+    return `Request failed (${response.status})`;
+  }
+};
+
+const authRequest = async (endpoint: string, init: RequestInit = {}) => {
+  const token = getAuthToken();
+  const response = await fetch(getApiUrl(endpoint), {
+    ...init,
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      ...(init.headers || {}),
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(await getErrorMessage(response));
+  }
+
+  return response;
+};
+
 export const useNotificationStore = create<NotificationStore>()(
   persist(
     (set, get) => ({
@@ -67,27 +103,43 @@ export const useNotificationStore = create<NotificationStore>()(
         });
       },
 
-      markAsRead: (id) => {
+      markAsRead: async (id) => {
+        await authRequest(`api/v1/notifications/${encodeURIComponent(id)}/read`, {
+          method: 'POST',
+        });
+
         set((state) => {
-          const notifications = state.notifications.map(notification =>
-            notification.id === id ? { ...notification, read_at: new Date().toISOString() } : notification
+          const now = new Date().toISOString();
+          const notifications = state.notifications.map((notification) =>
+            notification.id === id && !notification.read_at
+              ? { ...notification, read_at: now }
+              : notification
           );
-          const unreadCount = Math.max(0, state.unreadCount - 1);
+          const unreadCount = notifications.filter((n) => !n.read_at).length;
           return { notifications, unreadCount };
         });
       },
 
-      markAllAsRead: () => {
+      markAllAsRead: async () => {
+        await authRequest('api/v1/notifications/read-all', {
+          method: 'POST',
+        });
+
         set((state) => {
-          const notifications = state.notifications.map(notification => ({
+          const now = new Date().toISOString();
+          const notifications = state.notifications.map((notification) => ({
             ...notification,
-            read_at: notification.read_at || new Date().toISOString()
+            read_at: notification.read_at || now,
           }));
           return { notifications, unreadCount: 0 };
         });
       },
 
-      deleteNotification: (id) => {
+      deleteNotification: async (id) => {
+        await authRequest(`api/v1/notifications/${encodeURIComponent(id)}`, {
+          method: 'DELETE',
+        });
+
         set((state) => {
           const notificationToDelete = state.notifications.find(n => n.id === id);
           const notifications = state.notifications.filter(notification => notification.id !== id);
@@ -98,7 +150,11 @@ export const useNotificationStore = create<NotificationStore>()(
         });
       },
 
-      clearAllNotifications: () => {
+      clearAllNotifications: async () => {
+        await authRequest('api/v1/notifications/clear-all', {
+          method: 'DELETE',
+        });
+
         set({ notifications: [], unreadCount: 0 });
       },
 
@@ -130,8 +186,9 @@ export const useNotificationStore = create<NotificationStore>()(
       const unreadCount = items.filter((n: Notification) => !n.read_at).length;
       set({ notifications: items, unreadCount, error: null });
     }
-  } catch (error: any) {
-    set({ error: error?.message ?? 'Failed to fetch notifications' });
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : 'Failed to fetch notifications';
+    set({ error: message });
   } finally {
     set({ isLoading: false });
   }
@@ -147,7 +204,7 @@ export const useNotificationStore = create<NotificationStore>()(
         try {
           // إذا كان الـ API يوفر endpoint منفصل للعداد، استخدمه
           // وإلا استخدم fetchNotifications لحساب العدد
-          const response = await fetch(`${baseUrl}/notifications/unread-count`, {
+          const response = await fetch(getApiUrl('api/v1/notifications/unread-count'), {
             headers: {
               'Authorization': `Bearer ${token}`,
               'Content-Type': 'application/json',
@@ -156,8 +213,14 @@ export const useNotificationStore = create<NotificationStore>()(
 
           if (response.ok) {
             const result = await response.json();
-            if (result.status && result.data !== undefined) {
-              set({ unreadCount: result.data });
+            const nextUnreadCount =
+              result?.data?.unread_count ??
+              result?.data?.count ??
+              result?.unread_count ??
+              result?.count ??
+              result?.data;
+            if (nextUnreadCount !== undefined && nextUnreadCount !== null) {
+              set({ unreadCount: Number(nextUnreadCount) || 0 });
             }
           } else {
             // إذا لم يكن endpoint العداد موجوداً، احسب من الإشعارات
