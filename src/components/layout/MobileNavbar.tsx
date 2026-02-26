@@ -11,6 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
+import { applyLanguageImmediately, buildLocalizedPath } from "@/utils/languageNavigation";
 
 // استيراد stores
 import { useCartStore } from "@/store/cartStore/cartStore";
@@ -32,7 +33,7 @@ export default function MobileNavbar({
   headerVisible = true,
 }: MobileNavbarProps) {
   const { lang } = useLangSync();
-  const { i18n, t } = useTranslation();
+  const { t } = useTranslation();
   const [showLang, setShowLang] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
@@ -59,17 +60,14 @@ export default function MobileNavbar({
   };
 
   // 🔥 ضبط setShowLang عند فتح/إغلاق قائمة اللغة
-  const handleLangTrigger = () => {
-    setShowLang(!showLang);
+  const handleLangTrigger = (isOpen: boolean) => {
+    setShowLang(isOpen);
   };
 
   const handleLanguageChange = (nextLang: "ar" | "en") => {
-    const nextPath = /^\/(ar|en)(?=\/|$)/.test(location.pathname)
-      ? location.pathname.replace(/^\/(ar|en)(?=\/|$)/, `/${nextLang}`)
-      : `/${nextLang}${location.pathname.startsWith("/") ? location.pathname : `/${location.pathname}`}`;
-
+    applyLanguageImmediately(nextLang);
+    const nextPath = buildLocalizedPath(location.pathname, nextLang);
     navigate(`${nextPath}${location.search}${location.hash}`);
-    i18n.changeLanguage(nextLang);
   };
 
   return (

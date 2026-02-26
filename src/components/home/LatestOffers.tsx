@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useLangSync } from "@/hooks/useLangSync";
 import { useLatestOffersStore } from "@/store/home/latestOffersStore";
-import Loader from "@/components/Loader";
 import { SaudiRiyalIcon } from "@/components/common/SaudiRiyalIcon";
 import svg from "@/assets/images/Layer_1.png";
 
@@ -16,6 +15,35 @@ interface Offer {
   value: string;
   type: 'amount' | 'percentage';
   image: string;
+}
+
+function LatestOffersSkeleton() {
+  return (
+    <div className="w-full translate-y-[-50px] md:h-[60vh] xl:h-[100vh] md:min-h-[600px] xl:min-h-[700px] xl:px-[90px] px-2 pt-8 md:pt-0 relative md:px-0 flex flex-col">
+      <div className="w-[180px] md:w-[260px] h-[34px] md:h-[50px] mx-auto mb-8 rounded-xl bg-gray-200 animate-pulse" />
+
+      <div className="flex flex-col md:flex-row items-center flex-1 min-h-0 md:items-stretch justify-center pt-[40px] md:pt-[50px] gap-4 md:gap-5">
+        <div className="hidden md:block w-[300px] md:w-[36%] rounded-[16px] bg-gray-200 animate-pulse" />
+        <div className="w-full block md:hidden h-[200px] rounded-[16px] bg-gray-200 animate-pulse" />
+
+        <div className="flex flex-col gap-4 md:gap-5 w-full md:w-[60%] min-w-0 md:flex-1 md:min-h-0">
+          <div className="flex flex-row gap-4 md:gap-5 h-[120px] md:h-auto md:flex-1 md:min-h-0">
+            {[0, 1].map((item) => (
+              <div key={item} className="flex-1 min-h-0 h-full md:min-h-[120px] rounded-[16px] bg-gray-200 animate-pulse" />
+            ))}
+          </div>
+
+          <div className="h-[150px] md:h-auto md:flex-1 md:min-h-[150px] rounded-[16px] bg-gray-200 animate-pulse" />
+
+          <div className="flex flex-row gap-4 md:gap-5 h-[120px] md:h-auto md:flex-1 md:min-h-0">
+            {[0, 1].map((item) => (
+              <div key={`bottom-${item}`} className="flex-1 min-h-0 h-full md:min-h-[120px] rounded-[16px] bg-gray-200 animate-pulse" />
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export default function LatestOffers() {
@@ -55,8 +83,8 @@ export default function LatestOffers() {
     return `/${lang}/offers`;
   };
 
-  if (loading) {
-    return <Loader />;
+  if (loading && offers.length === 0) {
+    return <LatestOffersSkeleton />;
   }
 
   return (

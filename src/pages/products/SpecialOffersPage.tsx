@@ -9,7 +9,7 @@ import { useCategoriesStore } from "@/store/categories/useCategoriesStore";
 import type { Product } from "@/types/index";
 import InstallmentSection from "@/components/home/InstallmentSection"; // Import the InstallmentSection component
 import { useProductsStore } from "@/store/productsStore"; // Import the home page store
-import { getProductNumericPrice, isProductOnOffer, parseSortToken } from "@/utils/filterUtils";
+import { getProductNumericPrice, isProductOnOffer, parseSortToken, productMatchesCategorySelection } from "@/utils/filterUtils";
 
 export default function SpecialOffersPage() {
   const navigate = useNavigate();
@@ -45,8 +45,8 @@ export default function SpecialOffersPage() {
 
     // تطبيق فلتر الفئة
     if (selectedCategory !== null) {
-      result = result.filter(
-        (product) => product.category?.id === selectedCategory
+      result = result.filter((product) =>
+        productMatchesCategorySelection(product, selectedCategory, categories as any)
       );
     }
 
@@ -84,6 +84,10 @@ export default function SpecialOffersPage() {
             const aTime = new Date((a as any)?.created_at || 0).getTime() || 0;
             const bTime = new Date((b as any)?.created_at || 0).getTime() || 0;
             const diff = aTime - bTime;
+            return parsedSort.sortOrder === "asc" ? diff : -diff;
+          }
+          case "best_seller": {
+            const diff = Number((a as any)?.sales_count || 0) - Number((b as any)?.sales_count || 0);
             return parsedSort.sortOrder === "asc" ? diff : -diff;
           }
           default:

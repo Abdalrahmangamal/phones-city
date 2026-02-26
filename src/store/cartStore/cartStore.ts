@@ -55,6 +55,38 @@ interface CartState {
   clearCart: () => Promise<void>;
 }
 
+const normalizeComparableValue = (value: unknown) => {
+  if (value === null || value === undefined) return "";
+  return String(value);
+};
+
+const areCartItemsEquivalent = (prevItems: CartItem[], nextItems: CartItem[]) => {
+  if (prevItems.length !== nextItems.length) return false;
+
+  for (let i = 0; i < prevItems.length; i += 1) {
+    const prev = prevItems[i] as any;
+    const next = nextItems[i] as any;
+
+    if (!prev || !next) return false;
+
+    if (
+      prev.id !== next.id ||
+      prev.quantity !== next.quantity ||
+      normalizeComparableValue(prev.price) !== normalizeComparableValue(next.price) ||
+      Number(prev.subtotal ?? 0) !== Number(next.subtotal ?? 0) ||
+      prev.product?.id !== next.product?.id ||
+      normalizeComparableValue(prev.product?.name) !== normalizeComparableValue(next.product?.name) ||
+      normalizeComparableValue(prev.product?.final_price) !== normalizeComparableValue(next.product?.final_price) ||
+      normalizeComparableValue(prev.product?.main_image) !== normalizeComparableValue(next.product?.main_image) ||
+      normalizeComparableValue(prev.product?.images?.[0]?.url) !== normalizeComparableValue(next.product?.images?.[0]?.url)
+    ) {
+      return false;
+    }
+  }
+
+  return true;
+};
+
 export const useCartStore = create<CartState>((set, get) => ({
   loading: false,
   error: null,
@@ -88,12 +120,12 @@ export const useCartStore = create<CartState>((set, get) => ({
         newFreeShippingThreshold = parseFloat(thresholdStr) || 0;
       }
 
-      const { items, total } = get();
+      const { items, total, freeShippingThreshold } = get();
 
       if (
-        JSON.stringify(items) === JSON.stringify(newItems) &&
+        areCartItemsEquivalent(items, newItems) &&
         total === newTotal &&
-        get().freeShippingThreshold === newFreeShippingThreshold
+        freeShippingThreshold === newFreeShippingThreshold
       ) {
         return;
       }

@@ -15,7 +15,7 @@ import { useHeroSectionStore } from "@/store/home/herosectionStore";
 import { useHomePageStore } from '@/store/home/homepageStore';
 import type { Product } from '@/types/index';
 import { usePageSEO } from "@/hooks/usePageSEO";
-import { isProductOnOffer, parseSortToken, getProductNumericPrice } from "@/utils/filterUtils";
+import { isProductOnOffer, parseSortToken, getProductNumericPrice, productMatchesCategorySelection } from "@/utils/filterUtils";
 import axiosClient from "@/api/axiosClient";
 
 export default function Offers() {
@@ -113,20 +113,9 @@ export default function Offers() {
 
     // Apply category filter
     if (selectedSubCategory !== null) {
-      const selectedCategory = categories.find(
-        cat => cat.id === selectedSubCategory
+      result = result.filter((product) =>
+        productMatchesCategorySelection(product, selectedSubCategory, categories as any)
       );
-
-      if (selectedCategory?.children?.length) {
-        const childIds = selectedCategory.children.map(child => child.id);
-        result = result.filter(
-          (product) => product.category?.id && childIds.includes(product.category.id)
-        );
-      } else {
-        result = result.filter(
-          (product) => product.category?.id === selectedSubCategory
-        );
-      }
     }
 
     // Apply price range filter

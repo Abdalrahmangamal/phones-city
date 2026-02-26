@@ -8,6 +8,7 @@ import React, { useEffect } from "react";
 import { useCategoriesStore } from "@/store/categories/useCategoriesStore";
 
 import { getCategoryIcon } from "@/utils/categoryIcons";
+import { applyLanguageImmediately, buildLocalizedPath } from "@/utils/languageNavigation";
 
 export default function MobileMenu({
   isOpen,
@@ -22,7 +23,7 @@ export default function MobileMenu({
 }) {
   const [openCategory, setOpenCategory] = React.useState<string | null>(null);
   const { lang } = useLangSync();
-  const { i18n, t } = useTranslation();
+  const { t } = useTranslation();
   const [open] = React.useState(false);
   const navigate = useNavigate();
   const location = useLocation();
@@ -60,12 +61,9 @@ export default function MobileMenu({
   };
 
   const handleLanguageChange = (nextLang: "ar" | "en") => {
-    const nextPath = /^\/(ar|en)(?=\/|$)/.test(location.pathname)
-      ? location.pathname.replace(/^\/(ar|en)(?=\/|$)/, `/${nextLang}`)
-      : `/${nextLang}${location.pathname.startsWith("/") ? location.pathname : `/${location.pathname}`}`;
-
+    applyLanguageImmediately(nextLang);
+    const nextPath = buildLocalizedPath(location.pathname, nextLang);
     navigate(`${nextPath}${location.search}${location.hash}`);
-    i18n.changeLanguage(nextLang);
     onClose();
   };
 

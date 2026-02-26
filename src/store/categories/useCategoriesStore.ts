@@ -27,6 +27,7 @@ const baseUrl = import.meta.env.VITE_BASE_URL;
 const CATEGORIES_CACHE_TTL_MS = 300_000;
 const categoriesCache = new Map<string, { data: Category[]; fetchedAt: number }>();
 const categoriesInFlight = new Map<string, Promise<void>>();
+let currentCategoriesStateLang: string | null = null;
 
 export const useCategoriesStore = create<CategoriesState>((set) => ({
   categories: [],
@@ -39,6 +40,7 @@ export const useCategoriesStore = create<CategoriesState>((set) => ({
     const normalizedLang = (lang || "ar").trim() || "ar";
     const cached = categoriesCache.get(normalizedLang);
     if (cached && Date.now() - cached.fetchedAt < CATEGORIES_CACHE_TTL_MS) {
+      currentCategoriesStateLang = normalizedLang;
       set({ categories: cached.data, loading: false, error: null });
       return;
     }
@@ -48,7 +50,14 @@ export const useCategoriesStore = create<CategoriesState>((set) => ({
       return pending;
     }
 
-    set({ loading: true, error: null });
+    set((state) => ({
+      categories:
+        currentCategoriesStateLang && currentCategoriesStateLang !== normalizedLang
+          ? []
+          : state.categories,
+      loading: true,
+      error: null,
+    }));
     const token = localStorage.getItem("token");
 
     const request = (async () => {
@@ -66,6 +75,7 @@ export const useCategoriesStore = create<CategoriesState>((set) => ({
           fetchedAt: Date.now(),
         });
 
+        currentCategoriesStateLang = normalizedLang;
         set({ categories: nextCategories, loading: false, error: null });
       } catch {
         set({

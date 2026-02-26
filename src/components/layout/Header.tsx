@@ -44,6 +44,7 @@ import MobileNavbar from "./MobileNavbar";
 import { getCategoryIcon } from "@/utils/categoryIcons";
 import { cn } from "@/lib/utils";
 import LogoutConfirmDialog from "@/components/LogoutConfirmDialog";
+import { applyLanguageImmediately, buildLocalizedPath } from "@/utils/languageNavigation";
 
 interface SuggestionItem {
   id: number;
@@ -58,17 +59,14 @@ export default function Header() {
   const categories = useCategoriesStore((state) => state.categories);
   const fetchCategories = useCategoriesStore((state) => state.fetchCategories);
   const { lang } = useLangSync();
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
 
   const handleLanguageChange = (nextLang: "ar" | "en") => {
-    const nextPath = /^\/(ar|en)(?=\/|$)/.test(location.pathname)
-      ? location.pathname.replace(/^\/(ar|en)(?=\/|$)/, `/${nextLang}`)
-      : `/${nextLang}${location.pathname.startsWith("/") ? location.pathname : `/${location.pathname}`}`;
-
+    applyLanguageImmediately(nextLang);
+    const nextPath = buildLocalizedPath(location.pathname, nextLang);
     navigate(`${nextPath}${location.search}${location.hash}`);
-    i18n.changeLanguage(nextLang);
   };
 
   // States

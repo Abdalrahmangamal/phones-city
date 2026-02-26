@@ -104,6 +104,7 @@ export const useAuthStore = create<AuthState>((set) => ({
 
   sendVerifyCode: async (data, purpose = "register") => {
     try {
+      const currentLang = getCurrentLang();
       set({ loading: true, error: null });
 
       // تحديد endpoint بناءً على الغرض
@@ -115,7 +116,7 @@ export const useAuthStore = create<AuthState>((set) => ({
       const res = await axiosClient.post(endpoint, data, {
         headers: {
           Accept: "application/json",
-          "Accept-Language": "ar",
+          "Accept-Language": currentLang,
         },
       });
 
@@ -163,12 +164,13 @@ export const useAuthStore = create<AuthState>((set) => ({
   // دالة جديدة خاصة بالتحقق من كود إعادة التعيين
   verifyResetCode: async (data) => {
     try {
+      const currentLang = getCurrentLang();
       set({ loading: true, error: null });
 
       const res = await axiosClient.post(`api/v1/auth/verify-reset-code`, data, {
         headers: {
           Accept: "application/json",
-          "Accept-Language": "ar",
+          "Accept-Language": currentLang,
         },
       });
 
@@ -233,11 +235,12 @@ export const useAuthStore = create<AuthState>((set) => ({
 
   forgotpassword: async (data) => {
     try {
+      const currentLang = getCurrentLang();
       set({ loading: true, error: null });
       const res = await axiosClient.post(`api/v1/auth/forgot-password`, data, {
         headers: {
           Accept: "application/json",
-          "Accept-Language": "en",
+          "Accept-Language": currentLang,
         },
       });
 
@@ -265,11 +268,12 @@ export const useAuthStore = create<AuthState>((set) => ({
 
   resetPassword: async (data) => {
     try {
+      const currentLang = getCurrentLang();
       set({ loading: true, error: null });
       const res = await axiosClient.post(`api/v1/auth/reset-password`, data, {
         headers: {
           Accept: "application/json",
-          "Accept-Language": "ar",
+          "Accept-Language": currentLang,
         },
       });
 

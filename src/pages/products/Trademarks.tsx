@@ -13,8 +13,7 @@ import { usePageData } from "@/hooks/usePageData";
 import { useTranslation } from "react-i18next";
 import Loader from "@/components/Loader";
 import type { Product } from '@/types/index';
-import axios from "axios";
-import { getProductNumericPrice, parseSortToken } from "@/utils/filterUtils";
+import { getProductNumericPrice, parseSortToken, productMatchesCategorySelection } from "@/utils/filterUtils";
 
 export default function Trademarks() {
   const { lang } = useLangSync();
@@ -32,7 +31,6 @@ export default function Trademarks() {
   const itemsPerPage = 10;
 
   const [isLoading, setIsLoading] = useState(true);
-  const [trademarkName, setTrademarkName] = useState<string>("");
 
   const {
     fetchCategoriesbyid,
@@ -52,7 +50,6 @@ export default function Trademarks() {
     setSortOption("");
     setPriceRange([null, null]);
     setCurrentPage(1);
-    setTrademarkName("");
   }, [id, lang]);
 
   // Load initial data
@@ -78,43 +75,19 @@ export default function Trademarks() {
     loadData();
   }, [id, lang, fetchCategoriesbyid, fetchCatesubgategory, fetchtradmarks]);
 
-  // Get trademark name with language support
-  useEffect(() => {
-    if (!id) return;
-    
-    const fetchTrademarkName = async () => {
-      try {
-        const baseUrl = import.meta.env.VITE_BASE_URL;
-        const response = await axios.get(`${baseUrl}api/v1/categories/trademarks`, {
-          headers: { 
-            "Accept-Language": lang,
-            "Accept": "application/json"
-          }
-        });
-        
-        const data = response.data.data;
-        const trademark = data?.find((item: any) => 
-          item.id === parseInt(id) || item.slug === id
-        );
-        
-        if (trademark) {
-          setTrademarkName(
-            lang === 'ar' 
-              ? (trademark.name_ar || trademark.name || trademark.slug)
-              : (trademark.name_en || trademark.name || trademark.slug)
-          );
-        }
-      } catch (error) {
-        console.error("Error fetching trademark name:", error);
-        // Fallback
-        const fallback = treadmark.find((item: any) => 
-          item.id === parseInt(id) || item.slug === id
-        );
-        if (fallback) setTrademarkName(fallback.name || fallback.slug);
-      }
-    };
+  const trademarkName = useMemo(() => {
+    if (!id) return "";
 
-    fetchTrademarkName();
+    const targetId = Number(id);
+    const trademark = treadmark.find((item: any) =>
+      item.id === targetId || item.slug === id
+    );
+
+    if (!trademark) return "";
+
+    return lang === "ar"
+      ? (trademark.name_ar || trademark.name || trademark.slug || "")
+      : (trademark.name_en || trademark.name || trademark.slug || "");
   }, [id, lang, treadmark]);
 
   // Handle subcategory selection from slider
@@ -132,23 +105,15 @@ export default function Trademarks() {
 
     // Filter by active subcategory (from slider)
     if (activeSubCategory) {
-      result = result.filter(p => p.category?.id === activeSubCategory);
-
-      // Fallback filters if no match
-      if (!result.length) {
-        result = Categoriesbyid.filter(p => 
-          p.category_ids?.includes(activeSubCategory) ||
-          p.categories?.some((c: any) => c.id === activeSubCategory) ||
-          p.category?.parent_id === activeSubCategory
-        );
-      }
+      result = result.filter((p) =>
+        productMatchesCategorySelection(p, activeSubCategory, Catesubgategory as any)
+      );
     }
 
     // Filter by selected subcategory (from Filter component)
     if (selectedSubCategory !== null && !activeSubCategory) {
-      result = result.filter(p => 
-        p.category?.id === selectedSubCategory || 
-        p.category?.parent_id === selectedSubCategory
+      result = result.filter((p) =>
+        productMatchesCategorySelection(p, selectedSubCategory, Catesubgategory as any)
       );
     }
 
