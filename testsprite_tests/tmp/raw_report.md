@@ -17,12 +17,12 @@
 - **Test Error:** TEST FAILURE
 
 ASSERTIONS:
-- Current URL contains '/ar' but core content did not render after navigation.
-- Page shows 0 interactive elements and the visible screenshot is blank, indicating the SPA did not initialize.
-- Hero slider section not present or visible on the page after load.
-- Product categories section not present or visible on the page after load.
-- Testimonials or other core homepage content sections are not present or visible after load.
-- **Test Visualization and Result:** https://www.testsprite.com/dashboard/mcp/tests/d8bf0f04-a5c3-4d0e-9ce7-5d230603464a/947a8b79-f292-4ad4-bcaa-5612836b34a5
+- Home page at http://localhost:5173/ar did not render SPA content: page contains 0 interactive elements and shows no visible core content.
+- Hero slider not found on page (no elements rendered).
+- Product categories section not found on page (no elements rendered).
+- Special offers section not found on page (no elements rendered).
+- Testimonials section not found on page (no elements rendered).
+- **Test Visualization and Result:** https://www.testsprite.com/dashboard/mcp/tests/f92f0c0c-e1a4-4004-8b19-a234bdf50131/f3e0adf4-dbd2-4f29-937a-c93f1b87faae
 - **Status:** ❌ Failed
 - **Analysis / Findings:** {{TODO:AI_ANALYSIS}}.
 ---
@@ -32,10 +32,10 @@ ASSERTIONS:
 - **Test Error:** TEST FAILURE
 
 ASSERTIONS:
-- Home page did not render after navigation to /ar: page shows 0 interactive elements and no visible UI content.
-- Product categories section not found on /ar because page content failed to load.
-- Interaction steps (scroll, click category) could not be performed due to missing UI elements.
-- **Test Visualization and Result:** https://www.testsprite.com/dashboard/mcp/tests/d8bf0f04-a5c3-4d0e-9ce7-5d230603464a/e26f1372-ded3-4170-ac8f-174636c23ffa
+- SPA did not render on /ar — page screenshot is blank.
+- No interactive elements present on the page (0 interactive elements), so Product categories section cannot be located or interacted with.
+- Home feature 'Product categories section' could not be verified because the application UI failed to render.
+- **Test Visualization and Result:** https://www.testsprite.com/dashboard/mcp/tests/f92f0c0c-e1a4-4004-8b19-a234bdf50131/9239650e-b10a-425c-a28c-727bb9034fb0
 - **Status:** ❌ Failed
 - **Analysis / Findings:** {{TODO:AI_ANALYSIS}}.
 ---
@@ -45,11 +45,10 @@ ASSERTIONS:
 - **Test Error:** TEST FAILURE
 
 ASSERTIONS:
-- Home page at /ar did not render: page content is blank and no interactive elements are present.
-- Special offers section not found on the page (cannot locate or scroll to it).
-- No product cards available to click; product navigation cannot be exercised.
-- Navigation to '/ar/singleproduct' could not be verified because prerequisite UI elements are missing.
-- **Test Visualization and Result:** https://www.testsprite.com/dashboard/mcp/tests/d8bf0f04-a5c3-4d0e-9ce7-5d230603464a/b78ea09e-0cbc-4cea-a970-700f51a46145
+- SPA did not render after navigation to /ar; page shows 0 interactive elements and a blank screenshot.
+- 'Special offers' section not found because page content is empty; no product cards to click.
+- Waited 5 seconds after navigation but no UI elements appeared.
+- **Test Visualization and Result:** https://www.testsprite.com/dashboard/mcp/tests/f92f0c0c-e1a4-4004-8b19-a234bdf50131/a55e70f1-eafd-426e-bdee-9f0268e12a04
 - **Status:** ❌ Failed
 - **Analysis / Findings:** {{TODO:AI_ANALYSIS}}.
 ---
@@ -59,12 +58,10 @@ ASSERTIONS:
 - **Test Error:** TEST FAILURE
 
 ASSERTIONS:
-- Registration form not found on /ar/register: page contains 0 interactive elements.
-- SPA content did not render on the registration page (blank page observed).
-- Unable to enter name because name input field is not present.
-- Unable to enter phone or trigger registration because phone input and Register button are missing.
-- OTP flow could not be tested because registration submission could not be performed.
-- **Test Visualization and Result:** https://www.testsprite.com/dashboard/mcp/tests/d8bf0f04-a5c3-4d0e-9ce7-5d230603464a/d09572c2-0172-4802-a49a-8a95883e3ed3
+- Registration form not found on /ar/register; page shows 0 interactive elements and a blank render
+- Inline phone validation could not be verified because name and phone input fields are not present
+- OTP flow could not be validated because the registration page did not render
+- **Test Visualization and Result:** https://www.testsprite.com/dashboard/mcp/tests/f92f0c0c-e1a4-4004-8b19-a234bdf50131/7201251c-df3b-493e-a637-39e526de921c
 - **Status:** ❌ Failed
 - **Analysis / Findings:** {{TODO:AI_ANALYSIS}}.
 ---
@@ -74,12 +71,11 @@ ASSERTIONS:
 - **Test Error:** TEST FAILURE
 
 ASSERTIONS:
-- Registration page did not render any interactive elements on http://localhost:5175/ar/register.
-- 'Register' button not found on page; cannot perform registration attempt.
-- Validation message 'required' not visible because the registration form is not present.
-- Visibility of 'OTP' could not be verified due to missing page content.
-- SPA content appears not to load; page rendered blank with 0 interactive elements.
-- **Test Visualization and Result:** https://www.testsprite.com/dashboard/mcp/tests/d8bf0f04-a5c3-4d0e-9ce7-5d230603464a/08af7ea1-1125-4775-94f4-cc2f4903b9dd
+- SPA content did not render on /ar/register: page is blank and shows 0 interactive elements.
+- Register button not found on page: no interactive elements present to click.
+- Form fields not rendered: validation behavior ('required') could not be observed.
+- Although the URL contains '/ar/register', the UI for the registration flow is missing, preventing completion of the test.
+- **Test Visualization and Result:** https://www.testsprite.com/dashboard/mcp/tests/f92f0c0c-e1a4-4004-8b19-a234bdf50131/d787180c-9394-4b52-bac0-401772131a74
 - **Status:** ❌ Failed
 - **Analysis / Findings:** {{TODO:AI_ANALYSIS}}.
 ---
@@ -89,11 +85,12 @@ ASSERTIONS:
 - **Test Error:** TEST FAILURE
 
 ASSERTIONS:
-- Offers page loaded at /ar/offers but rendered no content (page is blank with 0 interactive elements).
-- 'Offers' heading not found on the page.
-- No product cards or listings were visible on the page.
-- Unable to open a product details page because there are no interactive elements to click.
-- **Test Visualization and Result:** https://www.testsprite.com/dashboard/mcp/tests/d8bf0f04-a5c3-4d0e-9ce7-5d230603464a/767fab76-b734-4bb7-a533-f2598b5a8b16
+- Offers page did not render: blank viewport with 0 interactive elements after navigating to /ar/offers and waiting.
+- Current URL is http://localhost:5173/ar/offers but page content (Offers heading, product listings) is missing.
+- No product cards or interactive elements were found to allow opening a product details page.
+- Multiple waits did not resolve the blank page; SPA content did not load or the feature is not present.
+
+- **Test Visualization and Result:** https://www.testsprite.com/dashboard/mcp/tests/f92f0c0c-e1a4-4004-8b19-a234bdf50131/0e2eb721-e718-4710-9722-419252ca109f
 - **Status:** ❌ Failed
 - **Analysis / Findings:** {{TODO:AI_ANALYSIS}}.
 ---
@@ -103,10 +100,10 @@ ASSERTIONS:
 - **Test Error:** TEST FAILURE
 
 ASSERTIONS:
-- Offers page did not render: the page loaded at http://localhost:5175/ar/offers but shows no visible content or interactive elements.
-- Category filter UI not found on the page, so filtering cannot be tested.
-- No product cards are visible on the offers page, preventing verification that filtering updates listings.
-- **Test Visualization and Result:** https://www.testsprite.com/dashboard/mcp/tests/d8bf0f04-a5c3-4d0e-9ce7-5d230603464a/88ffabc3-e1cf-467a-a0ed-61dd9a05be5a
+- Offers page at /ar/offers did not render: page shows 0 interactive elements and the screenshot is blank, preventing interaction with filters or listings.
+- Filters section (including Category dropdown) is not present on the page, so selecting a category is impossible.
+- Product listings are not visible on the page, so filtering behavior cannot be verified.
+- **Test Visualization and Result:** https://www.testsprite.com/dashboard/mcp/tests/f92f0c0c-e1a4-4004-8b19-a234bdf50131/04b74671-a9ee-453d-bba2-543d512e63aa
 - **Status:** ❌ Failed
 - **Analysis / Findings:** {{TODO:AI_ANALYSIS}}.
 ---
@@ -116,12 +113,11 @@ ASSERTIONS:
 - **Test Error:** TEST FAILURE
 
 ASSERTIONS:
-- Offers page at 'http://localhost:5175/ar/offers' did not render: page content is blank and screenshot is empty.
-- No interactive elements found on the offers page (0 elements), preventing selection of product cards.
-- SPA did not bootstrap after waiting, so product details page cannot be reached.
-- 'Add to cart' behavior and 'added' confirmation cannot be verified because product details page is inaccessible.
-- Re-navigating to the same URL is disallowed after a failed render, so the test cannot proceed further.
-- **Test Visualization and Result:** https://www.testsprite.com/dashboard/mcp/tests/d8bf0f04-a5c3-4d0e-9ce7-5d230603464a/5efa9938-e539-4de5-b5ba-d20e66366777
+- Offers page (http://localhost:5173/ar/offers) loaded with no interactive elements; expected product cards and 'Add to cart' buttons.
+- Root page (http://localhost:5173) loaded with no interactive elements; SPA did not render expected UI.
+- No navigation links, buttons, or controls were available to reach product details or perform cart operations.
+- Unable to verify adding a product to the cart because required pages and interactive elements were not present.
+- **Test Visualization and Result:** https://www.testsprite.com/dashboard/mcp/tests/f92f0c0c-e1a4-4004-8b19-a234bdf50131/6e02baf0-bf87-4538-926b-b113d5c33c36
 - **Status:** ❌ Failed
 - **Analysis / Findings:** {{TODO:AI_ANALYSIS}}.
 ---
@@ -131,10 +127,11 @@ ASSERTIONS:
 - **Test Error:** TEST FAILURE
 
 ASSERTIONS:
-- Search page did not render after navigation: page remained in loading state and the search input and search button were not found.
-- Current URL redirected/loaded to /ar/login instead of /ar/search, preventing access to the required search page.
-- Required UI elements for the test (search input, search button, results area) were not present after the allowed wait attempts.
-- **Test Visualization and Result:** https://www.testsprite.com/dashboard/mcp/tests/d8bf0f04-a5c3-4d0e-9ce7-5d230603464a/eb042537-a5b7-4180-ad8f-6fccc557626a
+- Search input field not found on /ar/search; page has 0 interactive elements and no form controls.
+- Results area did not render; 'No results' message could not be verified.
+- Categories section not present; suggested categories cannot be checked.
+- SPA content not rendered on the page (blank/white screen).
+- **Test Visualization and Result:** https://www.testsprite.com/dashboard/mcp/tests/f92f0c0c-e1a4-4004-8b19-a234bdf50131/067bebba-ade9-4b38-9c00-9d5b042aa1c1
 - **Status:** ❌ Failed
 - **Analysis / Findings:** {{TODO:AI_ANALYSIS}}.
 ---
@@ -144,11 +141,12 @@ ASSERTIONS:
 - **Test Error:** TEST FAILURE
 
 ASSERTIONS:
-- No interactive elements found on http://localhost:5175/ar after waiting; product cards and navigation controls are not present.
-- First product card not found on the Home page, so it could not be clicked to open a product page.
-- Unable to verify navigation to /ar/singleproduct because no product links or cards are available.
-- Cart summary and Checkout pages could not be reached, preventing verification of order summary and quantities.
-- **Test Visualization and Result:** https://www.testsprite.com/dashboard/mcp/tests/d8bf0f04-a5c3-4d0e-9ce7-5d230603464a/9c55dc88-797b-4b3b-9897-2ffdb7157d41
+- Application page at /ar returned blank content; no interactive elements detected, so UI interactions cannot proceed.
+- Product listing not present; no product cards available to click on the Home page.
+- 'Add to cart' button not found on the page; cart flow cannot be exercised.
+- Checkout page cannot be reached because navigation elements (cart/checkout buttons/links) are missing.
+- SPA did not render after waiting; UI rendering failure prevents completing the test steps.
+- **Test Visualization and Result:** https://www.testsprite.com/dashboard/mcp/tests/f92f0c0c-e1a4-4004-8b19-a234bdf50131/0535eb66-def7-4e35-8f18-0e114720334a
 - **Status:** ❌ Failed
 - **Analysis / Findings:** {{TODO:AI_ANALYSIS}}.
 ---
@@ -158,27 +156,20 @@ ASSERTIONS:
 - **Test Error:** TEST FAILURE
 
 ASSERTIONS:
-- Root page (http://localhost:5175/) and /ar (http://localhost:5175/ar) loaded but SPA content did not render; page shows 0 interactive elements.
-- Cart summary element not present on the page; unable to verify header cart summary visibility.
-- No product cards or clickable product elements found on the Home page; unable to navigate to /ar/singleproduct.
-- "Add to cart" action could not be performed and cart count could not be verified because product page elements are not available.
-- SPA appears not to have initialized or resources are blocked, preventing further testing of cart functionality.
-- **Test Visualization and Result:** https://www.testsprite.com/dashboard/mcp/tests/d8bf0f04-a5c3-4d0e-9ce7-5d230603464a/d9c59e25-e483-4225-bd3b-c21a1286477c
+- Application SPA did not render on http://localhost:5173/ar — page is blank and no interactive elements are present.
+- Cart functionality could not be tested because the homepage and navigation elements are not available.
+- No product cards, header cart icon, or cart summary were found on the page to interact with or verify.
+- Multiple navigation attempts and a short wait did not load the app (visited / and /ar), blocking further test steps.
+- Test cannot proceed or validate cart behavior due to the application not rendering.
+- **Test Visualization and Result:** https://www.testsprite.com/dashboard/mcp/tests/f92f0c0c-e1a4-4004-8b19-a234bdf50131/9988cee2-7c3f-47ee-9094-382ea7fec66c
 - **Status:** ❌ Failed
 - **Analysis / Findings:** {{TODO:AI_ANALYSIS}}.
 ---
 
 #### Test TC023 Increase quantity of an item in cart and verify updated quantity
 - **Test Code:** [TC023_Increase_quantity_of_an_item_in_cart_and_verify_updated_quantity.py](./TC023_Increase_quantity_of_an_item_in_cart_and_verify_updated_quantity.py)
-- **Test Error:** TEST FAILURE
-
-ASSERTIONS:
-- SPA did not render on the site after navigating to '/' and '/ar' (blank page displayed).
-- No interactive elements were found on the page (0 interactive elements), preventing any test actions.
-- Product listing and cart UI elements (product cards, 'Add to cart', cart icon) are not present, so cart interactions cannot be performed.
-- Waiting for the SPA to render (2s and 5s waits) did not change the page state; the UI remained blank.
-- **Test Visualization and Result:** https://www.testsprite.com/dashboard/mcp/tests/d8bf0f04-a5c3-4d0e-9ce7-5d230603464a/fa5dae05-d915-401c-b4d4-54ae3b71c430
-- **Status:** ❌ Failed
+- **Test Visualization and Result:** https://www.testsprite.com/dashboard/mcp/tests/f92f0c0c-e1a4-4004-8b19-a234bdf50131/a4296294-8758-4682-83d5-45bf988be639
+- **Status:** ✅ Passed
 - **Analysis / Findings:** {{TODO:AI_ANALYSIS}}.
 ---
 
@@ -187,11 +178,12 @@ ASSERTIONS:
 - **Test Error:** TEST FAILURE
 
 ASSERTIONS:
-- Product listing not present on /ar: page contains 0 interactive elements (blank page), so the first product card cannot be clicked.
-- Cart icon not found on the header of /ar, so the cart cannot be opened to inspect or remove items.
-- Add-to-cart and Remove actions could not be executed because no interactive elements were available on the page.
-- Login did not result in a visible post-login product listing/home page that would allow verification of cart behavior.
-- **Test Visualization and Result:** https://www.testsprite.com/dashboard/mcp/tests/d8bf0f04-a5c3-4d0e-9ce7-5d230603464a/0b43188b-bd0a-496a-9fdc-59d9446dee4d
+- Root page (http://localhost:5173) and /ar (http://localhost:5173/ar) loaded but contain 0 interactive elements (expected product listings, header/cart icon, and product cards are missing).
+- Cart functionality cannot be tested because no product cards or cart UI elements are present on the page.
+- After waiting 3 seconds the page remained empty with no interactive elements, indicating the frontend did not initialize or assets failed to load.
+- No clickable navigation elements (links/buttons) were found to proceed with the required test steps.
+
+- **Test Visualization and Result:** https://www.testsprite.com/dashboard/mcp/tests/f92f0c0c-e1a4-4004-8b19-a234bdf50131/ed879cb2-0cc9-421e-b4f6-3c476071d18b
 - **Status:** ❌ Failed
 - **Analysis / Findings:** {{TODO:AI_ANALYSIS}}.
 ---
@@ -201,10 +193,10 @@ ASSERTIONS:
 - **Test Error:** TEST FAILURE
 
 ASSERTIONS:
-- Root page (http://localhost:5175) rendered no interactive elements; application UI did not load.
-- /ar page (http://localhost:5175/ar) rendered no interactive elements; expected product cards, 'Add to cart' buttons, and navigation elements are missing.
-- Unable to perform in-app navigation or verify cart contents because required interactive UI elements are not present.
-- **Test Visualization and Result:** https://www.testsprite.com/dashboard/mcp/tests/d8bf0f04-a5c3-4d0e-9ce7-5d230603464a/3bfe4238-4bb9-403e-9fb7-d2126247db67
+- SPA content did not render on /ar; page shows 0 interactive elements.
+- Product cards not found on /ar; cannot click the first product to open single product page.
+- Checkout flow cannot be tested because essential UI elements ('Add to cart', 'Checkout', 'order items', 'Qty') are not present.
+- **Test Visualization and Result:** https://www.testsprite.com/dashboard/mcp/tests/f92f0c0c-e1a4-4004-8b19-a234bdf50131/60a3cf8e-ad6f-4818-b6c5-cc606f8e64e3
 - **Status:** ❌ Failed
 - **Analysis / Findings:** {{TODO:AI_ANALYSIS}}.
 ---
@@ -214,10 +206,10 @@ ASSERTIONS:
 - **Test Error:** TEST FAILURE
 
 ASSERTIONS:
-- Login failed - login form submission did not complete; login button clicks were not reliably interactable or became stale.
-- Profile page did not load after login - the URL never reached /ar/profile and profile content was not visible.
-- Required interactive elements are missing or the SPA is not rendering - current page contains 0 interactive elements, preventing further test actions.
-- **Test Visualization and Result:** https://www.testsprite.com/dashboard/mcp/tests/d8bf0f04-a5c3-4d0e-9ce7-5d230603464a/e6782d7b-93bc-40d6-8769-f97fd44f8afe
+- Login form not found on /ar/login: page contains 0 interactive elements and appears blank.
+- SPA did not render expected UI after navigation to / and /ar/login, preventing interaction with the page.
+- Unable to perform login and reach /ar/profile because required input fields and login button are missing.
+- **Test Visualization and Result:** https://www.testsprite.com/dashboard/mcp/tests/f92f0c0c-e1a4-4004-8b19-a234bdf50131/e8c7de11-2528-4695-9b71-88902ed4d1fd
 - **Status:** ❌ Failed
 - **Analysis / Findings:** {{TODO:AI_ANALYSIS}}.
 ---
@@ -225,7 +217,7 @@ ASSERTIONS:
 
 ## 3️⃣ Coverage & Matching Metrics
 
-- **0.00** of tests passed
+- **6.67** of tests passed
 
 | Requirement        | Total Tests | ✅ Passed | ❌ Failed  |
 |--------------------|-------------|-----------|------------|

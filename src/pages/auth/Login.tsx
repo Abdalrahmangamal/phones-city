@@ -44,7 +44,15 @@ export default function Login() {
     if (res?.data?.token) {
       navigate("/");
     } else {
-      setLoginError(t("auth.invalidCredentials"));
+      const authError = useAuthStore.getState().error;
+      const serverMessage =
+        typeof authError === "string"
+          ? authError
+          : authError && typeof authError === "object"
+            ? Object.values(authError as Record<string, any>).flat().join(", ")
+            : "";
+
+      setLoginError(serverMessage || t("auth.invalidCredentials"));
     }
   };
 

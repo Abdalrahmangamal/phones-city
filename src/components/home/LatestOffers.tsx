@@ -30,8 +30,12 @@ export default function LatestOffers() {
   }, [fetchOffers, lang]);
 
   const laptopOffer = offers[0];
-  const gamingOffer = offers[3];
-  const accessoryOffers = [offers[1], offers[2], offers[4], offers[5]];
+  const gamingOfferIndex =
+    offers.length > 3 ? 3 : offers.length > 1 ? offers.length - 1 : -1;
+  const gamingOffer = gamingOfferIndex >= 0 ? offers[gamingOfferIndex] : undefined;
+  const accessoryOffers = offers
+    .filter((_, index) => index !== 0 && index !== gamingOfferIndex)
+    .slice(0, 4);
 
   const getDiscountText = (offer: Offer | undefined) => {
     if (!offer) return t("SpecialDiscount");

@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
-import axios from 'axios';
+import axiosClient from '@/api/axiosClient';
 
 interface Offer {
   id: number;
@@ -52,11 +52,8 @@ export const useLatestOffersStore = create<LatestOffersState>()(
         set({ loading: true, error: null });
         const request = (async () => {
           try {
-            const token = localStorage.getItem('token');
-            const response = await axios.get('/api/v1/offers/home', {
-              baseURL: baseUrl,
+            const response = await axiosClient.get('/api/v1/offers/home', {
               headers: {
-                ...(token && { Authorization: `Bearer ${token}` }),
                 'Accept': 'application/json',
                 'Accept-Language': normalizedLang,
                 'Content-Type': 'application/json',

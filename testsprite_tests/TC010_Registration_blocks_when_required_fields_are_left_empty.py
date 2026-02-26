@@ -30,16 +30,16 @@ async def run_test():
         page = await context.new_page()
 
         # Interact with the page elements to simulate user flow
-        # -> Navigate to http://localhost:5175
-        await page.goto("http://localhost:5175", wait_until="commit", timeout=10000)
+        # -> Navigate to http://localhost:5173
+        await page.goto("http://localhost:5173", wait_until="commit", timeout=10000)
         
-        # -> Navigate to /ar/register (use navigate action to http://localhost:5175/ar/register).
-        await page.goto("http://localhost:5175/ar/register", wait_until="commit", timeout=10000)
+        # -> Navigate to /ar/register (use navigate because no relevant clickable elements exist on the current page).
+        await page.goto("http://localhost:5173/ar/register", wait_until="commit", timeout=10000)
         
         # --> Assertions to verify final state
         frame = context.pages[-1]
         await expect(frame.locator('text=required').first).to_be_visible(timeout=3000)
-        await expect(frame.locator('text=OTP').first).not_to_be_visible(timeout=3000)
+        await expect(frame.locator('text=OTP').first).to_be_hidden(timeout=3000)
         assert '/ar/register' in frame.url
         await asyncio.sleep(5)
 

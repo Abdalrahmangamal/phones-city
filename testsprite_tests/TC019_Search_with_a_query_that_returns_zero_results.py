@@ -30,11 +30,11 @@ async def run_test():
         page = await context.new_page()
 
         # Interact with the page elements to simulate user flow
-        # -> Navigate to http://localhost:5175
-        await page.goto("http://localhost:5175", wait_until="commit", timeout=10000)
+        # -> Navigate to http://localhost:5173
+        await page.goto("http://localhost:5173", wait_until="commit", timeout=10000)
         
-        # -> Navigate to /ar/search (explicit navigation required by test step) and wait for the page to load
-        await page.goto("http://localhost:5175/ar/search", wait_until="commit", timeout=10000)
+        # -> Navigate to /ar/search (explicit test step). Use navigate action to http://localhost:5173/ar/search per test instruction.
+        await page.goto("http://localhost:5173/ar/search", wait_until="commit", timeout=10000)
         
         # --> Assertions to verify final state
         frame = context.pages[-1]

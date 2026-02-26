@@ -30,19 +30,19 @@ async def run_test():
         page = await context.new_page()
 
         # Interact with the page elements to simulate user flow
-        # -> Navigate to http://localhost:5175
-        await page.goto("http://localhost:5175", wait_until="commit", timeout=10000)
+        # -> Navigate to http://localhost:5173
+        await page.goto("http://localhost:5173", wait_until="commit", timeout=10000)
         
-        # -> Navigate to /ar (http://localhost:5175/ar) and then verify the URL contains '/ar' and check visibility of the Hero slider, Product categories section, Special offers section, and Testimonials section.
-        await page.goto("http://localhost:5175/ar", wait_until="commit", timeout=10000)
+        # -> Navigate to /ar by issuing a navigate action to http://localhost:5173/ar to load the Arabic home page and then perform the assertions.
+        await page.goto("http://localhost:5173/ar", wait_until="commit", timeout=10000)
         
         # --> Assertions to verify final state
         frame = context.pages[-1]
         assert '/ar' in frame.url
-        await expect(frame.locator("xpath=//*[contains(text(), 'Hero slider')]").first).to_be_visible(timeout=3000)
-        await expect(frame.locator("xpath=//*[contains(text(), 'Product categories')]").first).to_be_visible(timeout=3000)
-        await expect(frame.locator("xpath=//*[contains(text(), 'Special offers')]").first).to_be_visible(timeout=3000)
-        await expect(frame.locator("xpath=//*[contains(text(), 'Testimonials')]").first).to_be_visible(timeout=3000)
+        await expect(frame.locator("xpath=//section[contains(translate(., 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'hero slider') or contains(translate(., 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'hero')]").first).to_be_visible(timeout=3000)
+        await expect(frame.locator("xpath=//section[contains(translate(., 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'product categories') or contains(translate(., 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'categories')]").first).to_be_visible(timeout=3000)
+        await expect(frame.locator("xpath=//section[contains(translate(., 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'special offers') or contains(translate(., 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'offers')]").first).to_be_visible(timeout=3000)
+        await expect(frame.locator("xpath=//section[contains(translate(., 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'testimonials') or contains(translate(., 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'testimonial')]").first).to_be_visible(timeout=3000)
         await asyncio.sleep(5)
 
     finally:

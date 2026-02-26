@@ -97,6 +97,11 @@ export default function Productdetails({
           position: "bottom-right",
           autoClose: 2000,
         });
+      } else if (typeof error?.message === "string" && error.message.trim()) {
+        toast.error(error.message, {
+          position: "bottom-right",
+          autoClose: 2000,
+        });
       } else {
         toast.error(t("product.addToCartFailed"), {
           position: "bottom-right",
@@ -134,6 +139,11 @@ export default function Productdetails({
       const errorMessage = error?.response?.data?.message;
       if (errorMessage === "Insufficient stock") {
         toast.error(t("product.insufficientStock"), {
+          position: "bottom-right",
+          autoClose: 2000,
+        });
+      } else if (typeof error?.message === "string" && error.message.trim()) {
+        toast.error(error.message, {
           position: "bottom-right",
           autoClose: 2000,
         });

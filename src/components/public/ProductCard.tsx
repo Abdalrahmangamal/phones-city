@@ -301,6 +301,8 @@ function ProductCardInner({ product, imagecard, containerstyle, quantity }: Prod
                     } else {
                       errorMessage = apiMessage;
                     }
+                  } else if (typeof error?.message === "string" && error.message.trim()) {
+                    errorMessage = error.message;
                   }
                   toast.error(errorMessage, { position: "bottom-right", autoClose: 3000 });
                 });

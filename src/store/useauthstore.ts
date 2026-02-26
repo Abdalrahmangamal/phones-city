@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import axiosClient from "@/api/axiosClient";
+import { useSettings } from "@/store/settings";
 
 interface ResetPasswordTypes {
   email: string;
@@ -43,6 +44,19 @@ interface AuthState {
   logout: () => void; // دالة تسجيل الخروج
 }
 
+const getCurrentLang = (): "ar" | "en" => {
+  return useSettings.getState().lang === "en" ? "en" : "ar";
+};
+
+const getCurrentRouteLang = (): "ar" | "en" => {
+  const firstSegment = window.location.pathname.split("/").filter(Boolean)[0];
+  if (firstSegment === "en" || firstSegment === "ar") {
+    return firstSegment;
+  }
+
+  return getCurrentLang();
+};
+
 export const useAuthStore = create<AuthState>((set) => ({
   loading: false,
   error: null,
@@ -52,20 +66,24 @@ export const useAuthStore = create<AuthState>((set) => ({
     localStorage.removeItem('token');
     localStorage.removeItem('userData');
     localStorage.removeItem('resetPasswordEmail');
-    window.location.href = '/login';
+    window.location.href = `/${getCurrentRouteLang()}/login`;
   },
 
   sendRegisterData: async (data) => {
     try {
+      const currentLang = getCurrentLang();
       set({ loading: true, error: null });
       const res = await axiosClient.post(`api/v1/auth/register`, data, {
         headers: {
           Accept: "application/json",
-          "Accept-Language": "ar",
+          "Accept-Language": currentLang,
         },
       });
       try {
-        localStorage.setItem("userData", JSON.stringify(res.data));
+        const registeredUser = res?.data?.data?.user;
+        if (registeredUser) {
+          localStorage.setItem("userData", JSON.stringify(registeredUser));
+        }
       } catch (e) { }
       set({ error: null });
       return res.data;
@@ -180,12 +198,13 @@ export const useAuthStore = create<AuthState>((set) => ({
 
   sendLogin: async (data) => {
     try {
-      set({ loading: true });
+      const currentLang = getCurrentLang();
+      set({ loading: true, error: null });
 
       const res = await axiosClient.post(`api/v1/auth/login`, data, {
         headers: {
           Accept: "application/json",
-          "Accept-Language": "en",
+          "Accept-Language": currentLang,
         },
       });
 
@@ -194,10 +213,18 @@ export const useAuthStore = create<AuthState>((set) => ({
 
       if (token) localStorage.setItem("token", token);
       if (user) localStorage.setItem("userData", JSON.stringify(user));
+      set({ error: null });
 
       return res.data;
-    } catch (err) {
-      // Login error handled
+    } catch (err: any) {
+      const serverErrors =
+        err?.response?.data?.message ??
+        err?.response?.data?.errors ??
+        err?.response?.data?.data ??
+        err?.response?.data ??
+        err?.message ??
+        "فشل تسجيل الدخول";
+      set({ error: serverErrors, loading: false });
       return null;
     } finally {
       set({ loading: false });

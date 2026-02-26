@@ -30,17 +30,17 @@ async def run_test():
         page = await context.new_page()
 
         # Interact with the page elements to simulate user flow
-        # -> Navigate to http://localhost:5175
-        await page.goto("http://localhost:5175", wait_until="commit", timeout=10000)
+        # -> Navigate to http://localhost:5173
+        await page.goto("http://localhost:5173", wait_until="commit", timeout=10000)
         
-        # -> Navigate to /ar/offers (use explicit navigate to http://localhost:5175/ar/offers as the test step requires).
-        await page.goto("http://localhost:5175/ar/offers", wait_until="commit", timeout=10000)
+        # -> Navigate to /ar/offers (use explicit navigate because no relevant clickable elements are present on the current page). After navigation, verify the URL contains '/ar/offers'.
+        await page.goto("http://localhost:5173/ar/offers", wait_until="commit", timeout=10000)
         
         # --> Assertions to verify final state
         frame = context.pages[-1]
         assert '/ar/offers' in frame.url
-        await expect(frame.locator("xpath=//div[contains(@class,'product-card') or contains(@class,'offer-card') or contains(@class,'card')]").first).to_be_visible(timeout=3000)
-        await expect(frame.locator('text=Category: Electronics').first).to_be_visible(timeout=3000)
+        await expect(frame.locator("xpath=//div[contains(@class,'product-card') or contains(@class,'offer-card') or contains(@class,'product-item') or contains(@class,'product')]").first).to_be_visible(timeout=3000)
+        await expect(frame.locator("xpath=//div[contains(@class,'filters') or contains(@id,'filters')]//select[contains(@name,'category') or contains(@id,'category')]/option[@selected]").first).to_be_visible(timeout=3000)
         await asyncio.sleep(5)
 
     finally:

@@ -30,18 +30,18 @@ async def run_test():
         page = await context.new_page()
 
         # Interact with the page elements to simulate user flow
-        # -> Navigate to http://localhost:5175
-        await page.goto("http://localhost:5175", wait_until="commit", timeout=10000)
+        # -> Navigate to http://localhost:5173
+        await page.goto("http://localhost:5173", wait_until="commit", timeout=10000)
         
-        # -> Navigate to /ar/offers (use the exact path http://localhost:5175/ar/offers) to reach the offers listing page.
-        await page.goto("http://localhost:5175/ar/offers", wait_until="commit", timeout=10000)
+        # -> Navigate to http://localhost:5173/ar/offers (use direct navigate since current page has no relevant interactive elements).
+        await page.goto("http://localhost:5173/ar/offers", wait_until="commit", timeout=10000)
         
         # --> Assertions to verify final state
         frame = context.pages[-1]
         assert '/ar/singleproduct/' in frame.url
         await expect(frame.locator('text=Add to cart').first).to_be_visible(timeout=3000)
         await expect(frame.locator('text=added').first).to_be_visible(timeout=3000)
-        await expect(frame.locator('xpath=//*[contains(@class,"cart") or contains(@id,"cart")]').first).to_be_visible(timeout=3000)
+        await expect(frame.locator('xpath=//span[contains(@class,"cart-count") or contains(@class,"cart-indicator") or contains(@id,"cart-count")]').first).to_be_visible(timeout=3000)
         await asyncio.sleep(5)
 
     finally:

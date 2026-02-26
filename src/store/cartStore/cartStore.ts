@@ -114,7 +114,9 @@ export const useCartStore = create<CartState>((set, get) => ({
     try {
       const token = localStorage.getItem("token");
       if (!token) {
-        return;
+        const errorMessage = "يجب تسجيل الدخول أولاً";
+        set({ error: errorMessage });
+        throw new Error(errorMessage);
       }
 
       const params = isOption
@@ -193,6 +195,7 @@ export const useCartStore = create<CartState>((set, get) => ({
 
       const token = localStorage.getItem("token");
       if (!token) {
+        set({ error: "يجب تسجيل الدخول أولاً", loading: false });
         return;
       }
 

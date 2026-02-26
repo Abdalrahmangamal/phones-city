@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import axios from "axios";
+import axiosClient from "@/api/axiosClient";
 export interface Service {
   id: number;
   name: string;
@@ -22,8 +22,6 @@ interface ServicesState {
   
   fetchServices: (lang:string) => Promise<void>;
 }
-const baseUrl = import.meta.env.VITE_BASE_URL;
-
 export const useServicesStore = create<ServicesState>((set) => ({
   services: [],
   loading: false,
@@ -33,7 +31,7 @@ export const useServicesStore = create<ServicesState>((set) => ({
     try {
       set({ loading: true, error: null });
 
-      const response = await axios.get(`${baseUrl}api/v1/services`,{
+      const response = await axiosClient.get(`api/v1/services`,{
 
         headers:{
                     "Accept-Language": `${lang}`
