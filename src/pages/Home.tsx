@@ -88,14 +88,22 @@ const NewHome = () => {
 
   // Fetch all data in parallel — NO blocking loader
   useEffect(() => {
-    // Fire all requests in parallel, each section loads independently
+    // Fire above-the-fold and commerce-critical requests first.
     fetchOffers(lang);
     fetchBestSellers(lang);
     fetchNewArrivals(lang);
     fetchSliders(lang);
-    fetchCertificates();
     fetchCategories(lang);
-    fetchFeatures();
+
+    // Defer below-the-fold sections to reduce request pressure on first load.
+    const deferredFetchTimer = window.setTimeout(() => {
+      fetchCertificates();
+      fetchFeatures();
+    }, 1000);
+
+    return () => {
+      window.clearTimeout(deferredFetchTimer);
+    };
   }, [fetchBestSellers, fetchCategories, fetchCertificates, fetchFeatures, fetchNewArrivals, fetchOffers, fetchSliders, lang]);
 
   // Features translated by current language

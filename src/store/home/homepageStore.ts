@@ -32,10 +32,9 @@
 
 // store/home/homePageStore.ts
 import { create } from "zustand";
-import axios from "axios";
+import axiosClient from "@/api/axiosClient";
 
-const baseUrl = import.meta.env.VITE_BASE_URL;
-const HOME_PAGE_CACHE_TTL_MS = 60_000;
+const HOME_PAGE_CACHE_TTL_MS = 300_000;
 const homePageCache = new Map<string, { data: HomePageData; fetchedAt: number }>();
 const homePageInFlight = new Map<string, Promise<void>>();
 
@@ -76,8 +75,8 @@ export const useHomePageStore = create<HomePageStore>((set, get) => ({
 
         const token = localStorage.getItem("token");
 
-        const res = await axios.get<HomePageResponse>(
-          `${baseUrl}api/v1/home-page`,
+        const res = await axiosClient.get<HomePageResponse>(
+          `api/v1/home-page`,
           {
             headers: {
               ...(token ? { Authorization: `Bearer ${token}` } : {}),

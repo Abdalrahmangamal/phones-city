@@ -66,7 +66,7 @@ function TrademarksRoute() {
 
 // Language Wrapper Component
 function LangWrapper() {
-  const { lang } = useSettings();
+  const { lang, setLang } = useSettings();
   const { lang: urlLang } = useParams<{ lang: string }>();
 
   // إعادة توجيه إذا اللغة في الـ URL غير صحيحة
@@ -76,10 +76,19 @@ function LangWrapper() {
 
   // Sync Global State with URL
   useEffect(() => {
-    if (urlLang && (urlLang === "ar" || urlLang === "en") && i18n.language !== urlLang) {
+    if (!urlLang || (urlLang !== "ar" && urlLang !== "en")) {
+      return;
+    }
+
+    if (lang !== urlLang) {
+      setLang(urlLang);
+    }
+
+    const currentI18nLang = i18n.language?.toLowerCase().startsWith("en") ? "en" : "ar";
+    if (currentI18nLang !== urlLang) {
       i18n.changeLanguage(urlLang);
     }
-  }, [urlLang]);
+  }, [lang, setLang, urlLang]);
 
   return (
     <Suspense fallback={<Loader />}>

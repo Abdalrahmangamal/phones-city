@@ -1,701 +1,2800 @@
 [
   {
     "id": "TC001",
-    "title": "User Registration with Valid Data",
-    "description": "Verify that a new user can successfully register with valid input data including username, email, and password.",
-    "category": "functional",
+    "title": "Home page loads and shows key sections",
+    "description": "Verifies the Home Page renders core content sections after initial load.",
+    "category": "Home Page",
     "priority": "High",
     "steps": [
       {
         "type": "action",
-        "description": "Navigate to the registration page"
-      },
-      {
-        "type": "action",
-        "description": "Enter valid username, email, and password"
-      },
-      {
-        "type": "action",
-        "description": "Submit the registration form"
+        "description": "Navigate to /ar"
       },
       {
         "type": "assertion",
-        "description": "Check that registration is successful and user is redirected appropriately"
+        "description": "Verify URL contains \"/ar\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Hero slider\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Product categories section\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Special offers section\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Testimonials section\" is visible"
       }
     ]
   },
   {
     "id": "TC002",
-    "title": "User Registration with Missing Fields",
-    "description": "Verify registration fails with appropriate error messages when required fields are missing.",
-    "category": "error handling",
-    "priority": "High",
+    "title": "Hero slider is visible and advances automatically",
+    "description": "Verifies the hero slider is present and changes content over time without user interaction.",
+    "category": "Home Page",
+    "priority": "Medium",
     "steps": [
       {
         "type": "action",
-        "description": "Navigate to the registration page"
-      },
-      {
-        "type": "action",
-        "description": "Leave required fields empty"
-      },
-      {
-        "type": "action",
-        "description": "Submit the registration form"
+        "description": "Navigate to /ar"
       },
       {
         "type": "assertion",
-        "description": "Check that registration fails and errors are displayed for missing fields"
+        "description": "Verify element \"Hero slider\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Active hero slide\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Wait for 5 seconds"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Active hero slide\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"\" is visible"
       }
     ]
   },
   {
     "id": "TC003",
-    "title": "User Login with Correct Credentials",
-    "description": "Verify that a registered user can log in using valid email and password.",
-    "category": "functional",
+    "title": "Browse product categories from the Home page",
+    "description": "Verifies a user can view and interact with the product categories section on Home.",
+    "category": "Home Page",
     "priority": "High",
     "steps": [
       {
         "type": "action",
-        "description": "Navigate to the login page"
-      },
-      {
-        "type": "action",
-        "description": "Enter valid email and password"
-      },
-      {
-        "type": "action",
-        "description": "Click the login button"
+        "description": "Navigate to /ar"
       },
       {
         "type": "assertion",
-        "description": "Check that login is successful and user is redirected to home page"
+        "description": "Verify element \"Product categories section\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Scroll to \"Product categories section\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"At least one category card\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Any category card\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/ar/categorySingle\""
       }
     ]
   },
   {
     "id": "TC004",
-    "title": "User Login with Invalid Credentials",
-    "description": "Verify that login fails with invalid email or password and appropriate error messages are displayed.",
-    "category": "error handling",
+    "title": "Open a product details page from Home product card",
+    "description": "Verifies clicking a product card from Home navigates to a product details page.",
+    "category": "Home Page",
     "priority": "High",
     "steps": [
       {
         "type": "action",
-        "description": "Navigate to the login page"
+        "description": "Navigate to /ar"
       },
       {
         "type": "action",
-        "description": "Enter invalid email and/or password"
-      },
-      {
-        "type": "action",
-        "description": "Click the login button"
+        "description": "Scroll to \"Special offers section\""
       },
       {
         "type": "assertion",
-        "description": "Check that login fails and error message is shown"
+        "description": "Verify element \"At least one product card\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Any product card\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/ar/singleproduct\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Product details section\" is visible"
       }
     ]
   },
   {
     "id": "TC005",
-    "title": "OTP Verification Flow",
-    "description": "Verify OTP can be sent and validated during registration and login flows.",
-    "category": "functional",
-    "priority": "High",
+    "title": "Special offers section displays products",
+    "description": "Verifies the Home page special offers section renders with product cards.",
+    "category": "Home Page",
+    "priority": "Medium",
     "steps": [
       {
         "type": "action",
-        "description": "Initiate registration/login that requires OTP verification"
+        "description": "Navigate to /ar"
       },
       {
         "type": "action",
-        "description": "Receive OTP code"
-      },
-      {
-        "type": "action",
-        "description": "Enter correct OTP code in OTP verification form"
+        "description": "Scroll to \"Special offers section\""
       },
       {
         "type": "assertion",
-        "description": "Check that OTP verification succeeds and user can proceed"
+        "description": "Verify element \"Special offers section\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"At least one product card\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Product price\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Product name\" is visible"
       }
     ]
   },
   {
     "id": "TC006",
-    "title": "OTP Verification with Incorrect Code",
-    "description": "Verify the system rejects incorrect OTP codes and shows an error message.",
-    "category": "error handling",
-    "priority": "High",
+    "title": "Bestsellers section displays products",
+    "description": "Verifies the bestsellers section is visible and contains product cards.",
+    "category": "Home Page",
+    "priority": "Medium",
     "steps": [
       {
         "type": "action",
-        "description": "Initiate OTP verification process"
+        "description": "Navigate to /ar"
       },
       {
         "type": "action",
-        "description": "Enter incorrect OTP code"
-      },
-      {
-        "type": "action",
-        "description": "Submit the OTP form"
+        "description": "Scroll to \"Bestsellers section\""
       },
       {
         "type": "assertion",
-        "description": "Check that verification fails with an appropriate error message"
+        "description": "Verify element \"Bestsellers section\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"At least one product card\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Any product card\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/ar/singleproduct\""
       }
     ]
   },
   {
     "id": "TC007",
-    "title": "Password Recovery Flow",
-    "description": "Verify the forgot password process allows user to reset password securely.",
-    "category": "functional",
-    "priority": "High",
+    "title": "New arrivals section displays products",
+    "description": "Verifies the new arrivals section is visible and contains product cards that are clickable.",
+    "category": "Home Page",
+    "priority": "Medium",
     "steps": [
       {
         "type": "action",
-        "description": "Navigate to forgot password page"
+        "description": "Navigate to /ar"
       },
       {
         "type": "action",
-        "description": "Enter registered email address"
-      },
-      {
-        "type": "action",
-        "description": "Submit request to receive password recovery email or OTP"
-      },
-      {
-        "type": "action",
-        "description": "Complete password reset process with valid token or OTP"
+        "description": "Scroll to \"New arrivals section\""
       },
       {
         "type": "assertion",
-        "description": "Check that password is reset successfully and user can log in with new password"
+        "description": "Verify element \"New arrivals section\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"At least one product card\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Any product card\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/ar/singleproduct\""
       }
     ]
   },
   {
     "id": "TC008",
-    "title": "Password Recovery with Unregistered Email",
-    "description": "Verify error is displayed when attempting password recovery with an unregistered email.",
-    "category": "error handling",
-    "priority": "Medium",
+    "title": "Testimonials carousel is visible on Home",
+    "description": "Verifies the testimonials section renders and shows at least one customer opinion.",
+    "category": "Home Page",
+    "priority": "Low",
     "steps": [
       {
         "type": "action",
-        "description": "Navigate to forgot password page"
+        "description": "Navigate to /ar"
       },
       {
         "type": "action",
-        "description": "Enter unregistered email address"
-      },
-      {
-        "type": "action",
-        "description": "Submit password recovery request"
+        "description": "Scroll to \"Testimonials section\""
       },
       {
         "type": "assertion",
-        "description": "Check that appropriate error message is shown indicating email not found"
+        "description": "Verify element \"Testimonials section\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"At least one testimonial card\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Testimonial text\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Customer name\" is visible"
       }
     ]
   },
   {
     "id": "TC009",
-    "title": "Browse Products by Category",
-    "description": "Verify that users can browse the products filtered by specific categories.",
-    "category": "functional",
+    "title": "Registration blocks submission when phone number format is invalid",
+    "description": "Verifies inline validation appears for an invalid phone format and the user is not advanced to OTP.",
+    "category": "User Registration",
     "priority": "High",
     "steps": [
       {
         "type": "action",
-        "description": "Navigate to the product categories page"
+        "description": "Navigate to /ar/register"
       },
       {
         "type": "action",
-        "description": "Select a category from the list"
+        "description": "Type \"Test User\" into the name field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"abcd\" into the phone number field"
+      },
+      {
+        "type": "action",
+        "description": "Click on the \"Register\" button"
       },
       {
         "type": "assertion",
-        "description": "Check that only products belonging to the selected category are displayed"
+        "description": "Verify text \"phone\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"invalid\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"OTP\" is not visible"
       }
     ]
   },
   {
     "id": "TC010",
-    "title": "Product Search Functionality",
-    "description": "Verify the search input returns relevant products matching the query keywords.",
-    "category": "functional",
+    "title": "Registration blocks when required fields are left empty",
+    "description": "Verifies required field validation prevents registration when key fields are missing.",
+    "category": "User Registration",
     "priority": "High",
     "steps": [
       {
         "type": "action",
-        "description": "Enter a product name or keyword in the search bar"
+        "description": "Navigate to /ar/register"
       },
       {
         "type": "action",
-        "description": "Submit the search query"
+        "description": "Click on the \"Register\" button"
       },
       {
         "type": "assertion",
-        "description": "Check that search results contain relevant products matching the query"
+        "description": "Verify text \"required\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"OTP\" is not visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/ar/register\""
       }
     ]
   },
   {
     "id": "TC011",
-    "title": "Product Search with No Results",
-    "description": "Verify the system handles searches returning no products gracefully.",
-    "category": "error handling",
+    "title": "Registration handles duplicate/previously-registered phone number gracefully",
+    "description": "Verifies the UI shows a clear error when trying to register with an already used phone number.",
+    "category": "User Registration",
     "priority": "Medium",
     "steps": [
       {
         "type": "action",
-        "description": "Enter a random string or non-existent product name in the search bar"
+        "description": "Navigate to /ar/register"
       },
       {
         "type": "action",
-        "description": "Submit the search query"
+        "description": "Type \"Test User\" into the name field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"07912345678\" into the phone number field"
+      },
+      {
+        "type": "action",
+        "description": "Click on the \"Register\" button"
       },
       {
         "type": "assertion",
-        "description": "Check that an informative 'no results found' message is displayed"
+        "description": "Verify text \"already\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"OTP\" is not visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/ar/register\""
       }
     ]
   },
   {
     "id": "TC012",
-    "title": "Apply Product Filters",
-    "description": "Verify that applying multiple filters such as brand, price range, and features correctly updates product listings.",
-    "category": "functional",
-    "priority": "High",
+    "title": "Registration page renders expected key inputs and register action",
+    "description": "Verifies the registration page loads with the essential form elements visible to the user.",
+    "category": "User Registration",
+    "priority": "Low",
     "steps": [
       {
         "type": "action",
-        "description": "Navigate to product listing page"
-      },
-      {
-        "type": "action",
-        "description": "Select multiple filters (e.g., brand, price range)"
-      },
-      {
-        "type": "action",
-        "description": "Confirm filter application"
+        "description": "Navigate to /ar/register"
       },
       {
         "type": "assertion",
-        "description": "Check that displayed products match all selected filter criteria"
+        "description": "Verify text \"Register\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Name\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Phone\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Register\" is visible"
       }
     ]
   },
   {
     "id": "TC013",
-    "title": "View Product Details",
-    "description": "Verify that clicking on a product navigates to the product details page displaying all relevant information and reviews.",
-    "category": "functional",
+    "title": "Browse offers and open a product details page",
+    "description": "Verifies a user can browse the offers list and open a product details page from a product card.",
+    "category": "Product Browsing",
     "priority": "High",
     "steps": [
       {
         "type": "action",
-        "description": "From product listing, select a product"
+        "description": "Navigate to /ar/offers"
       },
       {
         "type": "assertion",
-        "description": "Check product details page displays product images, description, specifications, price, and user reviews"
+        "description": "Verify URL contains \"/ar/offers\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Offers\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Scroll to the product listings section"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify at least one product card is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click on the first visible product card"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/ar/singleproduct/\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Add to cart\" is visible"
       }
     ]
   },
   {
     "id": "TC014",
-    "title": "Add Product to Shopping Cart",
-    "description": "Verify that a user can add a product to the shopping cart from product details or listing pages.",
-    "category": "functional",
+    "title": "Filter offers by category and verify results update",
+    "description": "Verifies filtering by category on the offers page updates the visible product listings.",
+    "category": "Product Browsing",
     "priority": "High",
     "steps": [
       {
         "type": "action",
-        "description": "Navigate to a product page or listing"
-      },
-      {
-        "type": "action",
-        "description": "Click 'Add to Cart' button"
+        "description": "Navigate to /ar/offers"
       },
       {
         "type": "assertion",
-        "description": "Check that the product is added to the cart and cart count updates accordingly"
+        "description": "Verify URL contains \"/ar/offers\""
+      },
+      {
+        "type": "action",
+        "description": "Scroll to the filters section"
+      },
+      {
+        "type": "action",
+        "description": "Select a non-default option from the Category dropdown"
+      },
+      {
+        "type": "action",
+        "description": "Wait for the product listings to update"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify at least one product card is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the selected category label is visible in the filters section"
       }
     ]
   },
   {
     "id": "TC015",
-    "title": "Update Product Quantity in Cart",
-    "description": "Verify that users can change the quantity of a product in the shopping cart and the total price updates accordingly.",
-    "category": "functional",
-    "priority": "High",
+    "title": "Filter offers by brand and verify results update",
+    "description": "Verifies filtering by brand on the offers page updates the visible product listings.",
+    "category": "Product Browsing",
+    "priority": "Medium",
     "steps": [
       {
         "type": "action",
-        "description": "Open shopping cart"
-      },
-      {
-        "type": "action",
-        "description": "Adjust quantity of a product"
+        "description": "Navigate to /ar/offers"
       },
       {
         "type": "assertion",
-        "description": "Check that product quantity updates and total price is recalculated correctly"
+        "description": "Verify URL contains \"/ar/offers\""
+      },
+      {
+        "type": "action",
+        "description": "Scroll to the filters section"
+      },
+      {
+        "type": "action",
+        "description": "Select a non-default option from the Brand dropdown"
+      },
+      {
+        "type": "action",
+        "description": "Wait for the product listings to update"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify at least one product card is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the selected brand label is visible in the filters section"
       }
     ]
   },
   {
     "id": "TC016",
-    "title": "Remove Product from Cart",
-    "description": "Verify users can remove a product from the shopping cart and the cart updates correctly.",
-    "category": "functional",
-    "priority": "High",
+    "title": "Filter offers by price range and open a filtered product",
+    "description": "Verifies applying a price filter narrows results and a filtered product can be opened successfully.",
+    "category": "Product Browsing",
+    "priority": "Medium",
     "steps": [
       {
         "type": "action",
-        "description": "Open shopping cart"
-      },
-      {
-        "type": "action",
-        "description": "Click remove/delete button for a product"
+        "description": "Navigate to /ar/offers"
       },
       {
         "type": "assertion",
-        "description": "Check that product is removed from the cart and cart content updates"
+        "description": "Verify URL contains \"/ar/offers\""
+      },
+      {
+        "type": "action",
+        "description": "Scroll to the filters section"
+      },
+      {
+        "type": "action",
+        "description": "Select a narrower non-default option from the Price Range control"
+      },
+      {
+        "type": "action",
+        "description": "Wait for the product listings to update"
+      },
+      {
+        "type": "action",
+        "description": "Click on the first visible product card"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/ar/singleproduct/\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Add to cart\" is visible"
       }
     ]
   },
   {
     "id": "TC017",
-    "title": "Checkout with Valid Address and Payment",
-    "description": "Verify that a user can successfully complete the checkout process by selecting a shipping address, applying discounts, choosing a payment method, and placing an order.",
-    "category": "functional",
+    "title": "Add a product to cart from the product details page",
+    "description": "Verifies a user can add a product to the cart from the product details page and sees a visible confirmation or cart indicator update.",
+    "category": "Product Browsing",
     "priority": "High",
     "steps": [
       {
         "type": "action",
-        "description": "Navigate to checkout page with items in cart"
+        "description": "Navigate to /ar/offers"
       },
       {
         "type": "action",
-        "description": "Select or add a valid shipping address"
-      },
-      {
-        "type": "action",
-        "description": "Apply a valid discount or promo code"
-      },
-      {
-        "type": "action",
-        "description": "Select payment method"
-      },
-      {
-        "type": "action",
-        "description": "Confirm and place the order"
+        "description": "Click on the first visible product card"
       },
       {
         "type": "assertion",
-        "description": "Check that order is submitted successfully and confirmation page is shown"
+        "description": "Verify URL contains \"/ar/singleproduct/\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Add to cart\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Add to cart\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"added\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a cart indicator element is visible"
       }
     ]
   },
   {
     "id": "TC018",
-    "title": "Checkout with Invalid Discount Code",
-    "description": "Verify that applying an invalid or expired promo code during checkout results in appropriate error feedback and the code is not accepted.",
-    "category": "error handling",
-    "priority": "Medium",
+    "title": "Add a product to favorites from a product card",
+    "description": "Verifies a user can add a product to favorites from a listing card and sees a visible confirmation state.",
+    "category": "Product Browsing",
+    "priority": "Low",
     "steps": [
       {
         "type": "action",
-        "description": "Navigate to checkout page with items in cart"
+        "description": "Navigate to /ar/offers"
       },
       {
         "type": "action",
-        "description": "Enter an invalid or expired discount code"
-      },
-      {
-        "type": "action",
-        "description": "Attempt to apply the discount code"
+        "description": "Scroll to the product listings section"
       },
       {
         "type": "assertion",
-        "description": "Check that the discount code is rejected and an error message is displayed"
+        "description": "Verify at least one product card is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click on the favorites (heart) control on the first visible product card"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"favorite\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a visible success notification element is shown"
       }
     ]
   },
   {
     "id": "TC019",
-    "title": "Manage User Profile Information",
-    "description": "Verify a logged-in user can view and update their profile information successfully.",
-    "category": "functional",
+    "title": "Search with a query that returns zero results",
+    "description": "Verifies searching from the search page can return zero results and shows a 'No results' message with suggested categories.",
+    "category": "Product Browsing",
     "priority": "High",
     "steps": [
       {
         "type": "action",
-        "description": "Log in to user account"
-      },
-      {
-        "type": "action",
-        "description": "Navigate to profile management page"
-      },
-      {
-        "type": "action",
-        "description": "Edit profile fields such as name, email, and phone number"
-      },
-      {
-        "type": "action",
-        "description": "Save changes"
+        "description": "Navigate to /ar/search"
       },
       {
         "type": "assertion",
-        "description": "Check that profile data updates are reflected correctly"
+        "description": "Verify URL contains \"/ar/search\""
+      },
+      {
+        "type": "action",
+        "description": "Type \"zzzz-no-such-product-123\" into the search field"
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Search\""
+      },
+      {
+        "type": "action",
+        "description": "Wait for the results area to render"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"No results\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Categories\" is visible"
       }
     ]
   },
   {
     "id": "TC020",
-    "title": "Add, Edit, and Delete Shipping Addresses",
-    "description": "Verify user can add new shipping addresses, edit existing ones, and delete addresses from their profile.",
-    "category": "functional",
-    "priority": "High",
+    "title": "Search with an empty query shows validation or no-results state",
+    "description": "Verifies submitting an empty search does not crash and shows a visible validation or no-results state.",
+    "category": "Product Browsing",
+    "priority": "Medium",
     "steps": [
       {
         "type": "action",
-        "description": "Log in and navigate to address management page"
-      },
-      {
-        "type": "action",
-        "description": "Add a new address with valid details"
+        "description": "Navigate to /ar/search"
       },
       {
         "type": "assertion",
-        "description": "Check new address is added and listed"
+        "description": "Verify URL contains \"/ar/search\""
       },
       {
         "type": "action",
-        "description": "Edit an existing address details"
-      },
-      {
-        "type": "assertion",
-        "description": "Check address updates are saved"
+        "description": "Click on the search field"
       },
       {
         "type": "action",
-        "description": "Delete an existing address"
+        "description": "Press Enter"
+      },
+      {
+        "type": "action",
+        "description": "Wait for the page to respond"
       },
       {
         "type": "assertion",
-        "description": "Check address is removed from the list"
+        "description": "Verify text \"No results\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the search field element is visible"
       }
     ]
   },
   {
     "id": "TC021",
-    "title": "View Order History and Details",
-    "description": "Verify users can view their past orders with order details and status.",
-    "category": "functional",
+    "title": "Add a product to cart and verify it appears on Checkout",
+    "description": "Verifies a shopper can add a product to the cart and see it listed with the correct quantity on the Checkout page.",
+    "category": "Shopping Cart",
     "priority": "High",
     "steps": [
       {
         "type": "action",
-        "description": "Log in and navigate to order history page"
-      },
-      {
-        "type": "assertion",
-        "description": "Check that all past orders are listed with status and details"
+        "description": "Navigate to \"/ar\""
       },
       {
         "type": "action",
-        "description": "Select an individual order to view details"
+        "description": "Click on the first visible product card on the Home page"
       },
       {
         "type": "assertion",
-        "description": "Verify order details including products, prices, shipping info, and status are displayed correctly"
+        "description": "Verify URL contains \"/ar/singleproduct\""
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Add to cart\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"cart summary\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Checkout\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/ar/checkout\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"order summary\" is visible"
       }
     ]
   },
   {
     "id": "TC022",
-    "title": "Add and Remove Favorite Products",
-    "description": "Verify users can add products to their favorites list and remove them as needed.",
-    "category": "functional",
-    "priority": "Medium",
+    "title": "Cart summary updates after adding an item",
+    "description": "Verifies the cart summary in the header/store updates after adding a product to the cart.",
+    "category": "Shopping Cart",
+    "priority": "High",
     "steps": [
       {
         "type": "action",
-        "description": "Log in and navigate to a product page"
-      },
-      {
-        "type": "action",
-        "description": "Click 'Add to Favorites' button"
+        "description": "Navigate to \"/ar\""
       },
       {
         "type": "assertion",
-        "description": "Check that product appears in user's favorites list"
+        "description": "Verify element \"cart summary\" is visible"
       },
       {
         "type": "action",
-        "description": "Remove product from favorites"
+        "description": "Click on the first visible product card on the Home page"
       },
       {
         "type": "assertion",
-        "description": "Check that product is no longer listed in favorites"
+        "description": "Verify URL contains \"/ar/singleproduct\""
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Add to cart\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"1\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click on the cart icon in the header"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"cart items list\" is visible"
       }
     ]
   },
   {
     "id": "TC023",
-    "title": "Submit and View Product Reviews",
-    "description": "Verify that a logged-in user can submit a product review with rating and comment and can view reviews on product pages.",
-    "category": "functional",
-    "priority": "Medium",
+    "title": "Increase quantity of an item in cart and verify updated quantity",
+    "description": "Verifies a shopper can increase an item quantity and the updated quantity is shown in the cart UI.",
+    "category": "Shopping Cart",
+    "priority": "High",
     "steps": [
       {
         "type": "action",
-        "description": "Log in and navigate to a product's detail page"
+        "description": "Navigate to \"/ar\""
       },
       {
         "type": "action",
-        "description": "Submit a review with rating and text comment"
+        "description": "Click on the first visible product card on the Home page"
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Add to cart\""
+      },
+      {
+        "type": "action",
+        "description": "Click on the cart icon in the header"
       },
       {
         "type": "assertion",
-        "description": "Check that submitted review appears on the product page with correct data"
+        "description": "Verify element \"cart items list\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click on \"+\" (increase quantity) for the first cart item"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"2\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"cart summary\" is visible"
       }
     ]
   },
   {
     "id": "TC024",
-    "title": "Internationalization Language Toggle",
-    "description": "Verify that user can switch between English and Arabic languages and the content updates accordingly.",
-    "category": "functional",
+    "title": "Decrease quantity of an item in cart",
+    "description": "Verifies a shopper can decrease an item quantity and the UI reflects the new quantity.",
+    "category": "Shopping Cart",
     "priority": "Medium",
     "steps": [
       {
         "type": "action",
-        "description": "Locate and use the language toggle control"
+        "description": "Navigate to \"/ar\""
       },
       {
         "type": "action",
-        "description": "Switch to Arabic language"
-      },
-      {
-        "type": "assertion",
-        "description": "Check the entire page content updates to Arabic with proper RTL layout"
+        "description": "Click on the first visible product card on the Home page"
       },
       {
         "type": "action",
-        "description": "Switch back to English language"
+        "description": "Click on \"Add to cart\""
+      },
+      {
+        "type": "action",
+        "description": "Click on the cart icon in the header"
+      },
+      {
+        "type": "action",
+        "description": "Click on \"+\" (increase quantity) for the first cart item"
       },
       {
         "type": "assertion",
-        "description": "Verify content changes back to English correctly"
+        "description": "Verify text \"2\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click on \"-\" (decrease quantity) for the first cart item"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"1\" is visible"
       }
     ]
   },
   {
     "id": "TC025",
-    "title": "Access Customer Support FAQ and Policies",
-    "description": "Verify that the FAQ, terms & policies, and payment/return plans pages load and display accurate content.",
-    "category": "functional",
-    "priority": "Medium",
+    "title": "Remove an item from the cart",
+    "description": "Verifies a shopper can remove a product from the cart and it no longer appears in the cart UI.",
+    "category": "Shopping Cart",
+    "priority": "High",
     "steps": [
       {
         "type": "action",
-        "description": "Navigate to FAQ page"
-      },
-      {
-        "type": "assertion",
-        "description": "Check FAQ questions and answers are displayed properly"
+        "description": "Navigate to \"/ar\""
       },
       {
         "type": "action",
-        "description": "Navigate to Terms & Policies page"
-      },
-      {
-        "type": "assertion",
-        "description": "Verify all policies content loads and is readable"
+        "description": "Click on the first visible product card on the Home page"
       },
       {
         "type": "action",
-        "description": "Navigate to Return and Payment Plans page"
+        "description": "Click on \"Add to cart\""
+      },
+      {
+        "type": "action",
+        "description": "Click on the cart icon in the header"
       },
       {
         "type": "assertion",
-        "description": "Confirm that return policies and payment plans details are shown accurately"
+        "description": "Verify element \"cart items list\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Remove\" for the first cart item"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Cart is empty\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"0\" is visible"
       }
     ]
   },
   {
     "id": "TC026",
-    "title": "Use AI Chatbot for Customer Assistance",
-    "description": "Verify the AI chatbot widget loads and responds to typical customer queries correctly.",
-    "category": "functional",
-    "priority": "Medium",
+    "title": "Cart contents persist when navigating to Checkout via UI",
+    "description": "Verifies cart contents remain present when moving from product page to Checkout using in-app navigation.",
+    "category": "Shopping Cart",
+    "priority": "High",
     "steps": [
       {
         "type": "action",
-        "description": "Open chatbot interface"
+        "description": "Navigate to \"/ar\""
       },
       {
         "type": "action",
-        "description": "Type a common customer query (e.g., 'What is your return policy?')"
+        "description": "Click on the first visible product card on the Home page"
       },
       {
         "type": "assertion",
-        "description": "Check that chatbot returns a relevant and accurate response"
+        "description": "Verify URL contains \"/ar/singleproduct\""
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Add to cart\""
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Checkout\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/ar/checkout\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"order items\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Qty\" is visible"
       }
     ]
   },
   {
     "id": "TC027",
-    "title": "Load Dynamic Home Page Content",
-    "description": "Verify the home page loads banners, sliders, promotional content, categories, and highlighted products correctly.",
-    "category": "functional",
-    "priority": "High",
+    "title": "Checkout reflects quantity changes made from cart summary",
+    "description": "Verifies that changing quantity in the cart UI is reflected on the Checkout page item quantities.",
+    "category": "Shopping Cart",
+    "priority": "Medium",
     "steps": [
       {
         "type": "action",
-        "description": "Navigate to the home page"
+        "description": "Navigate to \"/ar\""
+      },
+      {
+        "type": "action",
+        "description": "Click on the first visible product card on the Home page"
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Add to cart\""
+      },
+      {
+        "type": "action",
+        "description": "Click on the cart icon in the header"
+      },
+      {
+        "type": "action",
+        "description": "Click on \"+\" (increase quantity) for the first cart item"
       },
       {
         "type": "assertion",
-        "description": "Check that all banners and sliders load without errors"
+        "description": "Verify text \"2\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Checkout\""
       },
       {
         "type": "assertion",
-        "description": "Verify categories and promotional contents are shown and are clickable"
-      },
-      {
-        "type": "assertion",
-        "description": "Ensure highlighted products appear in dedicated sections"
+        "description": "Verify URL contains \"/ar/checkout\""
       }
     ]
   },
   {
     "id": "TC028",
-    "title": "Validate Responsive UI Components",
-    "description": "Verify key UI components such as buttons, dialogs, tabs, and forms are accessible and render correctly across various screen sizes and devices.",
-    "category": "ui",
+    "title": "Load profile page and display existing profile information",
+    "description": "Verifies an authenticated user can open the Profile page and see their profile information loaded and visible.",
+    "category": "User Profile",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /ar/login"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the phone/email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click on the \"Login\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/ar/profile\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Profile\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Name\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Phone\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC029",
+    "title": "Update profile name and save successfully",
+    "description": "Verifies a user can edit the name field, save, and see a success confirmation.",
+    "category": "User Profile",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /ar/login"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the phone/email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click on the \"Login\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/ar/profile\""
+      },
+      {
+        "type": "action",
+        "description": "Fill \"Updated Test Name\" into the name field"
+      },
+      {
+        "type": "action",
+        "description": "Click on the \"Save\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"success\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC030",
+    "title": "Update profile email and save successfully",
+    "description": "Verifies a user can edit the email field, save, and see a success confirmation.",
+    "category": "User Profile",
     "priority": "Medium",
     "steps": [
       {
         "type": "action",
-        "description": "Load common pages containing UI components"
+        "description": "Navigate to /ar/login"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the phone/email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click on the \"Login\" button"
       },
       {
         "type": "assertion",
-        "description": "Check UI components adjust layout visually and retain functionality on desktop, tablet, and mobile views"
+        "description": "Verify URL contains \"/ar/profile\""
+      },
+      {
+        "type": "action",
+        "description": "Fill \"updated.email.test@example.com\" into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Click on the \"Save\" button"
       },
       {
         "type": "assertion",
-        "description": "Verify accessible roles, labels, and keyboard navigation works"
+        "description": "Verify text \"success\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC031",
+    "title": "Update profile phone and save successfully",
+    "description": "Verifies a user can edit the phone field with a valid value, save, and see a success confirmation.",
+    "category": "User Profile",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /ar/login"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the phone/email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click on the \"Login\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/ar/profile\""
+      },
+      {
+        "type": "action",
+        "description": "Fill \"0791234567\" into the phone field"
+      },
+      {
+        "type": "action",
+        "description": "Click on the \"Save\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"success\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC032",
+    "title": "Invalid phone format shows inline validation error and prevents save",
+    "description": "Verifies invalid phone format triggers a visible validation error and the profile is not saved.",
+    "category": "User Profile",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /ar/login"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the phone/email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click on the \"Login\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/ar/profile\""
+      },
+      {
+        "type": "action",
+        "description": "Fill \"abc123\" into the phone field"
+      },
+      {
+        "type": "action",
+        "description": "Click on the \"Save\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"invalid\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC033",
+    "title": "Required field validation: clearing name shows error",
+    "description": "Verifies clearing a required profile field (name) shows an inline error and blocks saving.",
+    "category": "User Profile",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /ar/login"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the phone/email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click on the \"Login\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/ar/profile\""
+      },
+      {
+        "type": "action",
+        "description": "Fill \"\" into the name field"
+      },
+      {
+        "type": "action",
+        "description": "Click on the \"Save\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"required\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC034",
+    "title": "Canceling changes by refresh: unsaved edits are not confirmed as saved",
+    "description": "Verifies that making edits without saving does not show a success confirmation and does not indicate the profile was saved.",
+    "category": "User Profile",
+    "priority": "Low",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /ar/login"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the phone/email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click on the \"Login\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/ar/profile\""
+      },
+      {
+        "type": "action",
+        "description": "Fill \"Unsaved Name Change\" into the name field"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"success\" is not visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Save\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC035",
+    "title": "Save button remains available after load and allows retry after validation error",
+    "description": "Verifies that after a validation error, the Save control remains usable so the user can correct input and try again.",
+    "category": "User Profile",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /ar/login"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the phone/email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click on the \"Login\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/ar/profile\""
+      },
+      {
+        "type": "action",
+        "description": "Fill \"bad-phone\" into the phone field"
+      },
+      {
+        "type": "action",
+        "description": "Click on the \"Save\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"invalid\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Save\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC036",
+    "title": "Login then open Orders page and see orders list",
+    "description": "Verifies an authenticated user can reach My Orders and view an orders list.",
+    "category": "Orders Management",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /ar/login"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the phone number or username field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Login\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/ar\""
+      },
+      {
+        "type": "action",
+        "description": "Click on \"My Orders\" in the account/profile navigation"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"My Orders\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC037",
+    "title": "Open an order from the list and view order details",
+    "description": "Verifies the user can open an order and see a details view with order information.",
+    "category": "Orders Management",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /ar/login"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the phone number or username field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Login\" button"
+      },
+      {
+        "type": "action",
+        "description": "Click on \"My Orders\" in the account/profile navigation"
+      },
+      {
+        "type": "action",
+        "description": "Click on the first order item in the orders list"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Order Details\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC038",
+    "title": "Cancel an eligible order successfully from order details",
+    "description": "Verifies a cancelable order can be canceled and the UI reflects the updated state.",
+    "category": "Orders Management",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /ar/login"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the phone number or username field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Login\" button"
+      },
+      {
+        "type": "action",
+        "description": "Click on \"My Orders\" in the account/profile navigation"
+      },
+      {
+        "type": "action",
+        "description": "Click on an order that shows a visible \"Cancel Order\" action"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Cancel Order\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Canceled\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC039",
+    "title": "Cancel an eligible order successfully directly from the orders list (if available)",
+    "description": "Verifies cancellation works when initiated from the list view and the list reflects the new status.",
+    "category": "Orders Management",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /ar/login"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the phone number or username field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Login\" button"
+      },
+      {
+        "type": "action",
+        "description": "Click on \"My Orders\" in the account/profile navigation"
+      },
+      {
+        "type": "action",
+        "description": "Click \"Cancel Order\" on an order row that shows this action in the list"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Canceled\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC040",
+    "title": "Attempt to cancel a non-cancelable order and see an error message",
+    "description": "Verifies the app prevents cancellation for ineligible orders and shows an error message while keeping the order unchanged.",
+    "category": "Orders Management",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /ar/login"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the phone number or username field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Login\" button"
+      },
+      {
+        "type": "action",
+        "description": "Click on \"My Orders\" in the account/profile navigation"
+      },
+      {
+        "type": "action",
+        "description": "Click \"Cancel Order\" on an order that appears non-cancelable (for example, marked Delivered/Completed or otherwise ineligible)"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"cannot be canceled\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC041",
+    "title": "Cancel action is not available for a delivered/completed order in details view",
+    "description": "Verifies that for an order in a terminal status, the UI does not present a cancel action.",
+    "category": "Orders Management",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /ar/login"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the phone number or username field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Login\" button"
+      },
+      {
+        "type": "action",
+        "description": "Click on \"My Orders\" in the account/profile navigation"
+      },
+      {
+        "type": "action",
+        "description": "Click on an order that is visibly marked as Delivered/Completed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Cancel Order\" is not visible"
+      }
+    ]
+  },
+  {
+    "id": "TC042",
+    "title": "Orders list shows a clear empty-state when there are no orders",
+    "description": "Verifies the page displays an empty-state message when the user has no orders.",
+    "category": "Orders Management",
+    "priority": "Low",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /ar/login"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the phone number or username field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Login\" button"
+      },
+      {
+        "type": "action",
+        "description": "Click on \"My Orders\" in the account/profile navigation"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"No orders\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC043",
+    "title": "Orders page basic content loads and is readable (smoke)",
+    "description": "Verifies core orders page UI renders without missing key labels and sections after login.",
+    "category": "Orders Management",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /ar/login"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the phone number or username field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Login\" button"
+      },
+      {
+        "type": "action",
+        "description": "Click on \"My Orders\" in the account/profile navigation"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Orders\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"orders list\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC044",
+    "title": "Add a product to favorites from its product details page (happy path)",
+    "description": "Verifies a user can favorite a product and see it appear in the Favorites list.",
+    "category": "Favorites / Wishlist",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /ar/login"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the phone/email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click on the \"Login\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/ar\""
+      },
+      {
+        "type": "action",
+        "description": "Click on the \"Favourite\" or \"Favorites\" link in the account/menu navigation"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/ar/favourite"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Favorites list\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC045",
+    "title": "Verify favorites list renders correctly when empty",
+    "description": "Verifies the Favorites page shows an empty-state message or equivalent when there are no favorites.",
+    "category": "Favorites / Wishlist",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /ar/login"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the phone/email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click on the \"Login\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/ar\""
+      },
+      {
+        "type": "action",
+        "description": "Click on the \"Favourite\" or \"Favorites\" link in the account/menu navigation"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/ar/favourite"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"No favorites\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC046",
+    "title": "Invalid login blocks access to Favorites page",
+    "description": "Verifies that invalid credentials do not allow the user to proceed to Favorites and an error is shown.",
+    "category": "Favorites / Wishlist",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /ar/login"
+      },
+      {
+        "type": "action",
+        "description": "Type \"fake_user_99999\" into the phone/email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"wrong_password\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click on the \"Login\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Invalid\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/ar/login\""
+      }
+    ]
+  },
+  {
+    "id": "TC047",
+    "title": "Add a new delivery address and see it listed",
+    "description": "Verifies a logged-in user can add a new address and it appears in the address list.",
+    "category": "Address Management",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /ar/login"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the phone/email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Login\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/ar\""
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Address\" option in the account/profile menu"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/ar/address"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Add new address\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/ar/singleaddress"
+      },
+      {
+        "type": "action",
+        "description": "Type \"Home\" into the address label/name field"
+      },
+      {
+        "type": "action",
+        "description": "Select the first available option from the city dropdown"
+      },
+      {
+        "type": "action",
+        "description": "Type \"King Fahd Road\" into the street field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"10\" into the building/house number field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"2\" into the apartment/unit field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"Near the mall\" into the additional details/notes field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Save\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/ar/address"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Home\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC048",
+    "title": "Prevent saving a new address with missing required field",
+    "description": "Verifies inline validation blocks saving when a required field is missing on the add address form.",
+    "category": "Address Management",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /ar/login"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the phone/email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Login\" button"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Address\" option in the account/profile menu"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Add new address\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/ar/singleaddress"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Save\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"required\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/ar/singleaddress"
+      }
+    ]
+  },
+  {
+    "id": "TC049",
+    "title": "Cancel out of add address without saving",
+    "description": "Verifies the user can leave the add address page without creating a new address.",
+    "category": "Address Management",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /ar/login"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the phone/email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Login\" button"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Address\" option in the account/profile menu"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/ar/address"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Add new address\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/ar/singleaddress"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Cancel\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/ar/address"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Add new address\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC050",
+    "title": "City dropdown is available when adding a new address",
+    "description": "Verifies the add address form provides a city selector so the user can choose a city before saving.",
+    "category": "Address Management",
+    "priority": "Low",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /ar/login"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the phone/email field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Login\" button"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Address\" option in the account/profile menu"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Add new address\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/ar/singleaddress"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"City\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Select the first available option from the city dropdown"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the selected city value is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC051",
+    "title": "View notifications list after login",
+    "description": "Verifies an authenticated user can open the Notifications page and see the notifications list load.",
+    "category": "Notifications",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /ar/login"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the phone number field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click on the \"Login\" button"
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Notifications\" in the profile/account navigation"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/ar/notifications\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Notifications list\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC052",
+    "title": "Mark a single notification as read by opening it",
+    "description": "Verifies clicking a notification marks it as read and shows a visible read state change.",
+    "category": "Notifications",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /ar/login"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the phone number field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click on the \"Login\" button"
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Notifications\" in the profile/account navigation"
+      },
+      {
+        "type": "action",
+        "description": "Click on the first notification item in the list"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Read indicator for the opened notification\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC053",
+    "title": "Mark all notifications as read",
+    "description": "Verifies the user can mark all notifications as read from the Notifications page.",
+    "category": "Notifications",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /ar/login"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the phone number field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click on the \"Login\" button"
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Notifications\" in the profile/account navigation"
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Mark all as read\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"All notifications marked as read\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC054",
+    "title": "Delete a single notification",
+    "description": "Verifies the user can delete one notification and it is removed from the visible list.",
+    "category": "Notifications",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /ar/login"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the phone number field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click on the \"Login\" button"
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Notifications\" in the profile/account navigation"
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Delete\" for the first notification item"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Notification deleted\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Deleted notification item\" is not visible"
+      }
+    ]
+  },
+  {
+    "id": "TC055",
+    "title": "Clear all notifications successfully",
+    "description": "Verifies the user can clear all notifications and the list becomes empty.",
+    "category": "Notifications",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /ar/login"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the phone number field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click on the \"Login\" button"
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Notifications\" in the profile/account navigation"
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Clear all\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"No notifications\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Notifications list\" is not visible"
+      }
+    ]
+  },
+  {
+    "id": "TC056",
+    "title": "Notifications page shows empty state when there are no notifications",
+    "description": "Verifies the Notifications page displays an empty-state message when the list is empty.",
+    "category": "Notifications",
+    "priority": "Low",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /ar/login"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the phone number field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click on the \"Login\" button"
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Notifications\" in the profile/account navigation"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"No notifications\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Notifications list\" is not visible"
+      }
+    ]
+  },
+  {
+    "id": "TC057",
+    "title": "Switch from Arabic to English updates URL and visible language",
+    "description": "Verifies toggling language from Arabic to English updates the URL and visible UI text.",
+    "category": "Language Switching",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /ar"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/ar\""
+      },
+      {
+        "type": "action",
+        "description": "Click language toggle in header"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/en\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"html\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"English\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC058",
+    "title": "Switch from English to Arabic updates URL and visible language",
+    "description": "Verifies toggling language from English to Arabic updates the URL and visible UI text.",
+    "category": "Language Switching",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /en"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/en\""
+      },
+      {
+        "type": "action",
+        "description": "Click language toggle in header"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/ar\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"html\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"العربية\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC059",
+    "title": "Switch language from Arabic to English keeps user on the same page type (Home)",
+    "description": "Verifies language switching does not kick the user to an unrelated page and remains on a comparable page in the new language.",
+    "category": "Language Switching",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /ar"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify page title contains \"Phones\""
+      },
+      {
+        "type": "action",
+        "description": "Click language toggle in header"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/en\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify page title contains \"Phones\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Header\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC060",
+    "title": "Rapid double toggle ends in original language and URL",
+    "description": "Verifies two quick toggles returns the app to the original language and route prefix.",
+    "category": "Language Switching",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /ar"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/ar\""
+      },
+      {
+        "type": "action",
+        "description": "Click language toggle in header"
+      },
+      {
+        "type": "action",
+        "description": "Click language toggle in header"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/ar\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Header\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC061",
+    "title": "Language switch updates directionality from RTL to LTR",
+    "description": "Verifies switching from Arabic to English results in an LTR layout presentation.",
+    "category": "Language Switching",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /ar"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Main content\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click language toggle in header"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/en\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"English\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Main content\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC062",
+    "title": "Language switch updates directionality from LTR to RTL",
+    "description": "Verifies switching from English to Arabic results in an RTL layout presentation.",
+    "category": "Language Switching",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /en"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Main content\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click language toggle in header"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/ar\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"العربية\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Main content\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC063",
+    "title": "Open Blog listing and verify posts are displayed",
+    "description": "Verifies the blog listing page loads and shows a visible list of posts.",
+    "category": "Blog",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to \"/ar/blog\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/ar/blog\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Blog\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"blog posts list\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"a blog post card/item\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC064",
+    "title": "Open a blog post from listing and verify full post content renders",
+    "description": "Verifies a user can click a post on the listing and view the single post page content.",
+    "category": "Blog",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to \"/ar/blog\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"a blog post card/item\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click on \"a blog post title\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/ar/blog/\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"blog post title\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"blog post content/body\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC065",
+    "title": "Return to Blog listing from a single post via in-page navigation",
+    "description": "Verifies the user can navigate back to the blog listing using a visible link on the single post page.",
+    "category": "Blog",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to \"/ar/blog\""
+      },
+      {
+        "type": "action",
+        "description": "Click on \"a blog post title\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/ar/blog/\""
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Back to blog\" link"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/ar/blog\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"blog posts list\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC066",
+    "title": "Handle non-existent blog post slug with 'Post not found' message",
+    "description": "Verifies an invalid blog slug shows a not-found message and provides a way back to the blog listing.",
+    "category": "Blog",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to \"/ar/blog/non-existent-post-slug\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/ar/blog/\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Post not found\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"link back to blog\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click on \"link back to blog\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/ar/blog\""
+      }
+    ]
+  },
+  {
+    "id": "TC067",
+    "title": "Refresh-like revisit: Blog listing still renders after navigating away and back",
+    "description": "Verifies the blog listing remains accessible and renders posts after leaving the page and returning via UI navigation.",
+    "category": "Blog",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to \"/ar/blog\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"a blog post card/item\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Home\" in the main navigation"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/ar\""
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Blog\" in the main navigation"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/ar/blog\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"a blog post card/item\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC068",
+    "title": "Single blog post page shows core metadata elements (title and date/author if present)",
+    "description": "Verifies the single blog post page shows the main heading and any visible metadata area when available.",
+    "category": "Blog",
+    "priority": "Low",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to \"/ar/blog\""
+      },
+      {
+        "type": "action",
+        "description": "Click on \"a blog post title\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"blog post title\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"blog post content/body\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"blog post metadata (date/author)\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC069",
+    "title": "Home page loads in the default language route",
+    "description": "Verifies the app can be opened in a supported language route and the Home page renders visible content.",
+    "category": "Developer Setup & Local Dev",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /en"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/en\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify page title contains \"Phones\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Hero slider\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Offers\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Best\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC070",
+    "title": "Navigate from Home to Offers listing",
+    "description": "Verifies client-side navigation works from Home to the Offers listing page in the same language.",
+    "category": "Developer Setup & Local Dev",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /en"
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Offers\" in the site navigation"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/en/offers\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Offers\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Filters\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC071",
+    "title": "Search route shows search results page UI",
+    "description": "Verifies the search results page is reachable and renders its primary UI state.",
+    "category": "Developer Setup & Local Dev",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /en/search"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/en/search\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Search\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Search results\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC072",
+    "title": "Open Contact page from Home",
+    "description": "Verifies navigation to the Contact page and that contact content is visible.",
+    "category": "Developer Setup & Local Dev",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /en"
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Contact\" in the site navigation"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/en/contact\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Contact\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Contact form\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC073",
+    "title": "Protected Profile page accessible after login",
+    "description": "Verifies that a user can log in and access the authenticated Profile page route.",
+    "category": "Developer Setup & Local Dev",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /en/login"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the phone number field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click on the \"Login\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/en/profile\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Profile\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC074",
+    "title": "Protected Wallet page accessible after login",
+    "description": "Verifies that a user can log in and open the authenticated Wallet page from within the profile area.",
+    "category": "Developer Setup & Local Dev",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /en/login"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_USER}}\" into the phone number field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"{{LOGIN_PASSWORD}}\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click on the \"Login\" button"
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Wallet\" in the profile navigation"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/en/wallet"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Wallet\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC075",
+    "title": "Login shows validation or error on invalid credentials",
+    "description": "Verifies the login page surfaces a visible error when incorrect credentials are submitted.",
+    "category": "Developer Setup & Local Dev",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /en/login"
+      },
+      {
+        "type": "action",
+        "description": "Type \"not-a-real-user\" into the phone number field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"wrong-password\" into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Click on the \"Login\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Invalid\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"/en/login\""
       }
     ]
   }

@@ -5,8 +5,12 @@ import { useWebchat } from '@botpress/webchat';
 import botGif from '../../assets/images/ezgif-5c28a7a768da984f.webp';
 import { useSettings } from "@/store/settings";
 
-export default function Chatbot() {
-  const [isOpen, setIsOpen] = useState(false);
+interface ChatbotProps {
+  initialOpen?: boolean;
+}
+
+export default function Chatbot({ initialOpen = false }: ChatbotProps) {
+  const [isOpen, setIsOpen] = useState(initialOpen);
   const [inputValue, setInputValue] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { lang } = useSettings();
@@ -124,6 +128,8 @@ export default function Chatbot() {
           src={botGif}
           alt="Chat Bot"
           onClick={() => setIsOpen(!isOpen)}
+          loading="lazy"
+          decoding="async"
           className={`fixed z-[500] 
       w-[160px] h-[140px] md:w-[200px] md:h-[180px] 
       bottom-[-15px] md:bottom-[-20px]

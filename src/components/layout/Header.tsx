@@ -21,9 +21,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuLabel,
 } from "@/components/ui/dropdown-menu";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
 import {
   Sheet,
   SheetContent,
@@ -61,6 +60,16 @@ export default function Header() {
   const { lang } = useLangSync();
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const handleLanguageChange = (nextLang: "ar" | "en") => {
+    const nextPath = /^\/(ar|en)(?=\/|$)/.test(location.pathname)
+      ? location.pathname.replace(/^\/(ar|en)(?=\/|$)/, `/${nextLang}`)
+      : `/${nextLang}${location.pathname.startsWith("/") ? location.pathname : `/${location.pathname}`}`;
+
+    navigate(`${nextPath}${location.search}${location.hash}`);
+    i18n.changeLanguage(nextLang);
+  };
 
   // States
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -785,8 +794,8 @@ export default function Header() {
                 </DropdownMenuTrigger>
 
                 <DropdownMenuContent align="end" sideOffset={8} className="z-[9999]">
-                  <DropdownMenuItem onClick={() => i18n.changeLanguage("ar")}>العربية</DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => i18n.changeLanguage("en")}>English</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => handleLanguageChange("ar")}>العربية</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => handleLanguageChange("en")}>English</DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>

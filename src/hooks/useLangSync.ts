@@ -3,6 +3,10 @@ import { useEffect } from "react";
 import i18n from "@/i18n";
 import { useSettings } from "@/store/settings";
 
+const normalizeLang = (lng?: string): "ar" | "en" => {
+  return typeof lng === "string" && lng.toLowerCase().startsWith("en") ? "en" : "ar";
+};
+
 /**
  * يضمن إن i18n و Zustand متزامنين دايمًا
  * ويرجع لك lang و setLang عشان تقدر تستخدمهم
@@ -12,18 +16,24 @@ export function useLangSync() {
 
   // لما تتغير لغة i18n من حتة تانية
   useEffect(() => {
-    const handler = (lng: string) => setLang((lng as "ar" | "en") ?? "ar");
+    const handler = (lng: string) => {
+      const nextLang = normalizeLang(lng);
+      if (nextLang !== lang) {
+        setLang(nextLang);
+      }
+    };
 
     i18n.on("languageChanged", handler);
 
     return () => {
       i18n.off("languageChanged", handler);
     };
-  }, [setLang]);
+  }, [lang, setLang]);
 
   // أول تحميل: خلي i18n على لغة Zustand
   useEffect(() => {
-    if (i18n.language !== lang) {
+    const normalizedI18nLang = normalizeLang(i18n.language);
+    if (normalizedI18nLang !== lang) {
       i18n.changeLanguage(lang);
     }
   }, [lang]);

@@ -36,7 +36,7 @@ interface PageState {
   fetchProductbyid: (id: string, lang: string, params?: productsParams) => Promise<void>;
 }
 
-const PRODUCTS_SECTION_CACHE_TTL_MS = 60_000;
+const PRODUCTS_SECTION_CACHE_TTL_MS = 300_000;
 const offersSectionCache = new Map<string, { data: Product[]; meta: any; fetchedAt: number }>();
 const offersSectionInFlight = new Map<string, Promise<any>>();
 const bestSellerCache = new Map<string, { data: Product[]; fetchedAt: number }>();

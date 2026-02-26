@@ -1,6 +1,6 @@
 "use client";
 import { ChevronDown, X, Globe } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 import { useTranslation } from "react-i18next";
 import { useLangSync } from "@/hooks/useLangSync";
@@ -24,6 +24,8 @@ export default function MobileMenu({
   const { lang } = useLangSync();
   const { i18n, t } = useTranslation();
   const [open] = React.useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
   const categories = useCategoriesStore((state) => state.categories);
   const fetchCategories = useCategoriesStore((state) => state.fetchCategories);
 
@@ -55,6 +57,16 @@ export default function MobileMenu({
       // إذا لم يكن له أقسام فرعية، ننقل المستخدم مباشرة
       onClose();
     }
+  };
+
+  const handleLanguageChange = (nextLang: "ar" | "en") => {
+    const nextPath = /^\/(ar|en)(?=\/|$)/.test(location.pathname)
+      ? location.pathname.replace(/^\/(ar|en)(?=\/|$)/, `/${nextLang}`)
+      : `/${nextLang}${location.pathname.startsWith("/") ? location.pathname : `/${location.pathname}`}`;
+
+    navigate(`${nextPath}${location.search}${location.hash}`);
+    i18n.changeLanguage(nextLang);
+    onClose();
   };
 
   return (
@@ -201,13 +213,13 @@ export default function MobileMenu({
                     className="z-[9999] rounded-lg border border-gray-200 bg-white shadow-lg min-w-[120px] overflow-hidden"
                   >
                     <DropdownMenuItem
-                      onClick={() => i18n.changeLanguage("ar")}
+                      onClick={() => handleLanguageChange("ar")}
                       className="px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
                     >
                       {t("Arabic")}
                     </DropdownMenuItem>
                     <DropdownMenuItem
-                      onClick={() => i18n.changeLanguage("en")}
+                      onClick={() => handleLanguageChange("en")}
                       className="px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
                     >
                       {t("English")}

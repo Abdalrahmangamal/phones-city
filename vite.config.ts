@@ -29,12 +29,19 @@ export default defineConfig(({ mode }) => ({
           'vendor-react': ['react', 'react-dom', 'react-router-dom'],
           // UI Libraries
           'vendor-swiper': ['swiper'],
+          'vendor-mui': ['@mui/material', '@emotion/react', '@emotion/styled'],
           // i18n
           'vendor-i18n': ['react-i18next', 'i18next'],
           // State management
           'vendor-zustand': ['zustand'],
           // Toast notifications
           'vendor-toast': ['react-toastify'],
+          // Utilities / feature-specific libs
+          'vendor-axios': ['axios'],
+          'vendor-forms': ['react-hook-form', '@hookform/resolvers', 'zod'],
+          'vendor-botpress': ['@botpress/webchat', '@botpress/chat'],
+          'vendor-framer': ['framer-motion'],
+          'vendor-html2pdf': ['html2pdf.js'],
         },
       },
     },

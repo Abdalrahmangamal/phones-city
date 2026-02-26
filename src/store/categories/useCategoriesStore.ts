@@ -24,7 +24,7 @@ interface CategoriesState {
   fetchtradmarks: (lang?: string) => Promise<void>;
 }
 const baseUrl = import.meta.env.VITE_BASE_URL;
-const CATEGORIES_CACHE_TTL_MS = 60_000;
+const CATEGORIES_CACHE_TTL_MS = 300_000;
 const categoriesCache = new Map<string, { data: Category[]; fetchedAt: number }>();
 const categoriesInFlight = new Map<string, Promise<void>>();
 

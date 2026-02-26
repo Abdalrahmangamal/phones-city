@@ -2,26 +2,19 @@
   "status": "commited",
   "type": "frontend",
   "scope": "codebase",
-  "localEndpoint": "http://localhost:5173",
+  "localEndpoint": "http://localhost:5175",
   "loginUser": "Garett36@gmail.com",
   "loginPassword": "12345678",
   "executionArgs": {
     "projectName": "phones-city-main",
     "projectPath": "c:\\Users\\c.city\\OneDrive\\Desktop\\phones-city-main",
-    "testIds": [
-      "TC001",
-      "TC003",
-      "TC009",
-      "TC010",
-      "TC013",
-      "TC014",
-      "TC024",
-      "TC027"
-    ],
-    "additionalInstruction": "Focus on testing authentication, product browsing, cart operations, and checkout flows. Provide detailed error analysis and code quality suggestions.",
+    "testIds": [],
+    "additionalInstruction": "Test all pages and logic comprehensively. Focus on navigation, form submissions, cart operations, language switching, product browsing, checkout flow, and authentication. Report all bugs found.",
+    "serverMode": "development",
     "envs": {
       "API_KEY": "sk-user-VEMb8LS-SXX9z1CeIcPxvIc9LuDx2zjULQeW3rQ3My74cGa7zU7Wn0RkupljT0PVl-d5R7NNV-tLrXuz-3XSX-RX5AfqTowFIALRp5YyrGvdq2mgJahlkHdlcFtAeNXpbAw"
     }
   },
-  "proxy": "http://0d96d996-2e52-4efd-9b2c-a9d9b69547a2:YevQHEfLf8DTSiTbCgmaKnr4hip1yLwP@tun.testsprite.com:8080"
+  "serverPort": 60713,
+  "proxy": "http://dbc998af-b7c2-4572-a58b-bf064b5706ac:nTvlrjpG5jam0fgrsjmYPjCwDV7W5o85@tun.testsprite.com:8080"
 }

@@ -1,0 +1,413 @@
+version: "2"
+type: frontend
+tech_stack:
+  - TypeScript
+  - React 19
+  - Vite 7
+  - TailwindCSS 4
+  - Zustand (state management)
+  - React Router DOM 7
+  - Axios (HTTP client)
+  - Swiper (carousels)
+  - i18next (internationalization)
+  - Framer Motion (animations)
+  - React Hook Form + Zod (forms)
+  - MUI Material (UI components)
+  - Botpress Webchat (chatbot)
+  - React Toastify (notifications)
+routes:
+  - path: /:lang
+    file: src/pages/Home.tsx
+    auth_required: false
+    description: Home page with hero slider, product categories, offers, bestsellers, testimonials
+  - path: /:lang/about
+    file: src/pages/about.tsx
+    auth_required: false
+    description: About us page
+  - path: /:lang/servces
+    file: src/pages/Servces.tsx
+    auth_required: false
+    description: Services page
+  - path: /:lang/contact
+    file: src/pages/Contact.tsx
+    auth_required: false
+    description: Contact us page
+  - path: /:lang/offers
+    file: src/pages/products/Offers.tsx
+    auth_required: false
+    description: All offers listing page with filters
+  - path: /:lang/SpecialOffersPage
+    file: src/pages/products/SpecialOffersPage.tsx
+    auth_required: false
+    description: Special offers page
+  - path: /:lang/search
+    file: src/pages/products/SearchResults.tsx
+    auth_required: false
+    description: Search results page
+  - path: /:lang/login
+    file: src/pages/auth/Login.tsx
+    auth_required: false
+    description: User login page with phone number
+  - path: /:lang/register
+    file: src/pages/auth/Register.tsx
+    auth_required: false
+    description: User registration page
+  - path: /:lang/singleproduct/:id
+    file: src/pages/products/Singleproduct.tsx
+    auth_required: false
+    description: Single product details page
+  - path: /:lang/categorySingle/:id/:productmain?
+    file: src/pages/products/CategorySingle.tsx
+    auth_required: false
+    description: Category products listing page
+  - path: /:lang/trademarks/:id
+    file: src/pages/products/Trademarks.tsx
+    auth_required: false
+    description: Brand/trademark products page
+  - path: /:lang/BestSellerPage
+    file: src/pages/BestSellerPage.tsx
+    auth_required: false
+    description: Best seller products page
+  - path: /:lang/blog
+    file: src/pages/Blog.tsx
+    auth_required: false
+    description: Blog listing page
+  - path: /:lang/blog/:slug
+    file: src/pages/SingleBlog.tsx
+    auth_required: false
+    description: Single blog post page
+  - path: /:lang/checkout
+    file: src/pages/checkout/Checkout.tsx
+    auth_required: false
+    description: Checkout page with address, payment
+  - path: /:lang/profile
+    file: src/pages/profile/Profile.tsx
+    auth_required: true
+    description: User profile page
+  - path: /:lang/wallet
+    file: src/pages/profile/Wallet.tsx
+    auth_required: true
+    description: User wallet page
+  - path: /:lang/notifications
+    file: src/pages/profile/nothification/Notifications.tsx
+    auth_required: true
+    description: User notifications page
+  - path: /:lang/myorder
+    file: src/pages/profile/Myorder.tsx
+    auth_required: false
+    description: My orders page
+  - path: /:lang/bills
+    file: src/pages/profile/Bills.tsx
+    auth_required: false
+    description: Bills/invoices listing page
+  - path: /:lang/singlebills/:id
+    file: src/pages/Singlebills.tsx
+    auth_required: false
+    description: Single bill details page
+  - path: /:lang/address
+    file: src/pages/profile/Address.tsx
+    auth_required: false
+    description: User addresses page
+  - path: /:lang/singleaddress
+    file: src/pages/Singleaddress.tsx
+    auth_required: false
+    description: Add/edit address page
+  - path: /:lang/discounts
+    file: src/pages/profile/Discounts.tsx
+    auth_required: false
+    description: User discount coupons page
+  - path: /:lang/favourite
+    file: src/pages/profile/Favourite.tsx
+    auth_required: false
+    description: User favourites/wishlist page
+  - path: /:lang/return-policy
+    file: src/pages/customerCare/ReturnPolicy.tsx
+    auth_required: false
+    description: Return policy page
+  - path: /:lang/warranty-policy
+    file: src/pages/customerCare/WarrantyPolicy.tsx
+    auth_required: false
+    description: Warranty policy page
+  - path: /:lang/terms-and-conditions
+    file: src/pages/customerCare/TermsAndConditions.tsx
+    auth_required: false
+    description: Terms and conditions page
+  - path: /:lang/about-quara
+    file: src/pages/customerCare/AboutQuara.tsx
+    auth_required: false
+    description: About Quara installment page
+  - path: /:lang/about-mora
+    file: src/pages/customerCare/AboutMora.tsx
+    auth_required: false
+    description: About Mora installment page
+features:
+  - name: Home Page
+    description: Main landing page with hero slider, banners, categories, offers sections, bestsellers, new arrivals, testimonials, and partner logos
+    files:
+      - src/pages/Home.tsx
+      - src/components/public/HeroSection.tsx
+      - src/components/public/BannerSection.tsx
+      - src/components/home/ProductCategoriesSection.tsx
+      - src/components/home/SpecialOffersSection.tsx
+      - src/components/home/LatestOffers.tsx
+      - src/components/home/TestimonialsSection.tsx
+    entry_route: /ar
+    user_interactions:
+      - View hero slider with auto-play
+      - Browse product categories
+      - View special offers, bestsellers, new arrivals
+      - See testimonials carousel
+      - Navigate to product pages
+    api_calls:
+      - method: GET
+        endpoint: /api/v1/home-page
+      - method: GET
+        endpoint: /api/v1/sliders
+      - method: GET
+        endpoint: /api/v1/products?has_offer=1
+      - method: GET
+        endpoint: /api/v1/products?best_seller=true
+      - method: GET
+        endpoint: /api/v1/products/new-arrivals
+      - method: GET
+        endpoint: /api/v1/certificates
+      - method: GET
+        endpoint: /api/v1/store-features
+      - method: GET
+        endpoint: /api/v1/offers/home
+      - method: GET
+        endpoint: /api/v1/customer-opinions
+    auth_required: false
+  - name: User Login
+    description: Login with phone number, sends OTP verification code
+    files:
+      - src/pages/auth/Login.tsx
+      - src/store/useauthstore.ts
+    entry_route: /ar/login
+    user_interactions:
+      - Enter phone number
+      - Click login button
+      - Enter OTP verification code
+      - See error on invalid credentials
+    api_calls:
+      - method: POST
+        endpoint: /api/v1/auth/login
+      - method: POST
+        endpoint: /api/v1/auth/verify-code
+    auth_required: false
+  - name: User Registration
+    description: Register new user with name, phone, and other details
+    files:
+      - src/pages/auth/Register.tsx
+      - src/store/useauthstore.ts
+    entry_route: /ar/register
+    user_interactions:
+      - Fill in name, phone, and other registration fields
+      - Click register button
+      - Verify with OTP code
+    api_calls:
+      - method: POST
+        endpoint: /api/v1/auth/register
+      - method: POST
+        endpoint: /api/v1/auth/verify-code
+    auth_required: false
+  - name: Product Browsing
+    description: Browse products by category, brand, search, or offers
+    files:
+      - src/pages/products/Singleproduct.tsx
+      - src/pages/products/CategorySingle.tsx
+      - src/pages/products/Trademarks.tsx
+      - src/pages/products/Offers.tsx
+      - src/pages/products/SearchResults.tsx
+      - src/store/productsStore.ts
+      - src/components/public/ProductCard.tsx
+    entry_route: /ar/offers
+    user_interactions:
+      - Browse product listings
+      - Filter by category, price range, brand
+      - Search for products
+      - View product details
+      - Add to cart
+      - Add to favorites
+    api_calls:
+      - method: GET
+        endpoint: /api/v1/products
+      - method: GET
+        endpoint: /api/v1/products/:id
+    auth_required: false
+  - name: Shopping Cart
+    description: Add/remove products, update quantities
+    files:
+      - src/store/cartStore/cartStore.tsx
+      - src/store/cart.ts
+    entry_route: /ar
+    user_interactions:
+      - Add product to cart
+      - Update product quantity
+      - Remove product from cart
+      - View cart summary
+    api_calls:
+      - method: POST
+        endpoint: /api/v1/cart
+      - method: PUT
+        endpoint: /api/v1/cart/:id
+      - method: DELETE
+        endpoint: /api/v1/cart/:id
+    auth_required: false
+  - name: Checkout
+    description: Complete purchase with address selection, payment method
+    files:
+      - src/pages/checkout/Checkout.tsx
+      - src/components/checkout
+      - src/store/chekoutstore.ts
+    entry_route: /ar/checkout
+    user_interactions:
+      - Select delivery address
+      - Choose payment method
+      - Apply coupon code
+      - Review order summary
+      - Place order
+    api_calls:
+      - method: POST
+        endpoint: /api/v1/orders
+    auth_required: true
+  - name: User Profile
+    description: View and edit user profile information
+    files:
+      - src/pages/profile/Profile.tsx
+      - src/store/profile/profileStore.ts
+    entry_route: /ar/profile
+    user_interactions:
+      - View profile info
+      - Edit name, email, phone
+      - Save changes
+    api_calls:
+      - method: GET
+        endpoint: /api/v1/profile
+      - method: PUT
+        endpoint: /api/v1/profile
+    auth_required: true
+  - name: Orders Management
+    description: View order history and order details
+    files:
+      - src/pages/profile/Myorder.tsx
+      - src/store/profile/ordersStore.ts
+    entry_route: /ar/myorder
+    user_interactions:
+      - View list of orders
+      - View order details
+      - Cancel order
+    api_calls:
+      - method: GET
+        endpoint: /api/v1/orders
+      - method: PUT
+        endpoint: /api/v1/orders/:id/cancel
+    auth_required: true
+  - name: Favorites/Wishlist
+    description: Manage favorite products
+    files:
+      - src/pages/profile/Favourite.tsx
+      - src/store/favoritesStore.ts
+    entry_route: /ar/favourite
+    user_interactions:
+      - View favorite products
+      - Remove from favorites
+      - Toggle favorite status on product
+    api_calls:
+      - method: GET
+        endpoint: /api/v1/favorites
+      - method: POST
+        endpoint: /api/v1/favorites
+      - method: DELETE
+        endpoint: /api/v1/favorites/:id
+      - method: POST
+        endpoint: /api/v1/favorites/toggle
+    auth_required: true
+  - name: Address Management
+    description: Manage delivery addresses
+    files:
+      - src/pages/profile/Address.tsx
+      - src/pages/Singleaddress.tsx
+      - src/store/profile/addressStore.ts
+    entry_route: /ar/address
+    user_interactions:
+      - View saved addresses
+      - Add new address
+      - Edit existing address
+      - Delete address
+    api_calls:
+      - method: GET
+        endpoint: /api/v1/locations
+      - method: POST
+        endpoint: /api/v1/locations
+      - method: PUT
+        endpoint: /api/v1/locations/:id
+      - method: DELETE
+        endpoint: /api/v1/locations/:id
+      - method: GET
+        endpoint: /api/v1/cities
+    auth_required: true
+  - name: Notifications
+    description: View and manage notifications
+    files:
+      - src/pages/profile/nothification/Notifications.tsx
+      - src/store/notifications/notificationStore.ts
+    entry_route: /ar/notifications
+    user_interactions:
+      - View notifications list
+      - Mark notification as read
+      - Mark all as read
+      - Delete notification
+      - Clear all notifications
+    api_calls:
+      - method: GET
+        endpoint: /api/v1/notifications
+      - method: POST
+        endpoint: /api/v1/notifications/:id/read
+      - method: POST
+        endpoint: /api/v1/notifications/read-all
+      - method: DELETE
+        endpoint: /api/v1/notifications/:id
+      - method: DELETE
+        endpoint: /api/v1/notifications/clear-all
+    auth_required: true
+  - name: Language Switching
+    description: Switch between Arabic and English with RTL/LTR support
+    files:
+      - src/i18n/index.ts
+      - src/hooks/useLangSync.ts
+      - src/store/settings.ts
+      - src/components/layout/DirectionProvider.tsx
+    entry_route: /ar
+    user_interactions:
+      - Click language toggle in header
+      - URL changes between /ar/ and /en/
+    api_calls: []
+    auth_required: false
+  - name: Blog
+    description: View blog posts
+    files:
+      - src/pages/Blog.tsx
+      - src/pages/SingleBlog.tsx
+      - src/store/blogsStore.ts
+    entry_route: /ar/blog
+    user_interactions:
+      - Browse blog listings
+      - Read single blog post
+    api_calls:
+      - method: GET
+        endpoint: /api/v1/blogs
+    auth_required: false
+known_limitations:
+  - issue: homepageStore uses raw axios instead of shared axiosClient
+    location: src/store/home/homepageStore.ts
+    impact: Authentication token may not be sent consistently
+  - issue: Some stores use direct axios/fetch instead of axiosClient
+    location: src/store/servicesStore.ts, src/store/notifications/notificationStore.ts
+    impact: Inconsistent error handling and auth header management
+  - issue: Resize listener in SpecialOffersSection has no debounce
+    location: src/components/home/SpecialOffersSection.tsx
+    impact: Performance degradation during window resize
+  - issue: Google Fonts loaded twice (index.html and index.css)
+    location: index.html line 49, src/index.css line 2
+    impact: Extra HTTP request and bandwidth usage

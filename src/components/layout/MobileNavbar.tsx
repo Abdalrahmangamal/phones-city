@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { ShoppingCart, Globe, Menu, Search, Bell } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useLangSync } from "@/hooks/useLangSync";
 import { useTranslation } from "react-i18next";
 import {
@@ -34,6 +34,8 @@ export default function MobileNavbar({
   const { lang } = useLangSync();
   const { i18n, t } = useTranslation();
   const [showLang, setShowLang] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
   const token = localStorage.getItem("token");
 
   // جلب بيانات السلة
@@ -59,6 +61,15 @@ export default function MobileNavbar({
   // 🔥 ضبط setShowLang عند فتح/إغلاق قائمة اللغة
   const handleLangTrigger = () => {
     setShowLang(!showLang);
+  };
+
+  const handleLanguageChange = (nextLang: "ar" | "en") => {
+    const nextPath = /^\/(ar|en)(?=\/|$)/.test(location.pathname)
+      ? location.pathname.replace(/^\/(ar|en)(?=\/|$)/, `/${nextLang}`)
+      : `/${nextLang}${location.pathname.startsWith("/") ? location.pathname : `/${location.pathname}`}`;
+
+    navigate(`${nextPath}${location.search}${location.hash}`);
+    i18n.changeLanguage(nextLang);
   };
 
   return (
@@ -109,10 +120,10 @@ export default function MobileNavbar({
               sideOffset={8}
               className="z-[9999] relative"
             >
-              <DropdownMenuItem onClick={() => i18n.changeLanguage("ar")}>
+              <DropdownMenuItem onClick={() => handleLanguageChange("ar")}>
                 العربية
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => i18n.changeLanguage("en")}>
+              <DropdownMenuItem onClick={() => handleLanguageChange("en")}>
                 English
               </DropdownMenuItem>
             </DropdownMenuContent>

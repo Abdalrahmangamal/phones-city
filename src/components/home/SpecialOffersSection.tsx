@@ -54,11 +54,25 @@ const SpecialOffersSection: React.FC<SpecialOffersSectionProps> = ({
 
   useEffect(() => {
     setShouldAllowSlide(calculateShouldAllowSlide());
+    let resizeTimer: ReturnType<typeof setTimeout> | null = null;
+
     const handleResize = () => {
-      setShouldAllowSlide(calculateShouldAllowSlide());
+      if (resizeTimer) {
+        clearTimeout(resizeTimer);
+      }
+
+      resizeTimer = setTimeout(() => {
+        setShouldAllowSlide(calculateShouldAllowSlide());
+      }, 200);
     };
+
     window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    return () => {
+      if (resizeTimer) {
+        clearTimeout(resizeTimer);
+      }
+      window.removeEventListener('resize', handleResize);
+    };
   }, [products?.length, lang]);
 
   // حالة التحميل

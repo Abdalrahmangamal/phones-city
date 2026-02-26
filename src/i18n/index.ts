@@ -13,8 +13,14 @@ i18n
     resources: { ar: { translation: ar }, en: { translation: en } },
     fallbackLng: "ar",
     supportedLngs: ["ar", "en"],
+    load: "languageOnly",
     interpolation: { escapeValue: false },
-    detection: { order: ["localStorage", "navigator", "htmlTag"], caches: ["localStorage"] },
+    detection: {
+      // The URL (/ar or /en) should win on refresh/navigation.
+      order: ["path", "localStorage", "htmlTag", "navigator"],
+      lookupFromPathIndex: 0,
+      caches: ["localStorage"],
+    },
   });
 
 export default i18n;
