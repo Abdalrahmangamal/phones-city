@@ -25,18 +25,18 @@ export default function Offerherosection({
   return (
     <div className={`lg:px-[90px] px-2 ${padding} md:pt-0 pt-[50px] `}>
       <div
-        className={`w-full max-w-[1264px] mt-[50px] ${style} h-[230px]  md:h-[351px] rounded-lg mb-16 relative overflow-hidden`}
+        className={`w-full max-w-[1264px] mt-[50px] ${style} h-[230px]  md:h-[351px] rounded-lg mb-16 relative isolate overflow-hidden`}
       >
         {/* Background Image */}
         <img
           src={herooffer}
           alt="كل ما تحتاجه في مدينه الهواتف"
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover pointer-events-none select-none"
         />
         {/* Gradient Overlay */}
-        <div className={`absolute inset-0 bg-gradient-to-r  mdvia-[#211c4d33] ${lang=="ar"? "from-transparent via-[#211c4d57] to-[#211C4D]":"bg-gradient-to-l from-[#211C4D] via-[#211c4d57] mdvia-[#211c4d33] to-transparent"}`}></div>
+        <div className={`absolute inset-0 pointer-events-none bg-gradient-to-r  mdvia-[#211c4d33] ${lang=="ar"? "from-transparent via-[#211c4d57] to-[#211C4D]":"bg-gradient-to-l from-[#211C4D] via-[#211c4d57] mdvia-[#211c4d33] to-transparent"}`}></div>
         {/* Text Content - Responsive for mobile, without align-items and with correct padding */}
-        <div className="absolute inset-0 flex flex-col justify-start text-start  p-5 md:pr-[57px]">
+        <div className="absolute inset-0 z-10 flex flex-col justify-start text-start  p-5 md:pr-[57px]">
           <h1
             className={`text-white ${textstyle} font-roboto font-bold md:max-w-[30%] text-[24px] md:text-5xl leading-[48px] md:leading-[68px] mb-2 md:mb-4`}
           >

@@ -1,8 +1,14 @@
-import React, { useState, useRef, useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import Dialog from "@mui/material/Dialog";
 import { Eye, EyeOff } from "lucide-react";
 import { MuiOtpInput } from "mui-one-time-password-input";
 import { useAuthStore } from "@/store/useauthstore";
+import {
+  authDialogSlotProps,
+  authDialogSx,
+  authOtpSx,
+  getAuthDialogPaperSx,
+} from "@/components/auth/authDialogStyles";
 
 interface Props {
   isOpen: boolean;
@@ -25,31 +31,8 @@ export default function ResetPasswordWithCodeModal({
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
   const OTP_LENGTH = 6;
-  const otpContainerRef = useRef<HTMLDivElement>(null);
 
   const normalizeOtpValue = useCallback((value: string) => value.replace(/\D/g, "").slice(0, OTP_LENGTH), []);
-  const focusFirstOtpInput = useCallback(() => {
-    const first = otpContainerRef.current?.querySelector("input") as HTMLInputElement | null;
-    if (first) {
-      requestAnimationFrame(() => {
-        first.focus();
-        first.setSelectionRange(first.value.length, first.value.length);
-      });
-    }
-  }, []);
-
-  /** عند النقر فقط: إرجاع التركيز للمربع الأول — لا نعطّل انتقال التركيز أثناء الكتابة */
-  const handleOtpContainerMouseDown = useCallback(
-    (e: React.MouseEvent) => {
-      const target = e.target as HTMLElement;
-      if (target.closest?.(".MuiOtpInput-TextField") || target.tagName === "INPUT") {
-        e.preventDefault();
-        e.stopPropagation();
-        focusFirstOtpInput();
-      }
-    },
-    [focusFirstOtpInput]
-  );
 
   const { resetPassword, loading } = useAuthStore();
 
@@ -98,11 +81,15 @@ export default function ResetPasswordWithCodeModal({
     <Dialog
       open={isOpen}
       onClose={onClose}
+      fullWidth
+      maxWidth={false}
+      sx={authDialogSx}
+      slotProps={authDialogSlotProps}
       PaperProps={{
-        sx: { width: "600px", maxWidth: "90%", borderRadius: "16px" },
+        sx: getAuthDialogPaperSx(600),
       }}
     >
-      <div className="p-8 flex flex-col items-center gap-6">
+      <div className="p-4 sm:p-8 flex flex-col items-center gap-4 sm:gap-6">
         {success ? (
           <div className="text-center py-12">
             <div className="text-6xl text-green-500 mb-4">✓</div>
@@ -113,28 +100,26 @@ export default function ResetPasswordWithCodeModal({
           </div>
         ) : (
           <>
-            <h2 className="text-3xl font-bold text-[#211C4D] text-center">
+            <h2 className="text-2xl sm:text-3xl font-bold text-[#211C4D] text-center">
               إعادة تعيين كلمة المرور
             </h2>
-            <p className="text-center text-[#211C4DB2] mb-6">
+            <p className="text-center text-sm sm:text-base text-[#211C4DB2] mb-2 sm:mb-4 break-all">
               أدخل الكود المرسل إلى {email} ثم كلمة المرور الجديدة
             </p>
 
             {/* حقل الكود */}
             <div className="w-full max-w-md">
-              <label className="block mb-2 text-lg font-medium text-[#211C4DB2]">
+              <label className="block mb-2 text-base sm:text-lg font-medium text-[#211C4DB2]">
                 كود التحقق
               </label>
-              <div
-                ref={otpContainerRef}
-                onMouseDownCapture={handleOtpContainerMouseDown}
-              >
+              <div className="overflow-x-auto py-1" dir="ltr">
                 <MuiOtpInput
                   value={otp}
                   length={OTP_LENGTH}
                   onChange={(value) => setOtp(normalizeOtpValue(value))}
                   validateChar={(char) => /^\d$/.test(char)}
                   autoFocus
+                  sx={authOtpSx}
                 />
               </div>
             </div>
@@ -142,7 +127,7 @@ export default function ResetPasswordWithCodeModal({
             {/* كلمة المرور الجديدة */}
             <div className="w-full max-w-md space-y-5 mt-4">
               <div>
-                <label className="block mb-2 text-lg font-medium text-[#211C4DB2]">
+                <label className="block mb-2 text-base sm:text-lg font-medium text-[#211C4DB2]">
                   كلمة المرور الجديدة
                 </label>
                 <div className="relative">
@@ -150,7 +135,7 @@ export default function ResetPasswordWithCodeModal({
                     type={showPassword ? "text" : "password"}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full p-3 border rounded-lg outline-none focus:ring-2 focus:ring-[#2AA0DC]"
+                    className="w-full p-3 h-12 border rounded-lg outline-none focus:ring-2 focus:ring-[#2AA0DC]"
                   />
                   <button
                     type="button"
@@ -163,7 +148,7 @@ export default function ResetPasswordWithCodeModal({
               </div>
 
               <div>
-                <label className="block mb-2 text-lg font-medium text-[#211C4DB2]">
+                <label className="block mb-2 text-base sm:text-lg font-medium text-[#211C4DB2]">
                   تأكيد كلمة المرور
                 </label>
                 <div className="relative">
@@ -171,7 +156,7 @@ export default function ResetPasswordWithCodeModal({
                     type={showConfirm ? "text" : "password"}
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
-                    className="w-full p-3 border rounded-lg outline-none focus:ring-2 focus:ring-[#2AA0DC]"
+                    className="w-full p-3 h-12 border rounded-lg outline-none focus:ring-2 focus:ring-[#2AA0DC]"
                   />
                   <button
                     type="button"
@@ -193,7 +178,7 @@ export default function ResetPasswordWithCodeModal({
             <button
               onClick={handleSubmit}
               disabled={loading || otp.length !== 6 || !password || !confirmPassword}
-              className="bg-[#2AA0DC] w-full max-w-md h-14 rounded-full text-white font-medium text-lg disabled:opacity-50 mt-6"
+              className="bg-[#2AA0DC] w-full max-w-md h-12 sm:h-14 rounded-full text-white font-medium text-base sm:text-lg disabled:opacity-50 mt-4 sm:mt-6"
             >
               {loading ? "جاري المعالجة..." : "تأكيد وتغيير كلمة المرور"}
             </button>

@@ -129,7 +129,7 @@ export default function Register() {
   ];
 
   return (
-    <div dir={isRTL ? "rtl" : "ltr"} className="relative">
+    <div dir={isRTL ? "rtl" : "ltr"} className="relative overflow-x-hidden">
       <VerifyCode
         isopen={openverifymodal}
         email={verifyEmail}
@@ -140,7 +140,7 @@ export default function Register() {
       />
       <img
         src={smalllogo}
-        className={`smalllogo absolute ${isRTL ? 'md:right-[60px] right-2' : 'md:left-[60px] left-2'} top-5 z-10 w-auto`}
+        className={`smalllogo absolute ${isRTL ? 'md:right-[60px] right-2' : 'md:left-[60px] left-2'} top-5 z-10 w-auto pointer-events-none select-none`}
         alt=""
       />
       <img
@@ -149,19 +149,19 @@ export default function Register() {
         className={`absolute ${isRTL ? 'left-0' : 'right-0 -scale-x-100'} z-0 pointer-events-none`}
       />
 
-      <div className="min-h-screen flex md:mt-0 mt-[60px] md:p-0 px-4 z-10 flex-col md:flex-row items-center justify-center gap-30 relative">
-        <div className={`bg-white scale-[0.9] rounded-[20px] md:w-[600px] w-full text-start pt-4 form-wrap`}>
-          <h2 className={`text-[32px] font-[600] mt-5 text-[#211C4D] mb-3 ${isRTL ? 'text-right' : 'text-left'} leading-[32px] tracking-[-0.52px]`}>
+      <div className="min-h-screen flex pt-20 md:pt-0 pb-10 md:pb-0 px-4 md:px-0 z-10 flex-col md:flex-row items-center justify-center gap-8 md:gap-14 relative isolate">
+        <div className={`bg-white rounded-[20px] md:w-[600px] w-full max-w-[600px] text-start pt-2 md:pt-4 form-wrap relative z-10`}>
+          <h2 className={`text-[26px] md:text-[32px] font-[600] mt-4 md:mt-5 text-[#211C4D] mb-3 ${isRTL ? 'text-right' : 'text-left'} leading-[32px] tracking-[-0.52px]`}>
             {t("auth.createNewAccount")}
           </h2>
 
           <form
             onSubmit={handleSubmit(onSubmit)}
-            className={`grid grid-cols-2 gap-4 pt-0 bg-white p-6 rounded-2xl ${isRTL ? 'text-right' : 'text-left'}`}
+            className={`grid grid-cols-1 md:grid-cols-2 gap-4 pt-0 bg-white p-4 md:p-6 rounded-2xl ${isRTL ? 'text-right' : 'text-left'}`}
           >
             {/* عرض أخطاء السيرفر */}
             {authError && (
-              <div className="col-span-2 mb-2 p-3 bg-red-50 border border-red-300 rounded-xl text-red-600 font-semibold text-sm">
+              <div className="col-span-1 md:col-span-2 mb-2 p-3 bg-red-50 border border-red-300 rounded-xl text-red-600 font-semibold text-sm">
                 {typeof authError === "string"
                   ? authError
                   : Object.values(authError).flat().join(", ")}
@@ -172,16 +172,16 @@ export default function Register() {
             {signupInputs.map((inputt) => (
               <div
                 key={inputt.name}
-                className={`relative ${inputt.name === "password_confirmation" ? "col-span-2" : ""
+                className={`relative ${inputt.name === "password_confirmation" ? "md:col-span-2" : ""
                   }`}
               >
-                <label className="block mb-2 text-[18px] font-semibold text-[#211C4DB2]">
+                <label className="block mb-2 text-base md:text-[18px] font-semibold text-[#211C4DB2]">
                   {t(`${inputt.title}`)}
                 </label>
                 <input
                   type={inputt.type}
                   placeholder={`${t("Enter")} ${t(`${inputt.title}`)}`}
-                  className={`w-full p-3 border rounded-xl h-[50px] transition-all ${inputt.error
+                  className={`w-full p-3 border rounded-xl h-12 md:h-[50px] transition-all ${inputt.error
                     ? "border-red-400 bg-red-50 focus:ring-red-300 focus:ring-2"
                     : "border-gray-300 focus:ring-blue-300 focus:ring-2"
                     }`}
@@ -190,7 +190,7 @@ export default function Register() {
                 {inputt.showtoggle && (
                   <span
                     onClick={inputt.function}
-                    className={`absolute ${isRTL ? 'left-3' : 'right-3'} top-[49px] cursor-pointer text-gray-500`}
+                    className={`absolute ${isRTL ? 'left-3' : 'right-3'} top-[43px] md:top-[49px] cursor-pointer text-gray-500`}
                   >
                     {inputt.icontoggle}
                   </span>
@@ -302,7 +302,7 @@ export default function Register() {
               type="submit"
               disabled={isSubmitting}
               className="
-    col-span-2 w-full h-[54px] bg-[#2AA0DC] rounded-[32px] text-[20px] font-bold text-white mt-2
+    col-span-1 md:col-span-2 w-full h-[52px] md:h-[54px] bg-[#2AA0DC] rounded-[32px] text-[16px] md:text-[20px] font-bold text-white mt-2
     transition-all duration-300 ease-out
     hover:bg-[#238ec4]
     hover:scale-[1.02]
@@ -315,9 +315,9 @@ export default function Register() {
             </button>
 
             {/* تسجيل عبر السوشيال */}
-            <div className="col-span-2 flex flex-col items-center gap-3 mt-4">
+            <div className="col-span-1 md:col-span-2 flex flex-col items-center gap-3 mt-4">
 
-              <p className="text-[18px] text-[#211C4D] mt-1">
+              <p className="text-[16px] md:text-[18px] text-[#211C4D] mt-1 text-center">
                 {t("auth.haveAccount")}{" "}
                 <Link to="/login" className="text-[#2AA0DC] hover:underline">
                   {t("auth.loginNow")}
@@ -327,10 +327,10 @@ export default function Register() {
           </form>
         </div>
 
-        <div className="flex items-center justify-center">
-          <img src={loginimage} className="scale-[0.9]" alt="" />
+        <div className="hidden md:flex items-center justify-center pointer-events-none select-none">
+          <img src={loginimage} className="max-w-[520px] scale-[0.9]" alt="" />
         </div>
-        <img src={bottompattern} className={`absolute bottom-0 ${isRTL ? 'right-0' : 'left-0 -scale-x-100'}`} alt="" />
+        <img src={bottompattern} className={`absolute bottom-0 ${isRTL ? 'right-0' : 'left-0 -scale-x-100'} pointer-events-none select-none z-0`} alt="" />
       </div>
     </div>
   );

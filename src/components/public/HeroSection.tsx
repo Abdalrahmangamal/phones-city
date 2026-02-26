@@ -78,19 +78,19 @@ const NewHeroSection: React.FC<HeroSectionProps> = ({ sliders, showButton = true
         className="mySwiper md:h-[400px]  h-[200px] rounded-[16px] mt-6"
       >
         {sliders.map((slide, index) => (
-          <SwiperSlide key={`${slide.title}-${index}`} className=" relative">
+          <SwiperSlide key={`${slide.title}-${index}`} className="relative isolate">
             {/* خلفية الصورة */}
             <div className="absolute inset-0 w-[99%] h-full">
               <img
                 src={slide.bg}
                 alt={`${slide.title} - Slide ${index + 1}`}
-                className="w-full h-full object-cover rounded-[16px]"
+                className="w-full h-full object-cover rounded-[16px] pointer-events-none select-none"
                 loading={index === 0 ? "eager" : "lazy"}
                 fetchPriority={index === 0 ? "high" : "auto"}
               />
 
               {/* Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-r from-[#211C4D0A] via-[#211C4D22] to-[#211C4D6B] rounded-[16px]"></div>
+              <div className="absolute inset-0 pointer-events-none bg-gradient-to-r from-[#211C4D0A] via-[#211C4D22] to-[#211C4D6B] rounded-[16px]"></div>
             </div>
 
             {/* المحتوى النصي والزر */}

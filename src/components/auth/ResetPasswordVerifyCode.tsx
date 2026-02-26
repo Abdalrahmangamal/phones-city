@@ -1,8 +1,14 @@
 // ResetPasswordVerifyCode.tsx
-import React, { useEffect, useState, useRef, useCallback } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import Dialog from "@mui/material/Dialog";
 import { MuiOtpInput } from "mui-one-time-password-input";
 import { useAuthStore } from "@/store/useauthstore";
+import {
+  authDialogSlotProps,
+  authDialogSx,
+  authOtpSx,
+  getAuthDialogPaperSx,
+} from "@/components/auth/authDialogStyles";
 
 interface ResetVerifyProps {
   isopen: boolean;
@@ -24,31 +30,8 @@ export default function ResetPasswordVerifyCode({
   const [resendTimer, setResendTimer] = useState(0);
   const [canResend, setCanResend] = useState(false);
   const OTP_LENGTH = 6;
-  const otpContainerRef = useRef<HTMLDivElement>(null);
 
   const normalizeOtpValue = useCallback((value: string) => value.replace(/\D/g, "").slice(0, OTP_LENGTH), []);
-  const focusFirstOtpInput = useCallback(() => {
-    const first = otpContainerRef.current?.querySelector("input") as HTMLInputElement | null;
-    if (first) {
-      requestAnimationFrame(() => {
-        first.focus();
-        first.setSelectionRange(first.value.length, first.value.length);
-      });
-    }
-  }, []);
-
-  /** عند النقر فقط: إرجاع التركيز للمربع الأول — لا نعطّل انتقال التركيز أثناء الكتابة */
-  const handleOtpContainerMouseDown = useCallback(
-    (e: React.MouseEvent) => {
-      const target = e.target as HTMLElement;
-      if (target.closest?.(".MuiOtpInput-TextField") || target.tagName === "INPUT") {
-        e.preventDefault();
-        e.stopPropagation();
-        focusFirstOtpInput();
-      }
-    },
-    [focusFirstOtpInput]
-  );
 
   const { sendVerifyCode, loading, error } = useAuthStore();
 
@@ -142,24 +125,26 @@ export default function ResetPasswordVerifyCode({
     <Dialog
       open={open}
       onClose={onClose}
+      fullWidth
+      maxWidth={false}
+      sx={authDialogSx}
+      slotProps={authDialogSlotProps}
       PaperProps={{
-        sx: { width: "580px", maxWidth: "90%", borderRadius: "16px" }
+        sx: getAuthDialogPaperSx(580)
       }}
     >
-      <div className="p-8 flex flex-col items-center gap-6">
+      <div className="p-4 sm:p-8 flex flex-col items-center gap-4 sm:gap-6">
         {!showSuccess ? (
           <>
-            <h2 className="text-3xl font-bold text-center text-[#211C4D]">
+            <h2 className="text-2xl sm:text-3xl font-bold text-center text-[#211C4D]">
               أدخل رمز التحقق
             </h2>
-            <p className="text-center text-[#211C4DB2]">
+            <p className="text-center text-sm sm:text-base text-[#211C4DB2] break-all">
               تم إرسال رمز من 6 أرقام إلى {email}
             </p>
 
             <div
-              ref={otpContainerRef}
-              className="flex justify-center w-full"
-              onMouseDownCapture={handleOtpContainerMouseDown}
+              className="flex justify-center w-full overflow-x-auto py-1"
             >
               <MuiOtpInput
                 value={otp}
@@ -170,16 +155,7 @@ export default function ResetPasswordVerifyCode({
                 }}
                 validateChar={(char) => /^\d$/.test(char)}
                 autoFocus
-                sx={{
-                  gap: "10px",
-                  "& .MuiOtpInput-TextField": {
-                    "& input": {
-                      fontSize: "24px",
-                      width: "50px",
-                      height: "60px",
-                    },
-                  },
-                }}
+                sx={authOtpSx}
               />
             </div>
 
@@ -192,13 +168,13 @@ export default function ResetPasswordVerifyCode({
             <button
               onClick={handleSubmit}
               disabled={loading || !/^\d{6}$/.test(otp)}
-              className="bg-[#2AA0DC] w-[340px] h-[52px] rounded-full text-white disabled:opacity-60 hover:bg-[#1e8ec9] transition-colors"
+              className="bg-[#2AA0DC] w-full sm:w-[340px] h-[52px] rounded-full text-white disabled:opacity-60 hover:bg-[#1e8ec9] transition-colors"
             >
               {loading ? "جاري التحقق..." : "تأكيد"}
             </button>
 
-            <div className="text-center mt-4">
-              <p className="text-gray-600">
+            <div className="text-center mt-2 sm:mt-4">
+              <p className="text-gray-600 text-sm sm:text-base leading-6">
                 لم تستلم الكود؟{" "}
                 <button
                   onClick={handleResendCode}

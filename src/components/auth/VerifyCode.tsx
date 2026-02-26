@@ -1,9 +1,15 @@
-import React, { useEffect, useState, useRef, useCallback } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import { MuiOtpInput } from "mui-one-time-password-input";
 import { useAuthStore } from "@/store/useauthstore";
 import { useNavigate } from "react-router-dom";
+import {
+  authDialogSlotProps,
+  authDialogSx,
+  authOtpSx,
+  getAuthDialogPaperSx,
+} from "@/components/auth/authDialogStyles";
 
 interface VerifyProps {
   isopen: boolean;
@@ -23,31 +29,8 @@ const VerifyCode: React.FC<VerifyProps> = ({
   const [showSuccess, setShowSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const OTP_LENGTH = 6;
-  const otpContainerRef = useRef<HTMLDivElement>(null);
 
   const normalizeOtpValue = useCallback((value: string) => value.replace(/\D/g, "").slice(0, OTP_LENGTH), []);
-  const focusFirstOtpInput = useCallback(() => {
-    const first = otpContainerRef.current?.querySelector("input") as HTMLInputElement | null;
-    if (first) {
-      requestAnimationFrame(() => {
-        first.focus();
-        first.setSelectionRange(first.value.length, first.value.length);
-      });
-    }
-  }, []);
-
-  /** عند النقر فقط: إرجاع التركيز للمربع الأول — لا نعطّل انتقال التركيز أثناء الكتابة */
-  const handleOtpContainerMouseDown = useCallback(
-    (e: React.MouseEvent) => {
-      const target = e.target as HTMLElement;
-      if (target.closest?.(".MuiOtpInput-TextField") || target.tagName === "INPUT") {
-        e.preventDefault();
-        e.stopPropagation();
-        focusFirstOtpInput();
-      }
-    },
-    [focusFirstOtpInput]
-  );
 
   const { sendVerifyCode, loading, error } = useAuthStore();
   const navigate = useNavigate();
@@ -124,27 +107,32 @@ const VerifyCode: React.FC<VerifyProps> = ({
     <Dialog
       open={open}
       onClose={onClose}
+      fullWidth
+      maxWidth={false}
+      sx={authDialogSx}
+      slotProps={authDialogSlotProps}
       PaperProps={{
-        sx: {
-          width: "600px",
-          height: "400px",
-          borderRadius: "16px",
-        },
+        sx: [
+          getAuthDialogPaperSx(600),
+          {
+            minHeight: { xs: "auto", sm: "400px" },
+          },
+        ],
       }}
     >
-      <div className="w-full h-full flex flex-col items-center justify-around px-6">
+      <div className="w-full h-full flex flex-col items-center justify-around gap-4 sm:gap-6 px-4 sm:px-6 py-4 sm:py-6">
         <DialogTitle>
           {!showSuccess ? (
             <>
-              <p className="text-center text-[32px] font-[600] text-[#211C4D]">
+              <p className="text-center text-2xl sm:text-[32px] font-[600] text-[#211C4D]">
                 أدخل رمز التحقق
               </p>
-              <p className="text-center text-[16px] text-[#211C4DB2]">
+              <p className="text-center text-sm sm:text-[16px] text-[#211C4DB2] leading-6">
                 تم إرسال رمز من 6 أرقام إلى بريدك الإلكتروني
               </p>
             </>
           ) : (
-            <p className="text-center text-[32px] font-[600] text-[#27ae60]">
+            <p className="text-center text-2xl sm:text-[32px] font-[600] text-[#27ae60]">
               تم التحقق بنجاح 🎉
             </p>
           )}
@@ -153,10 +141,8 @@ const VerifyCode: React.FC<VerifyProps> = ({
         {!showSuccess ? (
           <>
             <div
-              ref={otpContainerRef}
               dir="ltr"
-              className="flex justify-center w-full"
-              onMouseDownCapture={handleOtpContainerMouseDown}
+              className="flex justify-center w-full overflow-x-auto py-1"
             >
               <MuiOtpInput
                 value={otp}
@@ -166,6 +152,8 @@ const VerifyCode: React.FC<VerifyProps> = ({
                   setErrorMessage("");
                 }}
                 validateChar={(char) => /^\d$/.test(char)}
+                autoFocus
+                sx={authOtpSx}
               />
             </div>
 
@@ -180,7 +168,7 @@ const VerifyCode: React.FC<VerifyProps> = ({
             <button
               onClick={handleSubmit}
               disabled={loading || !/^\d{6}$/.test(otp)}
-              className="bg-[#2AA0DC] w-[344px] h-[52px] rounded-[32px] text-white text-[22px] disabled:opacity-60 disabled:cursor-not-allowed transition-all"
+              className="bg-[#2AA0DC] w-full sm:w-[344px] h-[52px] rounded-[32px] text-white text-lg sm:text-[22px] disabled:opacity-60 disabled:cursor-not-allowed transition-all"
             >
               {loading ? "جاري التحقق..." : "استمر"}
             </button>

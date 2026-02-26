@@ -27,23 +27,23 @@ export default function Offerbannersingle() {
 
   return (
     <div className="lg:px-[90px] px-2 md:pt-0 pt-[50px]">
-      <div className="relative w-full h-[350px] rounded-[16px] my-18 overflow-hidden flex items-center justify-end">
+      <div className="relative isolate w-full h-[350px] rounded-[16px] my-18 overflow-hidden flex items-center justify-end">
         {/* الخلفية - استخدام الصورة من الداشبورد */}
         {bannerImage && (
           <img
             src={bannerImage}
             alt="Banner"
-            className="absolute inset-0 w-full h-full object-fill"
+            className="absolute inset-0 w-full h-full object-fill pointer-events-none select-none"
             loading="lazy"
           />
         )}
 
         {/* التدرج اللوني */}
-        <div className="w-full h-full top-0 right-0 absolute bg-[linear-gradient(90deg,rgba(33,28,77,0.28)_0%,rgba(33,28,77,0.2156)_30.77%,rgba(33,28,77,0.252)_50.48%,rgba(33,28,77,0)_94.71%)]"></div>
+        <div className="w-full h-full top-0 right-0 absolute pointer-events-none bg-[linear-gradient(90deg,rgba(33,28,77,0.28)_0%,rgba(33,28,77,0.2156)_30.77%,rgba(33,28,77,0.252)_50.48%,rgba(33,28,77,0)_94.71%)]"></div>
 
         {/* الدائرة مع blur */}
         <div
-          className="absolute end-[-850px] top-0 rounded-l-[80px] rounded-r-[80px] bg-[#211C4D5C] w-[891px] h-[684px]"
+          className="absolute end-[-850px] top-0 rounded-l-[80px] rounded-r-[80px] bg-[#211C4D5C] w-[891px] h-[684px] pointer-events-none"
           style={{
             backdropFilter: "blur(15px)",
             clipPath: "url(#bgblur_clip)",

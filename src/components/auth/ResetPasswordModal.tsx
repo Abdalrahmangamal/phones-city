@@ -4,6 +4,11 @@ import DialogTitle from "@mui/material/DialogTitle";
 import { Eye, EyeOff } from "lucide-react";
 import { useAuthStore } from "@/store/useauthstore";
 import Loader from "@/components/Loader";
+import {
+  authDialogSlotProps,
+  authDialogSx,
+  getAuthDialogPaperSx,
+} from "@/components/auth/authDialogStyles";
 
 interface ResetPasswordProps {
   isopen: boolean;
@@ -98,21 +103,25 @@ export default function ResetPasswordModal({
       <Dialog
         open={open && !loading}
         onClose={handleClose}
+        fullWidth
+        maxWidth={false}
+        sx={authDialogSx}
+        slotProps={authDialogSlotProps}
         PaperProps={{
-          sx: {
-            width: "600px",
-            maxWidth: "90%",
-            height: "480px",
-            borderRadius: "16px",
-          },
+          sx: [
+            getAuthDialogPaperSx(600),
+            {
+              minHeight: { xs: "auto", sm: "480px" },
+            },
+          ],
         }}
       >
-        <div className="w-full h-full flex items-center flex-col justify-around p-6">
+        <div className="w-full h-full flex items-center flex-col justify-around gap-4 sm:gap-6 p-4 sm:p-6">
           <DialogTitle className="w-full">
-            <p className="text-[#211C4D] text-center font-[600] text-[32px]">
+            <p className="text-[#211C4D] text-center font-[600] text-2xl sm:text-[32px]">
               إعادة تعيين كلمة المرور
             </p>
-            <p className="text-[#211C4DB2] text-center text-[16px]">
+            <p className="text-[#211C4DB2] text-center text-sm sm:text-[16px]">
               أدخل كلمة المرور الجديدة ثم أكدها
             </p>
           </DialogTitle>
@@ -129,7 +138,7 @@ export default function ResetPasswordModal({
             <>
               <div dir="ltr" className="w-full space-y-4">
                 <div>
-                  <label className="block mb-2 text-[18px] font-[500] text-[#211C4DB2]">
+                  <label className="block mb-2 text-base sm:text-[18px] font-[500] text-[#211C4DB2]">
                     كلمة المرور الجديدة
                   </label>
                   <div className="relative">
@@ -141,7 +150,7 @@ export default function ResetPasswordModal({
                         setErrorMessage("");
                       }}
                       placeholder="********"
-                      className="w-full p-3 border rounded-lg h-[50px] outline-none focus:ring-2 focus:ring-[#0B60B0]"
+                      className="w-full p-3 border rounded-lg h-12 sm:h-[50px] outline-none focus:ring-2 focus:ring-[#0B60B0]"
                     />
                     <span
                       onClick={() => setShowPass(!showPass)}
@@ -153,7 +162,7 @@ export default function ResetPasswordModal({
                 </div>
 
                 <div>
-                  <label className="block mb-2 text-[18px] font-[500] text-[#211C4DB2]">
+                  <label className="block mb-2 text-base sm:text-[18px] font-[500] text-[#211C4DB2]">
                     تأكيد كلمة المرور
                   </label>
                   <div className="relative">
@@ -165,7 +174,7 @@ export default function ResetPasswordModal({
                         setErrorMessage("");
                       }}
                       placeholder="********"
-                      className="w-full p-3 border rounded-lg h-[50px] outline-none focus:ring-2 focus:ring-[#0B60B0]"
+                      className="w-full p-3 border rounded-lg h-12 sm:h-[50px] outline-none focus:ring-2 focus:ring-[#0B60B0]"
                     />
                     <span
                       onClick={() => setShowPassConfirm(!showPassConfirm)}
@@ -186,7 +195,7 @@ export default function ResetPasswordModal({
               <button
                 onClick={handleSubmit}
                 disabled={!passwordsMatch || loading}
-                className="bg-[#2AA0DC] w-full max-w-[380px] h-[52px] my-3 rounded-[32px] text-[20px] text-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#1e8ec9] transition-colors"
+                className="bg-[#2AA0DC] w-full sm:max-w-[380px] h-[52px] my-1 sm:my-3 rounded-[32px] text-base sm:text-[20px] text-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#1e8ec9] transition-colors"
               >
                 {loading ? "جاري التغيير..." : "تأكيد كلمة المرور"}
               </button>

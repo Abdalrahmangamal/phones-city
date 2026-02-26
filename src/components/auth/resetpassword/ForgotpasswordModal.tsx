@@ -5,6 +5,11 @@ import { useAuthStore } from "@/store/useauthstore";
 import Loader from "@/components/Loader";
 import VerifyCode from "@/components/auth/VerifyCode";
 import ResetPasswordModal from "@/components/auth/ResetPasswordModal";
+import {
+  authDialogSlotProps,
+  authDialogSx,
+  getAuthDialogPaperSx,
+} from "@/components/auth/authDialogStyles";
 
 interface ForgotProps {
   isopen: boolean;
@@ -59,26 +64,30 @@ export default function ForgotpasswordModal({ isopen, onClose }: ForgotProps) {
       <Dialog 
         open={open && !loading} 
         onClose={handleClose}
+        fullWidth
+        maxWidth={false}
+        sx={authDialogSx}
+        slotProps={authDialogSlotProps}
         PaperProps={{
-          sx: {
-            width: "600px",
-            maxWidth: "90%",
-            height: "380px",
-            borderRadius: "16px",
-          },
+          sx: [
+            getAuthDialogPaperSx(600),
+            {
+              minHeight: { xs: "auto", sm: "380px" },
+            },
+          ],
         }}
       >
-        <div className="w-full h-full flex flex-col items-center justify-around p-6">
+        <div className="w-full h-full flex flex-col items-center justify-around gap-4 sm:gap-6 p-4 sm:p-6">
           <DialogTitle className="!pb-4">
-            <p className="text-[32px] text-center font-bold text-[#211C4D]">
+            <p className="text-2xl sm:text-[32px] text-center font-bold text-[#211C4D]">
               نسيت كلمة المرور؟
             </p>
-            <p className="text-[16px] text-center text-[#211C4DB2]">
+            <p className="text-sm sm:text-[16px] text-center text-[#211C4DB2]">
               أدخل بريدك لنرسل رمز التحقق
             </p>
           </DialogTitle>
 
-          <div className="w-3/4 space-y-4">
+          <div className="w-full sm:w-3/4 space-y-4">
             <input
               type="email"
               placeholder="username@gmail.com"
@@ -87,7 +96,7 @@ export default function ForgotpasswordModal({ isopen, onClose }: ForgotProps) {
                 setEmail(e.target.value);
                 if (errorMessage) setErrorMessage("");
               }}
-              className="w-full p-3 border rounded-lg outline-none h-[50px] focus:ring-2 focus:ring-[#0B60B0]"
+              className="w-full p-3 border rounded-lg outline-none h-12 sm:h-[50px] focus:ring-2 focus:ring-[#0B60B0]"
             />
             
             {errorMessage && (
@@ -102,7 +111,7 @@ export default function ForgotpasswordModal({ isopen, onClose }: ForgotProps) {
           <button
             onClick={handlesendemail}
             disabled={!isValid || loading}
-            className="bg-[#2AA0DC] w-[380px] h-[52px] rounded-[32px] text-white text-[18px] disabled:opacity-40 hover:bg-[#1E8BC3] transition-colors"
+            className="bg-[#2AA0DC] w-full sm:w-[380px] h-[52px] rounded-[32px] text-white text-base sm:text-[18px] disabled:opacity-40 hover:bg-[#1E8BC3] transition-colors"
           >
             {loading ? "جاري الإرسال..." : "استمر"}
           </button>

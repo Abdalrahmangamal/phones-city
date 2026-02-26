@@ -66,8 +66,8 @@ export default function Login() {
 
   return (
     <>
-      <div dir={isRTL ? "rtl" : "ltr"}>
-        <div className="w-full flex relative">
+      <div dir={isRTL ? "rtl" : "ltr"} className="relative overflow-x-hidden">
+        <div className="w-full flex relative pointer-events-none select-none">
           <img
             src={smalllogo}
             className={`absolute ${isRTL ? 'md:right-15 right-2' : 'md:left-15 left-2'} top-5 z-10`}
@@ -80,12 +80,12 @@ export default function Login() {
           />
         </div>
 
-        <div className="min-h-screen flex md:mt-[0px] mt-[200px] md:p-0 px-4 z-10 flex-col md:flex-row items-center justify-center gap-20 relative">
-          <div className={`bg-white rounded-[20px] md:w-[450px] w-full ${isRTL ? 'text-start' : 'text-start'}`}>
-            <h2 className="text-[35px] font-[600] text-[#211C4D] mb-2">
+        <div className="min-h-screen flex px-4 md:px-0 pt-24 md:pt-0 pb-10 md:pb-0 z-10 flex-col md:flex-row items-center justify-center gap-8 md:gap-16 relative isolate">
+          <div className={`bg-white rounded-[20px] md:w-[450px] w-full max-w-[450px] ${isRTL ? 'text-start' : 'text-start'} relative z-10`}>
+            <h2 className="text-[28px] md:text-[35px] font-[600] text-[#211C4D] mb-2">
               {t("auth.loginToAccount")}
             </h2>
-            <p className="text-[#B9B8B8] font-[400] text-[16px] md:mb-0 mb-8">
+            <p className="text-[#B9B8B8] font-[400] text-[14px] md:text-[16px] md:mb-0 mb-6">
               {t("auth.pleaseLogin")}
             </p>
 
@@ -95,7 +95,7 @@ export default function Login() {
             >
               {/* البريد الإلكتروني */}
               <div>
-                <label className="block mb-2 md:mb-0 text-[24px] font-[500] text-[#211C4DB2]">
+                <label className="block mb-2 md:mb-0 text-[18px] md:text-[24px] font-[500] text-[#211C4DB2]">
                   {t("auth.email")}
                 </label>
                 <input
@@ -108,7 +108,7 @@ export default function Login() {
                     }
                   })}
                   placeholder="username@gmail.com"
-                  className="w-full p-3 border rounded-lg h-[50px] outline-none focus:ring-2 focus:ring-[#0B60B0]"
+                  className="w-full p-3 border rounded-lg h-12 md:h-[50px] outline-none focus:ring-2 focus:ring-[#0B60B0]"
                 />
                 {errors.email && (
                   <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
@@ -117,7 +117,7 @@ export default function Login() {
 
               {/* كلمة المرور */}
               <div>
-                <label className="block mb-2 md:mb-0 text-[24px] font-[500] text-[#211C4DB2]">
+                <label className="block mb-2 md:mb-0 text-[18px] md:text-[24px] font-[500] text-[#211C4DB2]">
                   {t("auth.password")}
                 </label>
                 <div className="relative">
@@ -131,7 +131,7 @@ export default function Login() {
                         message: t("auth.passwordMinLength")
                       }
                     })}
-                    className={`w-full p-3 border rounded-lg outline-none focus:ring-2 focus:ring-[#0B60B0] ${isRTL ? 'pl-10' : 'pr-10'}`}
+                    className={`w-full h-12 md:h-auto p-3 border rounded-lg outline-none focus:ring-2 focus:ring-[#0B60B0] ${isRTL ? 'pl-10' : 'pr-10'}`}
                   />
                   <span
                     onClick={() => setShowPassword(!showPassword)}
@@ -166,13 +166,13 @@ export default function Login() {
               <button
                 type="submit"
                 disabled={authLoading}
-                className="w-full bg-[#2AA0DC] text-white py-3 rounded-[32px] font-[500] text-[16px] transition-all duration-300 hover:bg-[#0d8ed2] hover:scale-[1.03] shadow-[0_4px_10px_rgba(42,160,220,0.4)] hover:shadow-[0_6px_14px_rgba(42,160,220,0.6)] disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full bg-[#2AA0DC] text-white py-3 rounded-[32px] font-[500] text-[16px] transition-all duration-300 hover:bg-[#0d8ed2] hover:scale-[1.02] shadow-[0_4px_10px_rgba(42,160,220,0.4)] hover:shadow-[0_6px_14px_rgba(42,160,220,0.6)] disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {authLoading ? t("auth.loggingIn") : t("auth.login")}
               </button>
 
               {/* تسجيل جديد */}
-              <p className="text-[24px] text-center mt-4 text-[#211C4D]">
+              <p className="text-[18px] md:text-[24px] text-center mt-4 text-[#211C4D]">
                 {t("auth.noAccount")}
                 <Link
                   to="/register"
@@ -190,12 +190,12 @@ export default function Login() {
             onClose={() => setopenforgetpassmodal(false)}
           />
 
-          <div className="flex items-center justify-center">
-            <img src={loginimage} className="scale-[0.9] md:mb-0 mb-60" alt="" />
+          <div className="hidden md:flex items-center justify-center pointer-events-none select-none">
+            <img src={loginimage} className="max-w-[520px] scale-[0.9] md:mb-0" alt="" />
           </div>
           <img
             src={bottompattern}
-            className={`absolute bottom-0 ${isRTL ? 'right-0' : 'left-0 -scale-x-100'} pointer-events-none`}
+            className={`absolute bottom-0 ${isRTL ? 'right-0' : 'left-0 -scale-x-100'} pointer-events-none select-none z-0`}
             alt=""
           />
         </div>

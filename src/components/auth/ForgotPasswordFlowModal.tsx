@@ -1,11 +1,17 @@
 // ForgotPasswordFlowModal.tsx
-import { useState, useRef, useCallback } from "react";
+import { useState, useCallback } from "react";
 import Dialog from "@mui/material/Dialog";
 import { Eye, EyeOff } from "lucide-react";
 import { useAuthStore } from "@/store/useauthstore";
 import Loader from "@/components/Loader";
 import { useTranslation } from "react-i18next";
 import { MuiOtpInput } from "mui-one-time-password-input";
+import {
+  authDialogSlotProps,
+  authDialogSx,
+  authOtpSx,
+  getAuthDialogPaperSx,
+} from "@/components/auth/authDialogStyles";
 
 interface Props {
   isOpen: boolean;
@@ -23,35 +29,9 @@ export default function ForgotPasswordFlowModal({ isOpen, onClose }: Props) {
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const OTP_LENGTH = 6;
-  const otpContainerRef = useRef<HTMLDivElement>(null);
 
   /** تطبيع قيمة OTP: أرقام فقط وحد أقصى 6 */
   const normalizeOtpValue = useCallback((value: string) => value.replace(/\D/g, "").slice(0, OTP_LENGTH), []);
-
-  /** تركيز سلس على المربع الأول مع وضع المؤشر في النهاية دون تحديد النص */
-  const focusFirstOtpInput = useCallback(() => {
-    const first = otpContainerRef.current?.querySelector("input") as HTMLInputElement | null;
-    if (first) {
-      requestAnimationFrame(() => {
-        first.focus();
-        const len = first.value.length;
-        first.setSelectionRange(len, len);
-      });
-    }
-  }, []);
-
-  /** عند النقر فقط على أي مربع: إرجاع التركيز للمربع الأول (الكتابة العادية لا تُعطّل حتى يتم إدخال الـ 6 أرقام) */
-  const handleOtpContainerMouseDown = useCallback(
-    (e: React.MouseEvent) => {
-      const target = e.target as HTMLElement;
-      if (target.closest?.(".MuiOtpInput-TextField") || target.tagName === "INPUT") {
-        e.preventDefault();
-        e.stopPropagation();
-        focusFirstOtpInput();
-      }
-    },
-    [focusFirstOtpInput]
-  );
 
   const { forgotpassword, resetPassword, loading } = useAuthStore();
   const { t, i18n } = useTranslation();
@@ -168,15 +148,19 @@ export default function ForgotPasswordFlowModal({ isOpen, onClose }: Props) {
       <Dialog
         open={isOpen && step === "email"}
         onClose={handleClose}
+        fullWidth
+        maxWidth={false}
+        sx={authDialogSx}
+        slotProps={authDialogSlotProps}
         PaperProps={{
-          sx: { width: "580px", maxWidth: "90%", borderRadius: "16px" },
+          sx: getAuthDialogPaperSx(580),
         }}
       >
-        <div className="p-8 flex flex-col items-center gap-6">
-          <h2 className="text-3xl font-bold text-center text-[#211C4D]">
+        <div className="p-4 sm:p-8 flex flex-col items-center gap-4 sm:gap-6">
+          <h2 className="text-2xl sm:text-3xl font-bold text-center text-[#211C4D]">
             {t("forgotPassword.title")}
           </h2>
-          <p className="text-center text-[#211C4DB2]">
+          <p className="text-center text-sm sm:text-base text-[#211C4DB2]">
             {t("forgotPassword.subtitle")}
           </p>
 
@@ -188,7 +172,7 @@ export default function ForgotPasswordFlowModal({ isOpen, onClose }: Props) {
               setErrorMessage("");
             }}
             placeholder="example@email.com"
-            className="w-full p-3 border rounded-lg outline-none focus:ring-2 focus:ring-[#2AA0DC]"
+            className="w-full h-12 p-3 border rounded-lg outline-none focus:ring-2 focus:ring-[#2AA0DC]"
           />
 
           {errorMessage && (
@@ -200,7 +184,7 @@ export default function ForgotPasswordFlowModal({ isOpen, onClose }: Props) {
           <button
             onClick={handleSendCode}
             disabled={!isValidEmail || loading}
-            className="bg-[#2AA0DC] w-full max-w-[340px] h-12 rounded-full text-white disabled:opacity-50 hover:bg-[#1e8ec9] transition-colors"
+            className="bg-[#2AA0DC] w-full sm:max-w-[340px] h-12 rounded-full text-white disabled:opacity-50 hover:bg-[#1e8ec9] transition-colors"
           >
             {loading ? t("forgotPassword.sending") : t("forgotPassword.sendCode")}
           </button>
@@ -211,26 +195,28 @@ export default function ForgotPasswordFlowModal({ isOpen, onClose }: Props) {
       <Dialog
         open={isOpen && step === "code"}
         onClose={handleClose}
+        fullWidth
+        maxWidth={false}
+        sx={authDialogSx}
+        slotProps={authDialogSlotProps}
         PaperProps={{
-          sx: { width: "580px", maxWidth: "90%", borderRadius: "16px" },
+          sx: getAuthDialogPaperSx(580),
         }}
       >
-        <div className="p-8 flex flex-col items-center gap-6">
-          <h2 className="text-3xl font-bold text-center text-[#211C4D]">
+        <div className="p-4 sm:p-8 flex flex-col items-center gap-4 sm:gap-6">
+          <h2 className="text-2xl sm:text-3xl font-bold text-center text-[#211C4D]">
             {t("forgotPassword.enterVerificationCode")}
           </h2>
-          <p className="text-center text-[#211C4DB2]">
+          <p className="text-center text-sm sm:text-base text-[#211C4DB2]">
             {t("forgotPassword.codeSentTo")}
             <br />
-            <span className="font-semibold">{email}</span>
+            <span className="font-semibold break-all">{email}</span>
           </p>
 
           {/* حقل إدخال الكود: أرقام فقط، تركيز ثابت على المربع الأول */}
           <div
-            ref={otpContainerRef}
             dir="ltr"
-            className="flex justify-center w-full"
-            onMouseDownCapture={handleOtpContainerMouseDown}
+            className="flex justify-center w-full overflow-x-auto py-1"
           >
             <MuiOtpInput
               value={code}
@@ -241,6 +227,7 @@ export default function ForgotPasswordFlowModal({ isOpen, onClose }: Props) {
               }}
               validateChar={(char) => /^\d$/.test(char)}
               autoFocus
+              sx={authOtpSx}
             />
           </div>
 
@@ -250,23 +237,23 @@ export default function ForgotPasswordFlowModal({ isOpen, onClose }: Props) {
             </div>
           )}
 
-          <div className="flex gap-4 w-full">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full">
             <button
               onClick={() => setStep("email")}
-              className="bg-gray-200 w-1/2 h-12 rounded-full text-gray-700 hover:bg-gray-300 transition-colors"
+              className="bg-gray-200 w-full sm:w-1/2 h-12 rounded-full text-gray-700 hover:bg-gray-300 transition-colors"
             >
               {t("forgotPassword.back")}
             </button>
             <button
               onClick={handleVerifyCode}
               disabled={!isValidCode || loading}
-              className="bg-[#2AA0DC] w-1/2 h-12 rounded-full text-white disabled:opacity-50 hover:bg-[#1e8ec9] transition-colors"
+              className="bg-[#2AA0DC] w-full sm:w-1/2 h-12 rounded-full text-white disabled:opacity-50 hover:bg-[#1e8ec9] transition-colors"
             >
               {loading ? t("forgotPassword.verifying") : t("forgotPassword.verifyCode")}
             </button>
           </div>
 
-          <p className="text-center text-gray-600 text-sm">
+          <p className="text-center text-gray-600 text-sm leading-6">
             {t("forgotPassword.didntReceiveCode")}{' '}
             <button
               onClick={handleResendCode}
@@ -282,15 +269,15 @@ export default function ForgotPasswordFlowModal({ isOpen, onClose }: Props) {
       <Dialog
         open={isOpen && step === "password"}
         onClose={handleClose}
+        fullWidth
+        maxWidth={false}
+        sx={authDialogSx}
+        slotProps={authDialogSlotProps}
         PaperProps={{
-          sx: {
-            width: "580px",
-            maxWidth: "90%",
-            borderRadius: "16px",
-          },
+          sx: getAuthDialogPaperSx(580),
         }}
       >
-        <div className="p-8 flex flex-col items-center gap-6">
+        <div className="p-4 sm:p-8 flex flex-col items-center gap-4 sm:gap-6">
           {successMessage ? (
             <div className="text-center py-10">
               <div className="text-6xl text-green-500 mb-4">✓</div>
@@ -301,16 +288,16 @@ export default function ForgotPasswordFlowModal({ isOpen, onClose }: Props) {
             </div>
           ) : (
             <>
-              <h2 className="text-3xl font-bold text-center text-[#211C4D]">
+              <h2 className="text-2xl sm:text-3xl font-bold text-center text-[#211C4D]">
                 {t("forgotPassword.newPassword")}
               </h2>
-              <p className="text-center text-[#211C4DB2]">
+              <p className="text-center text-sm sm:text-base text-[#211C4DB2]">
                 {t("forgotPassword.enterNewPasswordSubtitle")}
               </p>
 
               {/* حقل كلمة المرور الجديدة */}
               <div className="w-full">
-                <label className="block mb-2 text-[18px] font-[500] text-[#211C4DB2]">
+                <label className="block mb-2 text-base sm:text-[18px] font-[500] text-[#211C4DB2]">
                   {t("forgotPassword.newPasswordLabel")}
                 </label>
                 <div className="relative">
@@ -322,7 +309,7 @@ export default function ForgotPasswordFlowModal({ isOpen, onClose }: Props) {
                       setErrorMessage("");
                     }}
                     placeholder={t("forgotPassword.enterStrongPassword")}
-                    className="w-full p-3 border rounded-lg h-[50px] outline-none focus:ring-2 focus:ring-[#0B60B0]"
+                    className="w-full p-3 border rounded-lg h-12 sm:h-[50px] outline-none focus:ring-2 focus:ring-[#0B60B0]"
                   />
                   <span
                     onClick={() => setShowPassword(!showPassword)}
@@ -335,7 +322,7 @@ export default function ForgotPasswordFlowModal({ isOpen, onClose }: Props) {
 
               {/* حقل تأكيد كلمة المرور */}
               <div className="w-full">
-                <label className="block mb-2 text-[18px] font-[500] text-[#211C4DB2]">
+                <label className="block mb-2 text-base sm:text-[18px] font-[500] text-[#211C4DB2]">
                   {t("forgotPassword.confirmPassword")}
                 </label>
                 <div className="relative">
@@ -347,7 +334,7 @@ export default function ForgotPasswordFlowModal({ isOpen, onClose }: Props) {
                       setErrorMessage("");
                     }}
                     placeholder={t("forgotPassword.reEnterPassword")}
-                    className="w-full p-3 border rounded-lg h-[50px] outline-none focus:ring-2 focus:ring-[#0B60B0]"
+                    className="w-full p-3 border rounded-lg h-12 sm:h-[50px] outline-none focus:ring-2 focus:ring-[#0B60B0]"
                   />
                   <span
                     onClick={() => setShowPasswordConfirm(!showPasswordConfirm)}
@@ -364,17 +351,17 @@ export default function ForgotPasswordFlowModal({ isOpen, onClose }: Props) {
                 </div>
               )}
 
-              <div className="flex gap-4 w-full">
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full">
                 <button
                   onClick={() => setStep("code")}
-                  className="bg-gray-200 w-1/2 h-12 rounded-full text-gray-700 hover:bg-gray-300 transition-colors"
+                  className="bg-gray-200 w-full sm:w-1/2 h-12 rounded-full text-gray-700 hover:bg-gray-300 transition-colors"
                 >
                   {t("forgotPassword.back")}
                 </button>
                 <button
                   onClick={handleResetPassword}
                   disabled={!passwordsMatch || loading}
-                  className="bg-[#2AA0DC] w-1/2 h-12 rounded-full text-white disabled:opacity-50 hover:bg-[#1e8ec9] transition-colors"
+                  className="bg-[#2AA0DC] w-full sm:w-1/2 h-12 rounded-full text-white disabled:opacity-50 hover:bg-[#1e8ec9] transition-colors"
                 >
                   {loading ? t("forgotPassword.changing") : t("forgotPassword.changePassword")}
                 </button>
