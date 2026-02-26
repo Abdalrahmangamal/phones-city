@@ -5,9 +5,9 @@ import BannerSection from "@/components/public/BannerSection";
 import Bestseller from "@/components/home/Bestseller";
 import Parttner from "@/components/public/Parttner";
 import Filter from "@/components/public/Filter";
-import { useProductsStore } from "@/store/productsStore.ts";
+import DeferredSection from "@/components/common/DeferredSection";
 import { useCategoriesStore } from "@/store/categories/useCategoriesStore.ts";
-import { useEffect, useMemo, useState, useRef } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useLangSync } from "@/hooks/useLangSync";
 import { useTranslation } from "react-i18next";
 import Loader from "@/components/Loader";
@@ -15,11 +15,10 @@ import { useHeroSectionStore } from "@/store/home/herosectionStore";
 import { useHomePageStore } from '@/store/home/homepageStore';
 import type { Product } from '@/types/index';
 import { usePageSEO } from "@/hooks/usePageSEO";
-import { isProductOnOffer, parseSortToken, getProductNumericPrice, productMatchesCategorySelection } from "@/utils/filterUtils";
+import { getCategorySelectionIdSet, isProductOnOffer, parseSortToken, productMatchesCategoryIdSet } from "@/utils/filterUtils";
 import axiosClient from "@/api/axiosClient";
 
 export default function Offers() {
-  const { loading } = useProductsStore();
   const { fetchCategories, categories } = useCategoriesStore();
   const { lang } = useLangSync();
   const { t } = useTranslation();
@@ -40,9 +39,6 @@ export default function Offers() {
   const itemsPerPage = 10;
 
   const [isLoading, setIsLoading] = useState(true);
-
-  // Ref to track if initial offers have been fetched
-  const offersFetched = useRef(false);
 
   // Fetch initial data
   useEffect(() => {
@@ -76,96 +72,100 @@ export default function Offers() {
     lang,
   });
 
-  // Fetch ALL offer products from API (no sort/filter params - only has_offer)
+  const selectedCategoryIds = useMemo(
+    () => getCategorySelectionIdSet(selectedSubCategory, categories as any),
+    [selectedSubCategory, categories]
+  );
+
+  const parsedSort = useMemo(() => parseSortToken(sortOption), [sortOption]);
+
+  const apiCategoryId = useMemo(() => {
+    if (selectedSubCategory === null) return null;
+    if (!selectedCategoryIds || selectedCategoryIds.size !== 1) return null;
+    if (!Array.isArray(categories) || categories.length === 0) return null;
+    return Array.from(selectedCategoryIds)[0] ?? null;
+  }, [selectedSubCategory, selectedCategoryIds, categories]);
+
+  // Fetch offer products from API with server-side sort/price filtering when possible.
   useEffect(() => {
+    const controller = new AbortController();
+    let cancelled = false;
+
     const fetchAllOffers = async () => {
       try {
         setOffersLoading(true);
-        // Fetch a large batch of offer products without any sort/filter to get the full set
+
+        const params: Record<string, unknown> = {
+          has_offer: 1,
+          per_page: 100,
+          simple: 0,
+        };
+
+        if (priceRange[0] !== null) params.min_price = priceRange[0];
+        if (priceRange[1] !== null) params.max_price = priceRange[1];
+        if (parsedSort) {
+          params.sort_by = parsedSort.sortBy;
+          params.sort_order = parsedSort.sortOrder;
+        }
+        if (apiCategoryId !== null) {
+          params.category_id = apiCategoryId;
+        }
+
         const res = await axiosClient.get(`api/v1/products`, {
-          params: { has_offer: 1, per_page: 100, simple: 0 },
+          params,
+          signal: controller.signal,
           headers: { "Accept-Language": lang || "ar" },
         });
 
+        if (cancelled) return;
         const products = Array.isArray(res.data.data) ? res.data.data : [];
         setAllOfferProducts(products);
-        offersFetched.current = true;
       } catch (error) {
+        if (
+          (error as any)?.name === "CanceledError" ||
+          (error as any)?.code === "ERR_CANCELED" ||
+          controller.signal.aborted
+        ) {
+          return;
+        }
         console.error("Error fetching offer products:", error);
-        setAllOfferProducts([]);
+        if (!cancelled) {
+          setAllOfferProducts([]);
+        }
       } finally {
-        setOffersLoading(false);
+        if (!cancelled) {
+          setOffersLoading(false);
+        }
       }
     };
 
     fetchAllOffers();
-  }, [lang]);
+
+    return () => {
+      cancelled = true;
+      controller.abort();
+    };
+  }, [lang, priceRange, parsedSort, apiCategoryId]);
 
   // Reset page when filters change
   useEffect(() => {
     setCurrentPage(1);
   }, [selectedSubCategory, sortOption, priceRange]);
 
-  // Apply client-side filtering and sorting on the offer products
+  // Keep only the remaining client-side work: offer safety check + tree category filtering.
   const filteredAndSortedProducts = useMemo(() => {
     // Start with all offer products
     let result = allOfferProducts.filter((product) => isProductOnOffer(product));
 
-    // Apply category filter
-    if (selectedSubCategory !== null) {
+    // Apply category filter locally only when we need tree/descendants matching.
+    if (selectedSubCategory !== null && selectedCategoryIds && apiCategoryId === null) {
       result = result.filter((product) =>
-        productMatchesCategorySelection(product, selectedSubCategory, categories as any)
+        productMatchesCategoryIdSet(product, selectedCategoryIds)
       );
     }
 
-    // Apply price range filter
-    if (priceRange[0] !== null || priceRange[1] !== null) {
-      result = result.filter((product) => {
-        const price = getProductNumericPrice(product);
-        const min = priceRange[0];
-        const max = priceRange[1];
-
-        if (min !== null && price < min) return false;
-        if (max !== null && price > max) return false;
-        return true;
-      });
-    }
-
-    // Apply sorting
-    const parsedSort = parseSortToken(sortOption);
-    if (parsedSort) {
-      result = [...result].sort((a, b) => {
-        switch (parsedSort.sortBy) {
-          case "main_price": {
-            const diff = getProductNumericPrice(a) - getProductNumericPrice(b);
-            return parsedSort.sortOrder === "asc" ? diff : -diff;
-          }
-          case "name_ar": {
-            const diff = (a.name || "").localeCompare(b.name || "", lang === "ar" ? "ar" : "en");
-            return parsedSort.sortOrder === "asc" ? diff : -diff;
-          }
-          case "average_rating": {
-            const diff = Number(a.average_rating || 0) - Number(b.average_rating || 0);
-            return parsedSort.sortOrder === "asc" ? diff : -diff;
-          }
-          case "created_at": {
-            const aTime = new Date((a as any)?.created_at || 0).getTime() || 0;
-            const bTime = new Date((b as any)?.created_at || 0).getTime() || 0;
-            const diff = aTime - bTime;
-            return parsedSort.sortOrder === "asc" ? diff : -diff;
-          }
-          case "best_seller": {
-            const diff = Number((a as any)?.sales_count || 0) - Number((b as any)?.sales_count || 0);
-            return parsedSort.sortOrder === "asc" ? diff : -diff;
-          }
-          default:
-            return 0;
-        }
-      });
-    }
-
     return result;
-  }, [allOfferProducts, selectedSubCategory, categories, sortOption, priceRange, lang]);
+  }, [allOfferProducts, selectedSubCategory, selectedCategoryIds, apiCategoryId]);
 
   // Client-side pagination
   const totalItems = filteredAndSortedProducts.length;
@@ -193,7 +193,7 @@ export default function Offers() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  if (isLoading || offersLoading) {
+  if (isLoading || (offersLoading && allOfferProducts.length === 0)) {
     return (
       <Layout>
         <Loader />
@@ -206,14 +206,20 @@ export default function Offers() {
       <div>
         <NewHeroSection sliders={sliders} showButton={false} />
 
-        <BannerSection images={data?.main_images || []} />
+        <DeferredSection
+          minHeight={160}
+          rootMargin="200px 0px"
+          placeholder={<div className="h-32 md:h-48" aria-hidden />}
+        >
+          <BannerSection images={data?.main_images || []} />
+        </DeferredSection>
 
         <Bestseller
           title={`${t("CityofPhonesOffers")}`}
           btn={true}
           link={`/${lang}/SpecialOffersPage`}
           products={paginatedProducts}
-          isLoading={offersLoading}
+          isLoading={offersLoading && allOfferProducts.length === 0}
           filterComponent={
             <div className="flex justify-center">
               <Filter
@@ -238,11 +244,19 @@ export default function Offers() {
           showPagination={true}
         />
 
-        <BannerSection images={data?.main_images || []} />
+        <DeferredSection
+          minHeight={160}
+          rootMargin="400px 0px"
+          placeholder={<div className="h-32 md:h-48" aria-hidden />}
+        >
+          <BannerSection images={data?.main_images || []} />
+        </DeferredSection>
 
-        <div className="mb-15">
-          <Parttner />
-        </div>
+        <DeferredSection minHeight={120} rootMargin="500px 0px">
+          <div className="mb-15">
+            <Parttner />
+          </div>
+        </DeferredSection>
       </div>
     </Layout>
   );

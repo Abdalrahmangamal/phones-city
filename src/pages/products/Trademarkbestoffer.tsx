@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Bestseller from "@/components/home/Bestseller";
 import Layout from "@/components/layout/layout";
 import { useProductsStore } from "@/store/productsStore";
@@ -8,7 +8,13 @@ import { useTranslation } from "react-i18next"; // أو أي طريقة تستخ
 import Filter from "@/components/public/Filter";
 import { useCategoriesStore } from "@/store/categories/useCategoriesStore";
 import type { Product } from "@/types/index";
-import { getProductNumericPrice, isProductOnOffer, parseSortToken, productMatchesCategorySelection } from "@/utils/filterUtils";
+import {
+  getCategorySelectionIdSet,
+  getProductNumericPrice,
+  isProductOnOffer,
+  parseSortToken,
+  productMatchesCategoryIdSet,
+} from "@/utils/filterUtils";
 
 export default function Trademarkbestoffer() {
   const navigate = useNavigate();
@@ -23,6 +29,10 @@ export default function Trademarkbestoffer() {
   const [sortOption, setSortOption] = useState<string>("");
   const [priceRange, setPriceRange] = useState<[number | null, number | null]>([null, null]);
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
+  const selectedCategoryIds = useMemo(
+    () => getCategorySelectionIdSet(selectedCategory, categories as any),
+    [selectedCategory, categories]
+  );
 
   useEffect(() => {
     fetchProducts({
@@ -41,9 +51,9 @@ export default function Trademarkbestoffer() {
       : [];
     
     // تطبيق فلتر الفئة
-    if (selectedCategory !== null) {
+    if (selectedCategory !== null && selectedCategoryIds) {
       result = result.filter((product) =>
-        productMatchesCategorySelection(product, selectedCategory, categories as any)
+        productMatchesCategoryIdSet(product, selectedCategoryIds)
       );
     }
     
@@ -94,7 +104,7 @@ export default function Trademarkbestoffer() {
     }
     
     setFilteredProducts(result);
-  }, [products, selectedCategory, sortOption, priceRange, lang]);
+  }, [products, selectedCategory, selectedCategoryIds, sortOption, priceRange, lang]);
 
   const handleSortChange = (option: string) => {
     setSortOption(option);

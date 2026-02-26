@@ -53,20 +53,31 @@ const toFiniteNumber = (value: unknown): number | null => {
   return Number.isFinite(parsed) ? parsed : null;
 };
 
-const addCategoryId = (set: Set<number>, value: unknown) => {
-  const parsed = toFiniteNumber(value);
-  if (parsed !== null) {
-    set.add(parsed);
-  }
-};
+const categorySelectionCache = new WeakMap<object, Map<number, Set<number>>>();
+const fallbackCategorySelectionCache = new Map<number, Set<number>>();
 
 const collectDescendantCategoryIds = (
   categories: CategoryNodeLike[] | undefined,
   targetId: number
-): number[] => {
+): Set<number> => {
   if (!Array.isArray(categories) || categories.length === 0) {
-    return [targetId];
+    let fallback = fallbackCategorySelectionCache.get(targetId);
+    if (!fallback) {
+      fallback = new Set<number>([targetId]);
+      fallbackCategorySelectionCache.set(targetId, fallback);
+    }
+    return fallback;
   }
+
+  const treeKey = categories as unknown as object;
+  let treeCache = categorySelectionCache.get(treeKey);
+  if (!treeCache) {
+    treeCache = new Map<number, Set<number>>();
+    categorySelectionCache.set(treeKey, treeCache);
+  }
+
+  const cached = treeCache.get(targetId);
+  if (cached) return cached;
 
   const findNode = (nodes: CategoryNodeLike[]): CategoryNodeLike | null => {
     for (const node of nodes) {
@@ -82,61 +93,81 @@ const collectDescendantCategoryIds = (
   };
 
   const root = findNode(categories);
-  if (!root) return [targetId];
+  if (!root) {
+    const fallback = new Set<number>([targetId]);
+    treeCache.set(targetId, fallback);
+    return fallback;
+  }
 
   const ids = new Set<number>();
   const walk = (node?: CategoryNodeLike | null) => {
     if (!node) return;
-    addCategoryId(ids, (node as any).id);
+    const nodeId = toFiniteNumber((node as any).id);
+    if (nodeId !== null) {
+      ids.add(nodeId);
+    }
     if (Array.isArray(node.children)) {
       node.children.forEach(walk);
     }
   };
 
   walk(root);
-  return ids.size > 0 ? Array.from(ids) : [targetId];
+  if (ids.size === 0) ids.add(targetId);
+  treeCache.set(targetId, ids);
+  return ids;
 };
+
+export function getCategorySelectionIdSet(
+  selectedCategoryId: number | null | undefined,
+  categoriesTree?: CategoryNodeLike[]
+): Set<number> | null {
+  const parsedId = toFiniteNumber(selectedCategoryId);
+  if (parsedId === null) return null;
+  return collectDescendantCategoryIds(categoriesTree, parsedId);
+}
+
+export function productMatchesCategoryIdSet(
+  product: any,
+  selectedIds: ReadonlySet<number> | null | undefined
+): boolean {
+  if (!product || !selectedIds || selectedIds.size === 0) return false;
+
+  const matchesSelected = (value: unknown) => {
+    const parsed = toFiniteNumber(value);
+    return parsed !== null && selectedIds.has(parsed);
+  };
+
+  if (
+    matchesSelected(product?.category?.id) ||
+    matchesSelected(product?.category?.parent_id) ||
+    matchesSelected(product?.category_id) ||
+    matchesSelected(product?.parent_category_id)
+  ) {
+    return true;
+  }
+
+  if (Array.isArray(product?.category_ids)) {
+    for (const id of product.category_ids) {
+      if (matchesSelected(id)) return true;
+    }
+  }
+
+  if (Array.isArray(product?.categories)) {
+    for (const cat of product.categories) {
+      if (matchesSelected(cat?.id) || matchesSelected(cat?.parent_id)) {
+        return true;
+      }
+    }
+  }
+
+  return false;
+}
 
 export function productMatchesCategorySelection(
   product: any,
   selectedCategoryId: number,
   categoriesTree?: CategoryNodeLike[]
 ): boolean {
-  if (!product || !selectedCategoryId) return false;
-
-  const selectedIds = new Set(
-    collectDescendantCategoryIds(categoriesTree, Number(selectedCategoryId)).filter(
-      (id) => Number.isFinite(id)
-    )
-  );
-
-  if (selectedIds.size === 0) {
-    selectedIds.add(Number(selectedCategoryId));
-  }
-
-  const productCategoryIds = new Set<number>();
-
-  addCategoryId(productCategoryIds, product?.category?.id);
-  addCategoryId(productCategoryIds, product?.category?.parent_id);
-  addCategoryId(productCategoryIds, product?.category_id);
-  addCategoryId(productCategoryIds, product?.parent_category_id);
-
-  if (Array.isArray(product?.category_ids)) {
-    product.category_ids.forEach((id: unknown) => addCategoryId(productCategoryIds, id));
-  }
-
-  if (Array.isArray(product?.categories)) {
-    product.categories.forEach((cat: any) => {
-      addCategoryId(productCategoryIds, cat?.id);
-      addCategoryId(productCategoryIds, cat?.parent_id);
-    });
-  }
-
-  for (const id of productCategoryIds) {
-    if (selectedIds.has(id)) {
-      return true;
-    }
-  }
-
-  return false;
+  const selectedIds = getCategorySelectionIdSet(selectedCategoryId, categoriesTree);
+  return productMatchesCategoryIdSet(product, selectedIds);
 }

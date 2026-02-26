@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Bestseller from "@/components/home/Bestseller";
 import Layout from "@/components/layout/layout";
 import { useNavigate } from "react-router-dom";
@@ -9,7 +9,13 @@ import { useCategoriesStore } from "@/store/categories/useCategoriesStore";
 import type { Product } from "@/types/index";
 import InstallmentSection from "@/components/home/InstallmentSection"; // Import the InstallmentSection component
 import { useProductsStore } from "@/store/productsStore"; // Import the home page store
-import { getProductNumericPrice, isProductOnOffer, parseSortToken, productMatchesCategorySelection } from "@/utils/filterUtils";
+import {
+  getCategorySelectionIdSet,
+  getProductNumericPrice,
+  isProductOnOffer,
+  parseSortToken,
+  productMatchesCategoryIdSet,
+} from "@/utils/filterUtils";
 
 export default function SpecialOffersPage() {
   const navigate = useNavigate();
@@ -28,6 +34,11 @@ export default function SpecialOffersPage() {
   ]);
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
 
+  const selectedCategoryIds = useMemo(
+    () => getCategorySelectionIdSet(selectedCategory, categories as any),
+    [selectedCategory, categories]
+  );
+
   useEffect(() => {
     fetchOffers(lang, currentPage).then(() => {
     }).catch((err) => console.error('Failed to fetch offers', err));
@@ -44,9 +55,9 @@ export default function SpecialOffersPage() {
       : [];
 
     // تطبيق فلتر الفئة
-    if (selectedCategory !== null) {
+    if (selectedCategory !== null && selectedCategoryIds) {
       result = result.filter((product) =>
-        productMatchesCategorySelection(product, selectedCategory, categories as any)
+        productMatchesCategoryIdSet(product, selectedCategoryIds)
       );
     }
 
@@ -96,7 +107,7 @@ export default function SpecialOffersPage() {
       });
     }
     setFilteredProducts(result);
-  }, [offersProducts, selectedCategory, sortOption, priceRange, lang]);
+  }, [offersProducts, selectedCategory, selectedCategoryIds, sortOption, priceRange, lang]);
 
   const handleSortChange = (option: string) => {
     setSortOption(option);

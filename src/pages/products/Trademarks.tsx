@@ -1,6 +1,7 @@
 // Trademarks.tsx
 import Bestseller from "@/components/home/Bestseller";
 import Layout from "@/components/layout/layout";
+import DeferredSection from "@/components/common/DeferredSection";
 import Offerherosection from "@/components/public/Offerherosection";
 import Sliderbycategory from "@/components/public/Sliderbycategory";
 import Parttner from "@/components/public/Parttner";
@@ -13,7 +14,12 @@ import { usePageData } from "@/hooks/usePageData";
 import { useTranslation } from "react-i18next";
 import Loader from "@/components/Loader";
 import type { Product } from '@/types/index';
-import { getProductNumericPrice, parseSortToken, productMatchesCategorySelection } from "@/utils/filterUtils";
+import {
+  getCategorySelectionIdSet,
+  getProductNumericPrice,
+  parseSortToken,
+  productMatchesCategoryIdSet,
+} from "@/utils/filterUtils";
 
 export default function Trademarks() {
   const { lang } = useLangSync();
@@ -90,6 +96,16 @@ export default function Trademarks() {
       : (trademark.name_en || trademark.name || trademark.slug || "");
   }, [id, lang, treadmark]);
 
+  const activeSubCategoryIds = useMemo(
+    () => getCategorySelectionIdSet(activeSubCategory, Catesubgategory as any),
+    [activeSubCategory, Catesubgategory]
+  );
+
+  const selectedSubCategoryIds = useMemo(
+    () => getCategorySelectionIdSet(selectedSubCategory, Catesubgategory as any),
+    [selectedSubCategory, Catesubgategory]
+  );
+
   // Handle subcategory selection from slider
   const handleSubCategorySelect = (categoryId: number | null) => {
     setActiveSubCategory(categoryId);
@@ -104,16 +120,16 @@ export default function Trademarks() {
     let result = [...Categoriesbyid];
 
     // Filter by active subcategory (from slider)
-    if (activeSubCategory) {
+    if (activeSubCategory && activeSubCategoryIds) {
       result = result.filter((p) =>
-        productMatchesCategorySelection(p, activeSubCategory, Catesubgategory as any)
+        productMatchesCategoryIdSet(p, activeSubCategoryIds)
       );
     }
 
     // Filter by selected subcategory (from Filter component)
-    if (selectedSubCategory !== null && !activeSubCategory) {
+    if (selectedSubCategory !== null && !activeSubCategory && selectedSubCategoryIds) {
       result = result.filter((p) =>
-        productMatchesCategorySelection(p, selectedSubCategory, Catesubgategory as any)
+        productMatchesCategoryIdSet(p, selectedSubCategoryIds)
       );
     }
 
@@ -162,7 +178,9 @@ export default function Trademarks() {
   }, [
     Categoriesbyid,
     activeSubCategory,
+    activeSubCategoryIds,
     selectedSubCategory,
+    selectedSubCategoryIds,
     sortOption,
     priceRange,
     lang
@@ -307,9 +325,11 @@ export default function Trademarks() {
         />
       </div>
 
-      <div className="my-12">
-        <Parttner />
-      </div>
+      <DeferredSection minHeight={120} rootMargin="500px 0px">
+        <div className="my-12">
+          <Parttner />
+        </div>
+      </DeferredSection>
     </Layout>
   );
 }

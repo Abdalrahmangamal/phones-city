@@ -1,4 +1,5 @@
 import Layout from "@/components/layout/Layout";
+import DeferredSection from "@/components/common/DeferredSection";
 import BannerSection from "@/components/public/BannerSection";
 import Bestseller from "@/components/home/Bestseller";
 import Parttner from "@/components/public/Parttner";
@@ -577,7 +578,13 @@ export default function CategorySingle() {
         <div>
           <HeroSection sliders={sliders} />
 
-          <BannerSection images={data?.main_images || []} />
+          <DeferredSection
+            minHeight={160}
+            rootMargin="200px 0px"
+            placeholder={<div className="h-32 md:h-48" aria-hidden />}
+          >
+            <BannerSection images={data?.main_images || []} />
+          </DeferredSection>
           
           {/* Use Bestseller component with similar structure as Offers.tsx */}
           <Bestseller
@@ -611,9 +618,11 @@ export default function CategorySingle() {
             showPagination={true}
           />
           
-          <div className="mb-15">
-            <Parttner />
-          </div>
+          <DeferredSection minHeight={120} rootMargin="500px 0px">
+            <div className="mb-15">
+              <Parttner />
+            </div>
+          </DeferredSection>
         </div>
       </div>
     </Layout>
