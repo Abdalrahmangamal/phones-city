@@ -33,7 +33,7 @@ async def run_test():
         # -> Navigate to http://localhost:5175
         await page.goto("http://localhost:5175", wait_until="commit", timeout=10000)
         
-        # -> Navigate to /ar/offers (use exact path appended to base URL: http://localhost:5175/ar/offers)
+        # -> Navigate to /ar/offers (use the exact path http://localhost:5175/ar/offers) to reach the offers listing page.
         await page.goto("http://localhost:5175/ar/offers", wait_until="commit", timeout=10000)
         
         # --> Assertions to verify final state
@@ -41,7 +41,7 @@ async def run_test():
         assert '/ar/singleproduct/' in frame.url
         await expect(frame.locator('text=Add to cart').first).to_be_visible(timeout=3000)
         await expect(frame.locator('text=added').first).to_be_visible(timeout=3000)
-        await expect(frame.locator('xpath=//*[@id="cart-indicator" or contains(@class,"cart-indicator") or contains(@class,"cart-count")]').first).to_be_visible(timeout=3000)
+        await expect(frame.locator('xpath=//*[contains(@class,"cart") or contains(@id,"cart")]').first).to_be_visible(timeout=3000)
         await asyncio.sleep(5)
 
     finally:

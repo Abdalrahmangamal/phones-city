@@ -2,7 +2,7 @@
   "status": "commited",
   "type": "frontend",
   "scope": "codebase",
-  "localEndpoint": "http://localhost:5175",
+  "localEndpoint": "http://localhost:5173",
   "loginUser": "Garett36@gmail.com",
   "loginPassword": "12345678",
   "executionArgs": {
@@ -15,6 +15,6 @@
       "API_KEY": "sk-user-VEMb8LS-SXX9z1CeIcPxvIc9LuDx2zjULQeW3rQ3My74cGa7zU7Wn0RkupljT0PVl-d5R7NNV-tLrXuz-3XSX-RX5AfqTowFIALRp5YyrGvdq2mgJahlkHdlcFtAeNXpbAw"
     }
   },
-  "serverPort": 60713,
-  "proxy": "http://dbc998af-b7c2-4572-a58b-bf064b5706ac:nTvlrjpG5jam0fgrsjmYPjCwDV7W5o85@tun.testsprite.com:8080"
+  "serverPort": 60836,
+  "proxy": "http://673b92c9-d9d6-4ed9-8e40-98aad4c01353:JPspwAlwe7ZVXh6E7ukGzErXptuVYFnK@tun.testsprite.com:8080"
 }

@@ -68,12 +68,13 @@ const extractItemPaymentMethods = (item: any): any[] => {
     ? item.product.options.find((opt: any) => opt?.id === selectedOptionId)
     : undefined;
 
+  // Prefer the selected option's payment methods first.
+  // Some cart responses include generic item/product payment_methods that can differ from the chosen variant.
   const candidates = [
-    item?.payment_methods,
     item?.product_option?.payment_methods,
     matchedOption?.payment_methods,
+    item?.payment_methods,
     item?.product?.payment_methods,
-    item?.product?.options?.[0]?.payment_methods,
   ];
 
   for (const candidate of candidates) {
@@ -130,7 +131,7 @@ export default function OrderSummary({
   const hasPaymentMethodsForAllItems =
     items.length > 0 && paymentMethodsByItem.every((methods) => Array.isArray(methods) && methods.length > 0);
 
-  const legacyPaymentMethods = (items[0]?.product as any)?.options?.[0]?.payment_methods || [];
+  const legacyPaymentMethods = extractItemPaymentMethods(items[0]);
 
   const paymentMethods = (() => {
     if (!hasPaymentMethodsForAllItems) {

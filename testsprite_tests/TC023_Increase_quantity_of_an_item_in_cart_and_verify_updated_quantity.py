@@ -33,14 +33,14 @@ async def run_test():
         # -> Navigate to http://localhost:5175
         await page.goto("http://localhost:5175", wait_until="commit", timeout=10000)
         
-        # -> Navigate to '/ar' using explicit navigate action to http://localhost:5175/ar (per test instruction requiring exact path navigation).
+        # -> Navigate to '/ar' (http://localhost:5175/ar) to load the Arabic storefront and reveal product cards and cart UI.
         await page.goto("http://localhost:5175/ar", wait_until="commit", timeout=10000)
         
         # --> Assertions to verify final state
         frame = context.pages[-1]
-        await expect(frame.locator('xpath=//div[@id="cart-items-list" or contains(@class,"cart-items-list") or contains(@class,"cart-items") or @data-testid="cart-items-list"]').first).to_be_visible(timeout=3000)
+        await expect(frame.locator('xpath=//div[contains(@class,"cart-items") or contains(@id,"cart-items-list") or @aria-label="cart items list"]').first).to_be_visible(timeout=3000)
         await expect(frame.locator('text=2').first).to_be_visible(timeout=3000)
-        await expect(frame.locator('xpath=//div[@id="cart-summary" or contains(@class,"cart-summary") or @data-testid="cart-summary"]').first).to_be_visible(timeout=3000)
+        await expect(frame.locator('xpath=//div[contains(@class,"cart-summary") or contains(@id,"cart-summary") or @aria-label="cart summary"]').first).to_be_visible(timeout=3000)
         await asyncio.sleep(5)
 
     finally:

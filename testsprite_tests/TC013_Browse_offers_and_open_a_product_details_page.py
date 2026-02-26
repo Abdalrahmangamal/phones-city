@@ -33,7 +33,7 @@ async def run_test():
         # -> Navigate to http://localhost:5175
         await page.goto("http://localhost:5175", wait_until="commit", timeout=10000)
         
-        # -> Navigate to /ar/offers (http://localhost:5175/ar/offers) as specified by the test step.
+        # -> Navigate to /ar/offers (use navigate action as the test step explicitly requires).
         await page.goto("http://localhost:5175/ar/offers", wait_until="commit", timeout=10000)
         
         # --> Assertions to verify final state

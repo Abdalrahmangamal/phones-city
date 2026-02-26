@@ -82,11 +82,24 @@ function ProductCardInner({ product, imagecard, containerstyle, quantity }: Prod
     : 0;
 
   // حالة المخزون بناءً على البيانات الفعلية من الـ API
-  const stockQuantity = selectedVariant?.quantity ?? product?.quantity ?? 0;
-  const stockStatus = selectedVariant?.stock_status ?? product?.stock_status ?? "in_stock";
+  const normalizeStockQuantity = (value: unknown): number | null => {
+    if (value === null || value === undefined || value === "") return null;
+    const parsed = Number(value);
+    return Number.isFinite(parsed) ? parsed : null;
+  };
 
-  const isOutOfStock = stockQuantity <= 0 || stockStatus === "out_of_stock";
-  const isLimited = stockStatus === "limited" && stockQuantity > 0;
+  const stockQuantity = normalizeStockQuantity(selectedVariant?.quantity ?? product?.quantity);
+  const stockStatus = String(selectedVariant?.stock_status ?? product?.stock_status ?? "in_stock")
+    .toLowerCase()
+    .trim();
+
+  // Some list endpoints (simple=true) omit quantity. Missing quantity should not be treated as zero.
+  const isOutOfStock =
+    stockStatus === "out_of_stock" ||
+    stockStatus === "unavailable" ||
+    (stockQuantity !== null && stockQuantity <= 0);
+
+  const isLimited = stockStatus === "limited" && (stockQuantity === null || stockQuantity > 0);
 
   // الصورة الحالية - أولوية للصورة من الـ variant المحدد
   const currentImage = selectedVariant?.images?.[0]?.url

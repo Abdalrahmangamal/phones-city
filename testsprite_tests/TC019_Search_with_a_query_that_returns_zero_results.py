@@ -33,7 +33,7 @@ async def run_test():
         # -> Navigate to http://localhost:5175
         await page.goto("http://localhost:5175", wait_until="commit", timeout=10000)
         
-        # -> Navigate to /ar/search by issuing a navigate to http://localhost:5175/ar/search and then inspect the page for the search input and search button.
+        # -> Navigate to /ar/search (explicit navigation required by test step) and wait for the page to load
         await page.goto("http://localhost:5175/ar/search", wait_until="commit", timeout=10000)
         
         # --> Assertions to verify final state

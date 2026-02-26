@@ -33,14 +33,14 @@ async def run_test():
         # -> Navigate to http://localhost:5175
         await page.goto("http://localhost:5175", wait_until="commit", timeout=10000)
         
-        # -> Navigate to /ar/register using the exact path on the current site
+        # -> Navigate to /ar/register as specified in the test steps.
         await page.goto("http://localhost:5175/ar/register", wait_until="commit", timeout=10000)
         
         # --> Assertions to verify final state
         frame = context.pages[-1]
         await expect(frame.locator('text=phone').first).to_be_visible(timeout=3000)
         await expect(frame.locator('text=invalid').first).to_be_visible(timeout=3000)
-        await expect(frame.locator('text=OTP').first).to_be_hidden(timeout=3000)
+        await expect(frame.locator('text=OTP').first).not_to_be_visible(timeout=3000)
         await asyncio.sleep(5)
 
     finally:

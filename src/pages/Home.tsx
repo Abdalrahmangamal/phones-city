@@ -27,7 +27,14 @@ import { usePageSEO, jsonLdGenerators } from "@/hooks/usePageSEO";
 const NewHome = () => {
   const { fetchHomePage, data } = useHomePageStore();
   const { lang } = useLangSync();
-  const { isShowing, showPopup, hidePopup } = usePopupStore();
+  const {
+    hasShown,
+    isShowing,
+    homeAutoPopupAttempted,
+    showPopup,
+    hidePopup,
+    markHomeAutoPopupAttempted,
+  } = usePopupStore();
 
   // SEO: Dynamic meta tags for the home page
   const homeJsonLd = useMemo(() => [
@@ -71,12 +78,18 @@ const NewHome = () => {
   const fetchCategories = useCategoriesStore((state) => state.fetchCategories);
   const { fetchFeatures, getFeaturesByLanguage } = useFeaturesStore();
 
-  // Effect to show popup after a delay only if it hasn't been shown yet AND there are sliders
+  // Auto-show popup only on the first home visit in this app runtime.
+  // If the user leaves Home before the timer ends, do not show it later on another Home visit.
   useEffect(() => {
-    usePopupStore.getState().resetPopup();
+    if (hasShown || homeAutoPopupAttempted || !sliders || sliders.length === 0) {
+      return;
+    }
+
+    markHomeAutoPopupAttempted();
 
     const popupTimer = setTimeout(() => {
-      if (!usePopupStore.getState().hasShown && sliders && sliders.length > 0) {
+      const popupState = usePopupStore.getState();
+      if (!popupState.hasShown && popupState.homeAutoPopupAttempted) {
         showPopup();
       }
     }, 10000);
@@ -84,7 +97,7 @@ const NewHome = () => {
     return () => {
       clearTimeout(popupTimer);
     };
-  }, [sliders]);
+  }, [hasShown, homeAutoPopupAttempted, markHomeAutoPopupAttempted, showPopup, sliders]);
 
   // Fetch all data in parallel — NO blocking loader
   useEffect(() => {

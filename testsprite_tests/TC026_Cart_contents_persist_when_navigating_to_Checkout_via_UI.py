@@ -30,43 +30,18 @@ async def run_test():
         page = await context.new_page()
 
         # Interact with the page elements to simulate user flow
-        # User manual correction
+        # -> Navigate to http://localhost:5175
         await page.goto("http://localhost:5175", wait_until="commit", timeout=10000)
-        try:
-            await page.wait_for_load_state("domcontentloaded", timeout=3000)
-        except async_api.Error:
-            pass 
-        # -> Fill the email and password fields on the login page and click the 'تسجيل الدخول' (login) button to authenticate.
-        frame = context.pages[-1]
-        # Input text
-        elem = frame.locator('xpath=/html/body/div/div/div/div[2]/div[1]/form/div[1]/input').nth(0)
-        await page.wait_for_timeout(3000); await elem.fill('Garett36@gmail.com')
-        frame = context.pages[-1]
-        # Input text
-        elem = frame.locator('xpath=/html/body/div/div/div/div[2]/div[1]/form/div[2]/div[1]/input').nth(0)
-        await page.wait_for_timeout(3000); await elem.fill('12345678')
-        frame = context.pages[-1]
-        # Click element
-        elem = frame.locator('xpath=/html/body/div/div/div/div[2]/div[1]/form/button').nth(0)
-        await page.wait_for_timeout(3000); await elem.click(timeout=5000)
-        # -> Fill the email (index 621) and password (index 627) fields with the provided credentials and click the login button (index 636). Then wait for the app to redirect/load and continue to the product page.
-        frame = context.pages[-1]
-        # Input text
-        elem = frame.locator('xpath=/html/body/div/div/div/div[2]/div[1]/form/div[1]/input').nth(0)
-        await page.wait_for_timeout(3000); await elem.fill('Garett36@gmail.com')
-        frame = context.pages[-1]
-        # Input text
-        elem = frame.locator('xpath=/html/body/div/div/div/div[2]/div[1]/form/div[2]/div[1]/input').nth(0)
-        await page.wait_for_timeout(3000); await elem.fill('12345678')
-        frame = context.pages[-1]
-        # Click element
-        elem = frame.locator('xpath=/html/body/div/div/div/div[2]/div[1]/form/button').nth(0)
-        await page.wait_for_timeout(3000); await elem.click(timeout=5000)
+        
+        # -> Navigate to '/ar' using exact path (http://localhost:5175/ar) as specified in the test steps.
+        await page.goto("http://localhost:5175/ar", wait_until="commit", timeout=10000)
+        
         # --> Assertions to verify final state
         frame = context.pages[-1]
-        await expect(frame.locator('text=Cart (1)').first).to_be_visible(timeout=3000)
-        assert '/checkout' in frame.url
-        await expect(frame.locator('text=Sample Product').first).to_be_visible(timeout=3000)
+        assert '/ar/singleproduct' in frame.url
+        assert '/ar/checkout' in frame.url
+        await expect(frame.locator('text=order items').first).to_be_visible(timeout=3000)
+        await expect(frame.locator('text=Qty').first).to_be_visible(timeout=3000)
         await asyncio.sleep(5)
 
     finally:

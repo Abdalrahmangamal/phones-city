@@ -162,9 +162,20 @@ export default function ProductPage() {
   // تحديد إذا كان المنتج غير متوفر
   const isOutOfStock = (() => {
     try {
-      const stockQuantity = selectedVariant?.quantity ?? product?.quantity ?? 0;
-      const stockStatus = selectedVariant?.stock_status ?? product?.stock_status ?? "in_stock";
-      return stockQuantity <= 0 || stockStatus === "out_of_stock" || stockStatus === "unavailable";
+      const rawStockQuantity = selectedVariant?.quantity ?? product?.quantity;
+      const stockQuantity =
+        rawStockQuantity === null || rawStockQuantity === undefined || rawStockQuantity === ""
+          ? null
+          : Number(rawStockQuantity);
+      const stockStatus = String(selectedVariant?.stock_status ?? product?.stock_status ?? "in_stock")
+        .toLowerCase()
+        .trim();
+
+      return (
+        stockStatus === "out_of_stock" ||
+        stockStatus === "unavailable" ||
+        (stockQuantity !== null && Number.isFinite(stockQuantity) && stockQuantity <= 0)
+      );
     } catch {
       return false;
     }

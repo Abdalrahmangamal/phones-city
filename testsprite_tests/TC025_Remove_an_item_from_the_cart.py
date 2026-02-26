@@ -33,12 +33,31 @@ async def run_test():
         # -> Navigate to http://localhost:5175
         await page.goto("http://localhost:5175", wait_until="commit", timeout=10000)
         
-        # -> Navigate to '/ar' by loading http://localhost:5175/ar (required explicit navigation step).
+        # -> Navigate to /ar by loading URL http://localhost:5175/ar (use navigate since no relevant clickable element exists on the current blank page).
+        await page.goto("http://localhost:5175/ar", wait_until="commit", timeout=10000)
+        
+        # -> Fill the email and password fields with the provided credentials and click the login/submit button to sign in.
+        frame = context.pages[-1]
+        # Input text
+        elem = frame.locator('xpath=/html/body/div/div/div/div[2]/div[1]/form/div[1]/input').nth(0)
+        await page.wait_for_timeout(3000); await elem.fill('Garett36@gmail.com')
+        
+        frame = context.pages[-1]
+        # Input text
+        elem = frame.locator('xpath=/html/body/div/div/div/div[2]/div[1]/form/div[2]/div[1]/input').nth(0)
+        await page.wait_for_timeout(3000); await elem.fill('12345678')
+        
+        frame = context.pages[-1]
+        # Click element
+        elem = frame.locator('xpath=/html/body/div/div/div/div[2]/div[1]/form/button').nth(0)
+        await page.wait_for_timeout(3000); await elem.click(timeout=5000)
+        
+        # -> Navigate to /ar (use explicit navigate to http://localhost:5175/ar as the test step requires).
         await page.goto("http://localhost:5175/ar", wait_until="commit", timeout=10000)
         
         # --> Assertions to verify final state
         frame = context.pages[-1]
-        await expect(frame.locator('xpath=//ul[@id="cart-items" or contains(@class,"cart-items") or @aria-label="cart items"]').first).to_be_visible(timeout=3000)
+        await expect(frame.locator('xpath=//div[contains(@class,"cart-items")]').first).to_be_visible(timeout=3000)
         await expect(frame.locator('text=Cart is empty').first).to_be_visible(timeout=3000)
         await expect(frame.locator('text=0').first).to_be_visible(timeout=3000)
         await asyncio.sleep(5)

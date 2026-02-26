@@ -33,16 +33,16 @@ async def run_test():
         # -> Navigate to http://localhost:5175
         await page.goto("http://localhost:5175", wait_until="commit", timeout=10000)
         
-        # -> Navigate to /ar (http://localhost:5175/ar) so the page can be checked for the required sections.
+        # -> Navigate to /ar (http://localhost:5175/ar) and then verify the URL contains '/ar' and check visibility of the Hero slider, Product categories section, Special offers section, and Testimonials section.
         await page.goto("http://localhost:5175/ar", wait_until="commit", timeout=10000)
         
         # --> Assertions to verify final state
         frame = context.pages[-1]
         assert '/ar' in frame.url
-        await expect(frame.locator('text=Hero slider').first).to_be_visible(timeout=3000)
-        await expect(frame.locator('text=Product categories section').first).to_be_visible(timeout=3000)
-        await expect(frame.locator('text=Special offers section').first).to_be_visible(timeout=3000)
-        await expect(frame.locator('text=Testimonials section').first).to_be_visible(timeout=3000)
+        await expect(frame.locator("xpath=//*[contains(text(), 'Hero slider')]").first).to_be_visible(timeout=3000)
+        await expect(frame.locator("xpath=//*[contains(text(), 'Product categories')]").first).to_be_visible(timeout=3000)
+        await expect(frame.locator("xpath=//*[contains(text(), 'Special offers')]").first).to_be_visible(timeout=3000)
+        await expect(frame.locator("xpath=//*[contains(text(), 'Testimonials')]").first).to_be_visible(timeout=3000)
         await asyncio.sleep(5)
 
     finally:

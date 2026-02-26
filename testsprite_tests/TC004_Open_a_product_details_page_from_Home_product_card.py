@@ -33,14 +33,14 @@ async def run_test():
         # -> Navigate to http://localhost:5175
         await page.goto("http://localhost:5175", wait_until="commit", timeout=10000)
         
-        # -> Navigate to /ar as specified in the test steps (use explicit navigate to http://localhost:5175/ar).
+        # -> Navigate to /ar (http://localhost:5175/ar) as specified by the test step.
         await page.goto("http://localhost:5175/ar", wait_until="commit", timeout=10000)
         
         # --> Assertions to verify final state
         frame = context.pages[-1]
-        await expect(frame.locator('xpath=//div[contains(@class,"product-card")]').first).to_be_visible(timeout=3000)
+        await expect(frame.locator('text=View Details').first).to_be_visible(timeout=3000)
         assert '/ar/singleproduct' in frame.url
-        await expect(frame.locator('xpath=//section[contains(@class,"product-details") or contains(@id,"product-details")]').first).to_be_visible(timeout=3000)
+        await expect(frame.locator('text=Product Details').first).to_be_visible(timeout=3000)
         await asyncio.sleep(5)
 
     finally:

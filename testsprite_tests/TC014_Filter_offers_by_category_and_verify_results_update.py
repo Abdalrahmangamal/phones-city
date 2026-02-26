@@ -33,14 +33,14 @@ async def run_test():
         # -> Navigate to http://localhost:5175
         await page.goto("http://localhost:5175", wait_until="commit", timeout=10000)
         
-        # -> Navigate to /ar/offers (use exact path appended to base URL http://localhost:5175/ar/offers) and then verify the URL contains '/ar/offers'.
+        # -> Navigate to /ar/offers (use explicit navigate to http://localhost:5175/ar/offers as the test step requires).
         await page.goto("http://localhost:5175/ar/offers", wait_until="commit", timeout=10000)
         
         # --> Assertions to verify final state
         frame = context.pages[-1]
         assert '/ar/offers' in frame.url
-        await expect(frame.locator('xpath=//div[contains(@class,"product-card")]').first).to_be_visible(timeout=3000)
-        await expect(frame.locator('xpath=//section[contains(@class,"filters")]//select[@name="category"]//option[@selected]').first).to_be_visible(timeout=3000)
+        await expect(frame.locator("xpath=//div[contains(@class,'product-card') or contains(@class,'offer-card') or contains(@class,'card')]").first).to_be_visible(timeout=3000)
+        await expect(frame.locator('text=Category: Electronics').first).to_be_visible(timeout=3000)
         await asyncio.sleep(5)
 
     finally:

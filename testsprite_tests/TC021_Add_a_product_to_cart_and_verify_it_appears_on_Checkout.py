@@ -33,18 +33,15 @@ async def run_test():
         # -> Navigate to http://localhost:5175
         await page.goto("http://localhost:5175", wait_until="commit", timeout=10000)
         
-        # -> Navigate to '/ar' by using the explicit navigate action to http://localhost:5175/ar
+        # -> Navigate to '/ar' (http://localhost:5175/ar) as the next immediate action.
         await page.goto("http://localhost:5175/ar", wait_until="commit", timeout=10000)
         
         # --> Assertions to verify final state
         frame = context.pages[-1]
-        frame = page
-        # Verify we are on the Arabic site root/page
-        assert "/ar" in frame.url
-        # The page shows a login form instead of product listing — report and stop the test
-        login_heading = frame.locator('xpath=/html/body//*[text()="تسجيل الدخول إلى حسابك"]')
-        assert await login_heading.is_visible(), "Expected login heading not visible; unable to continue with product/cart flow."
-        raise AssertionError("Feature missing: expected Home page with product listing but landed on Login page. Stopping test as per test plan.")
+        assert '/ar/singleproduct' in frame.url
+        await expect(frame.locator('text=Cart Summary').first).to_be_visible(timeout=3000)
+        assert '/ar/checkout' in frame.url
+        await expect(frame.locator('text=Order Summary').first).to_be_visible(timeout=3000)
         await asyncio.sleep(5)
 
     finally:
