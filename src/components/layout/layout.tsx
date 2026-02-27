@@ -62,7 +62,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       )}
       {shouldMountChatbot && (
         <Suspense fallback={null}>
-          <ChatBot initialOpen />
+          <ChatBot initialOpen onClose={() => setShouldMountChatbot(false)} />
         </Suspense>
       )}
     </div>

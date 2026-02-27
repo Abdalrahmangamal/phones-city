@@ -2,14 +2,14 @@ import { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { useWebchat } from '@botpress/webchat';
-import botGif from '../../assets/images/ezgif-5c28a7a768da984f.webp';
 import { useSettings } from "@/store/settings";
 
 interface ChatbotProps {
   initialOpen?: boolean;
+  onClose?: () => void;
 }
 
-export default function Chatbot({ initialOpen = false }: ChatbotProps) {
+export default function Chatbot({ initialOpen = false, onClose }: ChatbotProps) {
   const [isOpen, setIsOpen] = useState(initialOpen);
   const [inputValue, setInputValue] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -123,21 +123,6 @@ export default function Chatbot({ initialOpen = false }: ChatbotProps) {
 
   return (
     <>
-      {!isOpen && (
-        <img
-          src={botGif}
-          alt="Chat Bot"
-          onClick={() => setIsOpen(!isOpen)}
-          loading="lazy"
-          decoding="async"
-          className={`fixed z-[500] 
-      w-[160px] h-[140px] md:w-[200px] md:h-[180px] 
-      bottom-[-15px] md:bottom-[-20px]
-      ${isEn ? 'right-[-15px] md:right-[-20px]' : 'left-[-15px] md:left-[-20px]'} 
-      cursor-pointer transition-transform duration-300 hover:scale-110`}
-        />
-      )}
-
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -154,7 +139,16 @@ export default function Chatbot({ initialOpen = false }: ChatbotProps) {
               <div className="flex items-center gap-3">
                 <div className="relative">
                   <div className="bg-white/10 p-2 rounded-full backdrop-blur-sm w-10 h-10 overflow-hidden flex items-center justify-center">
-                    <img src={botGif} alt="Bot" className="w-full h-full object-cover" />
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      className="h-5 w-5 text-white"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M8 10h8M8 14h5m8-2a8 8 0 10-15.5 2.5L4 20l5.8-1.5A8 8 0 0021 12z" />
+                    </svg>
                   </div>
                   {isConnected && <span className={`absolute bottom-0 ${isEn ? 'left-0' : 'right-0'} w-3 h-3 bg-green-400 border-2 border-[#2F2C79] rounded-full`}></span>}
                 </div>
@@ -163,7 +157,13 @@ export default function Chatbot({ initialOpen = false }: ChatbotProps) {
                   <p className="text-[10px] text-gray-300 opacity-90">{t.subtitle}</p>
                 </div>
               </div>
-              <button onClick={() => setIsOpen(false)} className="bg-white/10 p-1.5 rounded-full text-white hover:bg-white/20 transition">
+              <button
+                onClick={() => {
+                  setIsOpen(false);
+                  onClose?.();
+                }}
+                className="bg-white/10 p-1.5 rounded-full text-white hover:bg-white/20 transition"
+              >
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>
