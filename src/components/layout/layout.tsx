@@ -9,7 +9,8 @@ const ChatBot = lazy(() => import("./Chatbot"));
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const { lang } = useSettings();
-  const [shouldMountChatbot, setShouldMountChatbot] = useState(false);
+  const [isChatOpen, setIsChatOpen] = useState(false);
+  const [isChatInitialized, setIsChatInitialized] = useState(false);
   const isEn = lang === "en";
   // const { isLoading, setLoading } = useLoaderStore();
 
@@ -38,10 +39,13 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <Header />
       <main className="pt-[70px] md:pt-[170px]">{children}</main>
       <Footer />
-      {!shouldMountChatbot && (
+      {!isChatOpen && (
         <button
           type="button"
-          onClick={() => setShouldMountChatbot(true)}
+          onClick={() => {
+            setIsChatInitialized(true);
+            setIsChatOpen(true);
+          }}
           aria-label={isEn ? "Open chat assistant" : "فتح المساعد الذكي"}
           className={`fixed z-[500] bottom-4 md:bottom-6 ${isEn ? "right-4 md:right-6" : "left-4 md:left-6"} flex items-center gap-2 rounded-full bg-[#2F2C79] px-4 py-3 text-white shadow-[0_12px_32px_rgba(47,44,121,0.35)] transition-transform hover:scale-105 active:scale-95`}
         >
@@ -60,9 +64,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           </span>
         </button>
       )}
-      {shouldMountChatbot && (
+      {isChatInitialized && (
         <Suspense fallback={null}>
-          <ChatBot initialOpen onClose={() => setShouldMountChatbot(false)} />
+          <ChatBot isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
         </Suspense>
       )}
     </div>

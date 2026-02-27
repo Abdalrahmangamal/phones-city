@@ -5,12 +5,11 @@ import { useWebchat } from '@botpress/webchat';
 import { useSettings } from "@/store/settings";
 
 interface ChatbotProps {
-  initialOpen?: boolean;
+  isOpen?: boolean;
   onClose?: () => void;
 }
 
-export default function Chatbot({ initialOpen = false, onClose }: ChatbotProps) {
-  const [isOpen, setIsOpen] = useState(initialOpen);
+export default function Chatbot({ isOpen = false, onClose }: ChatbotProps) {
   const [inputValue, setInputValue] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { lang } = useSettings();
@@ -158,10 +157,7 @@ export default function Chatbot({ initialOpen = false, onClose }: ChatbotProps) 
                 </div>
               </div>
               <button
-                onClick={() => {
-                  setIsOpen(false);
-                  onClose?.();
-                }}
+                onClick={onClose}
                 className="bg-white/10 p-1.5 rounded-full text-white hover:bg-white/20 transition"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
