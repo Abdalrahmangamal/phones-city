@@ -20,6 +20,41 @@ import { Package, Home, ShoppingBag } from "lucide-react";
 import BankTransferModal from "@/components/checkout/payment/BankTransferModal";
 import { SaudiRiyalIcon } from "@/components/common/SaudiRiyalIcon";
 
+const PENDING_PAYMENT_CART_SNAPSHOT_KEY = "pending_payment_cart_snapshot_v1";
+const PENDING_PAYMENT_CART_META_KEY = "pending_payment_cart_meta_v1";
+const PENDING_PAYMENT_CART_TTL_MS = 15 * 60 * 1000;
+
+type PendingCartSnapshotItem = {
+  id: number;
+  quantity: number;
+  isOption: boolean;
+};
+
+const FINALIZED_PAYMENT_STATUSES = new Set(["paid"]);
+const FINALIZED_ORDER_STATUSES = new Set(["completed"]);
+
+const hasActivePendingPaymentSnapshot = () => {
+  const snapshotRaw = sessionStorage.getItem(PENDING_PAYMENT_CART_SNAPSHOT_KEY);
+  const metaRaw = sessionStorage.getItem(PENDING_PAYMENT_CART_META_KEY);
+  if (!snapshotRaw || !metaRaw) return false;
+
+  try {
+    const snapshot = JSON.parse(snapshotRaw);
+    const meta = JSON.parse(metaRaw);
+
+    if (!Array.isArray(snapshot) || snapshot.length === 0) return false;
+
+    const createdAt = Number(meta?.createdAt || 0);
+    const isExpired = !createdAt || Date.now() - createdAt > PENDING_PAYMENT_CART_TTL_MS;
+    const restoreAttempts = Number(meta?.restoreAttempts || 0);
+    const reachedMaxAttempts = restoreAttempts >= 3;
+
+    return !isExpired && !reachedMaxAttempts;
+  } catch {
+    return false;
+  }
+};
+
 export default function CheckoutPage() {
   const location = useLocation();
   const locationState = (location.state || {}) as { checkoutStep?: number };
@@ -35,6 +70,15 @@ export default function CheckoutPage() {
   const [uploadUrl, setUploadUrl] = useState<string | null>(null); // URL لرفع إثبات الدفع
   const [bankAccountDetails, setBankAccountDetails] = useState<any>(null); // بيانات الحساب البنكي
   const [showBankTransferModal, setShowBankTransferModal] = useState(false); // مودال التحويل البنكي
+  const [isRestoringPendingCart, setIsRestoringPendingCart] = useState(false);
+  const [isWaitingRestoreCheck, setIsWaitingRestoreCheck] = useState<boolean>(() => {
+    try {
+      return hasActivePendingPaymentSnapshot();
+    } catch {
+      return false;
+    }
+  });
+  const [pendingRestoreTick, setPendingRestoreTick] = useState(0);
   const BANK_TRANSFER_ID = 8; // ID التحويل البنكي الحقيقي من الـ API
   const navigate = useNavigate();
 
@@ -53,6 +97,62 @@ export default function CheckoutPage() {
     addresses,
     deliveryMethod,
   } = useAddressStore();
+
+  const clearPendingPaymentSnapshot = () => {
+    sessionStorage.removeItem(PENDING_PAYMENT_CART_SNAPSHOT_KEY);
+    sessionStorage.removeItem(PENDING_PAYMENT_CART_META_KEY);
+  };
+
+  const savePendingPaymentSnapshot = (orderNum: string | number | null) => {
+    const snapshot = items
+      .map((item: any) => {
+        const optionId = Number(item?.product_option?.id ?? item?.product_option_id);
+        const productId = Number(item?.product?.id ?? item?.product_id);
+        const quantity = Math.max(1, Number(item?.quantity) || 1);
+
+        if (Number.isFinite(optionId) && optionId > 0) {
+          return { id: optionId, quantity, isOption: true };
+        }
+
+        if (Number.isFinite(productId) && productId > 0) {
+          return { id: productId, quantity, isOption: false };
+        }
+
+        return null;
+      })
+      .filter((entry): entry is PendingCartSnapshotItem => entry !== null);
+
+    if (snapshot.length === 0) return;
+
+    const meta = {
+      createdAt: Date.now(),
+      orderNumber: orderNum ? String(orderNum) : null,
+      paymentMethodId: Number(selectedPaymentId),
+      restoreAttempts: 0,
+    };
+
+    sessionStorage.setItem(PENDING_PAYMENT_CART_SNAPSHOT_KEY, JSON.stringify(snapshot));
+    sessionStorage.setItem(PENDING_PAYMENT_CART_META_KEY, JSON.stringify(meta));
+  };
+
+  useEffect(() => {
+    const handlePageShow = (event: PageTransitionEvent) => {
+      const navigationEntries = window.performance?.getEntriesByType?.("navigation") as PerformanceNavigationTiming[];
+      const isBackForwardNavigation =
+        event.persisted || navigationEntries?.[0]?.type === "back_forward";
+
+      if (isBackForwardNavigation) {
+        if (hasActivePendingPaymentSnapshot()) {
+          setIsWaitingRestoreCheck(true);
+        }
+        setPendingRestoreTick((prev) => prev + 1);
+        fetchCart();
+      }
+    };
+
+    window.addEventListener("pageshow", handlePageShow);
+    return () => window.removeEventListener("pageshow", handlePageShow);
+  }, [fetchCart]);
 
   const getPointsUsagePayload = () => {
     const normalizedPointsDiscount = Math.max(
@@ -153,6 +253,151 @@ export default function CheckoutPage() {
     }
   };
 
+  useEffect(() => {
+    const restorePendingPaymentCart = async () => {
+      if (items.length > 0) {
+        setIsWaitingRestoreCheck(false);
+        return;
+      }
+      if (isRestoringPendingCart) return;
+
+      const snapshotRaw = sessionStorage.getItem(PENDING_PAYMENT_CART_SNAPSHOT_KEY);
+      const metaRaw = sessionStorage.getItem(PENDING_PAYMENT_CART_META_KEY);
+
+      if (!snapshotRaw || !metaRaw) {
+        setIsWaitingRestoreCheck(false);
+        return;
+      }
+
+      let snapshot: PendingCartSnapshotItem[] = [];
+      let meta: any = null;
+
+      try {
+        snapshot = JSON.parse(snapshotRaw);
+        meta = JSON.parse(metaRaw);
+      } catch {
+        clearPendingPaymentSnapshot();
+        setIsWaitingRestoreCheck(false);
+        return;
+      }
+
+      const createdAt = Number(meta?.createdAt || 0);
+      const isExpired = !createdAt || Date.now() - createdAt > PENDING_PAYMENT_CART_TTL_MS;
+      const restoreAttempts = Number(meta?.restoreAttempts || 0);
+      const reachedMaxAttempts = restoreAttempts >= 3;
+      const orderNumber = String(meta?.orderNumber || "").trim();
+
+      if (
+        isExpired ||
+        reachedMaxAttempts ||
+        !Array.isArray(snapshot) ||
+        snapshot.length === 0
+      ) {
+        clearPendingPaymentSnapshot();
+        setIsWaitingRestoreCheck(false);
+        return;
+      }
+
+      sessionStorage.setItem(
+        PENDING_PAYMENT_CART_META_KEY,
+        JSON.stringify({ ...meta, restoreAttempts: restoreAttempts + 1 })
+      );
+
+      setIsRestoringPendingCart(true);
+
+      try {
+        // إذا الطلب تم دفعه فعليًا، لا نعيد السلة.
+        if (orderNumber) {
+          try {
+            const ordersResponse = await axiosClient.get("/api/v1/orders", {
+              headers: { Accept: "application/json" },
+            });
+            const orders = ordersResponse?.data?.data;
+
+            if (Array.isArray(orders)) {
+              const matchedOrder = orders.find(
+                (order: any) => String(order?.order_number || "").trim() === orderNumber
+              );
+
+              if (matchedOrder) {
+                const paymentStatus = String(matchedOrder?.payment_status || "").toLowerCase().trim();
+                const orderStatus = String(matchedOrder?.status || "").toLowerCase().trim();
+                const isFinalizedPayment =
+                  FINALIZED_PAYMENT_STATUSES.has(paymentStatus) ||
+                  FINALIZED_ORDER_STATUSES.has(orderStatus);
+
+                if (isFinalizedPayment) {
+                  clearPendingPaymentSnapshot();
+                  setIsWaitingRestoreCheck(false);
+                  return;
+                }
+              }
+            }
+          } catch {
+            // إذا فشل فحص الحالة نكمل الاسترجاع كـ fallback.
+          }
+        }
+
+        // دمج العناصر المتكررة لتقليل عدد الطلبات وتسريع الاسترجاع.
+        const merged = new Map<string, PendingCartSnapshotItem>();
+        snapshot.forEach((entry) => {
+          const itemId = Number(entry?.id);
+          const quantity = Math.max(1, Number(entry?.quantity) || 1);
+          const isOption = Boolean(entry?.isOption);
+          if (!Number.isFinite(itemId) || itemId <= 0) return;
+
+          const key = `${isOption ? "option" : "product"}:${itemId}`;
+          const prev = merged.get(key);
+          if (prev) {
+            prev.quantity += quantity;
+          } else {
+            merged.set(key, { id: itemId, isOption, quantity });
+          }
+        });
+
+        await Promise.all(
+          [...merged.values()].map((entry) => {
+            const params = entry.isOption
+              ? { product_option_id: entry.id, quantity: entry.quantity }
+              : { product_id: entry.id, quantity: entry.quantity };
+
+            return axiosClient.post("api/v1/cart", {}, {
+              params,
+              headers: {
+                Accept: "application/json",
+              },
+            });
+          })
+        );
+
+        await fetchCart();
+        clearPendingPaymentSnapshot();
+
+        showCustomToast(
+          "info",
+          isRTL ? "تمت استعادة السلة" : "Cart Restored",
+          isRTL
+            ? "رجعنا المنتجات للسلة بعد الرجوع من بوابة الدفع."
+            : "Your cart items were restored after returning from the payment gateway."
+        );
+      } catch {
+        console.error("Failed to restore pending payment cart");
+        showCustomToast(
+          "error",
+          isRTL ? "تعذر استعادة السلة" : "Cart Restore Failed",
+          isRTL
+            ? "حصل خطأ أثناء محاولة استعادة المنتجات. أعد تحميل الصفحة وحاول مرة أخرى."
+            : "An error occurred while restoring your cart. Please refresh and try again."
+        );
+      } finally {
+        setIsRestoringPendingCart(false);
+        setIsWaitingRestoreCheck(false);
+      }
+    };
+
+    restorePendingPaymentCart();
+  }, [items.length, isRestoringPendingCart, fetchCart, isRTL, pendingRestoreTick]);
+
   const handleCompleteOrder = async () => {
     setIsSubmitting(true);
 
@@ -250,8 +495,20 @@ export default function CheckoutPage() {
 
       if (requiresRedirect || redirectUrl) {
         // حفظ رقم الطلب جزئياً (قد نعود لاحقاً عبر webhook أو callback)
-        const orderNum = response.data.order_number || response.data.id;
+        const orderData = response.data.data?.order || response.data.data || response.data;
+        const orderNum = orderData?.order_number || response.data.order_number || response.data.id;
         setOrderNumber(orderNum);
+
+        if (!redirectUrl) {
+          showCustomToast(
+            'error',
+            isRTL ? 'رابط الدفع غير متاح' : 'Payment Link Missing',
+            isRTL ? 'تعذر تحويلك لبوابة الدفع. حاول مرة أخرى.' : 'Unable to redirect to payment gateway. Please try again.'
+          );
+          return;
+        }
+
+        savePendingPaymentSnapshot(orderNum);
 
         // لا ننظف السلة هنا لأن الدفع سيكمل خارج الموقع
         // افتح رابط الدفع
@@ -287,6 +544,7 @@ export default function CheckoutPage() {
       }
 
       setOrderCompleted(true);
+      clearPendingPaymentSnapshot();
 
       // تنظيف السلة
       if (clearCart) {
@@ -444,6 +702,25 @@ export default function CheckoutPage() {
     );
   }
 
+  const shouldShowRestoreLoader =
+    (isWaitingRestoreCheck || isRestoringPendingCart) &&
+    items.length === 0;
+
+  if (shouldShowRestoreLoader) {
+    return (
+      <Layout>
+        <div className="min-h-screen mt-[60px] bg-white flex items-center justify-center" dir={isRTL ? "rtl" : "ltr"}>
+          <div className="flex flex-col items-center gap-4">
+            <span className="animate-spin rounded-full h-10 w-10 border-b-2 border-[#211C4D]"></span>
+            <p className="text-[#211C4D] font-medium text-base">
+              {isRTL ? "جاري استعادة السلة..." : "Restoring your cart..."}
+            </p>
+          </div>
+        </div>
+      </Layout>
+    );
+  }
+
   // صفحة الـ Checkout العادية
   return (
     <Layout>
@@ -589,6 +866,7 @@ export default function CheckoutPage() {
           );
           setShowBankTransferModal(false);
           setOrderCompleted(true);
+          clearPendingPaymentSnapshot();
           if (clearCart) {
             clearCart();
           }
