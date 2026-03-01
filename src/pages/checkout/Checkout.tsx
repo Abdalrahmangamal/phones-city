@@ -32,6 +32,42 @@ type PendingCartSnapshotItem = {
 
 const FINALIZED_PAYMENT_STATUSES = new Set(["paid"]);
 const FINALIZED_ORDER_STATUSES = new Set(["completed"]);
+const EXTERNAL_PAYMENT_METHOD_IDS = new Set([1, 2, 3, 4, 5, 6, 7]);
+
+const normalizeStatusValue = (value: unknown) =>
+  String(value ?? "").toLowerCase().trim();
+
+const extractRedirectUrlFromOrderResponse = (responseData: any, paymentData: any, orderData: any) => {
+  const candidates = [
+    paymentData?.redirect_url,
+    paymentData?.redirectUrl,
+    paymentData?.url,
+    paymentData?.checkout_url,
+    paymentData?.payment_url,
+    paymentData?.payment_link,
+    orderData?.redirect_url,
+    orderData?.redirectUrl,
+    orderData?.url,
+    orderData?.checkout_url,
+    orderData?.payment_url,
+    orderData?.payment_link,
+    responseData?.redirect_url,
+    responseData?.redirectUrl,
+    responseData?.url,
+    responseData?.checkout_url,
+    responseData?.payment_url,
+    responseData?.payment_link,
+    responseData?.data?.redirect_url,
+    responseData?.data?.redirectUrl,
+    responseData?.data?.url,
+    responseData?.data?.checkout_url,
+    responseData?.data?.payment_url,
+    responseData?.data?.payment_link,
+  ];
+
+  const found = candidates.find((candidate) => typeof candidate === "string" && candidate.trim().length > 0);
+  return found ? String(found).trim() : null;
+};
 
 const hasActivePendingPaymentSnapshot = () => {
   const snapshotRaw = sessionStorage.getItem(PENDING_PAYMENT_CART_SNAPSHOT_KEY);
@@ -482,48 +518,68 @@ export default function CheckoutPage() {
       };
 
 
+      const isExternalGatewayMethod = EXTERNAL_PAYMENT_METHOD_IDS.has(Number(selectedPaymentId));
+      if (isExternalGatewayMethod) {
+        // نحفظ نسخة قبل إنشاء الطلب تحسبًا لحدوث مشكلة بالتحويل للبوابة.
+        savePendingPaymentSnapshot(null);
+        setIsWaitingRestoreCheck(true);
+      }
+
       // إرسال الطلب
       const response = await axiosClient.post('/api/v1/orders', orderRequestData);
 
       // إغلاق toast التحميل
       toast.dismiss(loadingToast);
 
-      // بعض بوابات الدفع (مثل Moyasar) يرجعون بيانات دفع مع رابط تحويل
+      // قراءة بيانات الطلب/الدفع بصيغة مرنة لأن شكل الـ API قد يختلف أحيانًا.
+      const orderData = response.data.data?.order || response.data.data || response.data;
+      const orderNum = orderData?.order_number || response.data.order_number || response.data.id;
+      const orderIdFromResponse = orderData?.id || response.data.data?.id || response.data.id || response.data.order_id;
       const paymentData = response.data?.payment || response.data?.data?.payment;
-      const redirectUrl = paymentData?.redirect_url || paymentData?.redirectUrl || paymentData?.url || null;
-      const requiresRedirect = paymentData?.requires_redirect || paymentData?.requiresRedirect || false;
+      setOrderNumber(orderNum);
+      setOrderId(orderIdFromResponse);
 
-      if (requiresRedirect || redirectUrl) {
-        // حفظ رقم الطلب جزئياً (قد نعود لاحقاً عبر webhook أو callback)
-        const orderData = response.data.data?.order || response.data.data || response.data;
-        const orderNum = orderData?.order_number || response.data.order_number || response.data.id;
-        setOrderNumber(orderNum);
+      const redirectUrl = extractRedirectUrlFromOrderResponse(response.data, paymentData, orderData);
+      const requiresRedirect =
+        Boolean(paymentData?.requires_redirect) ||
+        Boolean(paymentData?.requiresRedirect) ||
+        Boolean(orderData?.requires_redirect) ||
+        Boolean(orderData?.requiresRedirect) ||
+        Boolean(response.data?.requires_redirect) ||
+        Boolean(response.data?.requiresRedirect) ||
+        Boolean(response.data?.data?.requires_redirect) ||
+        Boolean(response.data?.data?.requiresRedirect);
 
-        if (!redirectUrl) {
-          showCustomToast(
-            'error',
-            isRTL ? 'رابط الدفع غير متاح' : 'Payment Link Missing',
-            isRTL ? 'تعذر تحويلك لبوابة الدفع. حاول مرة أخرى.' : 'Unable to redirect to payment gateway. Please try again.'
-          );
-          return;
-        }
+      const paymentStatus = normalizeStatusValue(
+        orderData?.payment_status || response.data?.data?.payment_status || response.data?.payment_status || paymentData?.status
+      );
+      const orderStatus = normalizeStatusValue(
+        orderData?.status || response.data?.data?.status || response.data?.status
+      );
+      const isFinalizedPayment =
+        FINALIZED_PAYMENT_STATUSES.has(paymentStatus) || FINALIZED_ORDER_STATUSES.has(orderStatus);
 
+      if (redirectUrl) {
+        // حفظ رقم الطلب مع الـ snapshot لاستخدامه لو رجع المستخدم Back قبل الدفع.
         savePendingPaymentSnapshot(orderNum);
-
-        // لا ننظف السلة هنا لأن الدفع سيكمل خارج الموقع
-        // افتح رابط الدفع
         window.location.href = redirectUrl as string;
         return;
       }
 
-      // حفظ رقم الطلب وتحديث الحالة للحالات التي لا تحتاج تحويل
-      const orderData = response.data.data?.order || response.data.data || response.data;
-      const orderNum = orderData?.order_number || response.data.order_number || response.data.id;
-      const orderIdFromResponse = orderData?.id || response.data.data?.id || response.data.id || response.data.order_id;
+      // حماية أساسية: أي بوابة دفع خارجية بدون redirect + بدون تأكيد دفع = لا نعتبر الطلب مكتمل.
+      if ((requiresRedirect || isExternalGatewayMethod) && !isFinalizedPayment) {
+        await fetchCart();
+        setPendingRestoreTick((prev) => prev + 1);
 
-
-      setOrderNumber(orderNum);
-      setOrderId(orderIdFromResponse);
+        showCustomToast(
+          'error',
+          isRTL ? 'تعذر تحويلك لبوابة الدفع' : 'Payment Redirect Failed',
+          isRTL
+            ? 'تم إنشاء الطلب لكن لم يتم تأكيد الدفع. لن نعتبر الطلب مكتملًا حتى يتم الدفع.'
+            : 'Order was created but payment was not confirmed. The order will not be marked completed until payment succeeds.'
+        );
+        return;
+      }
 
       // التحقق إذا كانت طريقة الدفع هي التحويل البنكي أو تحتاج رفع إثبات دفع
       const requiresProofUpload = paymentData?.requires_proof_upload || false;
