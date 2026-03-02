@@ -222,6 +222,25 @@ const looksLikeRedirectField = (key: string) =>
     key
   );
 
+const PAYMENT_URL_VALUE_KEYS = [
+  "url",
+  "href",
+  "link",
+  "checkout_url",
+  "payment_url",
+  "payment_link",
+  "redirect_url",
+  "redirectUrl",
+  "hosted_url",
+  "web_url",
+  "approval_url",
+  "invoice_url",
+  "pay_url",
+] as const;
+
+const looksLikePaymentRedirectPath = (value: string) =>
+  /(payment|checkout|gateway|tabby|tamara|emkan|mispay|madfu|amwal|invoice|session|redirect|pay)/i.test(value);
+
 const collectNestedRedirectCandidates = (
   value: unknown,
   depth = 0,
@@ -229,31 +248,34 @@ const collectNestedRedirectCandidates = (
 ): string[] => {
   if (depth > 4 || value === null || value === undefined) return acc;
 
-  if (typeof value === "string") {
-    acc.push(value);
-    return acc;
-  }
-
   if (Array.isArray(value)) {
     value.forEach((item) => collectNestedRedirectCandidates(item, depth + 1, acc));
     return acc;
   }
 
-  if (typeof value === "object") {
-    Object.entries(value as Record<string, unknown>).forEach(([key, nestedValue]) => {
-      if (looksLikeRedirectField(key)) {
-        if (typeof nestedValue === "string") {
-          acc.push(nestedValue);
-        } else if (nestedValue && typeof nestedValue === "object") {
-          const nestedUrl = (nestedValue as Record<string, unknown>)?.url;
-          if (typeof nestedUrl === "string") {
-            acc.push(nestedUrl);
-          }
-        }
-      }
-      collectNestedRedirectCandidates(nestedValue, depth + 1, acc);
-    });
+  if (typeof value !== "object") {
+    return acc;
   }
+
+  Object.entries(value as Record<string, unknown>).forEach(([key, nestedValue]) => {
+    if (looksLikeRedirectField(key)) {
+      if (typeof nestedValue === "string") {
+        acc.push(nestedValue);
+      } else if (nestedValue && typeof nestedValue === "object") {
+        const nestedRecord = nestedValue as Record<string, unknown>;
+        PAYMENT_URL_VALUE_KEYS.forEach((nestedKey) => {
+          const nestedCandidate = nestedRecord[nestedKey];
+          if (typeof nestedCandidate === "string") {
+            acc.push(nestedCandidate);
+          }
+        });
+      }
+    }
+
+    if (nestedValue && typeof nestedValue === "object") {
+      collectNestedRedirectCandidates(nestedValue, depth + 1, acc);
+    }
+  });
 
   return acc;
 };
@@ -262,23 +284,43 @@ const normalizeRedirectUrl = (candidate: unknown): string | null => {
   if (typeof candidate !== "string") return null;
 
   const raw = candidate.trim().replace(/&amp;/gi, "&").replace(/\\\//g, "/");
-  if (!raw) return null;
+  if (!raw || /\s/.test(raw)) return null;
+
+  const isAbsoluteHttp = /^https?:\/\//i.test(raw);
+  const isProtocolRelative = raw.startsWith("//");
+  const isPathRelative = raw.startsWith("/") || raw.startsWith("?");
+  if (!isAbsoluteHttp && !isProtocolRelative && !isPathRelative) return null;
 
   try {
     const parsed = (() => {
-      if (/^https?:\/\//i.test(raw)) {
+      if (isAbsoluteHttp) {
         return new URL(raw);
       }
 
-      if (raw.startsWith("//")) {
+      if (isProtocolRelative) {
         return new URL(`https:${raw}`);
       }
 
-      const apiBaseUrl = import.meta.env.VITE_BASE_URL || window.location.origin;
-      return new URL(raw, apiBaseUrl);
+      return new URL(raw, window.location.origin);
     })();
 
     if (parsed.protocol !== "http:" && parsed.protocol !== "https:") {
+      return null;
+    }
+
+    if (
+      parsed.origin === window.location.origin &&
+      /^\/(ar|en)\/?$/i.test(parsed.pathname) &&
+      !parsed.search &&
+      !parsed.hash
+    ) {
+      return null;
+    }
+
+    if (
+      parsed.hostname.includes("system.cityphonesa.com") &&
+      !looksLikePaymentRedirectPath(`${parsed.hostname}${parsed.pathname}${parsed.search}`)
+    ) {
       return null;
     }
 
@@ -290,38 +332,49 @@ const normalizeRedirectUrl = (candidate: unknown): string | null => {
 
 const extractRedirectUrlFromOrderResponse = (responseData: any, paymentData: any, orderData: any) => {
   const candidates = [
+    // 1. الأولوية للروابط الصريحة للدفع
+    paymentData?.payment_url,
+    paymentData?.checkout_url,
+    paymentData?.payment_link,
     paymentData?.redirect_url,
     paymentData?.redirectUrl,
-    paymentData?.url,
-    paymentData?.checkout_url,
-    paymentData?.payment_url,
-    paymentData?.payment_link,
+
+    orderData?.payment_url,
+    orderData?.checkout_url,
+    orderData?.payment_link,
     orderData?.redirect_url,
     orderData?.redirectUrl,
-    orderData?.url,
-    orderData?.checkout_url,
-    orderData?.payment_url,
-    orderData?.payment_link,
-    responseData?.redirect_url,
-    responseData?.redirectUrl,
-    responseData?.url,
-    responseData?.checkout_url,
-    responseData?.payment_url,
-    responseData?.payment_link,
+
+    responseData?.data?.payment_url,
+    responseData?.data?.checkout_url,
+    responseData?.data?.payment_link,
     responseData?.data?.redirect_url,
     responseData?.data?.redirectUrl,
+
+    responseData?.payment_url,
+    responseData?.checkout_url,
+    responseData?.payment_link,
+    responseData?.redirect_url,
+    responseData?.redirectUrl,
+
+    // 2. الروابط العامة (url) تترك في النهاية للضرورة
+    paymentData?.url,
+    orderData?.url,
     responseData?.data?.url,
-    responseData?.data?.checkout_url,
-    responseData?.data?.payment_url,
-    responseData?.data?.payment_link,
+    responseData?.url,
+
+    // 3. الروابط المتداخلة
     ...collectNestedRedirectCandidates(paymentData),
     ...collectNestedRedirectCandidates(orderData),
     ...collectNestedRedirectCandidates(responseData),
   ];
 
+  const seen = new Set<string>();
   for (const candidate of candidates) {
     const normalized = normalizeRedirectUrl(candidate);
-    if (normalized) return normalized;
+    if (!normalized || seen.has(normalized)) continue;
+    seen.add(normalized);
+    return normalized;
   }
 
   return null;
