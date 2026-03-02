@@ -3,6 +3,7 @@ import { X, Upload } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { SaudiRiyalIcon } from "@/components/common/SaudiRiyalIcon";
 import axiosClient from "@/api/axiosClient";
+import axios from "axios";
 
 interface BankTransferModalProps {
     isOpen: boolean;
@@ -23,6 +24,52 @@ interface BankDetails {
     branch?: string;
     bankInstructions?: string;
 }
+
+const MAX_UPLOAD_SIZE_MB = 10;
+const MAX_UPLOAD_SIZE_BYTES = MAX_UPLOAD_SIZE_MB * 1024 * 1024;
+const ALLOWED_FILE_TYPES = new Set([
+    "image/jpeg",
+    "image/jpg",
+    "image/png",
+    "image/webp",
+    "image/heic",
+    "image/heif",
+    "application/pdf",
+]);
+const ALLOWED_EXTENSIONS = new Set([
+    "jpg",
+    "jpeg",
+    "png",
+    "webp",
+    "heic",
+    "heif",
+    "pdf",
+]);
+
+const getFileExtension = (fileName: string) => {
+    const parts = String(fileName || "").toLowerCase().split(".");
+    return parts.length > 1 ? parts[parts.length - 1] : "";
+};
+
+const isAllowedFile = (file: File) => {
+    const mime = String(file.type || "").toLowerCase();
+    if (mime && ALLOWED_FILE_TYPES.has(mime)) return true;
+    const ext = getFileExtension(file.name);
+    return ALLOWED_EXTENSIONS.has(ext);
+};
+
+const isAbsoluteHttpUrl = (value: string) => /^https?:\/\//i.test(value);
+
+const toAbsoluteUrl = (value: string) => {
+    if (!value) return "";
+    if (isAbsoluteHttpUrl(value)) return value;
+    const base = import.meta.env.VITE_BASE_URL || window.location.origin;
+    try {
+        return new URL(value, base).toString();
+    } catch {
+        return value;
+    }
+};
 
 export default function BankTransferModal({
     isOpen,
@@ -84,16 +131,23 @@ export default function BankTransferModal({
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
-            // Check file size (max 2MB)
-            if (file.size > 2 * 1024 * 1024) {
-                alert(isRTL ? "حجم الملف يجب أن يكون أقل من 2 ميجا" : "File size must be less than 2MB");
+            // Check file size
+            if (file.size > MAX_UPLOAD_SIZE_BYTES) {
+                alert(
+                    isRTL
+                        ? `حجم الملف يجب أن يكون أقل من ${MAX_UPLOAD_SIZE_MB} ميجا`
+                        : `File size must be less than ${MAX_UPLOAD_SIZE_MB}MB`
+                );
                 return;
             }
 
             // Check file type
-            const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "application/pdf"];
-            if (!allowedTypes.includes(file.type)) {
-                alert(isRTL ? "يجب أن يكون الملف بصيغة JPG, JPEG, PNG أو PDF" : "File must be JPG, JPEG, PNG or PDF");
+            if (!isAllowedFile(file)) {
+                alert(
+                    isRTL
+                        ? "نوع الملف غير مدعوم. الصيغ المسموحة: JPG, JPEG, PNG, WEBP, HEIC, HEIF, PDF"
+                        : "Unsupported file type. Allowed: JPG, JPEG, PNG, WEBP, HEIC, HEIF, PDF"
+                );
                 return;
             }
 
@@ -105,6 +159,94 @@ export default function BankTransferModal({
                 setPreviewUrl(null);
             }
         }
+    };
+
+    useEffect(() => {
+        return () => {
+            if (previewUrl) {
+                URL.revokeObjectURL(previewUrl);
+            }
+        };
+    }, [previewUrl]);
+
+    const uploadProofFile = async (url: string, file: File) => {
+        const normalizedUrl = String(url || "").trim();
+        if (!normalizedUrl) {
+            throw new Error(isRTL ? "رابط الرفع غير متوفر" : "Upload URL is missing");
+        }
+
+        const absoluteUrl = toAbsoluteUrl(normalizedUrl);
+        const apiBaseNormalized = String(import.meta.env.VITE_BASE_URL || "").replace(/\/$/, "");
+        const isApiUploadUrl = Boolean(apiBaseNormalized) && absoluteUrl.startsWith(apiBaseNormalized);
+        const isExternalUploadUrl = !isApiUploadUrl;
+        const token = localStorage.getItem("token");
+
+        const formData = new FormData();
+        formData.append("payment_proof", file);
+
+        try {
+            const response = await axios.post(absoluteUrl, formData, {
+                timeout: 120000,
+                headers: {
+                    Accept: "application/json",
+                    ...(isApiUploadUrl && token ? { Authorization: `Bearer ${token}` } : {}),
+                },
+            });
+
+            if (response.status >= 200 && response.status < 300) {
+                return response;
+            }
+        } catch (postError: any) {
+            // Some gateways/storage links require PUT with raw file body.
+            const status = Number(postError?.response?.status || 0);
+            const allowPutFallback =
+                isExternalUploadUrl && (status === 403 || status === 405 || status === 415 || status === 400);
+
+            if (allowPutFallback) {
+                const putResponse = await axios.put(absoluteUrl, file, {
+                    timeout: 120000,
+                    headers: {
+                        "Content-Type": file.type || "application/octet-stream",
+                    },
+                });
+
+                if (putResponse.status >= 200 && putResponse.status < 300) {
+                    return putResponse;
+                }
+            }
+
+            throw postError;
+        }
+
+        throw new Error(isRTL ? "فشل رفع إثبات الدفع" : "Failed to upload payment proof");
+    };
+
+    const getUploadErrorMessage = (error: any) => {
+        const directMessage = error?.response?.data?.message;
+        if (typeof directMessage === "string" && directMessage.trim()) {
+            const nestedErrors = error?.response?.data?.errors?.errors;
+            if (nestedErrors && typeof nestedErrors === "object") {
+                const flattened = Object.values(nestedErrors)
+                    .flat()
+                    .map((msg) => String(msg))
+                    .join(" - ");
+                if (flattened) {
+                    return `${directMessage}: ${flattened}`;
+                }
+            }
+            return directMessage;
+        }
+
+        const flatErrors = error?.response?.data?.errors;
+        if (flatErrors && typeof flatErrors === "object") {
+            const flattened = Object.values(flatErrors)
+                .flat()
+                .map((msg) => String(msg))
+                .join(" - ");
+            if (flattened) return flattened;
+        }
+
+        return isRTL ? "حدث خطأ أثناء رفع إثبات الدفع" : "Error uploading payment proof";
     };
 
     const handleSubmit = async () => {
@@ -131,43 +273,29 @@ export default function BankTransferModal({
             }
 
             // تحديد الـ URL للرفع - نستخدم uploadUrl من الـ API إذا كان متوفرًا
-            const finalUploadUrl = currentUploadUrl || (currentOrderId ? `/api/v1/orders/${currentOrderId}/payment/upload-proof` : null);
+            const finalUploadUrl =
+                currentUploadUrl ||
+                (currentOrderId
+                    ? `/api/v1/orders/${encodeURIComponent(String(currentOrderId))}/payment/upload-proof`
+                    : null);
 
-
-            if (finalUploadUrl) {
-                const formData = new FormData();
-                formData.append('payment_proof', uploadedFile);
-
-
-                const response = await axiosClient.post(
-                    finalUploadUrl,
-                    formData,
-                    {
-                        headers: {
-                            'Content-Type': 'multipart/form-data',
-                        },
-                    }
+            if (!finalUploadUrl) {
+                throw new Error(
+                    isRTL
+                        ? "تعذر تحديد رابط رفع إثبات الدفع. حاول مرة أخرى."
+                        : "Could not determine payment proof upload URL. Please try again."
                 );
-
-
-                if (response.data.status || response.status === 200 || response.status === 201) {
-                    alert(isRTL ? "تم رفع إثبات الدفع بنجاح!" : "Payment proof uploaded successfully!");
-                    if (onUploadSuccess) {
-                        onUploadSuccess();
-                    }
-                    onClose();
-                    return;
-                }
-            } else {
             }
 
-            // fallback للـ onSubmit القديمة
-            await onSubmit(uploadedFile, bankDetails);
+            await uploadProofFile(finalUploadUrl, uploadedFile);
+
+            if (onUploadSuccess) {
+                onUploadSuccess();
+            }
             onClose();
         } catch (error: any) {
             console.error("Error submitting bank transfer");
-            const errorMessage = error.response?.data?.message ||
-                (isRTL ? "حدث خطأ أثناء رفع إثبات الدفع" : "Error uploading payment proof");
+            const errorMessage = getUploadErrorMessage(error);
             alert(errorMessage);
         } finally {
             setIsSubmitting(false);

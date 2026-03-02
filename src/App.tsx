@@ -1,6 +1,6 @@
 // App.tsx
 import { useEffect, Suspense, lazy } from "react";
-import { BrowserRouter, Routes, Route, Navigate, useParams } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useLocation, useParams } from "react-router-dom";
 import { useSettings } from "@/store/settings";
 import { useMaintenanceStore } from "@/store/maintenanceStore";
 import i18n from "@/i18n";
@@ -62,6 +62,16 @@ function TrademarksRoute() {
   const { lang, id } = useParams<{ lang: string; id: string }>();
 
   return <Trademarks key={`${lang || ""}:${id || ""}`} />;
+}
+
+function RedirectToLangCheckout() {
+  const { lang } = useSettings();
+  const location = useLocation();
+  const suffix = location.pathname.replace(/^\/(checkout|payments|payment)/i, "");
+
+  return (
+    <Navigate to={`/${lang}/checkout${suffix}${location.search}${location.hash}`} replace />
+  );
 }
 
 // Language Wrapper Component
@@ -135,7 +145,9 @@ function LangWrapper() {
         <Route path="BestSellerPage" element={<BestSellerPage />} />
         <Route path="trademarkscategory" element={<Trademarkscategory />} />
         <Route path="singleproduct/:id" element={<Singleproduct />} />
-        <Route path="checkout" element={<Checkout />} />
+        <Route path="checkout/*" element={<Checkout />} />
+        <Route path="payment/*" element={<Checkout />} />
+        <Route path="payments/*" element={<Checkout />} />
         <Route path="categorySingle/:id/:productmain?" element={<CategorySingleRoute />} />
         <Route path="blog" element={<Blog />} />
         <Route path="blog/:slug" element={<SingleBlog />} />
@@ -204,6 +216,9 @@ export default function App() {
           <Route path="/blog" element={<Navigate to={`/${lang}/blog`} replace />} />
           <Route path="/blog/:slug" element={<Navigate to={`/${lang}/blog/:slug`} replace />} />
           <Route path="/notifications" element={<Navigate to={`/${lang}/notifications`} replace />} /> {/* أضف هذا السطر */}
+          <Route path="/checkout/*" element={<RedirectToLangCheckout />} />
+          <Route path="/payment/*" element={<RedirectToLangCheckout />} />
+          <Route path="/payments/*" element={<RedirectToLangCheckout />} />
 
           {/* جميع الروتات التي تدعم اللغة */}
           <Route path="/:lang/*" element={<LangWrapper />} />
