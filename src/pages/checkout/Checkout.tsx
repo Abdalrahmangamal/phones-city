@@ -1241,6 +1241,41 @@ export default function CheckoutPage() {
   };
 
   const handleNextOrComplete = async () => {
+    if (!isStepValid()) {
+      if (activeStep === 1) {
+        const currentDelivery = deliveryMethod || "delivery";
+        const selectedAddress = getSelectedAddress();
+        if (currentDelivery === "delivery" && (!selectedAddressId || !selectedAddress)) {
+          showCustomToast(
+            "error",
+            isRTL ? "عنوان التوصيل مطلوب" : "Delivery Address Required",
+            isRTL
+              ? "يجب إضافة عنوان لإكمال باقي خطوات الدفع."
+              : "Please add a delivery address to continue checkout."
+          );
+          return;
+        }
+      }
+
+      if (activeStep === 0) {
+        showCustomToast(
+          "error",
+          isRTL ? "السلة فارغة" : "Cart is Empty",
+          isRTL ? "الرجاء إضافة منتجات إلى السلة أولًا." : "Please add products to your cart first."
+        );
+        return;
+      }
+
+      if (activeStep === 2) {
+        showCustomToast(
+          "error",
+          isRTL ? "طريقة الدفع مطلوبة" : "Payment Method Required",
+          isRTL ? "الرجاء اختيار طريقة دفع لإكمال الطلب." : "Please select a payment method to complete your order."
+        );
+        return;
+      }
+    }
+
     if (activeStep === steps.length - 1) {
       await handleCompleteOrder();
     } else {
@@ -1423,7 +1458,7 @@ export default function CheckoutPage() {
             <Button
               className="md:w-[400px] w-full h-[56px] bg-gradient-to-r from-[#F3AC5D] to-[#FF7B54] rounded-[16px] flex items-center justify-center text-[24px] text-white hover:from-[#FF7B54] hover:to-[#F3AC5D] transition-all shadow-lg hover:shadow-xl disabled:opacity-70 disabled:cursor-not-allowed"
               onClick={handleNextOrComplete}
-              disabled={isSubmitting || !isStepValid()}
+              disabled={isSubmitting}
             >
               {isSubmitting ? (
                 <span className="flex items-center gap-2">
